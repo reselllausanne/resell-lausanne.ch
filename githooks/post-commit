@@ -1,0 +1,26 @@
+#!/bin/sh
+# After each commit: push to origin so GitHub (and Shopify GitHub theme) stay current.
+# Skip: SKIP_AUTO_PUSH=1 git commit …  |  during rebase
+# shellcheck disable=SC2016
+
+[ -n "$SKIP_AUTO_PUSH" ] && exit 0
+
+git_dir=$(git rev-parse --git-dir 2>/dev/null) || exit 0
+[ -d "$git_dir/rebase-merge" ] || [ -d "$git_dir/rebase-apply" ] && exit 0
+
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+[ "$branch" = "HEAD" ] && exit 0
+
+remote=$(git config "branch.${branch}.remote")
+remote=${remote:-origin}
+
+if ! git remote get-url "$remote" >/dev/null 2>&1; then
+  echo "post-commit: no remote '$remote' — skipping push" >&2
+  exit 0
+fi
+
+echo "post-commit: pushing $branch → $remote …"
+if ! git push -u "$remote" "$branch"; then
+  echo "post-commit: push failed — fix then: git push -u $remote $branch" >&2
+fi
+exit 0
