@@ -1,6 +1,7 @@
 #!/bin/sh
 # After each commit: push to origin so GitHub (and Shopify GitHub theme) stay current.
-# Skip: SKIP_AUTO_PUSH=1 git commit …  |  during rebase
+# New clone (once): git config core.hooksPath githooks
+# Skip push: SKIP_AUTO_PUSH=1 git commit …  |  skipped during rebase
 # shellcheck disable=SC2016
 
 [ -n "$SKIP_AUTO_PUSH" ] && exit 0
