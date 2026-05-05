@@ -1,0 +1,345 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+{% comment %}
+  TODO: Shop-level facet whitelist contract.
+  Expected JSON metafield `shop.metafields.seo.facet_index_whitelist`:
+  {
+    "all": ["filter.v.option.color=black|sort_by=best-selling"],
+    "collection-handle": ["filter.v.availability=1"]
+  }
+{% endcomment %}
+
+{%- liquid
+  assign og_title = page_title | default: shop.name
+  assign canonical_href = canonical_url
+  if canonical_href == blank
+    assign canonical_href = request.origin | append: request.path
+  endif
+  assign og_url = canonical_href
+  assign og_type = 'website'
+  assign og_description = page_description | default: shop.description | default: shop.name
+  assign robots_content = ''
+
+  if request.page_type == 'product'
+    assign og_type = 'product'
+  elsif request.page_type == 'article'
+    assign og_type = 'article'
+  elsif request.page_type == 'password'
+    assign og_url = request.origin
+  endif
+
+  assign custom_canonicals = shop.metafields.seo.canonicals.value
+  if custom_canonicals != blank
+    for canonical in custom_canonicals
+      if request.path == canonical.url and canonical.origin_url != blank
+        assign canonical_href = canonical.origin_url
+        break
+      endif
+    endfor
+  endif
+
+  assign has_query_candidate = false
+  assign query_signature = ''
+  assign signature_parts = ''
+  assign raw_query_string = request.query_string | default: ''
+  if raw_query_string == blank and content_for_header contains '"pageurl":"'
+    assign header_page_url = content_for_header | split: '"pageurl":"' | last | split: '"' | first
+    assign header_page_url = header_page_url | replace: '\/', '/' | replace: '\u0026', '&'
+    if header_page_url contains '?'
+      assign raw_query_string = header_page_url | split: '?' | last | url_decode
+    endif
+  endif
+  if raw_query_string != blank
+    assign query_parts = raw_query_string | split: '&'
+    for query_part in query_parts
+      assign query_part_clean = query_part | strip
+      if query_part_clean == blank
+        continue
+      endif
+      assign pair = query_part_clean | split: '='
+      assign key = pair.first | downcase
+      if key == 'page' or key == 'view' or key == 'fbclid' or key == 'gclid' or key == '_fd' or key == 'pb' or key == 'preview_theme_id' or key == 'section_id' or key contains 'utm_'
+        continue
+      endif
+
+      assign has_query_candidate = true
+      if signature_parts != blank
+        assign signature_parts = signature_parts | append: '||'
+      endif
+      assign signature_parts = signature_parts | append: query_part_clean
+    endfor
+  endif
+  if signature_parts != blank
+    assign query_signature = signature_parts | split: '||' | sort | join: '|'
+  endif
+
+  if request.page_type == 'collection' and has_query_candidate
+    assign whitelist_payload = shop.metafields.seo.facet_index_whitelist.value
+    assign allowed_signatures = blank
+    assign clean_collection_canonical = canonical_href
+    if clean_collection_canonical == blank
+      assign clean_collection_canonical = request.origin | append: collection.url
+    endif
+    if clean_collection_canonical contains '?'
+      assign clean_collection_canonical = clean_collection_canonical | split: '?' | first
+    endif
+
+    if whitelist_payload != blank
+      if whitelist_payload[collection.handle] != blank
+        assign allowed_signatures = whitelist_payload[collection.handle]
+      elsif whitelist_payload.all != blank
+        assign allowed_signatures = whitelist_payload.all
+      else
+        assign allowed_signatures = whitelist_payload
+      endif
+    endif
+
+    assign facet_signature_allowed = false
+    if allowed_signatures != blank
+      for allowed in allowed_signatures
+        assign allowed_signature = allowed.signature | default: allowed.query | default: allowed
+        if allowed_signature == query_signature
+          assign facet_signature_allowed = true
+          break
+        endif
+      endfor
+    endif
+
+    if facet_signature_allowed
+      assign canonical_href = request.origin | append: request.path | append: '?' | append: raw_query_string
+    else
+      assign canonical_href = clean_collection_canonical
+      assign robots_content = 'noindex,follow'
+    endif
+  endif
+
+  if request.page_type == 'search'
+    assign canonical_href = request.origin | append: routes.search_url
+    assign robots_content = 'noindex,follow'
+  endif
+
+  assign no_indexes = shop.metafields.seo.no_indexes.value
+  if no_indexes != blank
+    for noindex in no_indexes
+      if request.path == noindex.url
+        assign robots_content = 'noindex,nofollow'
+        break
+      endif
+    endfor
+  endif
+
+  assign og_url = canonical_href
+%}
+
+<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_description | escape }}">
+
+{%- if page_image %}
+  <meta property="og:image" content="http:{{ page_image | image_url }}">
+  <meta property="og:image:secure_url" content="https:{{ page_image | image_url }}">
+  <meta property="og:image:width" content="{{ page_image.width }}">
+  <meta property="og:image:height" content="{{ page_image.height }}">
+{% endif %}
+
+{% render 'organization-schema' %}
+{% render 'website-schema' %}
+
+{%- if request.page_type == 'product' -%}
+  <script type="application/ld+json">
+    {{ product | structured_data }}
+  </script>
+
+  {% liquid
+    assign selected_variant = product.selected_or_first_available_variant
+    assign schema_gtin = selected_variant.barcode | default: product.metafields.custom.gtin.value
+    assign schema_mpn = selected_variant.sku | default: product.metafields.custom.mpn.value
+    assign schema_condition = 'https://schema.org/NewCondition'
+    assign raw_condition = product.metafields.custom.condition_label.value | downcase
+    if raw_condition contains 'used' or raw_condition contains 'occasion'
+      assign schema_condition = 'https://schema.org/UsedCondition'
+    elsif raw_condition contains 'refurb'
+      assign schema_condition = 'https://schema.org/RefurbishedCondition'
+    endif
+  %}
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "url": {{ canonical_href | json }},
+      "description": {{ product.description | strip_html | strip | json }},
+      "image": [
+        {%- for media in product.media limit: 10 -%}
+          {%- if media.preview_image != blank -%}
+            {%- if forloop.first == false -%},{%- endif -%}
+            {{ media.preview_image | image_url: width: 2048 | prepend: 'https:' | json }}
+          {%- endif -%}
+        {%- endfor -%}
+      ],
+      "sku": {{ selected_variant.sku | json }},
+      "gtin": {{ schema_gtin | json }},
+      "mpn": {{ schema_mpn | json }},
+      "brand": {
+        "@type": "Brand",
+        "name": {{ product.vendor | json }}
+      }
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Brand",
+      "name": {{ product.vendor | json }}
+    }
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Offer",
+      "url": {{ canonical_href | json }},
+      "priceCurrency": {{ cart.currency.iso_code | json }},
+      "price": {{ selected_variant.price | divided_by: 100.0 | json }},
+      "availability": "{% if selected_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+      "itemCondition": {{ schema_condition | json }}
+    }
+  </script>
+
+  <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+  <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+{%- endif -%}
+
+{%- if request.page_type == 'article' -%}
+  <script type="application/ld+json">
+    {{ article | structured_data }}
+  </script>
+{%- endif -%}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_description | escape }}">
+
+<title>
+  {{ page_title }}
+  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+  {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+</title>
+
+<link rel="canonical" href="{{ canonical_href }}">
+{% if robots_content != blank %}
+  <meta name="robots" content="{{ robots_content }}">
+{% endif %}
+
+{%- liquid
+  assign breadcrumb_name_2 = ''
+  assign breadcrumb_url_2 = ''
+  assign breadcrumb_name_3 = ''
+  assign breadcrumb_url_3 = ''
+
+  if request.page_type == 'product'
+    assign breadcrumb_collection = product.collections.first
+    if breadcrumb_collection != blank
+      assign breadcrumb_name_2 = breadcrumb_collection.title
+      assign breadcrumb_url_2 = request.origin | append: breadcrumb_collection.url
+    endif
+    assign breadcrumb_name_3 = product.title
+    assign breadcrumb_url_3 = canonical_href
+  elsif request.page_type == 'collection'
+    assign breadcrumb_name_2 = collection.title
+    assign breadcrumb_url_2 = canonical_href
+  elsif request.page_type == 'article'
+    assign breadcrumb_name_2 = blog.title
+    assign breadcrumb_url_2 = request.origin | append: blog.url
+    assign breadcrumb_name_3 = article.title
+    assign breadcrumb_url_3 = canonical_href
+  elsif request.page_type == 'page'
+    assign breadcrumb_name_2 = page.title
+    assign breadcrumb_url_2 = canonical_href
+  endif
+-%}
+
+{%- if breadcrumb_name_2 != blank -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": {{ 'breadcrumbs.home' | t | json }},
+          "item": {{ request.origin | append: routes.root_url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ breadcrumb_name_2 | json }},
+          "item": {{ breadcrumb_url_2 | json }}
+        }
+        {%- if breadcrumb_name_3 != blank -%}
+          ,
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": {{ breadcrumb_name_3 | json }},
+            "item": {{ breadcrumb_url_3 | json }}
+          }
+        {%- endif -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{%- liquid
+  assign faq_items_source = blank
+  if request.page_type == 'product'
+    assign faq_items_source = product.metafields.custom.product_faq_items.value
+  elsif request.page_type == 'collection'
+    assign faq_items_source = collection.metafields.custom.collection_faq_items.value
+  endif
+-%}
+
+{%- if faq_items_source != blank -%}
+  {%- capture faq_main_entities -%}
+    {%- assign faq_count = 0 -%}
+    {%- for faq_item in faq_items_source limit: 20 -%}
+      {%- liquid
+        assign faq_question = faq_item.question.value | default: faq_item.question | default: faq_item.title.value | default: faq_item.title
+        assign faq_answer = faq_item.answer.value | default: faq_item.answer | default: faq_item.content.value | default: faq_item.content
+      -%}
+      {%- if faq_question != blank and faq_answer != blank -%}
+        {%- if faq_count > 0 -%},{%- endif -%}
+        {
+          "@type": "Question",
+          "name": {{ faq_question | strip_html | strip | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ faq_answer | strip_html | strip | json }}
+          }
+        }
+        {%- assign faq_count = faq_count | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if faq_main_entities != blank -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [{{ faq_main_entities }}]
+      }
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+{% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}">
+{% endif %}

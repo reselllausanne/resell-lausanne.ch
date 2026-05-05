@@ -1,0 +1,241 @@
+{% liquid
+  assign modal_dom_id = 'size-selection-modal-' | append: section_id
+  assign size_guide_modal_id = 'product-size-guide-' | append: section_id
+  assign size_option_index = 0
+  assign size_option_name = ''
+  assign has_size_option = false
+
+  for opt in product.options
+    unless has_size_option
+      assign opt_down = opt | downcase
+      if opt_down contains 'size' or opt_down contains 'taille' or opt_down contains 'pointure'
+        assign has_size_option = true
+        assign size_option_name = opt
+        assign size_option_index = forloop.index0
+      endif
+    endunless
+  endfor
+
+  assign fit_note = 'Take your usual size.'
+  if product.metafields.custom.fit_note != blank and product.metafields.custom.fit_note.value != blank
+    assign fit_note = product.metafields.custom.fit_note.value
+  endif
+
+  assign delivery_prefix = product.metafields.custom.delivery_promise_prefix.value | default: 'Delivered in'
+  assign shipping_method_label = product.metafields.custom.shipping_method_label.value | default: 'Shipping method'
+  assign shipping_standard_label = product.metafields.custom.shipping_standard_label.value | default: 'Standard'
+  assign shipping_express_label = product.metafields.custom.shipping_express_label.value | default: 'Express'
+%}
+
+{% if has_size_option and product.has_only_default_variant == false %}
+  {{ 'product-size-selection-modal.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-size-selection-modal.js' | asset_url }}" defer></script>
+
+  {% comment %}
+    TODO: Variant delivery contract (metafield definitions):
+    - variant.custom.standard_delivery_min (number_integer)
+    - variant.custom.standard_delivery_max (number_integer)
+    - variant.custom.express_available (boolean)
+    - variant.custom.express_delivery_label (single_line_text)
+    - variant.custom.express_delivery_exact_date (date)
+    - variant.custom.express_price (money/number)
+    - variant.custom.shipping_group (single_line_text: standard|express|mixed)
+    - variant.custom.us_size (single_line_text)
+  {% endcomment %}
+
+  <div
+    id="{{ modal_dom_id }}"
+    class="rs-size-modal"
+    data-rs-size-modal
+    data-rs-size-modal-section="{{ section_id }}"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="{{ modal_dom_id }}-title"
+  >
+    <div class="rs-size-modal__overlay" data-rs-size-modal-overlay tabindex="-1"></div>
+
+    <div class="rs-size-modal__frame">
+      <div class="rs-size-modal__panel" role="document">
+        <div class="rs-size-modal__scroll">
+          <div class="rs-size-modal__inner">
+            <h2 id="{{ modal_dom_id }}-title" class="rs-size-modal__product-title">
+              {{ product.title | escape }}
+            </h2>
+
+            <div class="rs-size-modal__toolbar">
+              <div class="rs-size-modal__unit-toggle" role="group" aria-label="Size unit">
+                <button type="button" class="rs-size-modal__unit is-active" data-rs-size-unit="eu" aria-pressed="true">
+                  EU
+                </button>
+                <button type="button" class="rs-size-modal__unit" data-rs-size-unit="us" aria-pressed="false">
+                  US
+                </button>
+              </div>
+              <button
+                type="button"
+                class="rs-size-modal__guide-link"
+                data-size-modal-open="{{ size_guide_modal_id }}"
+                aria-controls="{{ size_guide_modal_id }}"
+                aria-haspopup="dialog"
+              >
+                Size guide
+              </button>
+            </div>
+
+            <div class="rs-size-modal__delivery" data-rs-delivery-row>
+              <span class="rs-size-modal__delivery-dot" aria-hidden="true"></span>
+              <span class="rs-size-modal__delivery-text">{{ delivery_prefix }}</span>
+              <span class="rs-size-modal__delivery-badge" data-rs-express-badge hidden>48h</span>
+            </div>
+
+            <p class="rs-size-modal__fit-note">{{ fit_note | escape }}</p>
+
+            <div class="rs-size-modal__grid" data-rs-size-grid role="listbox" aria-label="Sizes"></div>
+
+            <div class="rs-size-modal__shipping" data-rs-shipping-section>
+              <p class="rs-size-modal__shipping-title">{{ shipping_method_label }}</p>
+              <div class="rs-size-modal__shipping-cards">
+                <button
+                  type="button"
+                  class="rs-size-modal__ship-card is-selected"
+                  data-rs-ship="standard"
+                  role="radio"
+                  aria-checked="true"
+                >
+                  <span class="rs-size-modal__ship-name">{{ shipping_standard_label }}</span>
+                  <span class="rs-size-modal__ship-promise" data-rs-ship-standard-promise></span>
+                  <span class="rs-size-modal__ship-price" data-rs-ship-standard-price></span>
+                </button>
+                <button
+                  type="button"
+                  class="rs-size-modal__ship-card"
+                  data-rs-ship="express"
+                  role="radio"
+                  aria-checked="false"
+                  hidden
+                >
+                  <span class="rs-size-modal__ship-name">{{ shipping_express_label }}</span>
+                  <span class="rs-size-modal__ship-promise" data-rs-ship-express-promise></span>
+                  <span class="rs-size-modal__ship-row">
+                    <span class="rs-size-modal__ship-price" data-rs-ship-express-price></span>
+                    <span class="rs-size-modal__ship-badge" data-rs-ship-express-badge>48h</span>
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="rs-size-modal__atc button button--primary button--full-width"
+              data-rs-modal-atc
+              disabled
+            >
+              Add to cart
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="rs-size-modal__close-bottom" data-rs-size-modal-close aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="{{ modal_dom_id }}-payload">
+    {
+      "modalId": {{ modal_dom_id | json }},
+      "sizeOptionIndex": {{ size_option_index }},
+      "sizeOptionName": {{ size_option_name | json }},
+      "optionNames": {{ product.options | json }},
+      "productTitle": {{ product.title | json }},
+      "variants": [
+        {% for variant in product.variants %}
+          {% liquid
+            assign express_available = false
+            if variant.metafields.custom.express_available.value == true
+              assign express_available = true
+            endif
+
+            assign express_price_cents = variant.price
+            assign express_price_defined = false
+            if variant.metafields.custom.express_price != blank
+              assign exp_mv = variant.metafields.custom.express_price.value
+              if exp_mv.amount != blank
+                assign express_price_cents = exp_mv.amount | times: 100 | round
+                assign express_price_defined = true
+              elsif exp_mv != blank
+                assign exp_mv_str = exp_mv | append: '' | strip
+                if exp_mv_str contains '.'
+                  assign express_price_cents = exp_mv_str | times: 100 | round
+                else
+                  assign express_price_cents = exp_mv_str | plus: 0
+                endif
+                assign express_price_defined = true
+              endif
+            endif
+
+            if express_price_defined == false
+              assign express_available = false
+            endif
+
+            assign std_min = 5
+            assign std_max = 10
+            if variant.metafields.custom.standard_delivery_min.value != blank
+              assign std_min = variant.metafields.custom.standard_delivery_min.value
+            endif
+            if variant.metafields.custom.standard_delivery_max.value != blank
+              assign std_max = variant.metafields.custom.standard_delivery_max.value
+            endif
+
+            assign express_label = '48h'
+            if variant.metafields.custom.express_delivery_label.value != blank
+              assign express_label = variant.metafields.custom.express_delivery_label.value
+            endif
+
+            assign express_exact_date = ''
+            if variant.metafields.custom.express_delivery_exact_date.value != blank
+              assign express_exact_date = variant.metafields.custom.express_delivery_exact_date.value | date: '%Y-%m-%d'
+            endif
+
+            assign shipping_group = ''
+            if variant.metafields.custom.shipping_group.value != blank
+              assign shipping_group = variant.metafields.custom.shipping_group.value | downcase
+            endif
+
+            assign us_size = ''
+            if variant.metafields.custom.us_size.value != blank
+              assign us_size = variant.metafields.custom.us_size.value | append: '' | strip
+            endif
+
+            assign size_value = variant.options[size_option_index]
+
+            capture express_price_formatted
+              echo express_price_cents | money
+            endcapture
+          %}
+          {
+            "id": {{ variant.id | json }},
+            "available": {{ variant.available | json }},
+            "options": {{ variant.options | json }},
+            "sizeValue": {{ size_value | json }},
+            "usSize": {{ us_size | json }},
+            "price": {{ variant.price }},
+            "priceFormatted": {{ variant.price | money | json }},
+            "expressAvailable": {{ express_available | json }},
+            "expressPriceCents": {% if express_price_defined %}{{ express_price_cents }}{% else %}null{% endif %},
+            "expressPriceFormatted": {% if express_price_defined %}{{ express_price_formatted | strip | json }}{% else %}null{% endif %},
+            "standardMin": {{ std_min | json }},
+            "standardMax": {{ std_max | json }},
+            "expressLabel": {{ express_label | json }},
+            "expressExactDate": {{ express_exact_date | json }},
+            "shippingGroup": {{ shipping_group | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ]
+    }
+  </script>
+{% endif %}

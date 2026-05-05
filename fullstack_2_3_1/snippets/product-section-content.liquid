@@ -1,0 +1,550 @@
+{% liquid
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+
+  assign selected_variant = product.selected_or_first_available_variant
+  assign breadcrumb_collection = product.collections.first
+  assign product_info_width = section.settings.product_info_width
+  assign product_gap = section.settings.gap
+  if request.page_type == 'product'
+    assign product_info_width = 40
+    assign product_gap = 16
+  endif
+  assign pdp_standard_min = selected_variant.metafields.custom.standard_delivery_min.value | default: 5
+  assign pdp_standard_max = selected_variant.metafields.custom.standard_delivery_max.value | default: 10
+  assign pdp_express_label = selected_variant.metafields.custom.express_delivery_label.value | default: '48h'
+  assign pdp_express_available = false
+  assign selected_variant_express_price = selected_variant.metafields.custom.express_price.value
+  if selected_variant.metafields.custom.express_available.value == true and selected_variant_express_price != blank
+    assign pdp_express_available = true
+  endif
+
+  assign fit_note = product.metafields.custom.fit_note.value
+  assign product_summary = product.metafields.custom.product_summary.value
+  if product_summary == blank
+    assign product_summary = product.description
+  endif
+  assign trust_note = product.metafields.custom.trust_note.value
+  assign authenticity_note = product.metafields.custom.authenticity_note.value
+  assign shipping_returns_note = product.metafields.custom.shipping_returns_note.value
+  assign size_guide_note = product.metafields.custom.size_guide_note.value
+  assign related_collections = product.metafields.custom.related_collections.value
+  assign faq_items = product.metafields.custom.product_faq_items.value
+
+  assign commerce_gtin = selected_variant.barcode | default: product.metafields.custom.gtin.value
+  assign commerce_mpn = selected_variant.sku | default: product.metafields.custom.mpn.value
+  assign commerce_condition = product.metafields.custom.condition_label.value | default: 'new'
+%}
+
+{% if product != blank %}
+  <div
+    {% if section.settings.anchor_id != blank %}
+      id="{{ section.settings.anchor_id }}"
+    {% endif %}
+    class="
+      product-section color-{{ section.settings.color_scheme }}
+      {% if section.settings.carrousel_full_width %} product-section--carrousel-image-full-width{% endif %}
+    "
+    style="
+      --margin-top: {{ section.settings.margin_top }}px;
+      --margin-bottom: {{ section.settings.margin_bottom }}px;
+      --image-position: {{ section.settings.image_position }};
+      --product-info-width: {{ product_info_width }}%;
+      --gap: {{ product_gap }}px;
+    "
+  >
+    <div
+      class="product-section__content page-width"
+      style="
+        --padding-top: {{ section.settings.padding_top }}px;
+        --padding-bottom: {{ section.settings.padding_bottom }}px;
+      "
+      data-ref="product-section-content"
+    >
+      <div class="product-section__medias {% if section.settings.carrousel_sticky %}product-section__medias--sticky{% endif %}">
+        <div class="product-section__medias-container">
+          {{ media_gallery }}
+        </div>
+      </div>
+
+      <div
+        class="
+          product-section__product-info
+          {% if section.settings.product_info_sticky %}product-section__product-info--sticky{% endif %}
+          {% if section.settings.show_product_info_card %}card color-{{ section.settings.color_scheme_product_info }}{% endif %}
+        "
+        data-ref="product-section-product-info"
+      >
+        {% if request.page_type == 'product' %}
+          <nav class="commerce-breadcrumbs" aria-label="Breadcrumb">
+            <a class="link" href="{{ routes.root_url }}">Home</a>
+            {% if breadcrumb_collection != blank %}
+              <span aria-hidden="true">/</span>
+              <a class="link" href="{{ breadcrumb_collection.url }}">{{ breadcrumb_collection.title }}</a>
+            {% endif %}
+            <span aria-hidden="true">/</span>
+            <span>{{ product.title }}</span>
+          </nav>
+        {% endif %}
+        {{ blocks }}
+        {% if request.page_type == 'product' %}
+          <section
+            class="product-commerce-stack"
+            data-commerce-product-stack
+            data-commerce-identifiers-missing="{% if commerce_gtin == blank and commerce_mpn == blank %}true{% else %}false{% endif %}"
+          >
+            {% comment %}
+              TODO: Product contract.
+              Required metafields:
+              - product.custom.product_summary (rich text)
+              - product.custom.trust_note (single line text)
+              - product.custom.authenticity_note (rich text)
+              - product.custom.shipping_returns_note (rich text)
+              - product.custom.size_guide_note (rich text)
+              - product.custom.related_collections (list.collection_reference)
+              - product.custom.product_faq_items (list.metaobject_reference with question/answer)
+              - product.custom.condition_label (single line text, Merchant Center condition mirror)
+            {% endcomment %}
+
+            <p class="product-commerce-stack__delivery" data-rs-pdp-delivery>
+              <span class="product-commerce-stack__delivery-label">Delivery promise:</span>
+              <span data-rs-pdp-delivery-standard>
+                {{ pdp_standard_min }}-{{ pdp_standard_max }} working days
+              </span>
+              <span
+                class="product-commerce-stack__delivery-express"
+                data-rs-pdp-delivery-express
+                {% unless pdp_express_available %}
+                  hidden
+                {% endunless %}
+              >
+                Express {{ pdp_express_label }}
+              </span>
+            </p>
+
+            {% if fit_note != blank %}
+              <p class="product-commerce-stack__fit-note">
+                {{ fit_note }}
+              </p>
+            {% endif %}
+
+            {% if trust_note != blank %}
+              <p class="product-commerce-stack__trust-note">
+                {{ trust_note }}
+              </p>
+            {% endif %}
+
+            {% if product_summary != blank %}
+              <div class="product-commerce-stack__summary rte">
+                {{ product_summary }}
+              </div>
+            {% endif %}
+
+            <dl class="product-commerce-stack__attributes">
+              <div>
+                <dt>Brand</dt>
+                <dd>{{ product.vendor }}</dd>
+              </div>
+              {% if commerce_gtin != blank %}
+                <div>
+                  <dt>GTIN</dt>
+                  <dd>{{ commerce_gtin }}</dd>
+                </div>
+              {% endif %}
+              {% if commerce_mpn != blank %}
+                <div>
+                  <dt>MPN</dt>
+                  <dd>{{ commerce_mpn }}</dd>
+                </div>
+              {% endif %}
+              <div>
+                <dt>Condition</dt>
+                <dd>{{ commerce_condition }}</dd>
+              </div>
+              {% if selected_variant.available %}
+                <div>
+                  <dt>Availability</dt>
+                  <dd>In stock</dd>
+                </div>
+              {% else %}
+                <div>
+                  <dt>Availability</dt>
+                  <dd>Out of stock</dd>
+                </div>
+              {% endif %}
+            </dl>
+
+            {% if authenticity_note != blank %}
+              <div class="product-commerce-stack__panel rte">
+                <h3>Authenticity</h3>
+                {{ authenticity_note }}
+              </div>
+            {% endif %}
+
+            {% if shipping_returns_note != blank %}
+              <div class="product-commerce-stack__panel rte">
+                <h3>Shipping and returns</h3>
+                {{ shipping_returns_note }}
+              </div>
+            {% endif %}
+
+            {% if size_guide_note != blank %}
+              <div class="product-commerce-stack__panel rte">
+                <h3>Size guide</h3>
+                {{ size_guide_note }}
+              </div>
+            {% endif %}
+
+            {% if faq_items != blank %}
+              <div class="product-commerce-stack__faq" data-commerce-faq-visible>
+                <h3>FAQ</h3>
+                {% for faq_item in faq_items limit: 8 %}
+                  {% liquid
+                    assign faq_question = faq_item.question.value | default: faq_item.question | default: faq_item.title.value | default: faq_item.title
+                    assign faq_answer = faq_item.answer.value | default: faq_item.answer | default: faq_item.content.value | default: faq_item.content
+                  %}
+                  {% if faq_question != blank and faq_answer != blank %}
+                    <details class="product-commerce-stack__faq-item">
+                      <summary>{{ faq_question }}</summary>
+                      <div class="rte">{{ faq_answer }}</div>
+                    </details>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% if related_collections != blank %}
+              <div class="product-commerce-stack__related">
+                <h3>Related collections</h3>
+                <ul class="product-commerce-stack__related-list">
+                  {% for related_collection in related_collections limit: 8 %}
+                    {% if related_collection.url != blank %}
+                      <li><a class="link" href="{{ related_collection.url }}">{{ related_collection.title }}</a></li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </section>
+        {% endif %}
+        {% if request.page_type == 'product' %}
+          {% liquid
+            assign has_size_modal = false
+            assign size_modal_dom_id = 'size-selection-modal-' | append: section.id
+            if product.has_only_default_variant == false
+              for product_option in product.options
+                assign product_option_down = product_option | downcase
+                if product_option_down contains 'size' or product_option_down contains 'taille' or product_option_down contains 'pointure'
+                  assign has_size_modal = true
+                  break
+                endif
+              endfor
+            endif
+          %}
+          {% if has_size_modal %}
+            {% render 'product-size-selection-modal', product: product, section_id: section.id %}
+            {% assign product_size_guide_id = 'product-size-guide-' | append: section.id %}
+            {% render 'product-size-modal', product: product, modal_id: product_size_guide_id, load_assets: true %}
+          {% endif %}
+          <aside
+            class="product-mobile-dock"
+            data-rs-mobile-dock
+            data-rs-mobile-dock-modal-id="{{ size_modal_dom_id }}"
+          >
+            <div class="product-mobile-dock__meta">
+              <p class="product-mobile-dock__title" data-rs-mobile-dock-title>{{ product.title }}</p>
+              <p class="product-mobile-dock__price" data-rs-mobile-dock-price>{{ selected_variant.price | money }}</p>
+              <p class="product-mobile-dock__size" data-rs-mobile-dock-size>
+                {% if selected_variant != blank %}
+                  {{ selected_variant.title }}
+                {% endif %}
+              </p>
+            </div>
+            {% if has_size_modal %}
+              <button
+                type="button"
+                class="button button--secondary product-mobile-dock__size-button"
+                data-rs-size-modal-open="{{ size_modal_dom_id }}"
+              >
+                Select size
+              </button>
+            {% endif %}
+            <button
+              type="button"
+              class="button button--primary button--full-width product-mobile-dock__atc"
+              data-rs-mobile-dock-atc
+            >
+              Add to cart
+            </button>
+          </aside>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% elsif request.design_mode %}
+  <div class="design-mode-message-container page-width color-{{ section.settings.color_scheme }}">
+    <p class="design-mode-message">{{ 'products.no_product' | t }}</p>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  @media (width > 750px) {
+    .shopify-section-product-section {
+      overflow: visible;
+    }
+  }
+
+  .product-section {
+    margin-top: var(--margin-top);
+    margin-bottom: var(--margin-bottom);
+  }
+
+  .product-section__content {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: var(--gap-md);
+    padding-top: var(--padding-top);
+    padding-bottom: var(--padding-bottom);
+  }
+
+  .product-section__product-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-sm);
+  }
+
+  .commerce-breadcrumbs {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgb(0 0 0 / 65%);
+  }
+
+  .product-commerce-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    border-top: 1px solid rgb(0 0 0 / 8%);
+    padding-top: var(--padding-sm);
+  }
+
+  .product-commerce-stack__delivery {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--font-body--size);
+  }
+
+  .product-commerce-stack__delivery-label {
+    font-weight: 600;
+  }
+
+  .product-commerce-stack__delivery-express {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 99px;
+    padding: 2px 8px;
+    background: rgb(8 8 8);
+    color: rgb(255 255 255);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .product-commerce-stack__fit-note,
+  .product-commerce-stack__trust-note {
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgb(0 0 0 / 4%);
+  }
+
+  .product-commerce-stack__summary p:first-child {
+    margin-top: 0;
+  }
+
+  .product-commerce-stack__summary p:last-child {
+    margin-bottom: 0;
+  }
+
+  .product-commerce-stack__attributes {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .product-commerce-stack__attributes > div {
+    display: grid;
+    grid-template-columns: minmax(110px, auto) 1fr;
+    gap: 8px;
+  }
+
+  .product-commerce-stack__attributes dt {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .product-commerce-stack__attributes dd {
+    margin: 0;
+  }
+
+  .product-commerce-stack__panel h3,
+  .product-commerce-stack__faq h3,
+  .product-commerce-stack__related h3 {
+    margin: 0 0 8px;
+    font-size: var(--font-heading--size-h6);
+  }
+
+  .product-commerce-stack__faq-item + .product-commerce-stack__faq-item {
+    margin-top: 8px;
+  }
+
+  .product-commerce-stack__related-list {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .product-mobile-dock {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 55;
+    display: none;
+    gap: 10px;
+    padding: 10px var(--page-margin-mobile) calc(10px + env(safe-area-inset-bottom));
+    border-top: 1px solid rgb(0 0 0 / 12%);
+    background: rgb(255 255 255 / 96%);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(110%);
+    transition:
+      opacity 0.2s ease,
+      transform 0.25s ease;
+  }
+
+  .product-mobile-dock.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .product-mobile-dock__meta {
+    display: grid;
+    gap: 2px;
+  }
+
+  .product-mobile-dock__title,
+  .product-mobile-dock__price,
+  .product-mobile-dock__size {
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .product-mobile-dock__title {
+    font-size: 12px;
+    color: rgb(0 0 0 / 65%);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .product-mobile-dock__price {
+    font-size: 17px;
+    line-height: 1.1;
+    font-weight: 500;
+  }
+
+  .product-mobile-dock__size {
+    font-size: 12px;
+    color: rgb(0 0 0 / 58%);
+  }
+
+  .product-mobile-dock__size-button {
+    width: 100%;
+  }
+
+  @media (width > 750px) {
+    .product-section__content {
+      flex-direction: var(--image-position);
+      gap: var(--gap);
+    }
+
+    .product-section__medias-container {
+      overflow: hidden;
+    }
+
+    .product-section__medias {
+      width: calc(100% - var(--product-info-width));
+    }
+
+    .product-section__product-info {
+      max-width: calc(var(--product-info-width) - var(--gap));
+      width: 100%;
+      padding-top: 64px;
+    }
+
+    .product-section__product-info h1 {
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 400;
+      margin: 0 0 12px;
+    }
+
+    .product-section__product-info .product-price-container,
+    .product-section__product-info .price-container {
+      margin-bottom: 32px;
+    }
+
+    .product-section__product-info .rs-size-modal__trigger {
+      border-radius: 4px;
+      padding: 14px 48px;
+      min-height: 44px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .product-mobile-dock {
+      display: none !important;
+    }
+
+    .product-section__medias--sticky,
+    .product-section__product-info--sticky {
+      height: fit-content;
+      position: sticky;
+      top: calc(var(--header-height, 0px) + var(--padding-md));
+      z-index: 2;
+    }
+  }
+
+  @media (width <= 750px) {
+    .product-section--carrousel-image-full-width {
+      .product-section__content {
+        padding-top: 0 !important;
+      }
+
+      .product-media-gallery-main-slider {
+        width: calc(100% + 2 * (var(--page-margin-mobile)));
+        margin-left: calc(var(--page-margin-mobile) * -1);
+      }
+
+      .product-media-gallery__media--rounded {
+        border-radius: 0;
+      }
+    }
+
+    .product-section {
+      padding-bottom: 120px;
+    }
+
+    .product-mobile-dock {
+      display: grid;
+    }
+  }
+{% endstylesheet %}
