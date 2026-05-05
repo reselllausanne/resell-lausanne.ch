@@ -112,7 +112,9 @@
 
   const shippingLayout = (v) => {
     const g = (v.shippingGroup || '').toLowerCase();
-    const exp = !!v.expressAvailable;
+    const expPrice = Number(v.expressPriceCents);
+    const hasExpressPrice = Number.isFinite(expPrice) && expPrice > 0;
+    const exp = !!v.expressAvailable && hasExpressPrice;
     const samePrice = exp && Number(v.expressPriceCents) === Number(v.price);
     let showStandard = true;
     let showExpress = exp && g !== 'standard';

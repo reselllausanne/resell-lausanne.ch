@@ -15,7 +15,8 @@
   assign pdp_standard_max = selected_variant.metafields.custom.standard_delivery_max.value | default: 10
   assign pdp_express_label = selected_variant.metafields.custom.express_delivery_label.value | default: '48h'
   assign pdp_express_available = false
-  if selected_variant.metafields.custom.express_available.value == true
+  assign selected_variant_express_price = selected_variant.metafields.custom.express_price.value
+  if selected_variant.metafields.custom.express_available.value == true and selected_variant_express_price != blank
     assign pdp_express_available = true
   endif
 
