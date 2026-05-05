@@ -155,6 +155,7 @@
     const expShipBadge = modal.querySelector('[data-rs-ship-express-badge]');
     const pdpDeliveryStandard = section?.querySelector('[data-rs-pdp-delivery-standard]');
     const pdpDeliveryExpress = section?.querySelector('[data-rs-pdp-delivery-express]');
+    const mainAtcBtn = productForm.querySelector('[data-ref="add-to-cart-button"]');
     const mobileDock = section?.querySelector('[data-rs-mobile-dock]');
     const dockPriceEl = mobileDock?.querySelector('[data-rs-mobile-dock-price]');
     const dockSizeEl = mobileDock?.querySelector('[data-rs-mobile-dock-size]');
@@ -167,6 +168,7 @@
     let selectedVariant = null;
     let pendingVariantSync = false;
     let lastFocused = null;
+    let lastKnownScrollY = window.scrollY;
 
     const anyUs = payload.variants.some((v) => v.usSize && String(v.usSize).trim() !== '');
     if (unitUs) {
@@ -311,11 +313,22 @@
     };
 
     const updateModalAtcState = () => {
-      const mainBtn = productForm.querySelector('[data-ref="add-to-cart-button"]');
-      const mainDisabled = mainBtn?.disabled;
+      const mainDisabled = mainAtcBtn?.disabled;
       const ok = selectedVariant && selectedVariant.available && !mainDisabled && !pendingVariantSync;
       if (btnAtc) btnAtc.disabled = !ok;
       if (dockAtc) dockAtc.disabled = !ok;
+    };
+
+    const updateMobileDockVisibility = () => {
+      if (!mobileDock) return;
+      const y = window.scrollY;
+      const viewportBottom = window.innerHeight;
+      const targetRect = mainAtcBtn?.getBoundingClientRect();
+      const primaryCtaPassed = targetRect ? targetRect.bottom < (viewportBottom - 32) : y > 420;
+      const scrollingUp = y < lastKnownScrollY;
+      const shouldShow = primaryCtaPassed || (scrollingUp && y > 320);
+      mobileDock.classList.toggle('is-visible', shouldShow);
+      lastKnownScrollY = y;
     };
 
     const updateMobileDock = () => {
@@ -330,6 +343,7 @@
       if (dockSizeEl) {
         dockSizeEl.textContent = displayLabel(selectedVariant);
       }
+      updateMobileDockVisibility();
     };
 
     const highlightSelectedCard = () => {
@@ -518,6 +532,9 @@
       }
     });
 
+    window.addEventListener('scroll', updateMobileDockVisibility, { passive: true });
+    window.addEventListener('resize', updateMobileDockVisibility);
+
     modal.querySelector('[data-size-modal-open]')?.addEventListener(
       'click',
       () => {
@@ -529,6 +546,7 @@
     registry.set(modal.id, { open: openModal, close: closeModal });
     syncSelectionFromForm();
     updateMobileDock();
+    updateMobileDockVisibility();
   };
 
   document.querySelectorAll('[data-rs-size-modal][id]').forEach((modal) => mountModal(modal));

@@ -5,6 +5,12 @@
 
   assign selected_variant = product.selected_or_first_available_variant
   assign breadcrumb_collection = product.collections.first
+  assign product_info_width = section.settings.product_info_width
+  assign product_gap = section.settings.gap
+  if request.page_type == 'product'
+    assign product_info_width = 40
+    assign product_gap = 16
+  endif
   assign pdp_standard_min = selected_variant.metafields.custom.standard_delivery_min.value | default: 5
   assign pdp_standard_max = selected_variant.metafields.custom.standard_delivery_max.value | default: 10
   assign pdp_express_label = selected_variant.metafields.custom.express_delivery_label.value | default: '48h'
@@ -43,8 +49,8 @@
       --margin-top: {{ section.settings.margin_top }}px;
       --margin-bottom: {{ section.settings.margin_bottom }}px;
       --image-position: {{ section.settings.image_position }};
-      --product-info-width: {{ section.settings.product_info_width }}%;
-      --gap: {{ section.settings.gap }}px;
+      --product-info-width: {{ product_info_width }}%;
+      --gap: {{ product_gap }}px;
     "
   >
     <div
@@ -414,6 +420,18 @@
     border-top: 1px solid rgb(0 0 0 / 12%);
     background: rgb(255 255 255 / 96%);
     backdrop-filter: blur(8px);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(110%);
+    transition:
+      opacity 0.2s ease,
+      transform 0.25s ease;
+  }
+
+  .product-mobile-dock.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   .product-mobile-dock__meta {
@@ -437,8 +455,9 @@
   }
 
   .product-mobile-dock__price {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.1;
+    font-weight: 500;
   }
 
   .product-mobile-dock__size {
@@ -467,6 +486,27 @@
     .product-section__product-info {
       max-width: calc(var(--product-info-width) - var(--gap));
       width: 100%;
+      padding-top: 64px;
+    }
+
+    .product-section__product-info h1 {
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 400;
+      margin: 0 0 12px;
+    }
+
+    .product-section__product-info .product-price-container,
+    .product-section__product-info .price-container {
+      margin-bottom: 32px;
+    }
+
+    .product-section__product-info .rs-size-modal__trigger {
+      border-radius: 4px;
+      padding: 14px 48px;
+      min-height: 44px;
+      font-size: 13px;
+      font-weight: 500;
     }
 
     .product-mobile-dock {
