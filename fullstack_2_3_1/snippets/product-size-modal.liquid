@@ -1,0 +1,96 @@
+{% liquid
+  assign size_modal_id = modal_id | default: 'product-size-modal'
+  assign size_guide_metafield = product.metafields.custom.size_guide
+  assign use_dynamic_content = false
+
+  capture size_guide_content
+    if size_guide_metafield != blank
+      echo size_guide_metafield | metafield_tag
+    endif
+  endcapture
+
+  assign size_guide_content = size_guide_content | strip
+  if size_guide_content == blank and size_guide_metafield != blank and size_guide_metafield.value != blank
+    assign size_guide_content = size_guide_metafield.value | newline_to_br
+  endif
+
+  if size_guide_content contains '<table' or size_guide_content contains '<ul' or size_guide_content contains '<ol'
+    assign use_dynamic_content = true
+  endif
+%}
+
+{% unless load_assets == false %}
+  {{ 'product-size-modal.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-size-modal.js' | asset_url }}" defer></script>
+{% endunless %}
+
+<div
+  id="{{ size_modal_id }}"
+  class="product-size-modal"
+  data-size-modal
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="{{ size_modal_id }}-title"
+>
+  <div class="product-size-modal__overlay" data-size-modal-overlay></div>
+  <div class="product-size-modal__frame">
+    <div class="product-size-modal__panel">
+      <div class="product-size-modal__inner">
+        <button type="button" class="product-size-modal__close" data-size-modal-close aria-label="Close size guide">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M4.167 10h11.666M10 4.167L15.833 10 10 15.833" />
+          </svg>
+        </button>
+
+        <div class="product-size-modal__head">
+          <p id="{{ size_modal_id }}-title" class="product-size-modal__title">Size guide</p>
+
+          <div class="product-size-modal__labels">
+            <div class="product-size-modal__label">EU</div>
+            <div class="product-size-modal__label">US Men</div>
+            <div class="product-size-modal__label">UK</div>
+          </div>
+        </div>
+
+        <div class="product-size-modal__content">
+          {% if use_dynamic_content %}
+            <div class="product-size-modal__dynamic-content">
+              {{ size_guide_content }}
+            </div>
+          {% else %}
+            {% assign eu_sizes = '35.5|36|36.5|37.5|38|38.5|39|40|40.5|41|42|42.5|43|44|44.5|45|45.5|46|47|47.5|48|48.5|49.5' | split: '|' %}
+            {% assign us_men_sizes = '3.5|4|4.5|5|5.5|6|6.5|7|7.5|8|8.5|9|9.5|10|10.5|11|11.5|12|12.5|13|14|15|16' | split: '|' %}
+            {% assign uk_sizes = '3|3.5|4|4.5|5|5.5|6|6.5|7|7.5|8|8.5|9|9.5|10|10.5|11|11.5|12|12.5|13|14|15' | split: '|' %}
+
+            <div class="product-size-modal__size-columns" role="table" aria-label="Size guide table">
+              <ul class="product-size-modal__size-column" role="rowgroup">
+                {% for size in eu_sizes %}
+                  <li class="product-size-modal__size-cell" role="row">
+                    <span role="cell">{{ size }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+
+              <ul class="product-size-modal__size-column" role="rowgroup">
+                {% for size in us_men_sizes %}
+                  <li class="product-size-modal__size-cell" role="row">
+                    <span role="cell">{{ size }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+
+              <ul class="product-size-modal__size-column" role="rowgroup">
+                {% for size in uk_sizes %}
+                  <li class="product-size-modal__size-cell" role="row">
+                    <span role="cell">{{ size }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

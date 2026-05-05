@@ -1,0 +1,355 @@
+{%- liquid
+  assign collection_intro = collection.metafields.custom.collection_intro.value | default: collection.description
+  assign collection_editorial = collection.metafields.custom.collection_editorial.value
+  assign collection_faq_items = collection.metafields.custom.collection_faq_items.value
+  assign collection_related_collections = collection.metafields.custom.related_collections.value
+  assign collection_internal_links = collection.metafields.custom.collection_internal_links.value
+-%}
+
+{% comment %}
+  TODO: Collection contract.
+  Required metafields/metaobjects:
+  - collection.custom.collection_intro (rich text)
+  - collection.custom.collection_editorial (rich text)
+  - collection.custom.collection_faq_items (list.metaobject_reference with question/answer)
+  - collection.custom.related_collections (list.collection_reference)
+  - collection.custom.collection_internal_links (list.metaobject_reference with title/url)
+{% endcomment %}
+
+<div
+  class="main-collection color-{{ section.settings.color_scheme }}"
+  style="
+    --margin-top: {{ section.settings.margin_top }}px;
+    --margin-bottom: {{ section.settings.margin_bottom }}px;
+  "
+  data-ref="main-collection"
+>
+  <div
+    class="main-collection__inner page-width"
+    style="
+      --padding-top: {{ section.settings.padding_top }}px;
+      --padding-bottom: {{ section.settings.padding_bottom }}px;
+    "
+  >
+    <header class="main-collection__header" data-commerce-collection-header>
+      <nav class="commerce-breadcrumbs" aria-label="Breadcrumb">
+        <a class="link" href="{{ routes.root_url }}">Home</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ collection.title }}</span>
+      </nav>
+      <h1 class="main-collection__title">{{ collection.title }}</h1>
+      {% if collection_intro != blank %}
+        <div class="main-collection__intro rte">
+          {{ collection_intro }}
+        </div>
+      {% endif %}
+    </header>
+
+    {% content_for 'block', type: 'filters-and-sort', id: 'filters' %}
+
+    <div class="main-collection__products" data-ref="main-collection-products">
+      {% paginate collection.products by section.settings.products_per_page %}
+        <p class="main-collection__result-count" data-commerce-result-count>
+          {{ paginate.items }} results
+        </p>
+
+        <div
+          class="main-collection__products-grid"
+          style="
+            --grid-columns: {{ section.settings.grid_columns }};
+            --grid-columns-mobile: {{ section.settings.grid_columns_mobile }};
+          "
+          data-ref="main-collection-grid"
+        >
+          {% if collection.products.size > 0 %}
+            {% for product in collection.products %}
+              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+            {% endfor %}
+          {% else %}
+            <p class="main-collection__empty">{{ 'collections.empty' | t }}</p>
+          {% endif %}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          {% render 'pagination', paginate_object: paginate %}
+        {%- endif -%}
+      {% endpaginate %}
+    </div>
+
+    {% if collection_editorial != blank %}
+      <section class="main-collection__editorial rte">
+        {{ collection_editorial }}
+      </section>
+    {% endif %}
+
+    {% if collection_related_collections != blank or collection_internal_links != blank %}
+      <section class="main-collection__related-links">
+        <h2 class="main-collection__related-title">Related links</h2>
+        <ul class="main-collection__related-list">
+          {% for related_collection in collection_related_collections limit: 10 %}
+            {% if related_collection.url != blank %}
+              <li><a class="link" href="{{ related_collection.url }}">{{ related_collection.title }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% for related_link in collection_internal_links limit: 10 %}
+            {% liquid
+              assign related_url = related_link.url.value | default: related_link.url
+              assign related_title = related_link.title.value | default: related_link.title
+            %}
+            {% if related_url != blank and related_title != blank %}
+              <li><a class="link" href="{{ related_url }}">{{ related_title }}</a></li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    {% if collection_faq_items != blank %}
+      <section class="main-collection__faq" data-commerce-faq-visible>
+        <h2>Frequently asked questions</h2>
+        {% for faq_item in collection_faq_items limit: 10 %}
+          {% liquid
+            assign faq_question = faq_item.question.value | default: faq_item.question | default: faq_item.title.value | default: faq_item.title
+            assign faq_answer = faq_item.answer.value | default: faq_item.answer | default: faq_item.content.value | default: faq_item.content
+          %}
+          {% if faq_question != blank and faq_answer != blank %}
+            <details class="main-collection__faq-item">
+              <summary>{{ faq_question }}</summary>
+              <div class="rte">{{ faq_answer }}</div>
+            </details>
+          {% endif %}
+        {% endfor %}
+      </section>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .shopify-section-main-collection {
+    overflow: visible;
+  }
+
+  .main-collection {
+    margin-top: var(--margin-top);
+    margin-bottom: var(--margin-bottom);
+  }
+
+  .main-collection__inner {
+    padding-top: var(--padding-top);
+    padding-bottom: var(--padding-bottom);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+  }
+
+  .main-collection__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+  }
+
+  .commerce-breadcrumbs {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgb(0 0 0 / 65%);
+  }
+
+  .main-collection__title {
+    margin: 0;
+  }
+
+  .main-collection__intro > *:first-child {
+    margin-top: 0;
+  }
+
+  .main-collection__intro > *:last-child {
+    margin-bottom: 0;
+  }
+
+  .main-collection__result-count {
+    margin: 0 0 var(--gap-sm);
+    font-size: var(--font-body--size);
+    color: rgb(0 0 0 / 65%);
+  }
+
+  .main-collection__products-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns-mobile), 1fr);
+    column-gap: var(--grid-gap-vertical);
+    row-gap: var(--grid-gap-horizontal);
+  }
+
+  .main-collection__editorial,
+  .main-collection__related-links,
+  .main-collection__faq {
+    padding-top: var(--gap-sm);
+    border-top: 1px solid rgb(0 0 0 / 8%);
+  }
+
+  .main-collection__related-title,
+  .main-collection__faq h2 {
+    margin: 0 0 var(--gap-sm);
+  }
+
+  .main-collection__related-list {
+    margin: 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 8px;
+  }
+
+  .main-collection__faq-item + .main-collection__faq-item {
+    margin-top: 8px;
+  }
+
+  @media (width > 750px) {
+    .main-collection:has(.filter-and-sort--inline) .main-collection__inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-lg);
+    }
+
+    .main-collection:has(.filter-and-sort--sidebar) .main-collection__inner {
+      display: grid;
+      grid-template-columns: 25% calc(75% - var(--gap-lg));
+      gap: var(--gap-lg);
+    }
+
+    .main-collection:has(.filter-and-sort--sidebar) .main-collection__header,
+    .main-collection:has(.filter-and-sort--sidebar) .main-collection__editorial,
+    .main-collection:has(.filter-and-sort--sidebar) .main-collection__related-links,
+    .main-collection:has(.filter-and-sort--sidebar) .main-collection__faq {
+      grid-column: 1 / -1;
+    }
+
+    .main-collection:has(.filter-and-sort--sidebar) .filter-and-sort {
+      grid-column: 1;
+    }
+
+    .main-collection:has(.filter-and-sort--sidebar) .main-collection__products {
+      grid-column: 2;
+    }
+
+    .main-collection__products-grid {
+      grid-template-columns: repeat(var(--grid-columns), 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:collection",
+  "class": "shopify-section-main-collection",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:content"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "t:products_per_page",
+      "default": 24,
+      "min": 10,
+      "max": 40,
+      "step": 2
+    },
+    {
+      "type": "header",
+      "content": "t:style_desktop"
+    },
+    {
+      "type": "range",
+      "id": "grid_columns",
+      "label": "t:layout_grid_columns",
+      "default": 4,
+      "min": 2,
+      "max": 5,
+      "step": 1
+    },
+    {
+      "type": "header",
+      "content": "t:style_mobile"
+    },
+    {
+      "type": "select",
+      "id": "grid_columns_mobile",
+      "label": "t:layout_grid_columns",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "t:paddings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:padding_top",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:padding_bottom",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "header",
+      "content": "t:margins"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "t:margin_top",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "t:margin_bottom",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "header",
+      "content": "t:go_further"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:go_further_description"
+    }
+  ]
+}
+{% endschema %}
