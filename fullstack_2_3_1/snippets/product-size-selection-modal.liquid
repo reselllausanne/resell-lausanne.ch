@@ -161,10 +161,12 @@
             endif
 
             assign express_price_cents = variant.price
+            assign express_price_defined = false
             if variant.metafields.custom.express_price != blank
               assign exp_mv = variant.metafields.custom.express_price.value
               if exp_mv.amount != blank
                 assign express_price_cents = exp_mv.amount | times: 100 | round
+                assign express_price_defined = true
               elsif exp_mv != blank
                 assign exp_mv_str = exp_mv | append: '' | strip
                 if exp_mv_str contains '.'
@@ -172,7 +174,12 @@
                 else
                   assign express_price_cents = exp_mv_str | plus: 0
                 endif
+                assign express_price_defined = true
               endif
+            endif
+
+            if express_price_defined == false
+              assign express_available = false
             endif
 
             assign std_min = 5
@@ -219,8 +226,8 @@
             "price": {{ variant.price }},
             "priceFormatted": {{ variant.price | money | json }},
             "expressAvailable": {{ express_available | json }},
-            "expressPriceCents": {{ express_price_cents }},
-            "expressPriceFormatted": {{ express_price_formatted | strip | json }},
+            "expressPriceCents": {% if express_price_defined %}{{ express_price_cents }}{% else %}null{% endif %},
+            "expressPriceFormatted": {% if express_price_defined %}{{ express_price_formatted | strip | json }}{% else %}null{% endif %},
             "standardMin": {{ std_min | json }},
             "standardMax": {{ std_max | json }},
             "expressLabel": {{ express_label | json }},
