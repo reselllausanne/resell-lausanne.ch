@@ -4,45 +4,244 @@
   assign size_option_index = 0
   assign size_option_name = ''
   assign has_size_option = false
+  assign numeric_option_index = -1
+  assign numeric_option_matches = 0
+  assign largest_option_values_count = 0
 
-  for opt in product.options
-    unless has_size_option
-      assign opt_down = opt | downcase
-      if opt_down contains 'size' or opt_down contains 'taille' or opt_down contains 'pointure'
-        assign has_size_option = true
-        assign size_option_name = opt
-        assign size_option_index = forloop.index0
+  for opt in product.options_with_values
+    assign option_values_count = opt.values | size
+    if option_values_count > largest_option_values_count
+      assign largest_option_values_count = option_values_count
+    endif
+
+    assign option_has_numeric_value = false
+    for option_value in opt.values
+      assign option_value_token = option_value | append: '' | strip
+      assign option_value_token_clean = option_value_token | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' | remove: ' ' | remove: '.' | remove: ',' | remove: '/' | remove: '-'
+      if option_value_token != blank and option_value_token_clean == blank
+        assign option_has_numeric_value = true
+        break
       endif
-    endunless
+    endfor
+
+    if option_has_numeric_value
+      assign numeric_option_matches = numeric_option_matches | plus: 1
+      assign numeric_option_index = forloop.index0
+    endif
   endfor
 
-  assign fit_note = 'Take your usual size.'
-  if product.metafields.custom.fit_note != blank and product.metafields.custom.fit_note.value != blank
-    assign fit_note = product.metafields.custom.fit_note.value
+  assign size_option_index = -1
+  if product.options_with_values.size == 1
+    assign size_option_index = 0
+  elsif numeric_option_matches == 1
+    assign size_option_index = numeric_option_index
+  elsif largest_option_values_count > 1
+    for opt in product.options_with_values
+      if opt.values.size == largest_option_values_count
+        assign size_option_index = forloop.index0
+        break
+      endif
+    endfor
   endif
 
-  assign delivery_prefix = product.metafields.custom.delivery_promise_prefix.value | default: 'Delivered in'
-  assign shipping_method_label = product.metafields.custom.shipping_method_label.value | default: 'Shipping method'
+  if size_option_index >= 0
+    assign has_size_option = true
+    for opt in product.options_with_values
+      if forloop.index0 == size_option_index
+        assign size_option_name = opt.name
+        break
+      endif
+    endfor
+  endif
+
+  capture fit_note
+    render 'rs-product-fit-note', product: product
+  endcapture
+  assign fit_note = fit_note | strip
+
+  assign sm_free_shipping = 'products.pdp.size_modal.free_shipping_ch' | t
+  assign sm_size_guide = 'products.pdp.size_modal.size_guide' | t
+  assign sm_sizes_aria = 'products.pdp.size_modal.sizes_aria' | t
+  assign sm_unit_aria = 'products.pdp.size_modal.unit_aria' | t
+  assign sm_show_all_sizes = 'products.pdp.size_modal.show_all_sizes' | t
+  assign sm_add_to_cart = 'products.add_to_cart' | t
+  assign sm_hero_sub_range = 'products.pdp.size_modal.hero_sub_range' | t
+  assign sm_express_promise_default = 'products.pdp.size_modal.express_promise_default' | t
+  assign sm_promo_powerpay = 'products.pdp.size_modal.promo_powerpay' | t
+  assign sm_promo_free = 'products.pdp.size_modal.promo_free' | t
+  assign sm_promo_fast = 'products.pdp.size_modal.promo_fast' | t
+  assign sm_cart_added = 'products.pdp.size_modal.cart_added' | t
+  assign sm_delivery_option = 'products.pdp.size_modal.delivery_option' | t
+  assign sm_continue_checkout = 'products.pdp.size_modal.continue_checkout' | t
+  assign sm_close_aria = 'products.pdp.size_modal.close_aria' | t
+
+  assign shipping_method_label = product.metafields.custom.shipping_method_label.value | default: 'Livraison'
   assign shipping_standard_label = product.metafields.custom.shipping_standard_label.value | default: 'Standard'
-  assign shipping_express_label = product.metafields.custom.shipping_express_label.value | default: 'Express'
+  capture rs_shipping_express_label_raw
+    render 'rs-metafield-text', metafield: product.metafields.custom.shipping_express_label
+  endcapture
+  assign rs_shipping_express_label_raw = rs_shipping_express_label_raw | strip
+  if rs_shipping_express_label_raw != blank
+    assign shipping_express_label = rs_shipping_express_label_raw
+  else
+    assign shipping_express_label = 'products.pdp.size_modal.express_shipping' | t
+  endif
+
+  assign modal_48h_picto_src = 'rl-picto-48h.svg' | asset_url
+  if product.metafields.custom.delivery_48h_picto.value != blank
+    assign modal_48h_picto_src = product.metafields.custom.delivery_48h_picto.value | image_url: width: 100
+  endif
+
+  capture rs_soldes_48h_flag
+    render 'rs-soldes-48h-signal', product: product
+  endcapture
+  capture rs_48h_delivery_flag
+    render 'rs-48h-delivery-signal', product: product
+  endcapture
+  assign rs_soldes_48h_active = false
+  assign rs_48h_delivery_active = false
+  if rs_soldes_48h_flag != blank
+    assign rs_soldes_48h_active = true
+  endif
+  if rs_48h_delivery_flag != blank
+    assign rs_48h_delivery_active = true
+  endif
+  assign product_in_fast_delivery_collection = rs_soldes_48h_active
+
+  assign express_delivery_promise_default = ''
+  if product.metafields.custom.express_delivery_promise.value != blank
+    assign express_delivery_promise_default = product.metafields.custom.express_delivery_promise.value | append: '' | strip
+  elsif product.metafields.custom.delivery_estimation_text.value != blank
+    assign express_delivery_promise_default = product.metafields.custom.delivery_estimation_text.value | append: '' | strip
+  elsif product.metafields.custom.delivery_between_text.value != blank
+    assign express_delivery_promise_default = product.metafields.custom.delivery_between_text.value | append: '' | strip
+  elsif product.metafields.custom.delivery_promise_prefix.value != blank
+    assign express_delivery_promise_default = product.metafields.custom.delivery_promise_prefix.value | append: '' | strip
+  elsif rs_shipping_express_label_raw != blank
+    assign rs_shipping_express_label = rs_shipping_express_label_raw | downcase
+    if rs_shipping_express_label contains '48'
+      assign express_delivery_promise_default = rs_shipping_express_label_raw
+    endif
+  endif
+
+  assign product_has_48h_signal = false
+  if rs_soldes_48h_active or rs_48h_delivery_active
+    assign product_has_48h_signal = true
+  endif
+  if express_delivery_promise_default != blank
+    assign product_has_48h_signal = true
+  endif
+  if product_has_48h_signal and express_delivery_promise_default == blank
+    assign express_delivery_promise_default = '48H'
+  endif
+
+  comment
+    Variant-level custom.delivery_48h marks the sizes physically held in the
+    Bussigny warehouse. When at least one variant carries it, 48h is decided
+    per variant and the product-level signal must not blanket the others,
+    otherwise sizes sourced externally would promise a 48h delivery.
+  endcomment
+  assign product_has_variant_48h_flag = false
+  for variant_48h_probe in product.variants
+    if variant_48h_probe.metafields.custom.delivery_48h.value == true
+      assign product_has_variant_48h_flag = true
+      break
+    endif
+  endfor
+  assign product_48h_blankets_variants = product_has_48h_signal
+  if product_has_variant_48h_flag
+    assign product_48h_blankets_variants = false
+  endif
+
+  capture modal_price_snapshot
+    render 'rs-product-price-snapshot', product: product
+  endcapture
+  assign modal_price_parts = modal_price_snapshot | strip | split: '|'
+  assign modal_product_is_free = false
+  assign modal_product_has_valid_prices = false
+  assign modal_fallback_price = 0
+  if modal_price_parts[6] == '1'
+    assign modal_product_is_free = true
+  endif
+  if modal_price_parts[8] == '1'
+    assign modal_product_has_valid_prices = true
+    assign modal_fallback_price = modal_price_parts[2] | plus: 0
+  endif
+
+  assign socks_product = all_products['nike-everyday-plus-cushioned-crew-socks-6-pairs-white']
+  assign socks_upsell_handles = 'nike-everyday-plus-cushioned-crew-socks-6-pairs-white,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,alo-unisex-half-crew-throwback-sock-black-white,alo-unisex-half-crew-throwback-sock-white-black,fluffy-laces' | split: ','
+  assign apparel_upsell_product = blank
+  if product.metafields.custom.size_modal_upsell_product.value != blank
+    assign apparel_upsell_product = product.metafields.custom.size_modal_upsell_product.value
+  elsif product.metafields.custom.matching_short.value != blank
+    assign apparel_upsell_product = product.metafields.custom.matching_short.value
+  elsif product.metafields.custom.matching_shorts.value != blank
+    assign apparel_upsell_product = product.metafields.custom.matching_shorts.value
+  elsif product.metafields.custom.matching_tshirt.value != blank
+    assign apparel_upsell_product = product.metafields.custom.matching_tshirt.value
+  elsif product.metafields.custom.matching_t_shirt.value != blank
+    assign apparel_upsell_product = product.metafields.custom.matching_t_shirt.value
+  elsif product.metafields.custom.size_modal_upsell_handle.value != blank
+    assign apparel_upsell_handle = product.metafields.custom.size_modal_upsell_handle.value | append: '' | strip
+    assign apparel_upsell_product = all_products[apparel_upsell_handle]
+  endif
+  if apparel_upsell_product == blank
+    assign product_id_string = product.id | append: ''
+    case product_id_string
+      when '15340410896770'
+        assign apparel_upsell_product = all_products['essentials-tee-light-oatmeal-ss22']
+      when '15349630501250'
+        assign apparel_upsell_product = all_products['essentials-shorts-light-oatmeal-ss22']
+      when '15340411617666'
+        assign apparel_upsell_product = all_products['essentials-shorts-stretch-limo-ss22']
+      when '15340410732930'
+        assign apparel_upsell_product = all_products['fear-of-god-essentials-jersey-crewneck-t-shirt-black']
+        if apparel_upsell_product == blank
+          assign apparel_upsell_product = all_products['fear-of-god-essentials-jersey-crewneck-t-shirt-black-1']
+        endif
+    endcase
+  endif
+  if apparel_upsell_product != blank and apparel_upsell_product.id == product.id
+    assign apparel_upsell_product = blank
+  endif
+  assign apparel_upsell_size_option_index = 0
+  if apparel_upsell_product != blank and apparel_upsell_product.options_with_values.size > 1
+    assign current_size_option_name_down = size_option_name | downcase
+    for opt in apparel_upsell_product.options_with_values
+      assign apparel_opt_name_down = opt.name | downcase
+      if apparel_opt_name_down == current_size_option_name_down or apparel_opt_name_down == 'size' or apparel_opt_name_down == 'taille'
+        assign apparel_upsell_size_option_index = forloop.index0
+        break
+      endif
+    endfor
+  endif
+  assign initial_cart_upsell_product = apparel_upsell_product
+  if initial_cart_upsell_product == blank
+    assign initial_cart_upsell_product = socks_product
+  endif
+  assign protection_product = all_products['protection-du-colis']
+  assign protection_variant = protection_product.selected_or_first_available_variant
+  assign protection_subtitle = 'Livraison premium avec assurance incluse'
+
+  assign signature_product = all_products['livraison-sous-signature']
+  if signature_product == blank
+    assign signature_product = all_products['sous-signature']
+  endif
+  assign signature_variant = signature_product.selected_or_first_available_variant
 %}
 
 {% if has_size_option and product.has_only_default_variant == false %}
   {{ 'product-size-selection-modal.css' | asset_url | stylesheet_tag }}
-  <script src="{{ 'product-size-selection-modal.js' | asset_url }}" defer></script>
 
   {% comment %}
-    TODO: Variant delivery contract (metafield definitions):
-    - variant.custom.standard_delivery_min (number_integer)
-    - variant.custom.standard_delivery_max (number_integer)
-    - variant.custom.express_available (boolean)
-    - variant.custom.express_delivery_label (single_line_text)
-    - variant.custom.express_delivery_exact_date (date)
-    - variant.custom.express_price (money/number)
-    - variant.custom.shipping_group (single_line_text: standard|express|mixed)
-    - variant.custom.us_size (single_line_text)
+    Variant delivery contract:
+    - variant.custom.express_delivery_promise | delivery_estimation_text | delivery_between_text → 48h mode + picto
+    - product.metafields.custom.soldes_48h == true → 48h at product price, no extra fields
+    - product tag soldes-48h / soldes (or soldes collection) → same fallback
+    - variant.custom.express_price (money/number) → optional paid express upgrade on non-soldes products
   {% endcomment %}
 
+  <template id="{{ modal_dom_id }}-tpl">
   <div
     id="{{ modal_dom_id }}"
     class="rs-size-modal"
@@ -55,21 +254,32 @@
   >
     <div class="rs-size-modal__overlay" data-rs-size-modal-overlay tabindex="-1"></div>
 
-    <div class="rs-size-modal__frame">
-      <div class="rs-size-modal__panel" role="document">
-        <div class="rs-size-modal__scroll">
-          <div class="rs-size-modal__inner">
-            <h2 id="{{ modal_dom_id }}-title" class="rs-size-modal__product-title">
-              {{ product.title | escape }}
-            </h2>
+    <div class="rs-size-modal__content">
+      <div class="rs-size-modal__background" aria-hidden="true"></div>
+
+      <div
+      class="rs-size-modal__panel"
+      role="document"
+      data-rs-standard-shipping-name="{{ shipping_standard_label | escape }}"
+      data-rs-express-shipping-name="{{ shipping_express_label | escape }}"
+    >
+        <div class="rs-size-modal__main">
+          <div class="rs-size-modal__inner-top">
+            <div class="rs-size-modal__hero">
+              <h2 id="{{ modal_dom_id }}-title" class="rs-size-modal__hero-title" data-rs-modal-hero-title>
+                {{ product.title | escape }}
+              </h2>
+              <p class="rs-size-modal__hero-sub" data-rs-modal-hero-sub hidden>
+                <span data-rs-modal-hero-sub-label>{{ shipping_standard_label | escape }}</span>
+                {{ ' ' }}
+                <span data-rs-modal-hero-sub-range>{{ sm_hero_sub_range | escape }}</span>
+              </p>
+            </div>
 
             <div class="rs-size-modal__toolbar">
-              <div class="rs-size-modal__unit-toggle" role="group" aria-label="Size unit">
+              <div class="rs-size-modal__unit-toggle" role="group" aria-label="{{ sm_unit_aria | escape }}">
                 <button type="button" class="rs-size-modal__unit is-active" data-rs-size-unit="eu" aria-pressed="true">
                   EU
-                </button>
-                <button type="button" class="rs-size-modal__unit" data-rs-size-unit="us" aria-pressed="false">
-                  US
                 </button>
               </div>
               <button
@@ -79,20 +289,32 @@
                 aria-controls="{{ size_guide_modal_id }}"
                 aria-haspopup="dialog"
               >
-                Size guide
+                {{ sm_size_guide | escape }}
               </button>
             </div>
 
-            <div class="rs-size-modal__delivery" data-rs-delivery-row>
-              <span class="rs-size-modal__delivery-dot" aria-hidden="true"></span>
-              <span class="rs-size-modal__delivery-text">{{ delivery_prefix }}</span>
-              <span class="rs-size-modal__delivery-badge" data-rs-express-badge hidden>48h</span>
+            <div class="rs-size-modal__express-legend" data-rs-modal-express-legend hidden>
+              <span class="rs-size-modal__express-legend-dot" aria-hidden="true"></span>
+              <span class="rs-size-modal__express-legend-text" data-rs-modal-express-legend-text>{{ sm_express_promise_default | escape }}</span>
             </div>
 
             <p class="rs-size-modal__fit-note">{{ fit_note | escape }}</p>
+          </div>
 
-            <div class="rs-size-modal__grid" data-rs-size-grid role="listbox" aria-label="Sizes"></div>
-
+          <div class="rs-size-modal__grid-scroller">
+            <div class="rs-size-modal__grid" data-rs-size-grid role="listbox" aria-label="{{ sm_sizes_aria | escape }}"></div>
+          </div>
+          <div class="rs-size-modal__inner-bottom">
+            <button
+              type="button"
+              class="rs-size-modal__show-more"
+              data-rs-size-grid-expand
+              aria-expanded="false"
+              hidden
+            >
+              {{ sm_show_all_sizes | escape }}
+            </button>
+            {% render 'rs-free-shipping-note', class: 'rs-size-modal__free-shipping-note', text: sm_free_shipping %}
             <div class="rs-size-modal__shipping" data-rs-shipping-section>
               <p class="rs-size-modal__shipping-title">{{ shipping_method_label }}</p>
               <div class="rs-size-modal__shipping-cards">
@@ -103,26 +325,46 @@
                   role="radio"
                   aria-checked="true"
                 >
+                  <span class="rs-size-modal__ship-radio" aria-hidden="true"></span>
                   <span class="rs-size-modal__ship-name">{{ shipping_standard_label }}</span>
-                  <span class="rs-size-modal__ship-promise" data-rs-ship-standard-promise></span>
                   <span class="rs-size-modal__ship-price" data-rs-ship-standard-price></span>
                 </button>
                 <button
                   type="button"
-                  class="rs-size-modal__ship-card"
+                  class="rs-size-modal__ship-card rs-size-modal__ship-card--express"
                   data-rs-ship="express"
                   role="radio"
                   aria-checked="false"
                   hidden
                 >
-                  <span class="rs-size-modal__ship-name">{{ shipping_express_label }}</span>
-                  <span class="rs-size-modal__ship-promise" data-rs-ship-express-promise></span>
+                  <span class="rs-size-modal__ship-radio" aria-hidden="true"></span>
+                  <span class="rs-size-modal__ship-head">
+                    <span class="rs-size-modal__ship-name">{{ shipping_express_label | escape }}</span>
+                    <img
+                      class="rs-size-modal__ship-picto-48h"
+                      data-rs-ship-express-picto
+                      src="{{ modal_48h_picto_src }}"
+                      alt=""
+                      width="50"
+                      height="26"
+                      loading="lazy"
+                      decoding="async"
+                      hidden
+                    >
+                  </span>
+                  <span class="rs-size-modal__ship-promise" data-rs-ship-express-promise hidden></span>
                   <span class="rs-size-modal__ship-row">
                     <span class="rs-size-modal__ship-price" data-rs-ship-express-price></span>
-                    <span class="rs-size-modal__ship-badge" data-rs-ship-express-badge>48h</span>
                   </span>
                 </button>
               </div>
+            </div>
+
+            <div class="rs-size-modal__promo" data-rs-modal-promo>
+              <p class="rs-size-modal__promo-line rs-size-modal__promo-line--strong">{{ sm_promo_powerpay | escape }}</p>
+              <p class="rs-size-modal__promo-line">
+                <span class="rs-size-modal__promo-muted">{{ sm_promo_fast | escape | strip }}</span>
+              </p>
             </div>
 
             <button
@@ -131,19 +373,159 @@
               data-rs-modal-atc
               disabled
             >
-              Add to cart
+              {{ sm_add_to_cart | escape }}
             </button>
           </div>
         </div>
 
-        <button type="button" class="rs-size-modal__close-bottom" data-rs-size-modal-close aria-label="Close">
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-            <path fill="currentColor" d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
-          </svg>
-        </button>
+        <div class="rs-size-modal__cart-view" data-rs-modal-cart-view aria-hidden="true">
+          <div class="rs-size-modal__cart-inner">
+            <div class="rs-size-modal__cart-header">
+              <span class="rs-size-modal__cart-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="4 12 10 18 20 6"/>
+                </svg>
+              </span>
+              <p class="rs-size-modal__cart-eyebrow">{{ sm_cart_added | escape }}</p>
+            </div>
+
+            <div class="rs-size-modal__cart-product">
+              <div class="rs-size-modal__cart-product-media">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 200 }}"
+                    alt="{{ product.title | escape }}"
+                    width="80"
+                    height="80"
+                    loading="lazy"
+                    data-rs-modal-cart-image
+                  >
+                {% else %}
+                  <img src="" alt="" width="80" height="80" loading="lazy" data-rs-modal-cart-image>
+                {% endif %}
+              </div>
+
+              <div class="rs-size-modal__cart-product-info">
+                <p class="rs-size-modal__cart-product-title" data-rs-modal-cart-title>
+                  {{- product.title | escape -}}
+                </p>
+                <p class="rs-size-modal__cart-product-meta">
+                  <span data-rs-modal-cart-variant></span>
+                  <span class="rs-size-modal__cart-product-sep" aria-hidden="true">-</span>
+                  <span data-rs-modal-cart-price></span>
+                </p>
+                <p class="rs-size-modal__cart-delivery">
+                  <span class="rs-size-modal__cart-delivery-label" data-rs-modal-cart-delivery-label>{{ shipping_method_label | escape }}</span>
+                  <img
+                    class="rs-size-modal__cart-delivery-picto"
+                    data-rs-modal-cart-delivery-picto
+                    src="{{ modal_48h_picto_src }}"
+                    alt=""
+                    width="50"
+                    height="26"
+                    loading="lazy"
+                    decoding="async"
+                    hidden
+                  >
+                  <span class="rs-size-modal__cart-delivery-badge" data-rs-modal-cart-delivery-badge hidden></span>
+                </p>
+              </div>
+            </div>
+
+            {% render 'rs-free-shipping-note', class: 'rs-size-modal__free-shipping-note rs-size-modal__free-shipping-note--cart', text: sm_free_shipping %}
+
+            {%- if signature_product != blank and signature_variant != blank -%}
+              <div class="rs-size-modal__cart-delivery-options" data-rs-modal-cart-delivery-options>
+                <p class="rs-size-modal__shipping-title">{{ sm_delivery_option | escape }}</p>
+                <div class="rs-size-modal__shipping-cards rs-size-modal__cart-delivery-cards">
+                  <button
+                    type="button"
+                    class="rs-size-modal__ship-card is-selected"
+                    data-rs-cart-ship="standard"
+                    role="radio"
+                    aria-checked="true"
+                  >
+                    <span class="rs-size-modal__ship-radio" aria-hidden="true"></span>
+                    <span class="rs-size-modal__ship-name">{{ shipping_standard_label | escape }}</span>
+                    <span class="rs-size-modal__ship-price" data-rs-cart-ship-standard-price></span>
+                  </button>
+                  <button
+                    type="button"
+                    class="rs-size-modal__ship-card"
+                    data-rs-cart-ship="signature"
+                    role="radio"
+                    aria-checked="false"
+                    {% unless signature_variant.available %}disabled{% endunless %}
+                  >
+                    <span class="rs-size-modal__ship-radio" aria-hidden="true"></span>
+                    <span class="rs-size-modal__ship-name">Sous signature</span>
+                    <span class="rs-size-modal__ship-promise">Remise contre signature</span>
+                    <span class="rs-size-modal__ship-price">{{ signature_variant.price | money_without_trailing_zeros }}</span>
+                  </button>
+                </div>
+              </div>
+            {%- endif -%}
+
+            <div class="rs-size-modal__cart-upsell-list">
+              <p class="rs-size-modal__cart-upsell-heading">Complétez votre panier</p>
+
+              <div data-rs-modal-cart-upsells></div>
+
+            {%- if protection_product != blank and protection_variant != blank -%}
+              <div class="rs-size-modal__cart-upsell rs-size-modal__cart-upsell--protection" data-rs-modal-protection-upsell>
+                <div class="rs-size-modal__cart-upsell-row" data-rs-modal-protection-upsell-row>
+                  <div class="rs-size-modal__cart-upsell-media" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 2.5L4.5 6v5.5c0 4.7 3.2 9.1 7.5 10 4.3-.9 7.5-5.3 7.5-10V6L12 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                      <path d="M9 12.2l2 2 4.2-4.4" stroke="#2f9e8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+
+                  <div class="rs-size-modal__cart-upsell-info">
+                    <p class="rs-size-modal__cart-upsell-title">{{ protection_product.title | escape }}</p>
+                    <p class="rs-size-modal__cart-upsell-price">{{ protection_variant.price | money_without_trailing_zeros }}</p>
+                    {%- if protection_subtitle != blank -%}
+                      <p class="rs-size-modal__cart-upsell-sub">{{ protection_subtitle | escape }}</p>
+                    {%- endif -%}
+                  </div>
+
+                  <button
+                    type="button"
+                    class="rs-size-modal__cart-upsell-add"
+                    data-rs-modal-protection-add
+                    aria-pressed="false"
+                    aria-label="Ajouter {{ protection_product.title | escape }}"
+                    {% unless protection_variant.available %}disabled{% endunless %}
+                  >
+                    <span class="rs-size-modal__cart-upsell-add-icon" data-rs-modal-protection-add-icon aria-hidden="true">+</span>
+                  </button>
+                </div>
+              </div>
+            {%- endif -%}
+
+            </div>
+          </div>
+
+          <div class="rs-size-modal__cart-footer">
+            <a
+              href="/checkout"
+              class="rs-size-modal__cart-cta rs-size-modal__cart-cta--primary"
+              data-rs-modal-cart-checkout
+            >
+              {{ sm_continue_checkout | escape }}
+            </a>
+          </div>
+        </div>
       </div>
+
+      <button type="button" class="rs-size-modal__close-fab" data-rs-size-modal-close aria-label="{{ sm_close_aria | escape }}">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
     </div>
   </div>
+  </template>
 
   <script type="application/json" id="{{ modal_dom_id }}-payload">
     {
@@ -151,13 +533,107 @@
       "sizeOptionIndex": {{ size_option_index }},
       "sizeOptionName": {{ size_option_name | json }},
       "optionNames": {{ product.options | json }},
+      "productId": {{ product.id | json }},
+      "productHandle": {{ product.handle | json }},
       "productTitle": {{ product.title | json }},
+      "productImage": {{ product.featured_image | image_url: width: 200 | json }},
+      "expressDeliveryPromiseDefault": {{ express_delivery_promise_default | json }},
+      "i18n": {
+        "addToCart": {{ sm_add_to_cart | json }},
+        "deliveryLabel": {{ shipping_method_label | json }},
+        "expressPromiseDefault": {{ sm_express_promise_default | json }},
+        "selectSizeDesktop": {{ 'products.pdp.size_modal.select_size_desktop' | t | json }},
+        "selectSizeMobile": {{ 'products.pdp.size_modal.select_size_mobile' | t | json }}
+      },
+      "apparelUpsell": {% if apparel_upsell_product != blank and apparel_upsell_product.variants.size > 0 %}{
+        "productId": {{ apparel_upsell_product.id | json }},
+        "title": {{ apparel_upsell_product.title | json }},
+        "image": {{ apparel_upsell_product.featured_image | image_url: width: 160 | json }},
+        "sizeOptionIndex": {{ apparel_upsell_size_option_index }},
+        "optionNames": {{ apparel_upsell_product.options | json }},
+        "variants": [
+          {%- for apparel_variant in apparel_upsell_product.variants -%}
+            {% liquid
+              assign apparel_variant_size_label = apparel_variant.title
+              if apparel_upsell_product.options.size > 1
+                assign apparel_variant_size_label = apparel_variant.options[apparel_upsell_size_option_index]
+              endif
+            %}
+            {
+              "id": {{ apparel_variant.id | json }},
+              "sizeLabel": {{ apparel_variant_size_label | json }},
+              "options": {{ apparel_variant.options | json }},
+              "priceFormatted": {{ apparel_variant.price | money_without_trailing_zeros | json }},
+              "available": {{ apparel_variant.available | json }}
+            }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        ]
+      }{% else %}null{% endif %},
+      "socksUpsell": {% if socks_product != blank and socks_product.variants.size > 0 %}{
+        "productId": {{ socks_product.id | json }},
+        "title": {{ socks_product.title | json }},
+        "image": {{ socks_product.featured_image | image_url: width: 160 | json }},
+        "variants": [
+          {%- for sock_variant in socks_product.variants -%}
+            {
+              "id": {{ sock_variant.id | json }},
+              "sizeLabel": {{ sock_variant.title | json }},
+              "priceFormatted": {{ sock_variant.price | money_without_trailing_zeros | json }},
+              "available": {{ sock_variant.available | json }}
+            }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        ]
+      }{% else %}null{% endif %},
+      "cartUpsells": [
+        {%- assign cart_upsell_first = true -%}
+        {%- for cart_upsell_handle in socks_upsell_handles -%}
+          {%- assign cart_upsell_product = all_products[cart_upsell_handle] -%}
+          {%- if cart_upsell_product != blank and cart_upsell_product.variants.size > 0 -%}
+            {%- unless cart_upsell_first -%},{%- endunless -%}
+            {
+              "productId": {{ cart_upsell_product.id | json }},
+              "title": {{ cart_upsell_product.title | json }},
+              "image": {{ cart_upsell_product.featured_image | image_url: width: 160 | json }},
+              "variants": [
+                {%- for cart_upsell_variant in cart_upsell_product.variants -%}
+                  {
+                    "id": {{ cart_upsell_variant.id | json }},
+                    "sizeLabel": {{ cart_upsell_variant.title | json }},
+                    "image": {%- if cart_upsell_variant.image != blank -%}{{ cart_upsell_variant.image | image_url: width: 160 | json }}{%- else -%}null{%- endif -%},
+                    "priceFormatted": {{ cart_upsell_variant.price | money_without_trailing_zeros | json }},
+                    "available": {{ cart_upsell_variant.available | json }}
+                  }{%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+              ]
+            }
+            {%- assign cart_upsell_first = false -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ],
+      "protectionUpsell": {% if protection_product != blank and protection_variant != blank %}{
+        "productId": {{ protection_product.id | json }},
+        "variantId": {{ protection_variant.id | json }},
+        "title": {{ protection_product.title | json }},
+        "priceFormatted": {{ protection_variant.price | money_without_trailing_zeros | json }},
+        "available": {{ protection_variant.available | json }}
+      }{% else %}null{% endif %},
+      "signature": {% if signature_product != blank and signature_variant != blank %}{
+        "variantId": {{ signature_variant.id | json }},
+        "title": {{ signature_product.title | json }},
+        "priceFormatted": {{ signature_variant.price | money_without_trailing_zeros | json }},
+        "available": {{ signature_variant.available | json }}
+      }{% else %}null{% endif %},
       "variants": [
         {% for variant in product.variants %}
           {% liquid
             assign express_available = false
             if variant.metafields.custom.express_available.value == true
               assign express_available = true
+            endif
+
+            assign variant_is_48h_stock = false
+            if variant.metafields.custom.delivery_48h.value == true
+              assign variant_is_48h_stock = true
             endif
 
             assign express_price_cents = variant.price
@@ -178,27 +654,18 @@
               endif
             endif
 
+            if express_price_defined == false and variant_is_48h_stock
+              assign express_price_cents = variant.price
+              assign express_price_defined = true
+              assign express_available = true
+            endif
+
             if express_price_defined == false
               assign express_available = false
             endif
-
-            assign std_min = 5
-            assign std_max = 10
-            if variant.metafields.custom.standard_delivery_min.value != blank
-              assign std_min = variant.metafields.custom.standard_delivery_min.value
-            endif
-            if variant.metafields.custom.standard_delivery_max.value != blank
-              assign std_max = variant.metafields.custom.standard_delivery_max.value
-            endif
-
-            assign express_label = '48h'
-            if variant.metafields.custom.express_delivery_label.value != blank
-              assign express_label = variant.metafields.custom.express_delivery_label.value
-            endif
-
-            assign express_exact_date = ''
-            if variant.metafields.custom.express_delivery_exact_date.value != blank
-              assign express_exact_date = variant.metafields.custom.express_delivery_exact_date.value | date: '%Y-%m-%d'
+            if express_price_defined and express_price_cents <= 0
+              assign express_price_defined = false
+              assign express_available = false
             endif
 
             assign shipping_group = ''
@@ -206,32 +673,77 @@
               assign shipping_group = variant.metafields.custom.shipping_group.value | downcase
             endif
 
-            assign us_size = ''
-            if variant.metafields.custom.us_size.value != blank
-              assign us_size = variant.metafields.custom.us_size.value | append: '' | strip
+            assign delivery_estimation_text = ''
+            if variant.metafields.custom.delivery_estimation_text.value != blank
+              assign delivery_estimation_text = variant.metafields.custom.delivery_estimation_text.value | append: '' | strip
+            endif
+
+            assign delivery_between_text = ''
+            if variant.metafields.custom.delivery_between_text.value != blank
+              assign delivery_between_text = variant.metafields.custom.delivery_between_text.value | append: '' | strip
+            endif
+
+            assign express_delivery_label = ''
+            if variant.metafields.custom.express_delivery_label.value != blank
+              assign express_delivery_label = variant.metafields.custom.express_delivery_label.value | append: '' | strip
+            endif
+
+            assign express_custom_promise = ''
+            if variant.metafields.custom.express_delivery_promise.value != blank
+              assign express_custom_promise = variant.metafields.custom.express_delivery_promise.value | append: '' | strip
+            elsif delivery_estimation_text != blank
+              assign express_custom_promise = delivery_estimation_text
+            elsif delivery_between_text != blank
+              assign express_custom_promise = delivery_between_text
+            endif
+
+            comment
+              48h delivery is ONLY variant.custom.delivery_48h (Bussigny stock).
+              soldes_48h / show_48h_picto are campaign/picto flags and must never
+              promise a 48h delivery — Nike Air Max Plus Triple Black had
+              soldes_48h=true with physical_in_stock=false and was falsely
+              advertising 48h on StockX sizes (e.g. 39 EU express CHF 279).
+            endcomment
+            assign express_is_48h = false
+            if variant_is_48h_stock
+              assign express_is_48h = true
+              if express_custom_promise == blank
+                assign express_custom_promise = '48H'
+              endif
             endif
 
             assign size_value = variant.options[size_option_index]
+            assign variant_standard_price = variant.price
+            assign variant_available_for_display = variant.available
+            if modal_product_is_free == false and variant_standard_price <= 0
+              assign variant_available_for_display = false
+              if modal_product_has_valid_prices
+                assign variant_standard_price = modal_fallback_price
+              endif
+            endif
 
             capture express_price_formatted
-              echo express_price_cents | money
+              echo express_price_cents | money_without_trailing_zeros
             endcapture
           %}
           {
             "id": {{ variant.id | json }},
-            "available": {{ variant.available | json }},
+            "available": {{ variant_available_for_display | json }},
             "options": {{ variant.options | json }},
             "sizeValue": {{ size_value | json }},
-            "usSize": {{ us_size | json }},
-            "price": {{ variant.price }},
-            "priceFormatted": {{ variant.price | money | json }},
+            "price": {{ variant_standard_price }},
+            "priceFormatted": {{ variant_standard_price | money_without_trailing_zeros | json }},
+            "compareAtPrice": {% if variant.compare_at_price > variant_standard_price and variant.compare_at_price > 0 %}{{ variant.compare_at_price }}{% else %}null{% endif %},
+            "compareAtPriceFormatted": {% if variant.compare_at_price > variant_standard_price and variant.compare_at_price > 0 %}{{ variant.compare_at_price | money_without_trailing_zeros | json }}{% else %}null{% endif %},
             "expressAvailable": {{ express_available | json }},
+            "expressPriceDefined": {{ express_price_defined | json }},
             "expressPriceCents": {% if express_price_defined %}{{ express_price_cents }}{% else %}null{% endif %},
             "expressPriceFormatted": {% if express_price_defined %}{{ express_price_formatted | strip | json }}{% else %}null{% endif %},
-            "standardMin": {{ std_min | json }},
-            "standardMax": {{ std_max | json }},
-            "expressLabel": {{ express_label | json }},
-            "expressExactDate": {{ express_exact_date | json }},
+            "deliveryEstimationText": {{ delivery_estimation_text | json }},
+            "expressCustomPromise": {{ express_custom_promise | json }},
+            "expressIs48h": {{ express_is_48h | json }},
+            "expressDeliveryLabel": {{ express_delivery_label | json }},
+            "deliveryBetweenText": {{ delivery_between_text | json }},
             "shippingGroup": {{ shipping_group | json }}
           }{% unless forloop.last %},{% endunless %}
         {% endfor %}

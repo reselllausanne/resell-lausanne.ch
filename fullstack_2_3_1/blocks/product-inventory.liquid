@@ -96,59 +96,6 @@
   </span>
 </product-inventory>
 
-{% stylesheet %}
-  .product-inventory {
-    display: block;
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-  }
-
-  shopify-visual-preview-block-list .product-inventory[data-visual-preview-mode] {
-    width: 150px;
-  }
-
-  .product-inventory__status {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-sm);
-    font-size: var(--font-body--size);
-  }
-
-  .product-inventory__status--left {
-    justify-content: flex-start;
-  }
-
-  .product-inventory__status--right {
-    justify-content: flex-end;
-  }
-
-  .product-inventory__status--center {
-    justify-content: center;
-  }
-
-  .product-inventory__icon,
-  .product-inventory__icon svg {
-    width: 15px;
-    height: 15px;
-  }
-
-  .product-inventory__icon-low {
-    color: orange;
-  }
-
-  .product-inventory__icon-in_stock {
-    color: green;
-  }
-
-  .product-inventory__icon-out_of_stock {
-    color: red;
-  }
-
-  .product-inventory__icon circle:first-of-type {
-    opacity: 0.3;
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:product_inventory",

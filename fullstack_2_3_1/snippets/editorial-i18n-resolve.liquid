@@ -1,0 +1,26 @@
+{% comment %}
+  Resolve editorial copy for current locale from article metafield.
+
+  @param article {article}
+  @returns via assign: editorial_i18n, editorial_lang
+{% endcomment %}
+{% liquid
+  assign editorial_lang = locale_base | default: 'fr'
+  assign editorial_i18n = blank
+  assign editorial_bundle = article.metafields.custom.editorial_i18n.value
+
+  if editorial_bundle != blank
+    case editorial_lang
+      when 'de'
+        assign editorial_i18n = editorial_bundle.de
+      when 'en'
+        assign editorial_i18n = editorial_bundle.en
+      else
+        assign editorial_i18n = editorial_bundle.fr
+    endcase
+
+    if editorial_i18n == blank
+      assign editorial_i18n = editorial_bundle.fr
+    endif
+  endif
+%}

@@ -1,0 +1,368 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign contact_url = 'mailto:contact@resell-lausanne.ch'
+  if pages.faq != blank
+    assign faq_livraison_url = pages.faq.url | append: '?category=livraison'
+  elsif pages.livraison != blank
+    assign faq_livraison_url = pages.livraison.url
+  else
+    assign faq_livraison_url = '/pages/faq?category=livraison'
+  endif
+  assign return_policy_url = pages['politique-de-retour'].url | default: pages['echanges-remboursements'].url | default: '/pages/politique-de-retour'
+  assign return_request_url = pages['demande-retour'].url | default: '/pages/demande-retour'
+  assign privacy_url = shop.privacy_policy.url | default: '/policies/privacy-policy'
+  for policy in shop.policies
+    if policy.url contains '/policies/privacy-policy'
+      assign privacy_url = policy.url
+    endif
+  endfor
+%}
+
+<div class="rl-faq-page__legal-body">
+{% if locale_base == 'de' %}
+<p class="rl-faq-page__legal-version">Version vom 18. Juli 2026</p>
+
+        <h2>1. Identität des Verkäufers</h2>
+        <p>Die Website <a href="https://www.resell-lausanne.ch">www.resell-lausanne.ch</a> (die « Website ») wird unter der Marke « Resell Lausanne » von Solutions Manzinali, Einzelunternehmen, Chemin de Bas-de-Plan 6, 1030 Bussigny, Schweiz, betrieben, IDE CHE-309.864.712, MwSt.-Nr. CHE-309.864.712 (nachstehend « Resell Lausanne », « wir »).</p>
+
+        <h2>2. Geltungsbereich</h2>
+        <p>Diese Allgemeinen Verkaufsbedingungen (« AGB ») gelten für jede Bestellung auf der Website durch einen privaten oder geschäftlichen Kunden (der « Kunde »).</p>
+        <p>Jede Bestellung bedeutet die vorbehaltlose Annahme dieser AGB, der Rückgabe- und Erstattungspolitik, der Datenschutzrichtlinie und gegebenenfalls besonderer Bedingungen auf der Website oder bei der Bestellung.</p>
+
+        <h2>3. Produkte</h2>
+        <p>Resell Lausanne vertreibt insbesondere Sneakers, Bekleidung, Accessoires und gegebenenfalls authentische Sammlerstücke.</p>
+        <p>Einige Produkte können nach Bestellbestätigung über Partner, Plattformen, professionelle Wiederverkäufer oder Privatpersonen beschafft werden. Verfügbarkeit, Frist und logistische Merkmale können von dieser Lieferkette abhängen.</p>
+        <p>Fotos, Beschreibungen, Visuals und Grössentabellen sind indikativ. Geringfügige Unterschiede bei Farbe, Material, Kennzeichnung, Verpackung oder Zubehör können je nach Serie, Vertriebsland oder Herstellerversion bestehen.</p>
+
+        <h2>4. Authentizität und Kontrolle</h2>
+        <p>Resell Lausanne wendet angemessene Massnahmen zur Kontrolle, Authentifizierung und Zustandsprüfung der Produkte an.</p>
+        <p>Erfüllt ein Produkt unsere internen Anforderungen an Konformität, Authentizität oder Zustand nicht, können wir den Versand verweigern und die Bestellung stornieren. In diesem Fall wird der Kunde für die tatsächlich erhaltenen Beträge der betreffenden Bestellung erstattet.</p>
+
+        <h2>5. Bestellung und Vertragsschluss</h2>
+        <p>Der Kunde muss Warenkorb, Kontaktdaten, Rechnungs-/Lieferadresse, Grösse, Gesamtpreis und allfällige Gebühren vor der Bestätigung sorgfältig prüfen.</p>
+        <p>Das Absenden der Bestellung gilt als Kaufangebot des Kunden.</p>
+        <p>Der Vertrag kommt erst zustande nach:</p>
+        <ul>
+          <li>Eingang der Bestellung;</li>
+          <li>Validierung durch Resell Lausanne;</li>
+          <li>und elektronischer Bestätigung oder effektivem Versand des Produkts.</li>
+        </ul>
+        <p>Wir behalten uns vor, eine Bestellung abzulehnen oder zu stornieren, insbesondere bei:</p>
+        <ul>
+          <li>unvorhergesehener Nichtverfügbarkeit;</li>
+          <li>offensichtlichem Preis- oder Beschreibungsfehler;</li>
+          <li>Scheitern der Beschaffung;</li>
+          <li>Scheitern der Kontrolle/Authentifizierung;</li>
+          <li>Betrugsverdacht oder missbräuchlicher Nutzung;</li>
+          <li>unrichtigen oder unvollständigen Kundendaten.</li>
+        </ul>
+
+        <h2>6. Preise</h2>
+        <p>Massgebend sind die zum Bestellzeitpunkt auf der Website angezeigten Preise, vorbehaltlich offensichtlicher Irrtümer.</p>
+        <p>Für Verkäufe an Verbraucher in der Schweiz enthalten die Preise die nicht optionalen Zuschläge für den Kauf. Versandkosten können separat ausgewiesen werden, wenn sie je Bestellung variieren.</p>
+        <p>Bei internationalen Bestellungen können Einfuhrsteuern, Zölle, lokale MwSt., Akten- oder Verwaltungsgebühren im Bestimmungsland anfallen. Sofern beim Checkout nicht ausdrücklich anders angegeben, trägt diese der Kunde.</p>
+
+        <h2>7. Zahlung</h2>
+        <p>Der Preis ist bei der Bestellung über die auf der Website angebotenen Zahlungsmittel sofort zahlbar.</p>
+        <p>Die Bestellung wird erst nach Zahlungsautorisierung bearbeitet.</p>
+        <p>Bei Zahlungsablehnung, ungerechtfertigtem Chargeback, mutmasslichem Betrug oder Missbrauch eines Zahlungsmittels können wir die Bestellung aussetzen oder stornieren und geeignete Massnahmen ergreifen.</p>
+        {% render 'resell-powerpay-cgv-block' %}
+
+        <h2>8. Verfügbarkeit und Stornierung durch den Verkäufer</h2>
+        <p>Angezeigte Produkte werden im Rahmen der Beschaffungsmöglichkeiten angeboten.</p>
+        <p>Bei On-Demand-Beschaffung können Lieferstörungen, Ablehnung bei Qualitäts-/Authentizitätskontrolle, Verfügbarkeitsfehler oder logistische Ereignisse die Erfüllung unmöglich machen.</p>
+        <p>In diesem Fall informieren wir den Kunden rasch und erstatten, bieten eine gleichwertige Alternative oder eine andere passende Lösung an.</p>
+
+        <h2>9. Lieferung</h2>
+        <p>Lieferungen erfolgen an die vom Kunden bei der Bestellung angegebene Adresse.</p>
+        <p>Angezeigte Fristen sind Schätzungen, sofern nicht ausdrücklich schriftlich anders vereinbart.</p>
+        <p>Bei On-Demand-Produkten kann die Lieferung mehrere Schritte umfassen:</p>
+        <ul>
+          <li>Bestellvalidierung;</li>
+          <li>Beschaffung oder Erwerb;</li>
+          <li>Transport zu Resell Lausanne oder einem Partner;</li>
+          <li>Kontrolle, Prüfung oder Authentifizierung;</li>
+          <li>Vorbereitung;</li>
+          <li>Endversand.</li>
+        </ul>
+        <p>Eine angemessene Verzögerung begründet nicht automatisch Stornierung, Entschädigung oder Schadenersatz, ausser zwingendes Recht verlangt anderes. Bei signifikanter Überschreitung muss der Kunde Resell Lausanne zuerst eine angemessene zusätzliche Frist schriftlich einräumen, bevor er die Stornierung verlangen kann. Details: <a href="{{ faq_livraison_url }}">FAQ Lieferung</a>.</p>
+
+        <h2>10. Gefahrübergang</h2>
+        <p>Vorbehaltlich zwingenden Verbraucherrechts geht die Gefahr des Verlusts oder der Beschädigung bei physischer Lieferung an die angegebene Adresse oder bei Übergabe an den Kunden bzw. einen von ihm benannten Dritten über.</p>
+
+        <h2>11. Falsche Adresse, Annahmeverweigerung, nicht abgeholtes Paket</h2>
+        <p>Der Kunde allein ist für die Richtigkeit seiner Angaben verantwortlich.</p>
+        <p>Bei unrichtiger/unvollständiger Adresse, Annahmeverweigerung, nicht abgeholtem Paket oder Rücksendung an den Absender aus Gründen, die dem Kunden zuzurechnen sind, können Rücksende-, Bearbeitungs-, Lager- und erneute Versandkosten zu Lasten des Kunden gehen.</p>
+        <p>Insbesondere kann eine erneute Versendung eines nicht abgeholten und an uns zurückgesandten Pakets gegen eine <strong>Pauschale von CHF 20.–</strong> erfolgen (ca. CHF 9.– Post-Rücksendeetikett, ca. CHF 7.– neues Versandetikett, Rest für Suche und Handhabung). Details: <a href="{{ faq_livraison_url }}">FAQ — nicht abgeholtes Paket</a>.</p>
+
+        <h2>12. Rückgaben, Widerruf und Erstattungen</h2>
+        <p>Bedingungen zu Rückgabe, Widerruf, Umtausch, Gutschein und Erstattung sind in der <a href="{{ return_policy_url }}">Rückgabe- und Erstattungsrichtlinie</a> geregelt, die integraler Bestandteil dieser AGB ist. Retourenanfrage: <a href="{{ return_request_url }}">Retourenformular</a>.</p>
+        <p>Freiwillige Retouren betreffen ausschliesslich Sneakers / Schuhe. Bekleidung ist ausgeschlossen, ausser bei unserem Fehler oder nachgewiesenem Mangel. Ausgeschlossen (ausser unser Fehler oder nachgewiesener Mangel): Uhren, Schmuck, Collectibles, jedes Nicht-Sneaker-Produkt, jeder Artikel mit Kaufpreis über CHF&nbsp;650.– sowie jeder Artikel aus Sale, Soldes 48h, Liquidation, Archiv oder zum Aktionspreis (durchgestrichener Preis).</p>
+        <p>Jede Retoure erfordert eine vorherige schriftliche Genehmigung durch Resell Lausanne. Keine Retoure ohne Genehmigung oder an eine nicht mitgeteilte Adresse wird bearbeitet.</p>
+        <p>Der Kunde anerkennt, dass:</p>
+        <ul>
+          <li>Regeln je nach Lieferland abweichen können;</li>
+          <li>freiwillige Rückgaben in der Schweiz einer Handelspolitik unterliegen;</li>
+          <li>Verbraucher mit EU-Lieferung spezifische zwingende Rechte haben können.</li>
+        </ul>
+
+        <h2>13. Mängel, Nichtkonformität und Garantien</h2>
+        <p>Der Kunde prüft das Produkt bei Empfang und meldet rasch erkennbare Anomalien, Fehler oder Schäden.</p>
+        <p>Bei gesetzlichem Mangel oder Nichtkonformität behandelt Resell Lausanne den Fall gemäss den zwingenden Rechten des Kunden.</p>
+        <p>Bei relevanter Herstellergarantie kann Resell Lausanne an die Marke oder den zuständigen Kundendienst verweisen oder unterstützen, ohne zwingende gesetzliche Rechte auszuschliessen.</p>
+        <p>Keine dem Verkäufer zurechenbaren Mängel sind insbesondere: normale Abnutzung, gebrauchsbedingte Veränderung, Feuchtigkeit, unsachgemässe Pflege, ungeeignete Wäsche, Unfallschäden, Änderungen nach Lieferung, nicht bestimmungsgemässer Gebrauch.</p>
+
+        <h2>14. Geistiges Eigentum</h2>
+        <p>Website, Architektur, Katalog, Texte, Visuals, Fotos, Grafiken, Logos, Datenbanken, Produktauswahl und Inhalte sind durch geltendes Immaterialgüterrecht geschützt.</p>
+        <p>Jede unautorisierte Vervielfältigung, Darstellung, Extraktion, Wiederverwendung, Verbreitung oder Verwertung ist untersagt.</p>
+
+        <h2>15. Personendaten</h2>
+        <p>Personendaten werden gemäss unserer <a href="{{ privacy_url }}">Datenschutzrichtlinie</a> verarbeitet.</p>
+
+        <h2>16. Haftungsbeschränkung</h2>
+        <p>Im gesetzlich zulässigen Rahmen haftet Resell Lausanne nicht für indirekte Schäden, Betriebsausfall, entgangenen Gewinn oder immaterielle Schäden aus Nutzung der Website oder Ausführung einer Bestellung.</p>
+        <p>Keine Klausel schliesst die Haftung aus oder beschränkt sie, wo zwingendes Recht dies verbietet, insbesondere bei grober Fahrlässigkeit oder Absicht.</p>
+
+        <h2>17. Höhere Gewalt</h2>
+        <p>Resell Lausanne haftet nicht für Verzögerung oder Nichterfüllung durch höhere Gewalt oder Ereignisse ausserhalb zumutbarer Kontrolle, insbesondere Streik, Logistikblockade, Lieferantenausfall, Pandemie, Naturkatastrophe, Behördenentscheid, Cyberangriff, Zollblockade, Krieg, Unruhen oder grossflächiger Ausfall.</p>
+
+        <h2>18. Anwendbares Recht und Gerichtsstand</h2>
+        <p>Diese AGB unterstehen schweizerischem Recht.</p>
+        <p>Handelt der Kunde als Verbraucher und geniesst er zwingendere Schutzvorschriften seines gewöhnlichen Aufenthaltslandes, bleiben diese vorbehalten.</p>
+        <p>Vorbehaltlich zwingender Verbrauchergerichtsstände ist ausschliesslich der Gerichtsstand des Kantons Waadt, Schweiz, zuständig.</p>
+
+        <h2>19. Kontakt</h2>
+        <p>Fragen zu einer Bestellung: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a></p>
+
+      {% elsif locale_base == 'en' %}
+<p class="rl-faq-page__legal-version">Version of 18 July 2026</p>
+
+        <h2>1. Seller identity</h2>
+        <p>The website <a href="https://www.resell-lausanne.ch">www.resell-lausanne.ch</a> (the “Site”) is operated under the brand “Resell Lausanne” by Solutions Manzinali, sole proprietorship, Chemin de Bas-de-Plan 6, 1030 Bussigny, Switzerland, business ID CHE-309.864.712, VAT no. CHE-309.864.712 (hereinafter “Resell Lausanne”, “we”).</p>
+
+        <h2>2. Scope</h2>
+        <p>These terms and conditions of sale (“T&amp;Cs”) govern any order placed on the Site by a private or professional customer (the “Customer”).</p>
+        <p>Any order implies full acceptance of these T&amp;Cs, the return and refund policy, the privacy policy and, where applicable, any special conditions stated on the Site or at checkout.</p>
+
+        <h2>3. Products</h2>
+        <p>Resell Lausanne sells sneakers, apparel, accessories and, where applicable, authentic collectibles.</p>
+        <p>Some products may be sourced on demand after order confirmation from partners, platforms, professional resellers or individuals. Actual availability, timing and logistics may depend on that supply chain.</p>
+        <p>Photos, descriptions, visuals and size charts are indicative. Minor differences in shade, material, marking, packaging or accessories may exist depending on series, distribution country or manufacturer version.</p>
+
+        <h2>4. Authenticity and inspection</h2>
+        <p>Resell Lausanne applies reasonable measures to inspect, authenticate and verify product condition.</p>
+        <p>If a product does not meet our internal conformity, authenticity or condition standards, we may refuse shipment and cancel the order. In that case, the Customer is refunded amounts actually collected for the order concerned.</p>
+
+        <h2>5. Order and contract formation</h2>
+        <p>The Customer must carefully check cart contents, contact details, billing/shipping addresses, selected size, total price and any applicable fees before confirming.</p>
+        <p>Submitting the order constitutes an offer to purchase by the Customer.</p>
+        <p>The contract is formed only after:</p>
+        <ul>
+          <li>receipt of the order;</li>
+          <li>validation by Resell Lausanne; and</li>
+          <li>electronic order confirmation, or actual product shipment.</li>
+        </ul>
+        <p>We reserve the right to refuse or cancel an order, including in case of:</p>
+        <ul>
+          <li>unforeseen product unavailability;</li>
+          <li>manifest price or description error;</li>
+          <li>sourcing failure;</li>
+          <li>inspection/authentication failure;</li>
+          <li>suspected fraud or abusive use;</li>
+          <li>inaccurate or incomplete customer information.</li>
+        </ul>
+
+        <h2>6. Prices</h2>
+        <p>Applicable prices are those shown on the Site at the time of order, subject to manifest error.</p>
+        <p>For consumer sales in Switzerland, prices include non-optional charges required for the purchase. Shipping fees may be shown separately when they vary by order.</p>
+        <p>For international orders, import taxes, customs duties, local VAT, handling or administrative fees may be due in the destination country. Unless expressly stated otherwise at payment, these remain the Customer’s responsibility.</p>
+
+        <h2>7. Payment</h2>
+        <p>The price is payable immediately at order via the payment methods offered on the Site.</p>
+        <p>The order is processed only after payment authorisation.</p>
+        <p>In case of payment refusal, unjustified chargeback, suspected fraud or abusive use of a payment method, we may suspend or cancel the order and take any useful measure.</p>
+        {% render 'resell-powerpay-cgv-block' %}
+
+        <h2>8. Availability and seller cancellation</h2>
+        <p>Products shown on the Site are offered subject to sourcing possibilities.</p>
+        <p>When a product is sourced on demand, a supply incident, quality/authenticity rejection, availability error or logistics event may make performance impossible.</p>
+        <p>In that case, we inform the Customer promptly and proceed, as appropriate, with a refund, an equivalent proposal or another suitable solution.</p>
+
+        <h2>9. Delivery</h2>
+        <p>Deliveries are made to the address indicated by the Customer at checkout.</p>
+        <p>Displayed timeframes are estimates, unless expressly agreed otherwise in writing.</p>
+        <p>For on-demand products, delivery may include several steps:</p>
+        <ul>
+          <li>order validation;</li>
+          <li>sourcing or acquisition;</li>
+          <li>shipment to Resell Lausanne or a partner;</li>
+          <li>inspection, verification or authentication;</li>
+          <li>preparation;</li>
+          <li>final dispatch.</li>
+        </ul>
+        <p>A reasonable delay does not automatically entitle the Customer to cancellation, indemnity or damages, unless mandatory law provides otherwise. If the delay is significant, the Customer must first grant Resell Lausanne a reasonable additional period in writing before requesting cancellation. See <a href="{{ faq_livraison_url }}">Shipping FAQ</a>.</p>
+
+        <h2>10. Transfer of risk</h2>
+        <p>Subject to mandatory consumer law, the risk of loss or damage passes to the Customer upon physical delivery to the stated address, or upon handover to the Customer or any third party designated by them.</p>
+
+        <h2>11. Incorrect address, refused delivery, unclaimed parcel</h2>
+        <p>The Customer alone is responsible for the accuracy of their details.</p>
+        <p>In case of inaccurate or incomplete address, refused delivery, unclaimed parcel or return to sender attributable to the Customer, return, handling, storage and reshipment fees may remain payable by the Customer.</p>
+        <p>In particular, reshipment of an unclaimed parcel returned to us may be arranged for a <strong>flat fee of CHF 20.–</strong> (about CHF 9.– Post return label, about CHF 7.– new outbound label, remainder for search and handling). See <a href="{{ faq_livraison_url }}">FAQ — unclaimed package</a>.</p>
+
+        <h2>12. Returns, withdrawal and refunds</h2>
+        <p>Return, withdrawal, exchange, store-credit and refund rules are set out in the <a href="{{ return_policy_url }}">return and refund policy</a>, which forms an integral part of these T&amp;Cs. Return request: <a href="{{ return_request_url }}">return form</a>.</p>
+        <p>Voluntary returns apply to sneakers / footwear only. Apparel is excluded except for our error or proven defect. Also excluded (except our error or proven defect): watches, jewellery, collectibles, any non-sneaker product, any item with a purchase price above CHF&nbsp;650.–, and any item purchased on sale, Soldes 48h, clearance, archive or at a promotional price (compare-at / strikethrough price).</p>
+        <p>Every return requires prior written approval from Resell Lausanne. No return without approval or to an uncommunicated address will be processed.</p>
+        <p>The Customer acknowledges that:</p>
+        <ul>
+          <li>rules may differ by delivery country;</li>
+          <li>voluntary Swiss returns follow a commercial policy;</li>
+          <li>consumers delivered in the EU may benefit from specific mandatory rights.</li>
+        </ul>
+
+        <h2>13. Defects, non-conformity and warranties</h2>
+        <p>The Customer must check the product on receipt and promptly report any apparent anomaly, error or damage.</p>
+        <p>Where a product has a defect or non-conformity under applicable law, Resell Lausanne handles the request in line with the Customer’s mandatory rights.</p>
+        <p>Where a manufacturer commercial warranty appears relevant, Resell Lausanne may refer the Customer to the brand or competent after-sales service, or assist, without excluding mandatory legal rights.</p>
+        <p>The following are not defects attributable to Resell Lausanne: normal wear, use-related alteration, humidity, improper care, unsuitable washing, accidental damage, post-delivery modifications, use contrary to brand recommendations.</p>
+
+        <h2>14. Intellectual property</h2>
+        <p>The Site, its architecture, catalogue, texts, visuals, photographs, graphic elements, logos, databases, product selections and content remain protected by applicable intellectual property rights.</p>
+        <p>Any unauthorised reproduction, representation, extraction, reuse, distribution or exploitation is prohibited.</p>
+
+        <h2>15. Personal data</h2>
+        <p>Customer personal data is processed in accordance with our <a href="{{ privacy_url }}">privacy policy</a>.</p>
+
+        <h2>16. Limitation of liability</h2>
+        <p>To the extent permitted by law, Resell Lausanne is not liable for indirect damages, loss of business, loss of opportunity, loss of profits or immaterial harm arising from use of the Site or performance of an order.</p>
+        <p>No clause excludes or limits liability where such exclusion or limitation is prohibited by mandatory law, including in case of gross negligence or wilful misconduct.</p>
+
+        <h2>17. Force majeure</h2>
+        <p>Resell Lausanne shall not be liable for delay or non-performance due to force majeure or any event reasonably beyond its control, including strike, logistics blockage, supplier failure, pandemic, natural disaster, administrative decision, cyberattack, customs blockage, war, civil unrest or widespread outage.</p>
+
+        <h2>18. Governing law and jurisdiction</h2>
+        <p>These T&amp;Cs are governed by Swiss law.</p>
+        <p>If the Customer acts as a consumer and benefits from more protective mandatory rules of their habitual residence, those rules remain reserved.</p>
+        <p>Subject to mandatory consumer venues, any dispute falls under the exclusive jurisdiction of the courts of the Canton of Vaud, Switzerland.</p>
+
+        <h2>19. Contact</h2>
+        <p>For any question about an order: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a></p>
+
+      {% else %}
+<p class="rl-faq-page__legal-version">Version du 18 juillet 2026</p>
+
+        <h2>1. Identité du vendeur</h2>
+        <p>Le site <a href="https://www.resell-lausanne.ch">www.resell-lausanne.ch</a> (le « Site ») est exploité sous l’enseigne « Resell Lausanne » par Solutions Manzinali, raison individuelle, Chemin de Bas-de-Plan 6, 1030 Bussigny, Suisse, numéro IDE CHE-309.864.712, inscrite à la TVA sous le numéro CHE-309.864.712 (ci-après « Resell Lausanne », « nous »).</p>
+
+        <h2>2. Champ d’application</h2>
+        <p>Les présentes conditions générales de vente (« CGV ») régissent toute commande passée sur le Site par un client agissant à titre privé ou professionnel (le « Client »).</p>
+        <p>Toute commande implique l’acceptation pleine et entière des présentes CGV, de la politique de retour et de remboursement, de la politique de confidentialité et, le cas échéant, de toute condition particulière mentionnée sur le Site ou au moment de la commande.</p>
+
+        <h2>3. Produits</h2>
+        <p>Resell Lausanne commercialise notamment des sneakers, vêtements, accessoires et, selon les cas, certains objets de collection authentiques.</p>
+        <p>Certains produits peuvent être sourcés à la demande après validation de la commande auprès de partenaires, plateformes, revendeurs professionnels ou particuliers. La disponibilité réelle, le délai et certaines caractéristiques logistiques peuvent dépendre de cette chaîne d’approvisionnement.</p>
+        <p>Les photographies, descriptions, visuels et tableaux de tailles sont fournis à titre indicatif. Des différences mineures de teinte, matière, marquage, packaging ou accessoires peuvent exister selon les séries, pays de distribution ou versions du fabricant.</p>
+
+        <h2>4. Authenticité et contrôle</h2>
+        <p>Resell Lausanne met en œuvre des mesures raisonnables de contrôle, d’authentification et de vérification de l’état des produits.</p>
+        <p>Si un produit ne satisfait pas à nos exigences internes de conformité, d’authenticité ou d’état, nous pouvons refuser son expédition et annuler la commande. Dans ce cas, le Client est remboursé des sommes effectivement encaissées pour la commande concernée.</p>
+
+        <h2>5. Commande et formation du contrat</h2>
+        <p>Le Client doit vérifier attentivement le contenu de son panier, ses coordonnées, les adresses de facturation/livraison, la taille sélectionnée, le prix total et les éventuels frais applicables avant validation.</p>
+        <p>L’envoi de la commande vaut offre d’achat par le Client.</p>
+        <p>Le contrat n’est définitivement formé qu’après&nbsp;:</p>
+        <ul>
+          <li>réception de la commande&nbsp;;</li>
+          <li>validation par Resell Lausanne&nbsp;;</li>
+          <li>et confirmation électronique de la commande, ou expédition effective du produit.</li>
+        </ul>
+        <p>Nous nous réservons le droit de refuser ou d’annuler une commande, notamment en cas&nbsp;:</p>
+        <ul>
+          <li>d’indisponibilité imprévue du produit&nbsp;;</li>
+          <li>d’erreur manifeste sur le prix ou la description&nbsp;;</li>
+          <li>d’échec de sourcing&nbsp;;</li>
+          <li>d’échec de contrôle/authentification&nbsp;;</li>
+          <li>de suspicion de fraude ou d’usage abusif&nbsp;;</li>
+          <li>d’informations client inexactes ou incomplètes.</li>
+        </ul>
+
+        <h2>6. Prix</h2>
+        <p>Les prix applicables sont ceux affichés sur le Site au moment de la commande, sous réserve d’erreur manifeste.</p>
+        <p>Pour les ventes destinées aux consommateurs en Suisse, les prix incluent les suppléments non optionnels exigés pour l’achat. Les frais de livraison peuvent être indiqués séparément lorsqu’ils varient selon la commande.</p>
+        <p>Pour les commandes internationales, des taxes d’importation, droits de douane, TVA locale, frais de dossier ou frais administratifs peuvent être exigibles dans le pays de destination. Sauf mention contraire explicite au moment du paiement, ces frais restent à la charge du Client.</p>
+
+        <h2>7. Paiement</h2>
+        <p>Le prix est payable immédiatement au moment de la commande via les moyens de paiement proposés sur le Site.</p>
+        <p>La commande ne sera traitée qu’après autorisation du paiement.</p>
+        <p>En cas de refus de paiement, rétrofacturation injustifiée, fraude présumée ou utilisation abusive d’un moyen de paiement, nous pouvons suspendre ou annuler la commande et prendre toute mesure utile.</p>
+        {% render 'resell-powerpay-cgv-block' %}
+
+        <h2>8. Disponibilité et annulation par le vendeur</h2>
+        <p>Les produits affichés sur le Site sont proposés dans la limite des possibilités d’approvisionnement.</p>
+        <p>Lorsque le produit est sourcé à la demande, un incident d’approvisionnement, un refus lors du contrôle qualité/authenticité, une erreur de disponibilité ou un événement logistique peut rendre l’exécution impossible.</p>
+        <p>Dans ce cas, nous en informons le Client dans les meilleurs délais et procédons, selon le cas, à un remboursement, à une proposition équivalente ou à toute autre solution appropriée.</p>
+
+        <h2>9. Livraison</h2>
+        <p>Les livraisons sont effectuées à l’adresse indiquée par le Client lors de la commande.</p>
+        <p>Les délais affichés sont des estimations, sauf engagement écrit exprès contraire.</p>
+        <p>Certains produits étant sourcés à la demande, la livraison peut comprendre plusieurs étapes&nbsp;:</p>
+        <ul>
+          <li>validation de la commande&nbsp;;</li>
+          <li>sourcing ou acquisition du produit&nbsp;;</li>
+          <li>acheminement vers Resell Lausanne ou un partenaire&nbsp;;</li>
+          <li>contrôle, vérification ou authentification&nbsp;;</li>
+          <li>préparation&nbsp;;</li>
+          <li>expédition finale.</li>
+        </ul>
+        <p>Un retard raisonnable ne donne pas automatiquement droit à annulation, indemnité ou dommages-intérêts, sauf disposition impérative contraire. En cas de dépassement significatif, le Client doit d’abord accorder à Resell Lausanne un délai supplémentaire raisonnable, communiqué par écrit, avant de pouvoir demander l’annulation de la commande. Détails&nbsp;: <a href="{{ faq_livraison_url }}">FAQ livraison</a>.</p>
+
+        <h2>10. Transfert des risques</h2>
+        <p>Sous réserve du droit impératif applicable aux consommateurs, le risque de perte ou d’endommagement du produit est transféré au Client lors de la livraison physique du produit à l’adresse indiquée, ou lors de sa remise au Client ou à tout tiers désigné par lui.</p>
+
+        <h2>11. Adresse incorrecte, refus de livraison, colis non réclamé</h2>
+        <p>Le Client est seul responsable de l’exactitude de ses coordonnées.</p>
+        <p>En cas d’adresse inexacte, incomplète, refus de livraison, colis non réclamé ou retour à l’expéditeur imputable au Client, les frais de retour, de traitement, de stockage et de réexpédition peuvent rester à la charge du Client.</p>
+        <p>En particulier, la réexpédition d’un colis non réclamé qui nous est renvoyé peut être effectuée moyennant des <strong>frais forfaitaires de CHF&nbsp;20.–</strong> (environ CHF&nbsp;9.– pour l’étiquette / facturation retour Poste, environ CHF&nbsp;7.– pour la nouvelle étiquette d’envoi, solde pour recherche et manutention). Détails&nbsp;: <a href="{{ faq_livraison_url }}">FAQ — colis non réclamé</a>.</p>
+
+        <h2>12. Retours, rétractation et remboursements</h2>
+        <p>Les conditions de retour, de rétractation, d’échange, d’avoir et de remboursement sont définies dans la <a href="{{ return_policy_url }}">politique de retour et de remboursement</a>, qui fait partie intégrante des présentes CGV. Demande de retour&nbsp;: <a href="{{ return_request_url }}">formulaire de retour</a>.</p>
+        <p>Les retours volontaires concernent exclusivement les sneakers / chaussures. Les vêtements sont exclus, sauf erreur de notre part ou défaut avéré. Sont également exclus (sauf erreur de notre part ou défaut avéré)&nbsp;: montres, bijoux, collectibles, tout produit hors sneaker, tout article d’un prix d’achat supérieur à CHF&nbsp;650.–, ainsi que tout article acheté en Soldes, Soldes 48h, liquidation, archive ou à prix promotionnel (prix barré).</p>
+        <p>Tout retour nécessite une autorisation écrite préalable de Resell Lausanne. Aucun retour sans autorisation ou adressé à une adresse non communiquée ne sera traité.</p>
+        <p>Le Client reconnaît que&nbsp;:</p>
+        <ul>
+          <li>les règles diffèrent selon le pays de livraison&nbsp;;</li>
+          <li>les retours volontaires suisses relèvent d’une politique commerciale&nbsp;;</li>
+          <li>les consommateurs livrés dans l’UE peuvent bénéficier de droits impératifs spécifiques.</li>
+        </ul>
+
+        <h2>13. Défauts, non-conformité et garanties</h2>
+        <p>Le Client doit vérifier le produit à réception et signaler rapidement toute anomalie, erreur ou dommage apparent.</p>
+        <p>Lorsqu’un produit présente un défaut ou une non-conformité relevant de la loi applicable, Resell Lausanne traite la demande conformément aux droits impératifs du Client.</p>
+        <p>Lorsqu’une garantie commerciale fabricant semble pertinente, Resell Lausanne peut orienter le Client vers la marque ou le SAV compétent, ou l’assister dans cette démarche, sans exclure les droits légaux impératifs applicables.</p>
+        <p>Ne constituent pas des défauts imputables à Resell Lausanne&nbsp;: l’usure normale, l’altération liée à l’usage, l’humidité, le mauvais entretien, le lavage inadapté, les dommages accidentels, les modifications postérieures à la livraison, l’usage non conforme aux recommandations de la marque.</p>
+
+        <h2>14. Propriété intellectuelle</h2>
+        <p>Le Site, son architecture, son catalogue, ses textes, visuels, photographies, éléments graphiques, logos, bases de données, sélections de produits et contenus demeurent protégés par les droits de propriété intellectuelle applicables.</p>
+        <p>Toute reproduction, représentation, extraction, réutilisation, diffusion ou exploitation non autorisée est interdite.</p>
+
+        <h2>15. Données personnelles</h2>
+        <p>Les données personnelles du Client sont traitées conformément à notre <a href="{{ privacy_url }}">politique de confidentialité</a>.</p>
+
+        <h2>16. Limitation de responsabilité</h2>
+        <p>Dans les limites permises par la loi, Resell Lausanne n’est pas responsable des dommages indirects, pertes d’exploitation, pertes d’opportunité, pertes de profits ou préjudices immatériels résultant de l’utilisation du Site ou de l’exécution d’une commande.</p>
+        <p>Aucune clause des présentes CGV n’exclut ni ne limite notre responsabilité dans les cas où une telle exclusion ou limitation est interdite par le droit impératif applicable, notamment en cas de faute grave ou dol.</p>
+
+        <h2>17. Force majeure</h2>
+        <p>Resell Lausanne ne pourra être tenue responsable d’un retard ou d’une inexécution dus à un cas de force majeure ou à tout événement échappant raisonnablement à son contrôle, notamment grève, blocage logistique, rupture fournisseur, pandémie, catastrophe naturelle, décision administrative, cyberattaque, blocage douanier, guerre, troubles civils ou panne généralisée.</p>
+
+        <h2>18. Droit applicable et juridiction</h2>
+        <p>Les présentes CGV sont régies par le droit suisse.</p>
+        <p>Si le Client agit en qualité de consommateur et bénéficie de dispositions impératives plus protectrices en vertu du droit de son pays de résidence habituel, ces dispositions demeurent réservées.</p>
+        <p>Sous réserve des fors impératifs applicables aux consommateurs, tout litige relèvera de la compétence exclusive des tribunaux du canton de Vaud, Suisse.</p>
+
+        <h2>19. Contact</h2>
+        <p>Pour toute question relative à une commande&nbsp;: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a></p>
+      {% endif %}
+</div>

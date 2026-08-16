@@ -1,0 +1,235 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+
+  assign cta_title = section.settings.cta_title
+  assign cta_text = section.settings.cta_text
+  assign cta_primary_label = section.settings.cta_primary_label
+  assign cta_primary_url = section.settings.cta_primary_url
+  assign cta_secondary_label = section.settings.cta_secondary_label
+  assign cta_secondary_url = section.settings.cta_secondary_url
+
+  if cta_title == blank
+    if locale_base == 'de'
+      assign cta_title = 'Authentische Sneakers in der Schweiz'
+    elsif locale_base == 'en'
+      assign cta_title = 'Authentic sneakers in Switzerland'
+    else
+      assign cta_title = 'Sneakers authentiques en Suisse'
+    endif
+  endif
+
+  if cta_text == blank
+    if locale_base == 'de'
+      assign cta_text = 'Entdecke unsere Auswahl — jedes Paar geprüft, mit Echtheitszertifikat, Lieferung in die Schweiz.'
+    elsif locale_base == 'en'
+      assign cta_text = 'Browse our selection — every pair checked, certificate included, delivery across Switzerland.'
+    else
+      assign cta_text = 'Découvre notre sélection — chaque paire contrôlée, certificat d’authenticité, livraison en Suisse.'
+    endif
+  endif
+
+  if cta_primary_label == blank
+    if locale_base == 'de'
+      assign cta_primary_label = 'Alle Sneakers'
+    elsif locale_base == 'en'
+      assign cta_primary_label = 'All sneakers'
+    else
+      assign cta_primary_label = 'Toutes nos paires'
+    endif
+  endif
+
+  if cta_primary_url == blank
+    assign rl_sneakers_col = collections['toutes-nos-paires']
+    if rl_sneakers_col != blank
+      assign cta_primary_url = rl_sneakers_col.url
+    else
+      assign cta_primary_url = '/collections/toutes-nos-paires'
+    endif
+  endif
+
+  if cta_secondary_label == blank
+    assign cta_secondary_label = 'FAQ'
+  endif
+
+  if cta_secondary_url == blank
+    assign cta_secondary_url = routes.root_url | append: 'pages/faq'
+  endif
+
+  assign blog_home = blog.url | default: routes.root_url
+
+  assign is_auth_guide = false
+  if article.tags contains 'guide-authentification' or article.tags contains 'guide-authentication'
+    assign is_auth_guide = true
+  endif
+%}
+
+{% if is_auth_guide %}
+  {{ 'auth-guide.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+<article class="resell-article color-{{ section.settings.color_scheme }}{% if is_auth_guide %} is-auth-guide{% endif %}">
+  <div class="resell-article__hero{% unless article.image %} resell-article__hero--placeholder{% endunless %}">
+    {% if article.image != blank %}
+      {% assign hero_alt = article.image.alt | default: article.title | escape %}
+      {{
+        article.image
+        | image_url: width: 1920
+        | image_tag: class: 'resell-article__hero-image', loading: 'eager', fetchpriority: 'high', widths: '750, 1100, 1500, 1920', sizes: '100vw', alt: hero_alt
+      }}
+    {% else %}
+      <img
+        src="{{ 'placeholder-article.jpg' | asset_img_url: '1920x' }}"
+        alt="{{ article.title | escape }}"
+        width="1920"
+        height="1080"
+        loading="eager"
+        fetchpriority="high"
+        class="resell-article__hero-image"
+      >
+    {% endif %}
+  </div>
+
+  <div
+    class="resell-article__shell page-width"
+    style="
+      --padding-top: {{ section.settings.padding_top }}px;
+      --padding-bottom: {{ section.settings.padding_bottom }}px;
+    "
+  >
+    <div class="resell-article__layout">
+      <nav class="resell-article__breadcrumb" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+        <a href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{ blog_home }}">{{ blog.title }}</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ article.title }}</span>
+      </nav>
+
+      {% if article.tags.size > 0 %}
+        <ul class="resell-article__tags">
+          {% for tag in article.tags %}
+            <li>
+              <a class="resell-article__tag" href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <h1 class="resell-article__title">{{ article.title }}</h1>
+
+      <p class="resell-article__meta">
+        {% if article.author != blank %}
+          <span class="resell-article__author">{{ article.author }}</span>
+          <span aria-hidden="true">·</span>
+        {% endif %}
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+          {{ article.published_at | time_tag: format: 'date' }}
+        </time>
+      </p>
+
+      <div class="resell-article__body rte">
+        {% render 'resell-blog-article-body', article: article %}
+      </div>
+
+      {% if section.settings.show_cta %}
+        <aside class="resell-article__cta">
+          <p class="resell-article__cta-title">{{ cta_title | escape }}</p>
+          {% if cta_text != blank %}
+            <p class="resell-article__cta-text">{{ cta_text | escape }}</p>
+          {% endif %}
+          <div class="resell-article__cta-links">
+            {% if cta_primary_url != blank %}
+              <a class="resell-article__cta-link resell-article__cta-link--primary" href="{{ cta_primary_url }}">
+                {{ cta_primary_label | escape }}
+              </a>
+            {% endif %}
+            {% if cta_secondary_url != blank %}
+              <a class="resell-article__cta-link" href="{{ cta_secondary_url }}">
+                {{ cta_secondary_label | escape }}
+              </a>
+            {% endif %}
+          </div>
+        </aside>
+      {% endif %}
+    </div>
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Resell article",
+  "tag": "section",
+  "class": "section-resell-article",
+  "enabled_on": {
+    "templates": ["article"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Afficher le bloc CTA boutique",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_title",
+      "label": "CTA titre"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_text",
+      "label": "CTA texte"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "CTA bouton principal"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "CTA lien principal"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "CTA bouton secondaire"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "CTA lien secondaire"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:padding_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Resell article"
+    }
+  ]
+}
+{% endschema %}

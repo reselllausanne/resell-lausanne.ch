@@ -1,0 +1,106 @@
+{% comment %}
+  Single tile for `sections/image-tag-slider.liquid` (or copy markup elsewhere).
+
+  Usage (inside a `for block in section.blocks` loop, schema matches image-tag-slider `item` block):
+
+    <li class="rl-image-tag-slider__item" {{ block.shopify_attributes }}>
+      {% render 'rl-image-tag-slider-card',
+        title: block.settings.title,
+        image: block.settings.image,
+        image_url: block.settings.image_url,
+        link: block.settings.link
+      %}
+    </li>
+
+  Rules:
+  - `link` empty → non-clickable card (`<button>`). Section resolves link from collection handle when possible.
+  - `image` (Shopify image_picker) wins over auto fallbacks, then `image_url` when set.
+  - Auto fallbacks: `collection_image` first, then `product_image`.
+{% endcomment %}
+{% liquid
+  assign t = title | strip
+  assign img_url_f = image_url | strip
+  assign href = link | strip
+  assign card_image = image
+  if card_image == blank and img_url_f == blank
+    if collection_image != blank
+      assign card_image = collection_image
+    endif
+    if card_image == blank and product_image != blank
+      assign card_image = product_image
+    endif
+  endif
+  assign static_card = false
+  if href == blank
+    assign static_card = true
+  endif
+%}
+{% if static_card %}
+  <button
+    type="button"
+    class="rl-image-tag-slider__card rl-image-tag-slider__card--static"
+    {% if t != blank %}
+      aria-label="{{ t | escape }}"
+    {% endif %}
+  >
+{% else %}
+  <a class="rl-image-tag-slider__card" href="{{ href }}">
+{% endif %}
+  <span class="rl-image-tag-slider__media">
+    {% if card_image != blank %}
+      {% if compact %}
+        {% capture card_srcset %}
+          {{ card_image | image_url: width: 36 }} 36w, {{ card_image | image_url: width: 72 }} 72w
+        {% endcapture %}
+        {% assign rl_card_img_src = card_image | image_url: width: 72 %}
+        {% render 'rl-deferred-img',
+          lazy_src: rl_card_img_src,
+          lazy_srcset: card_srcset,
+          sizes: '36px',
+          alt: t,
+          width: 36,
+          height: 36
+        %}
+      {% else %}
+        {% liquid
+          assign slider_card_width = 180
+          if card_image.aspect_ratio != blank and card_image.aspect_ratio > 0
+            assign slider_card_height = slider_card_width | divided_by: card_image.aspect_ratio | round
+          else
+            assign slider_card_height = 180
+          endif
+        %}
+        {% capture card_srcset %}
+          {{ card_image | image_url: width: 180 }} 180w, {{ card_image | image_url: width: 260 }} 260w, {{ card_image | image_url: width: 360 }} 360w, {{ card_image | image_url: width: 480 }} 480w, {{ card_image | image_url: width: 640 }} 640w
+        {% endcapture %}
+        {% assign rl_card_img_src = card_image | image_url: width: 640 %}
+        {% render 'rl-deferred-img',
+          lazy_src: rl_card_img_src,
+          lazy_srcset: card_srcset,
+          sizes: '(max-width: 749px) 44vw, (max-width: 1100px) 26vw, clamp(120px, 16vw, 220px)',
+          alt: t,
+          width: slider_card_width,
+          height: slider_card_height,
+          eager: eager
+        %}
+      {% endif %}
+    {% elsif img_url_f != blank %}
+      {% render 'rl-deferred-img',
+        lazy_src: img_url_f,
+        alt: t,
+        width: 320,
+        height: 192,
+        eager: eager
+      %}
+    {% else %}
+      <span class="rl-image-tag-slider__placeholder" aria-hidden="true"></span>
+    {% endif %}
+  </span>
+  {% if t != blank %}
+    <span class="rl-image-tag-slider__label">{{ t }}</span>
+  {% endif %}
+{% if static_card %}
+  </button>
+{% else %}
+  </a>
+{% endif %}

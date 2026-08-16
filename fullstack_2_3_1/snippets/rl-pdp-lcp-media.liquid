@@ -1,0 +1,144 @@
+{%- comment -%}
+  PDP LCP image resolution — shared by lcp-preload-pdp (<head>) and StockX gallery.
+  360: preload frame 0 only (1400w); other frames warmed by product-360-spin.js on idle/drag.
+  Standard: responsive srcset on featured / variant hero image.
+  Keep aligned with blocks/_product-media-gallery.liquid.
+{%- endcomment -%}
+
+{%- liquid
+  assign selected_variant_media = product.selected_or_first_available_variant.featured_media
+
+  assign sorted_media = '' | split: ','
+  if selected_variant_media
+    assign sorted_media = sorted_media | concat: product.media | where: 'id', selected_variant_media.id
+    for media in product.media
+      if media.id != selected_variant_media.id
+        assign found_media = product.media | where: 'id', media.id
+        assign sorted_media = sorted_media | concat: found_media
+      endif
+    endfor
+  else
+    assign sorted_media = product.media
+  endif
+
+  assign spin_file_frames = product.metafields.custom.spin_360_frames.value
+  assign spin_enabled = product.metafields.custom.spin_360_enabled.value
+
+  assign spin_media_image_count = 0
+  for media in sorted_media
+    if media.media_type == 'image'
+      assign spin_media_image_count = spin_media_image_count | plus: 1
+    endif
+  endfor
+
+  assign spin_use_media_frames = false
+  if spin_file_frames == blank
+    if spin_enabled == true and spin_media_image_count > 1
+      assign spin_use_media_frames = true
+    elsif spin_media_image_count >= 24
+      assign spin_use_media_frames = true
+    endif
+  endif
+
+  assign spin_frame_count = 0
+  if spin_file_frames != blank
+    assign spin_frame_count = spin_file_frames.size
+  elsif spin_use_media_frames
+    assign spin_frame_count = spin_media_image_count
+  endif
+
+  assign has_spin_frames = false
+  if spin_frame_count > 1
+    assign has_spin_frames = true
+  endif
+
+  assign spin_lcp_width = 1400
+
+  assign fallback_image = product.featured_image | default: product.images.first
+  if selected_variant_media != blank and selected_variant_media.media_type == 'image'
+    assign fallback_image = selected_variant_media.preview_image
+  endif
+
+  assign pdp_lcp_src = ''
+  if fallback_image != blank
+    assign pdp_lcp_src = fallback_image | image_url: width: 1800
+  endif
+
+  assign spin_first_src = ''
+  if has_spin_frames
+    if spin_file_frames != blank
+      assign spin_first = spin_file_frames.first
+      assign spin_first_src = spin_first | image_url: width: spin_lcp_width
+      if spin_first_src == blank
+        assign spin_first_src = spin_first | file_url
+      endif
+    elsif spin_use_media_frames
+      for media in sorted_media
+        if media.media_type != 'image'
+          continue
+        endif
+        assign spin_first_src = media.preview_image | image_url: width: spin_lcp_width
+        break
+      endfor
+    endif
+    if spin_first_src != blank
+      assign pdp_lcp_src = spin_first_src
+    endif
+  endif
+-%}
+
+{%- if mode == 'preload' and pdp_lcp_src != blank -%}
+  {%- if has_spin_frames -%}
+    {%- liquid
+      assign spin_lcp_image = blank
+      if spin_file_frames != blank
+        assign spin_lcp_image = spin_file_frames.first
+      elsif spin_use_media_frames
+        for media in sorted_media
+          if media.media_type == 'image'
+            assign spin_lcp_image = media.preview_image
+            break
+          endif
+        endfor
+      endif
+    -%}
+    {%- if spin_lcp_image != blank -%}
+      {%- capture pdp_spin_lcp_srcset -%}
+        {{ spin_lcp_image | image_url: width: 320 }} 320w,
+        {{ spin_lcp_image | image_url: width: 375 }} 375w,
+        {{ spin_lcp_image | image_url: width: 412 }} 412w,
+        {{ spin_lcp_image | image_url: width: 550 }} 550w,
+        {{ spin_lcp_image | image_url: width: 750 }} 750w,
+        {{ spin_lcp_image | image_url: width: 900 }} 900w,
+        {{ spin_lcp_image | image_url: width: 1024 }} 1024w,
+        {{ spin_lcp_image | image_url: width: 1400 }} 1400w
+      {%- endcapture -%}
+      <link
+        rel="preload"
+        as="image"
+        href="{{ spin_lcp_image | image_url: width: 750 }}"
+        imagesrcset="{{ pdp_spin_lcp_srcset }}"
+        imagesizes="(min-width: 751px) 70vw, 100vw"
+        fetchpriority="high"
+      >
+    {%- else -%}
+      <link rel="preload" as="image" href="{{ pdp_lcp_src | escape }}" fetchpriority="high">
+    {%- endif -%}
+  {%- elsif fallback_image != blank -%}
+    {%- capture pdp_lcp_srcset -%}
+      {{ fallback_image | image_url: width: 320 }} 320w,
+      {{ fallback_image | image_url: width: 375 }} 375w,
+      {{ fallback_image | image_url: width: 412 }} 412w,
+      {{ fallback_image | image_url: width: 550 }} 550w,
+      {{ fallback_image | image_url: width: 750 }} 750w,
+      {{ fallback_image | image_url: width: 900 }} 900w,
+      {{ fallback_image | image_url: width: 1024 }} 1024w,
+      {{ fallback_image | image_url: width: 1200 }} 1200w,
+      {{ fallback_image | image_url: width: 1400 }} 1400w,
+      {{ fallback_image | image_url: width: 1600 }} 1600w
+    {%- endcapture -%}
+    <link rel="preload" as="image" imagesrcset="{{ pdp_lcp_srcset }}" imagesizes="(min-width: 751px) 70vw, 100vw" fetchpriority="high">
+  {%- endif -%}
+{%- elsif mode == 'src' -%}
+  {{- pdp_lcp_src -}}
+{%- endif -%}

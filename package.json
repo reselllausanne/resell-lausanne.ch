@@ -1,0 +1,24 @@
+{
+  "name": "resell-lausanne-theme-validation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Validation tooling for the Resell Lausanne Shopify theme (P0 SEO/SEA/CRO/trust checks).",
+  "scripts": {
+    "validate:p0": "node scripts/validate-p0.js",
+    "validate:p1": "node scripts/validate-p1.js",
+    "validate:p2": "node scripts/validate-p2.js",
+    "scrape:legitcheck": "node scripts/scrape-legitcheck.mjs",
+    "auth-guides:create": "node --env-file=apps/.env scripts/create-auth-guides.mjs",
+    "translate:map": "node --env-file=apps/.env scripts/build-collection-link-map.mjs",
+    "translate:pilot": "node --env-file=apps/.env scripts/translate_products_cursor.mjs",
+    "translate:1k": "LIMIT=1000 node --env-file=apps/.env scripts/translate_products_cursor.mjs",
+    "translate:fast": "SHARDS=6 BATCH_SIZE=40 WRITE_CONCURRENCY=5 node --env-file=apps/.env scripts/run_translate_parallel.mjs",
+    "translate:repair": "REPAIR=1 CANDIDATES_CACHE=0 SHARDS=6 BATCH_SIZE=40 WRITE_CONCURRENCY=5 node --env-file=apps/.env scripts/run_translate_parallel.mjs",
+    "translate:dry": "DRY_RUN=1 LIMIT=15 node --env-file=apps/.env scripts/translate_products_cursor.mjs"
+  },
+  "devDependencies": {
+    "@cursor/sdk": "^1.0.23",
+    "axe-core": "^4.10.0",
+    "playwright": "^1.60.0"
+  }
+}

@@ -1,0 +1,31 @@
+{% comment %}
+  Editorial article top nav — back to blog (+ optional hub).
+
+  @param blog {blog}
+  @param hub_handle {string} optional article handle for parent hub
+{% endcomment %}
+{% liquid
+  assign blog_home = blog.url | default: routes.root_url
+  assign hub_article = blank
+
+  if hub_handle != blank
+    for item in blog.articles
+      if item.handle == hub_handle
+        assign hub_article = item
+        break
+      endif
+    endfor
+  endif
+%}
+
+<nav class="editorial-guide__toolbar" aria-label="{{ 'editorial.article_nav_label' | t }}">
+  <a class="editorial-guide__back" href="{{ blog_home }}">
+    <span class="editorial-guide__back-icon" aria-hidden="true">←</span>
+    {{ 'editorial.back_to_blog' | t }}
+  </a>
+  {% if hub_article != blank %}
+    <a class="editorial-guide__back editorial-guide__back--ghost" href="{{ hub_article.url }}">
+      {{ 'editorial.hub_back_to_hub' | t }}
+    </a>
+  {% endif %}
+</nav>

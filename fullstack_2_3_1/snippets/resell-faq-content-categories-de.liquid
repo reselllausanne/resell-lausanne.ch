@@ -1,0 +1,194 @@
+{% doc %}
+  FAQ Kategorien (ohne Metaobjects) — Deutsch.
+  @param active_category {string}
+  @param contact_url {string}
+  @param faq_return_url {string}
+  @param faq_guide_url {string}
+  @param faq_process_auth_url {string}
+  @param url_notre_concept {string}
+  @param faq_title_livraison {string}
+  @param faq_title_authenticite {string}
+  @param faq_title_echanges {string}
+  @param faq_title_options {string}
+  @param faq_title_prix {string}
+  @param faq_title_guide {string}
+  @param faq_title_apropos {string}
+{% enddoc %}
+
+{% if active_category == blank or active_category == 'livraison' %}
+  <section id="faq-livraison" class="rl-faq-page__category">
+    <h2>{{ faq_title_livraison }}</h2>
+    {% render 'resell-faq-livraison-article-de', contact_url: contact_url %}
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'authenticite' %}
+  <section id="faq-authenticite" class="rl-faq-page__category">
+    <h2>{{ faq_title_authenticite }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>Wie garantiert Resell Lausanne die Authentizität?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Jedes Produkt wird vor dem Versand von Experten geprüft: Box, Etiketten, Material, Nähte, Sohle und modellspezifische Details.</p>
+        <p>Wir arbeiten nur mit professionellen Wiederverkäufern und zertifizierten Partnern. Nichts wird ohne interne Kontrolle versendet.</p>
+        <p>Details in fünf Schritten: <a href="{{ faq_process_auth_url }}">Unser Authentifizierungsprozess</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Erhalte ich ein Echtheitszertifikat?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Ja. Jede Bestellung enthält ein Resell-Lausanne-Echtheitszertifikat — bestätigt durch unsere Prüfung.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Was passiert, wenn ein Produkt nicht authentisch ist?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Besteht es die finale Kontrolle nicht, wird es nicht versendet. Sie werden sofort informiert und vollständig erstattet.</p>
+        <p>Bei Zweifeln nach Erhalt: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Woher stammen Ihre Produkte?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Von professionellen Wiederverkäufern, Fachhändlern und Partnern in der Schweiz, Europa und international — nie ungeprüft von Privatpersonen.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'echanges-et-retours' %}
+  <section id="faq-echanges-et-retours" class="rl-faq-page__category">
+    <h2>{{ faq_title_echanges }}</h2>
+    {% render 'resell-faq-echanges-article-de', contact_url: contact_url, faq_return_url: faq_return_url %}
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'options-de-paiement' %}
+  <section id="faq-options-de-paiement" class="rl-faq-page__category">
+    <h2>{{ faq_title_options }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>Welche Zahlungsmethoden akzeptieren Sie?</summary>
+      <div class="rl-faq-page__answer">
+        <p><strong>Schweiz:</strong> Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay (Ratenzahlung).</p>
+        <p><strong>Europa:</strong> Visa, MasterCard, Amex, Apple Pay, Alma (2, 3 oder 4 Raten bei berechtigten Bestellungen).</p>
+        <p>Verfügbare Optionen hängen vom Lieferland ab.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Ist Ratenzahlung verfügbar?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Schweiz: Powerpay. Europa: Alma in 2, 3 oder 4 Raten ohne Gebühren (berechtigte Bestellungen).</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Ist die Zahlung sicher?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Ja. SSL-verschlüsselt über zertifizierte Zahlungsdienstleister. Resell Lausanne speichert keine Bankdaten.</p>
+      </div>
+    </details>
+
+    {% render 'resell-powerpay-cgv-block' %}
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'prix-et-reductions' %}
+  <section id="faq-prix-et-reductions" class="rl-faq-page__category">
+    <h2>{{ faq_title_prix }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>Wie werden Preise festgelegt?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Marktwert zum Verkaufszeitpunkt inkl. Beschaffung, Authentizitätsprüfung und Betrieb. Preise in CHF.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Warum variieren Preise nach Grösse?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Jede Grösse hat eigene Nachfrage und Verfügbarkeit. Echtzeit-Beschaffung → unterschiedliche Preise pro Grösse sind normal.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Gibt es Promo-Codes?</summary>
+      <div class="rl-faq-page__answer">
+        <p><strong>CHF 10 Rabatt</strong> auf die erste Bestellung mit Code <strong>FIRST10</strong>. Weitere Angebote per Newsletter.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Sind Preise inkl. MwSt.?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Ja, inkl. Schweizer MwSt. Ausserhalb der Schweiz können lokale Steuern anfallen.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'guide-des-tailles' %}
+  <section id="faq-guide-des-tailles" class="rl-faq-page__category">
+    <h2>{{ faq_title_guide }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>Wie wähle ich meine Sneaker-Grösse?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Grössen in EU. Produktseite zeigt Passform (true to size, gross, klein). Im Zweifel halbe Grösse grösser.</p>
+        <p><a href="{{ faq_guide_url }}"><strong>Detaillierter Grössenratgeber</strong></a> mit EU/US/UK/CM für Nike, Jordan, Adidas, New Balance, ASICS, Yeezy, UGG u.a.</p>
+        <p>Beratung: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Wie rechne ich US, UK und EU um?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Markenabhängig. Siehe <a href="{{ faq_guide_url }}">Grössentabelle</a>. Richtwerte:</p>
+        <ul>
+          <li>EU 40 = US 7 = UK 6</li>
+          <li>EU 42 = US 8.5 = UK 7.5</li>
+          <li>EU 44 = US 10 = UK 9</li>
+          <li>EU 45 = US 11 = UK 10</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Wo finde ich den vollständigen Marken-Guide?</summary>
+      <div class="rl-faq-page__answer">
+        <p><a href="{{ faq_guide_url }}"><strong>Grössenratgeber</strong></a> für Nike, Air Jordan, Adidas, New Balance, ASICS, Yeezy, UGG, Converse, Salomon, Puma, Veja, On Running — mit EU/US/UK/CM.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'a-propos-de-nous' %}
+  <section id="faq-a-propos-de-nous" class="rl-faq-page__category">
+    <h2>{{ faq_title_apropos }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>Wer ist Resell Lausanne?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Schweizer Online-Shop für authentische Sneakers, Premium-Streetwear und Collectibles aus Lausanne. <a href="{{ url_notre_concept }}">Unser Konzept</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Wie erreiche ich Sie?</summary>
+      <div class="rl-faq-page__answer">
+        <p><a href="{{ contact_url }}">contact@resell-lausanne.ch</a> — Antwort meist innerhalb 24–48 Werktagsstunden.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Gibt es einen Store-Service?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Hauptsächlich online. Abholung/Termin in Lausanne nach Absprache per E-Mail.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}

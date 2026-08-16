@@ -1,0 +1,62 @@
+{% liquid
+  assign url_air_jordan = collections['air-jordan'].url | default: '/collections/air-jordan'
+  assign url_nike = collections.nike.url | default: '/collections/nike'
+  capture url_guide
+    render 'rl-resolved-page-url', handle: 'guide-des-tailles'
+  endcapture
+  assign url_guide = url_guide | strip
+  capture url_faq
+    render 'rl-resolved-page-url', handle: 'faq'
+  endcapture
+  assign url_faq = url_faq | strip
+%}
+<p>
+  Les sneakers Travis Scott font partie des collaborations les plus recherchées au monde, et particulièrement en Suisse. Chez Resell Lausanne, nous sélectionnons chaque paire avec soin : Air Jordan 1 Low Travis Scott, Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack, Nike SB Dunk Low, Nike Air Force 1 Cactus Jack et Jordan 4 Travis Scott. Chaque modèle est authentifié, jamais porté et expédié rapidement en Suisse romande comme alémanique.
+</p>
+<p>
+  La force de la collab Travis Scott × Nike repose sur des détails reconnaissables : le swoosh inversé, les teintes terreuses, les overlays Cactus Jack. Ces codes en ont fait des pièces de collection autant que des sneakers à porter au quotidien. Notre rôle est simple : vous garantir des paires authentiques, à un prix juste, avec un suivi humain en français, allemand et anglais.
+</p>
+
+<h3>Air Jordan 1 Low Travis Scott — La silhouette qui a tout changé</h3>
+<p>
+  Lancée en 2019 avec le coloris Mocha, l'Air Jordan 1 Low Travis Scott a relancé l'engouement mondial pour la silhouette Low. Les déclinaisons Reverse Mocha, Olive, Black Phantom, Velvet Brown ou Shy Pink continuent d'alimenter le marché. Notre sélection regroupe les coloris confirmés et les éditions enfant (PS, TD) compatibles famille.
+</p>
+
+<h3>Nike SB Dunk Low Travis Scott — La paire culte du skate</h3>
+<p>
+  La Nike SB Dunk Low Travis Scott reste l'une des paires SB les plus convoitées depuis sa sortie. Avec son matelas de paillettes intégrées et son arrière déchirable, elle incarne parfaitement l'ADN Cactus Jack. Nous proposons les exemplaires en bon état, vérifiés sur l'ensemble des points sensibles (étiquettes, semelle, boîte d'origine).
+</p>
+
+<h3>Jordan 4, Jumpman Jack & Air Force 1 Cactus Jack — Les modèles d'exception</h3>
+<p>
+  Au-delà de la Jordan 1, la gamme Travis Scott couvre des silhouettes phares : Jordan 4 Cactus Jack, Jumpman Jack TR (Olive, Sail, Travis Scott Green Spark), Air Force 1 Low Cactus Jack. Ces modèles sont devenus des références grail pour les collectionneurs en Suisse, et nous sourçons régulièrement les coloris en demande.
+</p>
+
+<h3>Acheter des Travis Scott en Suisse en toute confiance</h3>
+<p>
+  En commandant chez Resell Lausanne, vous bénéficiez d'une authentification interne, d'un paiement flexible (Visa, MasterCard, Twint, PostFinance, Powerpay, Alma 2-4 fois), d'une livraison rapide dans toute la Suisse et d'un service client réactif. Notre objectif : vous offrir l'expérience d'achat la plus claire et la plus sûre pour un produit Travis Scott authentique, sans mauvaise surprise.
+</p>
+<p>
+  Pour compléter votre recherche, explorez aussi notre
+  <a href="{{ url_air_jordan }}">collection Air Jordan</a>,
+  notre <a href="{{ url_nike }}">collection Nike</a>,
+  notre <a href="{{ url_guide }}">guide des tailles</a>
+  et la <a href="{{ url_faq }}">FAQ Resell Lausanne</a>.
+</p>
+
+<h3>Questions fréquentes — Travis Scott</h3>
+<p><strong>Comment garantissez-vous l'authenticité des Travis Scott ?</strong><br>
+  Chaque paire passe par un contrôle multi-points (boîte, étiquette, points de couture, semelle, swoosh inversé, paillettes pour la Dunk SB). Nous refusons toute paire qui ne réussit pas le contrôle.
+</p>
+<p><strong>Quels modèles Travis Scott avez-vous en stock ?</strong><br>
+  Air Jordan 1 Low (Mocha, Reverse Mocha, Olive, Black Phantom, Velvet Brown, Shy Pink, Canary), Jordan 1 High Fragment, Jordan 4 Cactus Jack, Jumpman Jack, Nike SB Dunk Low Travis Scott, Air Force 1 Cactus Jack. Stock mis à jour fréquemment.
+</p>
+<p><strong>Livrez-vous partout en Suisse ?</strong><br>
+  Oui, livraison dans toute la Suisse avec suivi. La livraison est gratuite en Suisse dès 50 CHF d'achat. Forfait de 10 CHF pour les livraisons en Europe.
+</p>
+<p><strong>Puis-je payer en plusieurs fois ?</strong><br>
+  Oui. Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois) sur les commandes éligibles.
+</p>
+<p><strong>Quelle taille choisir pour une Travis Scott ?</strong><br>
+  La plupart des modèles taillent normalement (Jordan 1 Low, AF1). La Nike SB Dunk Low taille plutôt grand : envisagez une demi-pointure en dessous selon votre forme de pied. En cas de doute, contactez-nous.
+</p>

@@ -9,16 +9,95 @@
 
 {% if product.has_only_default_variant == false %}
   {% liquid
+    assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+    assign locale_base = locale_iso | split: '-' | first
     assign selection_modal_id = 'size-selection-modal-' | append: section.id
     assign size_selector_label = product.metafields.custom.size_selector_label.value | default: 'Select your size'
+    assign size_guide_label = 'Size guide'
+    assign size_guide_url = '/pages/guide-des-tailles'
+    if pages['guide-des-tailles'] != blank
+      assign size_guide_url = pages['guide-des-tailles'].url
+    endif
+    assign add_to_cart_label = 'products.add_to_cart' | t
+    if locale_base == 'fr'
+      assign size_selector_label = product.metafields.custom.size_selector_label.value | default: 'Sélectionnez votre taille'
+      assign size_guide_label = 'Guide des tailles'
+    elsif locale_base == 'de'
+      assign size_selector_label = product.metafields.custom.size_selector_label.value | default: 'Wahle deine groesse'
+      assign size_guide_label = 'Grossentabelle'
+    endif
+    capture fit_note_inline
+      render 'rs-product-fit-note', product: product
+    endcapture
+    assign fit_note_inline = fit_note_inline | strip
+    assign show_fit_size_guide_link = true
+    capture rs_is_sealed_flag
+      render 'rs-product-is-sealed-collectible', product: product
+    endcapture
+    if rs_is_sealed_flag != blank
+      assign show_fit_size_guide_link = false
+    endif
     assign has_size_modal = false
+    assign is_direct_atc = false
+    assign size_option_index = -1
+    assign size_option_values_count = 0
+    assign numeric_option_index = -1
+    assign numeric_option_matches = 0
+    assign largest_option_values_count = 0
+
     for option in product.options_with_values
-      assign option_name_downcase_pre = option.name | downcase
-      if option_name_downcase_pre contains 'size' or option_name_downcase_pre contains 'taille' or option_name_downcase_pre contains 'pointure'
-        assign has_size_modal = true
-        break
+      assign option_values_count = option.values | size
+      if option_values_count > largest_option_values_count
+        assign largest_option_values_count = option_values_count
+      endif
+
+      assign option_has_numeric_value = false
+      for option_value in option.values
+        assign option_value_token = option_value | append: '' | strip
+        assign option_value_token_clean = option_value_token | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' | remove: ' ' | remove: '.' | remove: ',' | remove: '/' | remove: '-'
+        if option_value_token != blank and option_value_token_clean == blank
+          assign option_has_numeric_value = true
+          break
+        endif
+      endfor
+
+      if option_has_numeric_value
+        assign numeric_option_matches = numeric_option_matches | plus: 1
+        assign numeric_option_index = forloop.index0
       endif
     endfor
+
+    if product.options_with_values.size == 1
+      assign size_option_index = 0
+    elsif numeric_option_matches == 1
+      assign size_option_index = numeric_option_index
+    elsif largest_option_values_count > 1
+      for option in product.options_with_values
+        if option.values.size == largest_option_values_count
+          assign size_option_index = forloop.index0
+          break
+        endif
+      endfor
+    endif
+
+    if size_option_index >= 0
+      assign has_size_modal = true
+      for option in product.options_with_values
+        if forloop.index0 == size_option_index
+          assign size_option_values_count = option.values | size
+          break
+        endif
+      endfor
+      if size_option_values_count == 1
+        capture rs_express_pricing_flag
+          render 'rs-product-has-express-pricing', product: product
+        endcapture
+        assign rs_express_pricing_flag = rs_express_pricing_flag | strip
+        unless rs_express_pricing_flag == 'true'
+          assign is_direct_atc = true
+        endunless
+      endif
+    endif
     capture variant_picker_class
       if block.settings.additional_class != blank
         echo block.settings.additional_class
@@ -32,6 +111,7 @@
   %}
   <variant-picker
     data-product-url="{{ product.url }}"
+    {% if is_direct_atc %}data-rs-direct-atc-product{% endif %}
     style="
       --margin-top: {{ block.settings.margin_top }}px;
       --margin-bottom: {{ block.settings.margin_bottom }}px;
@@ -46,7 +126,7 @@
   >
     {% comment %}
       TODO: Product contract.
-      Required metafield:
+      Optional metafield with fallback:
       - product.custom.size_selector_label (single_line_text) for localized modal trigger text.
     {% endcomment %}
     <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
@@ -54,16 +134,15 @@
     <div class="variant-picker__options">
       {% for option in product.options_with_values %}
         {% liquid
-          assign option_name_downcase = option.name | downcase
           assign is_size_option = false
-          if option_name_downcase contains 'size' or option_name_downcase contains 'taille' or option_name_downcase contains 'pointure'
+          if forloop.index0 == size_option_index
             assign is_size_option = true
             assign has_size_modal = true
           endif
         %}
         {% if block.settings.variant_picker_type == 'selects' %}
           <div class="variant-picker__option">
-            {% if block.settings.show_option_name %}
+            {% if block.settings.show_option_name and is_size_option == false %}
               <div class="variant-picker__option-name variant_label">
                 <span>{{ option.name }} :</span>
 
@@ -74,7 +153,7 @@
             {% endif %}
 
             {% if is_size_option %}
-              <div class="rs-size-modal__native-size">
+              <div class="rs-size-modal__native-size" hidden>
                 <div class="select-wrapper select-wrapper--full-width">
                   <select
                     name="option-{{ option.name }}"
@@ -106,17 +185,52 @@
                   </div>
                 </div>
               </div>
-              <div class="rs-size-modal__trigger-wrap">
-                <button
-                  type="button"
-                  class="rs-size-modal__trigger"
-                  data-rs-size-modal-open="{{ selection_modal_id }}"
-                  aria-controls="{{ selection_modal_id }}"
-                  aria-haspopup="dialog"
-                >
-                  {{ size_selector_label }}
-                </button>
-              </div>
+              {% if is_direct_atc %}
+                <div class="rs-size-modal__trigger-wrap rs-size-modal__trigger-wrap--direct-atc">
+                  <button
+                    type="button"
+                    class="rs-size-modal__trigger rs-size-modal__trigger--direct-atc"
+                    data-rs-direct-atc
+                    data-rs-size-modal-target="{{ selection_modal_id }}"
+                  >
+                    {{ add_to_cart_label }}
+                  </button>
+                  <div class="rs-size-modal__fit-note-box{% unless show_fit_size_guide_link %} rs-size-modal__fit-note-box--no-guide{% endunless %}">
+                    <p class="rs-size-modal__fit-note-inline">{{ fit_note_inline | escape }}</p>
+                    {% if show_fit_size_guide_link %}
+                      <a
+                        class="rs-size-modal__fit-note-link"
+                        href="{{ size_guide_url }}"
+                      >
+                        {{ size_guide_label }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% else %}
+                <div class="rs-size-modal__trigger-wrap">
+                  <button
+                    type="button"
+                    class="rs-size-modal__trigger"
+                    data-rs-size-modal-open="{{ selection_modal_id }}"
+                    aria-controls="{{ selection_modal_id }}"
+                    aria-haspopup="dialog"
+                  >
+                    {{ size_selector_label }}
+                  </button>
+                  <div class="rs-size-modal__fit-note-box{% unless show_fit_size_guide_link %} rs-size-modal__fit-note-box--no-guide{% endunless %}">
+                    <p class="rs-size-modal__fit-note-inline">{{ fit_note_inline | escape }}</p>
+                    {% if show_fit_size_guide_link %}
+                      <a
+                        class="rs-size-modal__fit-note-link"
+                        href="{{ size_guide_url }}"
+                      >
+                        {{ size_guide_label }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
             {% else %}
               <div class="select-wrapper select-wrapper--full-width">
                 <select
@@ -152,7 +266,7 @@
           </div>
         {% elsif block.settings.variant_picker_type == 'buttons' %}
           <fieldset class="variant-picker__option">
-            {% if block.settings.show_option_name %}
+            {% if block.settings.show_option_name and is_size_option == false %}
               <div class="variant-picker__option-name variant_label">
                 <span>{{ option.name }} :</span>
 
@@ -163,7 +277,7 @@
             {% endif %}
 
             {% if is_size_option %}
-              <div class="rs-size-modal__native-size">
+              <div class="rs-size-modal__native-size" hidden>
                 <div class="variant-picker__option-values">
                   {% liquid
                     assign native_swatches_count = option.values | map: 'swatch' | compact | size
@@ -218,17 +332,52 @@
                   %}
                 </div>
               </div>
-              <div class="rs-size-modal__trigger-wrap">
-                <button
-                  type="button"
-                  class="rs-size-modal__trigger"
-                  data-rs-size-modal-open="{{ selection_modal_id }}"
-                  aria-controls="{{ selection_modal_id }}"
-                  aria-haspopup="dialog"
-                >
-                  {{ size_selector_label }}
-                </button>
-              </div>
+              {% if is_direct_atc %}
+                <div class="rs-size-modal__trigger-wrap rs-size-modal__trigger-wrap--direct-atc">
+                  <button
+                    type="button"
+                    class="rs-size-modal__trigger rs-size-modal__trigger--direct-atc"
+                    data-rs-direct-atc
+                    data-rs-size-modal-target="{{ selection_modal_id }}"
+                  >
+                    {{ add_to_cart_label }}
+                  </button>
+                  <div class="rs-size-modal__fit-note-box{% unless show_fit_size_guide_link %} rs-size-modal__fit-note-box--no-guide{% endunless %}">
+                    <p class="rs-size-modal__fit-note-inline">{{ fit_note_inline | escape }}</p>
+                    {% if show_fit_size_guide_link %}
+                      <a
+                        class="rs-size-modal__fit-note-link"
+                        href="{{ size_guide_url }}"
+                      >
+                        {{ size_guide_label }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% else %}
+                <div class="rs-size-modal__trigger-wrap">
+                  <button
+                    type="button"
+                    class="rs-size-modal__trigger"
+                    data-rs-size-modal-open="{{ selection_modal_id }}"
+                    aria-controls="{{ selection_modal_id }}"
+                    aria-haspopup="dialog"
+                  >
+                    {{ size_selector_label }}
+                  </button>
+                  <div class="rs-size-modal__fit-note-box{% unless show_fit_size_guide_link %} rs-size-modal__fit-note-box--no-guide{% endunless %}">
+                    <p class="rs-size-modal__fit-note-inline">{{ fit_note_inline | escape }}</p>
+                    {% if show_fit_size_guide_link %}
+                      <a
+                        class="rs-size-modal__fit-note-link"
+                        href="{{ size_guide_url }}"
+                      >
+                        {{ size_guide_label }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
             {% else %}
               <div class="variant-picker__option-values">
                 {% liquid
@@ -297,42 +446,6 @@
   <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
 {% endif %}
 
-{% stylesheet %}
-  shopify-visual-preview-block-list variant-picker[data-visual-preview-mode] {
-    width: 350px;
-  }
-
-  variant-picker {
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-  }
-
-  .variant-picker__options {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-md);
-  }
-
-  .variant-picker__option {
-    border: none;
-    padding: 0;
-  }
-
-  .variant-picker__option-name {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--gap-sm);
-  }
-
-  .variant-picker__option-values {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--gap-sm);
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:product_variant_picker",
@@ -396,6 +509,13 @@
       "label": "t:swatches_rounded",
       "default": true,
       "visible_if": "{{ block.settings.show_swatches and block.settings.variant_picker_type == 'buttons' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_guide",
+      "label": "Show size guide link",
+      "default": false,
+      "info": "Deprecated — use Guide des tailles inside the size selection modal."
     },
     {
       "type": "header",

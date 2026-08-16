@@ -9,86 +9,22 @@
  */
 {
   "sections": {
-    "custom_section_9YFVEQ": {
-      "type": "custom-section",
-      "blocks": {
-        "text_GzgzHF": {
-          "type": "text",
-          "name": "t:title",
-          "settings": {
-            "show_on_display": "desktop_and_mobile",
-            "text": "<h1>{{ closest.collection.title }}</h1>",
-            "text_style": "h2",
-            "paragraph_font_size": "normal",
-            "font_weight": 400,
-            "alignment": "left",
-            "alignment_mobile": "left",
-            "show_read_more": false,
-            "read_more_length": 200,
-            "read_more_text": "Voir plus",
-            "read_less_text": "Voir moins",
-            "truncate": false,
-            "truncate_length": 2,
-            "margin_top": 0,
-            "margin_bottom": 0,
-            "additional_class": ""
-          },
-          "blocks": {}
-        },
-        "text_RjDBF3": {
-          "type": "text",
-          "name": "Description",
-          "disabled": true,
-          "settings": {
-            "show_on_display": "desktop_and_mobile",
-            "text": "{{ closest.collection.description }}",
-            "text_style": "paragraph",
-            "paragraph_font_size": "normal",
-            "font_weight": 400,
-            "alignment": "left",
-            "alignment_mobile": "left",
-            "show_read_more": false,
-            "read_more_length": 200,
-            "read_more_text": "Voir plus",
-            "read_less_text": "Voir moins",
-            "truncate": false,
-            "truncate_length": 2,
-            "margin_top": 0,
-            "margin_bottom": 0,
-            "additional_class": ""
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": ["text_GzgzHF", "text_RjDBF3"],
-      "name": "Titre de la collection",
+    "collection_plp_header": {
+      "type": "collection-plp-header",
+      "name": "PLP — en-tête + marques",
       "settings": {
-        "show_on_display": "desktop_and_mobile",
         "color_scheme": "scheme-1",
-        "wrap_in_card": false,
-        "color_scheme_card": "",
-        "section_width": "normal",
-        "layout_type": "flex",
-        "layout_flex_direction_desktop": "column",
-        "layout_grid_columns_desktop": 3,
-        "layout_gap_desktop": 15,
-        "layout_wrap_desktop": "nowrap",
-        "layout_flex_justify_desktop": "flex-start",
-        "layout_flex_align_items_desktop": "flex-start",
-        "same_as_desktop": true,
-        "layout_flex_direction_mobile": "row",
-        "layout_gap_mobile": 20,
-        "layout_wrap_mobile": "nowrap",
-        "layout_flex_justify_mobile": "flex-start",
-        "layout_flex_align_items_mobile": "flex-start",
-        "layout_grid_columns_mobile": 1,
-        "padding_top": 60,
-        "padding_bottom": 0,
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "anchor_id": "",
-        "additional_class": ""
-      }
+        "show_heading": true,
+        "show_brand_strip": true,
+        "sync_with_menu_drawer": true,
+        "only_on_all_collection": true,
+        "brand_menu": "",
+        "aria_label": "Filtrer par marque",
+        "padding_top": 24,
+        "padding_bottom": 12
+      },
+      "blocks": {},
+      "block_order": []
     },
     "main": {
       "type": "main-collection",
@@ -125,7 +61,7 @@
                 "show_slider": true,
                 "media_rounded": true,
                 "show_badges": true,
-                "media_ratio": "1 / 1",
+                "media_ratio": "adapt",
                 "additional_class": ""
               },
               "blocks": {}
@@ -153,27 +89,10 @@
                 "additional_class": ""
               },
               "blocks": {
-                "text_ExEbDY": {
-                  "type": "text",
-                  "name": "Titre produit",
-                  "settings": {
-                    "show_on_display": "desktop_and_mobile",
-                    "text": "<h2>{{ closest.product.title }}</h2>",
-                    "text_style": "paragraph",
-                    "paragraph_font_size": "normal",
-                    "font_weight": 500,
-                    "alignment": "left",
-                    "alignment_mobile": "left",
-                    "show_read_more": false,
-                    "read_more_length": 200,
-                    "read_more_text": "Voir plus",
-                    "read_less_text": "Voir moins",
-                    "truncate": false,
-                    "truncate_length": 2,
-                    "margin_top": 0,
-                    "margin_bottom": 0,
-                    "additional_class": ""
-                  },
+                "product_card_plp_brand": {
+                  "type": "_product-card-plp-brand",
+                  "name": "Marque (PLP)",
+                  "settings": {},
                   "blocks": {}
                 },
                 "product_price_jg9zQp": {
@@ -186,72 +105,45 @@
                     "show_sales_badge_text": false,
                     "show_unit_price": false,
                     "text_style": "paragraph",
-                    "additional_class": ""
-                  },
-                  "blocks": {}
-                },
-                "product_card_swatches_wiewgm": {
-                  "type": "_product-card-swatches",
-                  "name": "t:swatches",
-                  "settings": {
-                    "show_on_display": "desktop_and_mobile",
-                    "swatches_size": "small",
-                    "swatches_rounded": true,
-                    "additional_class": ""
-                  },
-                  "blocks": {}
-                },
-                "rating_stars_tmhMrj": {
-                  "type": "rating-stars",
-                  "name": "t:rating_stars",
-                  "settings": {
-                    "show_on_display": "desktop_and_mobile",
-                    "product": "{{ closest.product }}",
-                    "hide_rating_when_no_reviews": true,
-                    "rating": 4.5,
-                    "show_note": true,
-                    "show_review_count": true,
-                    "review_count": 123,
-                    "link": "",
-                    "margin_top": 0,
-                    "margin_bottom": 0,
+                    "use_plp_card_price": true,
                     "additional_class": ""
                   },
                   "blocks": {}
                 }
               },
-              "block_order": ["text_ExEbDY", "product_price_jg9zQp", "product_card_swatches_wiewgm", "rating_stars_tmhMrj"]
-            },
-            "product_card_quick_add_BnYnWb": {
-              "type": "_product-card-quick-add",
-              "name": "t:product_card_quick_add",
-              "settings": {
-                "show_on_display": "desktop_and_mobile",
-                "button_style": "secondary",
-                "button_shape": "default",
-                "align_quick_add_together": true,
-                "show_product_media_gallery": false,
-                "margin_top": 0,
-                "margin_bottom": 0,
-                "additional_class": ""
-              },
-              "blocks": {}
+              "block_order": ["product_card_plp_brand", "product_price_jg9zQp"]
             }
           },
-          "block_order": ["product_card_gallery_6qMVW4", "product_card_group_rUyxyU", "product_card_quick_add_BnYnWb"]
+          "block_order": ["product_card_gallery_6qMVW4", "product_card_group_rUyxyU"]
         }
       },
       "settings": {
         "color_scheme": "scheme-1",
-        "products_per_page": 24,
+        "show_plp_heading": false,
+        "products_per_page": 28,
         "grid_columns": 4,
         "grid_columns_mobile": "2",
-        "padding_top": 60,
+        "padding_top": 0,
         "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "collection_plp_seo_readmore": {
+      "type": "collection-plp-seo-readmore",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "use_resell_default_copy": true,
+        "heading": "",
+        "subheading": "",
+        "body": "",
+        "collapsed_height": 360,
+        "padding_top": 48,
+        "padding_bottom": 56,
         "margin_top": 0,
         "margin_bottom": 0
       }
     }
   },
-  "order": ["custom_section_9YFVEQ", "main"]
+  "order": ["collection_plp_header", "main", "collection_plp_seo_readmore"]
 }

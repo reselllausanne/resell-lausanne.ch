@@ -1,0 +1,145 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign hub_heading = section.settings.heading
+  assign hub_subheading = section.settings.subheading
+  assign hub_intro = section.settings.intro
+
+  if hub_heading == blank
+    if locale_base == 'de'
+      assign hub_heading = 'Le Blog By Resell-lausanne'
+    elsif locale_base == 'en'
+      assign hub_heading = 'Le Blog By Resell-lausanne'
+    else
+      assign hub_heading = 'Le Blog By Resell-lausanne'
+    endif
+  endif
+
+  if hub_subheading == blank
+    if locale_base == 'de'
+      assign hub_subheading = 'Authentizität, Grössen, Drops & Vergleiche für die Schweiz'
+    elsif locale_base == 'en'
+      assign hub_subheading = 'Authenticity, sizing, drops & comparisons for Switzerland'
+    else
+      assign hub_subheading = 'Authenticité, tailles, drops et comparatifs pour la Suisse'
+    endif
+  endif
+
+  if hub_intro == blank
+    if locale_base == 'de'
+      assign hub_intro = '<p>Guides, Vergleiche und Kaufberatung zu authentischen Sneakers und Streetwear — geschrieben für Käufer in der Schweiz. Authentizität, Lieferzeiten, Grössen und Marktpreise.</p>'
+    elsif locale_base == 'en'
+      assign hub_intro = '<p>Guides, comparisons and buying advice on authentic sneakers and streetwear — written for buyers in Switzerland. Authenticity, delivery times, sizing and market prices.</p>'
+    else
+      assign hub_intro = "<p>Guides, comparatifs et conseils d'achat sur les sneakers et le streetwear authentiques — rédigés pour les acheteurs en Suisse. Authenticité, délais de livraison, tailles et prix du marché.</p>"
+    endif
+  endif
+-%}
+
+<section
+  class="resell-blog-hub color-{{ section.settings.color_scheme }}"
+  style="
+    --padding-top: {{ section.settings.padding_top }}px;
+    --padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="resell-blog-hub__inner page-width">
+    <nav class="resell-blog-hub__breadcrumb" aria-label="{{ 'breadcrumbs.home' | t }}">
+      <a href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      <span aria-hidden="true">/</span>
+      <span>{{ blog.title | default: hub_heading }}</span>
+    </nav>
+
+    <header class="resell-blog-hub__header">
+      <h1 class="resell-blog-hub__title">{{ hub_heading | escape }}</h1>
+      <p class="resell-blog-hub__subtitle">{{ hub_subheading | escape }}</p>
+      {%- if hub_intro != blank -%}
+        <div class="resell-blog-hub__intro rte">{{ hub_intro }}</div>
+      {%- endif -%}
+    </header>
+
+    {%- if section.settings.show_topic_pills -%}
+      <nav class="resell-blog-hub__topics" aria-label="Thématiques">
+        <span class="resell-blog-hub__topics-label">Thématiques :</span>
+        <ul class="resell-blog-hub__topics-list">
+          <li>
+            <a href="{{ blog.url }}"{% unless current_tags %} class="is-active"{% endunless %}>Tous</a>
+          </li>
+          <li><a href="{{ blog.url }}/tagged/guides-achat"{% if current_tags contains 'guides-achat' %} class="is-active"{% endif %}>Guides d'achat</a></li>
+          <li><a href="{{ blog.url }}/tagged/authenticite"{% if current_tags contains 'authenticite' %} class="is-active"{% endif %}>Authenticité</a></li>
+          <li><a href="{{ blog.url }}/tagged/comparatifs"{% if current_tags contains 'comparatifs' %} class="is-active"{% endif %}>Comparatifs</a></li>
+          {%- if blog.tags contains 'drops' -%}
+            <li><a href="{{ blog.url }}/tagged/drops"{% if current_tags contains 'drops' %} class="is-active"{% endif %}>Drops & sorties</a></li>
+          {%- endif -%}
+          <li><a href="{{ blog.url }}/tagged/suisse"{% if current_tags contains 'suisse' %} class="is-active"{% endif %}>Suisse</a></li>
+        </ul>
+      </nav>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Resell blog hub",
+  "tag": "section",
+  "class": "section-resell-blog-hub",
+  "enabled_on": {
+    "templates": ["blog"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre H1",
+      "default": "Resell Journal — Sneakers, streetwear & guides d'achat"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Sous-titre",
+      "default": "Authenticité, tailles, drops et comparatifs pour la Suisse"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction SEO",
+      "default": "<p>Guides, comparatifs et conseils d'achat sur les sneakers et le streetwear authentiques — rédigés pour les acheteurs en Suisse.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_topic_pills",
+      "label": "Afficher les pills thématiques (tags blog)",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Resell blog hub"
+    }
+  ]
+}
+{% endschema %}

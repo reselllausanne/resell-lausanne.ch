@@ -1,5 +1,21 @@
 {% liquid
   assign number_of_media = 0
+  assign story_slide_asset = blank
+  assign story_thumb_asset = blank
+
+  if block.settings.story_preset == 'auth'
+    assign story_slide_asset = 'rl-story-auth-slide.jpg'
+    assign story_thumb_asset = 'rl-story-auth-thumb.jpg'
+  elsif block.settings.story_preset == 'returns'
+    assign story_slide_asset = 'rl-story-returns-slide.jpg'
+    assign story_thumb_asset = 'rl-story-returns-thumb.jpg'
+  elsif block.id contains 'story_auth' or block.settings.title == 'Authenticité'
+    assign story_slide_asset = 'rl-story-auth-slide.jpg'
+    assign story_thumb_asset = 'rl-story-auth-thumb.jpg'
+  elsif block.id contains 'story_returns' or block.settings.title == '14 jours'
+    assign story_slide_asset = 'rl-story-returns-slide.jpg'
+    assign story_thumb_asset = 'rl-story-returns-thumb.jpg'
+  endif
 
   for i in (1..8)
     assign video_key = 'video_' | append: i
@@ -26,6 +42,15 @@
 
       {% if story_thumbnail != blank %}
         {{ story_thumbnail | image_url: width: 150 | image_tag }}
+      {% elsif story_thumb_asset != blank %}
+        <img
+          src="{{ story_thumb_asset | asset_url }}"
+          alt="{{ block.settings.title | escape }}"
+          width="55"
+          height="55"
+          loading="lazy"
+          decoding="async"
+        >
       {% else %}
         <img src="{{ 'placeholder-image.jpg' | asset_img_url: 'x150' }}" alt="Story image" width="55" height="55">
       {% endif %}
@@ -41,8 +66,15 @@
       <div class="splide story__slider" role="group" data-ref="story-slider" data-story-id="{{ block.id }}">
         <div class="story__header">
           <div class="story__progress-bars" data-ref="story-progress-bars">
-            {% if number_of_media != 0 %}
-              {% for i in (1..number_of_media) %}
+            {% liquid
+              assign progress_bar_count = number_of_media
+              if progress_bar_count == 0 and story_slide_asset != blank
+                assign progress_bar_count = 1
+              endif
+            %}
+
+            {% if progress_bar_count != 0 %}
+              {% for i in (1..progress_bar_count) %}
                 <progress class="story__progress-bar" data-ref="story-progress-bar" max="100" value="0" data-index="{{ i }}"></progress>
               {% endfor %}
             {% else %}
@@ -58,6 +90,15 @@
 
             {% if first_image != blank %}
               {{ first_image | image_url: width: 100 | image_tag }}
+            {% elsif story_thumb_asset != blank %}
+              <img
+                src="{{ story_thumb_asset | asset_url }}"
+                alt="{{ block.settings.title | escape }}"
+                width="32"
+                height="32"
+                loading="lazy"
+                decoding="async"
+              >
             {% else %}
               <img
                 src="{{ 'placeholder-image.jpg' | asset_img_url: 'x70' }}"
@@ -83,7 +124,32 @@
 
         <div class="splide__track">
           <ul class="splide__list">
-            {% if number_of_media != 0 %}
+            {% liquid
+              assign rendered_story_slides = 0
+
+              for i in (1..8)
+                assign media_type_key = 'media_type_' | append: i
+                assign video_key = 'video_' | append: i
+                assign image_key = 'image_' | append: i
+                assign image_duration_key = 'image_duration_' | append: i
+
+                assign media_type = block.settings[media_type_key]
+                assign video = block.settings[video_key]
+                assign image = block.settings[image_key]
+                assign image_duration = block.settings[image_duration_key]
+                if image_duration == blank
+                  assign image_duration = 5
+                endif
+
+                if media_type == 'video' and video != blank
+                  assign rendered_story_slides = rendered_story_slides | plus: 1
+                elsif media_type == 'image' and image != blank
+                  assign rendered_story_slides = rendered_story_slides | plus: 1
+                endif
+              endfor
+            %}
+
+            {% if rendered_story_slides > 0 %}
               {% for i in (1..8) %}
                 {% assign media_type_key = 'media_type_' | append: i %}
                 {% assign video_key = 'video_' | append: i %}
@@ -110,6 +176,19 @@
                   </li>
                 {% endif %}
               {% endfor %}
+            {% elsif story_slide_asset != blank %}
+              {% assign image_duration = block.settings.image_duration_1 | default: 5 | times: 1000 %}
+
+              <li class="splide__slide story-slider__slide" data-ref="story-slide" data-index="1" data-interval="{{ image_duration }}">
+                <img
+                  src="{{ story_slide_asset | asset_url }}"
+                  alt="{{ block.settings.title | escape }}"
+                  width="600"
+                  height="1000"
+                  loading="lazy"
+                  decoding="async"
+                >
+              </li>
             {% else %}
               <li class="splide__slide story-slider__slide" data-ref="story-slide" data-index="1" data-interval="50000">
                 <img src="{{ 'placeholder-image.jpg' | asset_img_url: 'x1000' }}" alt="Story image" width="600" height="auto">
@@ -327,6 +406,18 @@
       "id": "title",
       "label": "t:title",
       "default": "t:story"
+    },
+    {
+      "type": "select",
+      "id": "story_preset",
+      "label": "Story preset",
+      "default": "none",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "auth", "label": "Authenticité" },
+        { "value": "returns", "label": "14 jours retour" }
+      ],
+      "info": "Uses bundled Resell story images when no media is uploaded."
     },
     {
       "type": "image_picker",

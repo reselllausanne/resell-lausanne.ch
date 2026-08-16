@@ -1,0 +1,47 @@
+resource_type,resource_handle,field_namespace,field_key,locales_needed,priority,notes
+collection,onitsuka-tiger,custom,seo_intro,en;de,P0,Admin intro if set — overrides theme fallback
+collection,onitsuka-tiger,custom,seo_h1,en;de,P0,H1 override metafield
+collection,onitsuka-tiger,custom,collection_editorial,en;de,P1,Rich editorial block below grid
+collection,onitsuka-tiger,custom,collection_faq_items,en;de,P0,Metaobject FAQ list — questions + answers
+collection,onitsuka-tiger,custom,related_collections,en;de,P1,Related collection titles
+collection,onitsuka-tiger,global,title_tag,en;de,P0,SEO title if set in Admin
+collection,onitsuka-tiger,global,description_tag,en;de,P0,Meta description if set in Admin
+collection,onitsuka-tiger,default,title,en;de,P1,Collection display title
+collection,onitsuka-tiger,default,description,en;de,P1,Collection description field
+collection,fear-of-god-essentials,custom,seo_intro,en;de,P0,Essentials PLP intro
+collection,fear-of-god-essentials,custom,seo_h1,en;de,P0,
+collection,fear-of-god-essentials,custom,collection_faq_items,en;de,P0,
+collection,fear-of-god-essentials,custom,collection_editorial,en;de,P1,
+collection,fear-of-god-essentials,global,title_tag,en;de,P0,
+collection,fear-of-god-essentials,global,description_tag,en;de,P0,
+collection,fear-of-god-essentials,default,title,en;de,P1,
+collection,fear-of-god-essentials,default,description,en;de,P1,
+collection,nike-air-max-plus-tn,custom,seo_intro,en;de,P0,Nike TN PLP
+collection,nike-air-max-plus-tn,custom,collection_faq_items,en;de,P0,
+collection,nike-air-max-plus-tn,global,title_tag,en;de,P0,
+collection,nike-air-max-plus-tn,global,description_tag,en;de,P0,
+collection,nike-air-max-95,custom,seo_intro,en;de,P0,Air Max 95 PLP
+collection,nike-air-max-95,custom,collection_faq_items,en;de,P0,
+collection,nike-air-max-95,global,title_tag,en;de,P0,
+collection,nike-air-max-95,global,description_tag,en;de,P0,
+collection,air-jordan-4,custom,seo_intro,en;de,P0,Jordan 4 PLP
+collection,air-jordan-4,custom,collection_faq_items,en;de,P0,
+collection,air-jordan-4,global,title_tag,en;de,P0,
+collection,air-jordan-4,global,description_tag,en;de,P0,
+collection,air-jordan-x-travis-scott,custom,seo_intro,en;de,P0,Travis Scott PLP
+collection,air-jordan-x-travis-scott,custom,collection_faq_items,en;de,P0,
+collection,air-jordan-x-travis-scott,global,title_tag,en;de,P0,
+collection,air-jordan-x-travis-scott,global,description_tag,en;de,P0,
+collection,asics-gel-kayano-14,custom,seo_intro,en;de,P0,Gel-Kayano 14 PLP
+collection,asics-gel-kayano-14,custom,collection_faq_items,en;de,P0,
+collection,asics-gel-kayano-14,global,title_tag,en;de,P0,
+collection,asics-gel-kayano-14,global,description_tag,en;de,P0,
+metaobject,page_faq_category,all,title;items,en;de,P0,FAQ page categories — used on /pages/faq
+metaobject,page_faq_item,all,question;answer,en;de,P0,FAQ Q&A entries
+menu,main-menu,all,link titles,en;de,P1,Navigation labels
+menu,footer,all,link titles,en;de,P2,Footer link labels
+page,faq,default,title;body,en;de,P0,FAQ page shell if not fully metaobject-driven
+page,livraison,default,title;body,en;de,P1,Delivery page
+page,guide-des-tailles,default,title;body,en;de,P1,Size guide
+page,notre-concept,default,title;body,en;de,P2,About page
+product,all,default,title;description,en;de,P2,Bulk product translations via existing translate pipeline

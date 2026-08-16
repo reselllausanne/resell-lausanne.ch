@@ -1,0 +1,169 @@
+{%- doc -%}
+  Featured delivery rail for parent PLP collections only (streetwear, toutes-nos-paires).
+
+  @param {object} collection - Current collection
+  @param {object} section - main-collection section
+{%- enddoc -%}
+
+{%- liquid
+  assign col_handle = collection.handle | default: ''
+  assign featured_source = blank
+  assign show_featured_rail = false
+  assign col_in_parent_allowlist = false
+  assign featured_rail_context = blank
+
+  assign streetwear_handles = section.settings.featured_rail_streetwear_handles | default: 'vetements,streetwear' | split: ','
+  assign sneakers_handles = section.settings.featured_rail_sneakers_handles | default: 'toutes-nos-paires,toutes-nos-sneakers' | split: ','
+
+  for handle_token in streetwear_handles
+    assign handle_token = handle_token | strip | downcase
+    if handle_token != blank and handle_token == col_handle
+      assign col_in_parent_allowlist = true
+      assign featured_rail_context = 'streetwear'
+      break
+    endif
+  endfor
+
+  unless col_in_parent_allowlist
+    for handle_token in sneakers_handles
+      assign handle_token = handle_token | strip | downcase
+      if handle_token != blank and handle_token == col_handle
+        assign col_in_parent_allowlist = true
+        assign featured_rail_context = 'sneakers'
+        break
+      endif
+    endfor
+  endunless
+
+  if section.settings.featured_rail_enabled != false and col_in_parent_allowlist
+    if collection.metafields.custom.plp_featured_collection != blank and collection.metafields.custom.plp_featured_collection.value != blank
+      assign featured_source = collection.metafields.custom.plp_featured_collection.value
+    elsif featured_rail_context == 'streetwear' and section.settings.featured_rail_streetwear_collection != blank
+      assign featured_source = section.settings.featured_rail_streetwear_collection
+    elsif featured_rail_context == 'sneakers' and section.settings.featured_rail_sneakers_collection != blank
+      assign featured_source = section.settings.featured_rail_sneakers_collection
+    endif
+
+    if featured_source != blank
+      assign show_featured_rail = true
+    endif
+  endif
+
+  assign featured_max = section.settings.featured_rail_max_products | default: 8
+  if featured_max < 4
+    assign featured_max = 4
+  endif
+  if featured_max > 8
+    assign featured_max = 8
+  endif
+
+  assign featured_available_count = 0
+  if show_featured_rail and featured_source != blank
+    for product in featured_source.products
+      if product.available
+        assign featured_available_count = featured_available_count | plus: 1
+      endif
+    endfor
+    if featured_available_count == 0
+      assign show_featured_rail = false
+    endif
+  endif
+
+  assign plp_has_active_filters = false
+  if request.query_string contains 'filter.'
+    assign plp_has_active_filters = true
+  endif
+
+  assign featured_heading = section.settings.featured_rail_heading
+  if featured_heading == blank
+    assign featured_heading = 'collections.featured_rail_48h' | t
+  endif
+  assign featured_link_label = section.settings.featured_rail_link_label
+  if featured_link_label == blank
+    assign featured_link_label = 'collections.featured_rail_view_all' | t
+  endif
+  assign price_from_label = 'search.starting_from' | t
+-%}
+
+{%- if show_featured_rail and featured_source != blank -%}
+  {{ 'collection-plp-featured-rail.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'collection-plp-featured-rail.js' | asset_url }}" defer></script>
+
+  <section
+    class="collection-plp-featured-rail"
+    data-ref="collection-plp-featured-rail"
+    aria-label="{{ featured_heading | escape }}"
+    {% if plp_has_active_filters %}
+      hidden
+    {% endif %}
+  >
+    <div class="collection-plp-featured-rail__inner">
+      <div class="collection-plp-featured-rail__head">
+        <h2 class="collection-plp-featured-rail__title">{{ featured_heading | escape }}</h2>
+        {%- if featured_source.url != blank -%}
+          <a class="collection-plp-featured-rail__link" href="{{ featured_source.url }}">
+            {{ featured_link_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="collection-plp-featured-rail__scroller" tabindex="0">
+        <ul class="collection-plp-featured-rail__track" role="list">
+          {%- assign featured_rendered = 0 -%}
+          {%- for product in featured_source.products -%}
+            {%- unless product.available -%}
+              {%- continue -%}
+            {%- endunless -%}
+            {%- if featured_rendered >= featured_max -%}
+              {%- break -%}
+            {%- endif -%}
+            {%- assign featured_rendered = featured_rendered | plus: 1 -%}
+            <li class="collection-plp-featured-rail__item">
+              {%- capture rail_price_snapshot -%}
+                {% render 'rs-product-price-snapshot', product: product %}
+              {%- endcapture -%}
+              {%- assign rail_price_parts = rail_price_snapshot | strip | split: '|' -%}
+              <a class="collection-plp-featured-rail__card" href="{{ product.url }}">
+                <span class="collection-plp-featured-rail__media">
+                  {%- if product.featured_media != blank -%}
+                    {%- capture rail_srcset -%}
+                      {{ product.featured_media | image_url: width: 240 }} 240w, {{ product.featured_media | image_url: width: 360 }} 360w, {{ product.featured_media | image_url: width: 480 }} 480w, {{ product.featured_media | image_url: width: 640 }} 640w
+                    {%- endcapture -%}
+                    {%- assign rail_img_src = product.featured_media | image_url: width: 640 -%}
+                    {%- assign rail_img_eager = false -%}
+                    {%- if featured_rendered <= 4 -%}
+                      {%- assign rail_img_eager = true -%}
+                    {%- endif -%}
+                    {% render 'rl-deferred-img',
+                      lazy_src: rail_img_src,
+                      lazy_srcset: rail_srcset,
+                      sizes: '(max-width: 749px) 44vw, (max-width: 1100px) 26vw, clamp(140px, 16vw, 220px)',
+                      alt: product.title,
+                      width: 320,
+                      height: 400,
+                      eager: rail_img_eager
+                    %}
+                  {%- else -%}
+                    <span class="collection-plp-featured-rail__placeholder" aria-hidden="true"></span>
+                  {%- endif -%}
+                  <span class="collection-plp-featured-rail__pictos">
+                    {% render 'product-card-promotional-pictos', product: product %}
+                  </span>
+                </span>
+                <span class="collection-plp-featured-rail__label">{{ product.title }}</span>
+                {% if rail_price_parts[8] == '1' %}
+                  <span class="collection-plp-featured-rail__price">
+                    {% if rail_price_parts[5] == '1' %}
+                      <span class="collection-plp-featured-rail__price-from">{{ price_from_label }}</span>
+                    {% endif %}
+                    {{ rail_price_parts[2] | plus: 0 | money_without_trailing_zeros }}
+                  </span>
+                {% endif %}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </section>
+{%- endif -%}

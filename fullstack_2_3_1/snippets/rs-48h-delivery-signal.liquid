@@ -1,0 +1,19 @@
+{%- doc -%}
+  48h delivery picto only — no SOLDES picto.
+
+  TRUE only when at least one in-stock variant has custom.delivery_48h.
+  Sold-out warehouse sizes return blank so the product-level badge hides.
+
+  Outputs "1" when active — capture in parent:
+  {% capture flag %}{% render 'rs-48h-delivery-signal', product: product %}{% endcapture %}
+
+  @param {product} product
+{%- enddoc -%}
+
+{%- liquid
+  capture rs_picto_flags
+    render 'rs-promotional-picto-signals', product: product
+  endcapture
+  assign rs_picto_parts = rs_picto_flags | strip | split: '|'
+-%}
+{%- if rs_picto_parts[1] == '1' -%}1{%- endif -%}

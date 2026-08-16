@@ -5,10 +5,18 @@
   @param {boolean} show_language - Affiche le sélecteur de langue
   @param {boolean} [uppercase] - Indique si les éléments doivent être en majuscule
   @param {number} [font_weight] - Poids de la police
+  @param {string} [form_id] - Unique form id when multiple forms exist on the page
 
   @example
-  {% render 'localization-form', show_country: true, show_language: true %}
+  {% render 'localization-form', show_country: true, show_language: true, form_id: 'LocalizationForm-drawer' %}
 {%- enddoc -%}
+
+{% liquid
+  assign loc_form_id = form_id | default: 'LocalizationForm' | strip
+  if loc_form_id == blank
+    assign loc_form_id = 'LocalizationForm'
+  endif
+%}
 
 {%- liquid
   assign currencies = localization.available_countries | map: 'currency' | map: 'iso_code' | uniq
@@ -22,7 +30,7 @@
 <script src="{{ 'localization-form.js' | asset_url }}" type="module"></script>
 
 <localization-form-component>
-  {%- form 'localization', id: 'LocalizationForm', class: 'localization-form' -%}
+  {%- form 'localization', id: loc_form_id, class: 'localization-form' -%}
     {% if show_country %}
       <div class="localization-form__country-selector">
         <ul role="list" class="localization-form__countries list-unstyled">
@@ -68,6 +76,7 @@
             class="localization-form__language-select"
             name="language_code"
             data-ref="language-input"
+            aria-label="{{ 'content.language' | t }}"
           >
             {%- for language in localization.available_languages -%}
               <option

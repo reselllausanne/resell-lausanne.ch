@@ -1,0 +1,44 @@
+{% liquid
+  assign url_nike = routes.root_url | append: 'collections/nike'
+  assign url_air_jordan = routes.root_url | append: 'collections/air-jordan'
+  assign url_adidas = routes.root_url | append: 'collections/adidas'
+  assign url_new_balance = routes.root_url | append: 'collections/new-balance'
+  assign url_asics = routes.root_url | append: 'collections/asics'
+  assign url_salomon = routes.root_url | append: 'collections/salomon'
+  assign url_on = routes.root_url | append: 'collections/on'
+
+  if collections.nike != blank
+    assign url_nike = collections.nike.url
+  endif
+  if collections['air-jordan'] != blank
+    assign url_air_jordan = collections['air-jordan'].url
+  endif
+  if collections.adidas != blank
+    assign url_adidas = collections.adidas.url
+  endif
+  if collections['new-balance'] != blank
+    assign url_new_balance = collections['new-balance'].url
+  endif
+  if collections.asics != blank
+    assign url_asics = collections.asics.url
+  endif
+  if collections.salomon != blank
+    assign url_salomon = collections.salomon.url
+  endif
+  if collections.on != blank
+    assign url_on = collections.on.url
+  endif
+%}
+
+<div class="rl-footer-links">
+  <h3 class="rl-footer-heading">{{ 'rl_footer.brands_heading' | t }}</h3>
+  <ul class="rl-footer-links__list">
+    <li><a href="{{ url_nike }}" class="rl-footer-links__link">Nike</a></li>
+    <li><a href="{{ url_air_jordan }}" class="rl-footer-links__link">Air Jordan</a></li>
+    <li><a href="{{ url_adidas }}" class="rl-footer-links__link">Adidas</a></li>
+    <li><a href="{{ url_new_balance }}" class="rl-footer-links__link">New Balance</a></li>
+    <li><a href="{{ url_asics }}" class="rl-footer-links__link">Asics</a></li>
+    <li><a href="{{ url_salomon }}" class="rl-footer-links__link">Salomon</a></li>
+    <li><a href="{{ url_on }}" class="rl-footer-links__link">On Running</a></li>
+  </ul>
+</div>

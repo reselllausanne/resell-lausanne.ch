@@ -1,0 +1,79 @@
+{% comment %}
+  Gift card promo — links to carte cadeau product with branded image.
+
+  @param section {section}
+{% endcomment %}
+{% liquid
+  assign gift_card_default_url = '/products/carte-cadeau-resell-lausanne'
+
+  if section.settings.promo_eyebrow != blank
+    assign promo_eyebrow = section.settings.promo_eyebrow
+  else
+    assign promo_eyebrow = 'editorial.promo_eyebrow' | t
+  endif
+  if section.settings.promo_title != blank
+    assign promo_title = section.settings.promo_title
+  else
+    assign promo_title = 'editorial.promo_title' | t
+  endif
+  if section.settings.promo_text != blank
+    assign promo_text = section.settings.promo_text
+  else
+    assign promo_text = 'editorial.promo_text' | t
+  endif
+  if section.settings.promo_primary_label != blank
+    assign promo_primary_label = section.settings.promo_primary_label
+  else
+    assign promo_primary_label = 'editorial.promo_cta_primary' | t
+  endif
+
+  assign promo_primary_url = section.settings.promo_primary_url
+  if promo_primary_url == blank and section.settings.promo_product != blank
+    assign promo_primary_url = section.settings.promo_product.url
+  endif
+  if promo_primary_url == blank
+    assign promo_primary_url = gift_card_default_url
+  endif
+
+  assign promo_image = section.settings.promo_image
+  assign promo_image_alt = section.settings.promo_image_alt
+  if promo_image_alt == blank
+    assign promo_image_alt = 'editorial.promo_card_alt' | t
+  endif
+%}
+
+<aside class="editorial-promo" id="editorial-promo">
+  <div class="editorial-promo__copy">
+    <p class="editorial-promo__eyebrow">{{ promo_eyebrow | escape }}</p>
+    <h2 class="editorial-promo__title">{{ promo_title | escape }}</h2>
+    {% if promo_text != blank %}
+      <p class="editorial-promo__text">{{ promo_text | escape }}</p>
+    {% endif %}
+    <div class="editorial-promo__actions">
+      <a class="editorial-promo__btn" href="{{ promo_primary_url }}">{{ promo_primary_label | escape }}</a>
+    </div>
+  </div>
+  <a class="editorial-promo__visual" href="{{ promo_primary_url }}" aria-label="{{ promo_primary_label | escape }}">
+    {% if promo_image != blank %}
+      {{
+        promo_image
+        | image_url: width: 960
+        | image_tag:
+          class: 'editorial-promo__image',
+          loading: 'lazy',
+          widths: '480, 640, 960',
+          sizes: '(min-width: 900px) 320px, 72vw',
+          alt: promo_image_alt
+      }}
+    {% else %}
+      <img
+        src="{{ 'editorial-gift-card-resell.png' | asset_img_url: '960x' }}"
+        alt="{{ promo_image_alt | escape }}"
+        width="960"
+        height="608"
+        loading="lazy"
+        class="editorial-promo__image"
+      >
+    {% endif %}
+  </a>
+</aside>

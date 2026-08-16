@@ -29,36 +29,6 @@
   </div>
 {%- endif -%}
 
-{% stylesheet %}
-  .this-pack-contains {
-    display: flex;
-    flex-direction: column;
-    font-size: var(--font-body--size);
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-  }
-
-  shopify-visual-preview-block-list .this-pack-contains[data-visual-preview-mode] {
-    width: 450px;
-  }
-
-  .this-pack-contains__title {
-    font-weight: 500;
-  }
-
-  .this-pack-contains_description {
-    margin-top: var(--margin-xs);
-  }
-
-  .this-pack-contains_product-list {
-    display: flex;
-    gap: var(--gap-sm);
-    width: 100%;
-    overflow-y: auto;
-    padding: var(--padding-sm) 0;
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:this_pack_contains",

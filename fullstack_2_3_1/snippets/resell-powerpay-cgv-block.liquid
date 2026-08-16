@@ -1,0 +1,24 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+%}
+
+<div class="rl-faq-page__legal-powerpay" id="powerpay">
+  {% if locale_base == 'de' %}
+    <h3>Kauf auf Rechnung mit Teilzahlungsoption (POWERPAY)</h3>
+    <p>MF Group / POWERPAY bietet als externer Zahlungsdienstleister die Zahlungsart «Kauf auf Rechnung» an. Mit der Einzelrechnung können Sie Ihren Onlineeinkauf einfach per Rechnung begleichen. Sollten Sie auf eine Zahlung im vorgegebenen Zeitrahmen verzichten, erhalten Sie nachträglich im Folgemonat eine Monatsrechnung mit Bestellübersicht.</p>
+    <p>Beim Abschluss des Kaufvertrags übernimmt POWERPAY die entstandene Rechnungsforderung und wickelt die entsprechenden Zahlungsmodalitäten ab. Bei Kauf auf Rechnung akzeptieren Sie zusätzlich zu unseren AGB die AGB von POWERPAY (<a href="https://powerpay.ch/de/agb" rel="noopener noreferrer" target="_blank">powerpay.ch/de/agb</a>).</p>
+  {% elsif locale_base == 'en' %}
+    <h3>Purchase by invoice with partial payment option (POWERPAY)</h3>
+    <p>As an external payment provider, MF Group/POWERPAY offers the payment option «Pay by invoice». You can simply pay for your online purchase by invoice using the order invoice. If you do not make the payment within the specified period, you will receive a subsequent monthly invoice the following month with an order overview.</p>
+    <p>When a purchase agreement is made, POWERPAY takes on the amount receivable and processes it using the payment method selected. By selecting purchase by invoice, you are also agreeing to our GTC and POWERPAY's GTC (<a href="https://powerpay.ch/en/agb" rel="noopener noreferrer" target="_blank">powerpay.ch/en/agb</a>).</p>
+  {% elsif locale_base == 'it' %}
+    <h3>Pagamento contro fattura con opzione di pagamento rateale (POWERPAY)</h3>
+    <p>MF Group/POWERPAY, in veste di fornitore di servizi esterno, offre la modalità di pagamento «contro fattura». La fattura ordine consente di pagare in modo semplice l'acquisto online contro fattura. Qualora non effettuiate un pagamento nell'intervallo di tempo dato, nel mese successivo riceverete a posteriori una fattura mensile con il riepilogo dell'ordine.</p>
+    <p>Alla stipula del contratto di acquisto, POWERPAY si fa carico del credito da fattura generato e avvia le modalità di pagamento corrispondenti. In caso di acquisto con fattura, oltre alle nostre CG, accettate le CG di POWERPAY (<a href="https://powerpay.ch/it/agb" rel="noopener noreferrer" target="_blank">powerpay.ch/it/agb</a>).</p>
+  {% else %}
+    <h3>Achat sur facture avec option de paiement partiel (POWERPAY)</h3>
+    <p>MF Group / POWERPAY propose à titre de prestataire de paiement indépendant le type de paiement «Paiement sur facture». La facture de l'ordre vous permet tout simplement de régler votre achat en ligne par facture. Si vous renoncez à un paiement dans les délais impartis, vous obtiendrez à titre rétroactif le mois suivant une facture mensuelle avec un aperçu de la commande.</p>
+    <p>A la conclusion du contrat d'achat, POWERPAY prend en charge la créance sur facture et se charge du traitement des modalités de paiement. Dans le cadre de l'achat sur facture, vous acceptez en plus de nos CG, les GC de POWERPAY (<a href="https://powerpay.ch/fr/agb" rel="noopener noreferrer" target="_blank">powerpay.ch/fr/agb</a>).</p>
+  {% endif %}
+</div>

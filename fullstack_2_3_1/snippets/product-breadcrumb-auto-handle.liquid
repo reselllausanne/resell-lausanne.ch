@@ -1,0 +1,88 @@
+{% comment %}
+  Pick the deepest taxonomy-mapped collection handle from product.collections.
+
+  Output: collection handle string, or blank.
+
+  Skips merchandising / catch-all buckets so a more specific collection wins.
+{% endcomment %}
+{% liquid
+  assign best_depth = 0
+  assign best_handle = ''
+  assign skip_merch = 'all,frontpage,express-delivery,nouveautes,soldes,soldes-48h,liquidation,archive' | split: ','
+
+  for coll in product.collections
+    assign lookup_handle = coll.handle | default: '' | strip | handleize
+    if lookup_handle == blank
+      continue
+    endif
+
+    assign is_merch = false
+    for skip_h in skip_merch
+      if lookup_handle == skip_h
+        assign is_merch = true
+        break
+      endif
+    endfor
+    if is_merch
+      continue
+    endif
+
+    case lookup_handle
+      when 'air-force-1'
+        assign lookup_handle = 'nike-air-force-1'
+      when 'jordan-4'
+        assign lookup_handle = 'air-jordan-4'
+      when 'essentials'
+        assign lookup_handle = 'fear-of-god-essentials'
+      when 'travis-scott'
+        assign lookup_handle = 'vetement-travis'
+    endcase
+
+    capture taxonomy_payload
+      render 'breadcrumb-taxonomy-map', primary_collection_handle: lookup_handle
+    endcapture
+    assign taxonomy_payload = taxonomy_payload | strip
+
+    if taxonomy_payload contains '###'
+      assign taxonomy_labels_path = taxonomy_payload | split: '###' | first | strip
+      assign taxonomy_depth = taxonomy_labels_path | split: '|' | size
+      if taxonomy_depth > best_depth
+        assign best_depth = taxonomy_depth
+        assign best_handle = lookup_handle
+      endif
+    endif
+  endfor
+
+  if best_handle == blank
+    assign infer_vendor_handle = product.vendor | handleize
+    assign infer_title_lower = product.title | downcase
+    if infer_vendor_handle == 'lego' or infer_title_lower contains 'lego'
+      if infer_title_lower contains 'star wars'
+        assign best_handle = 'lego-star-wars'
+      elsif infer_title_lower contains 'technic'
+        assign best_handle = 'lego-technic'
+      elsif infer_title_lower contains 'harry potter'
+        assign best_handle = 'lego-harry-potter'
+      elsif infer_title_lower contains 'marvel'
+        assign best_handle = 'lego-marvel'
+      elsif infer_title_lower contains 'ninjago'
+        assign best_handle = 'lego-ninjago'
+      elsif infer_title_lower contains 'speed champions'
+        assign best_handle = 'lego-speed-champions'
+      elsif infer_title_lower contains 'botanical'
+        assign best_handle = 'lego-botanicals'
+      elsif infer_title_lower contains ' disney'
+        assign best_handle = 'lego-disney'
+      elsif infer_title_lower contains 'friends'
+        assign best_handle = 'lego-friends'
+      elsif infer_title_lower contains 'icons'
+        assign best_handle = 'lego-icons'
+      else
+        assign best_handle = 'lego'
+      endif
+    elsif infer_vendor_handle == 'pokemon'
+      assign best_handle = 'pokemon'
+    endif
+  endif
+-%}
+{{- best_handle -}}

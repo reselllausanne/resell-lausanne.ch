@@ -1,0 +1,193 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article-editorial",
+      "blocks": {
+        "callout-main": {
+          "type": "callout",
+          "settings": {
+            "title": "École + sport : attention",
+            "text": "Une sneaker lifestyle n’est pas automatiquement une chaussure de sport. Si l’école impose une paire pour la salle, prévoir un modèle dédié propre plutôt que d’acheter une chaussure “qui devrait tout faire”."
+          }
+        },
+        "section-main": {
+          "type": "content_section",
+          "settings": {
+            "heading": "Le bon équilibre pour 2026",
+            "body": "<p>Les Air Force 1 restent une référence de rentrée, tandis que les runners rétro gagnent du terrain grâce à leur confort. Les Jordan gardent un fort pouvoir d’envie, surtout en tailles GS. Pour une paire unique, un coloris gris, noir-blanc ou bleu foncé est souvent plus réaliste qu’un blanc intégral. Les matières lisses se nettoient mieux; le mesh sèche plus vite mais laisse passer l’humidité; le daim demande plus d’attention.</p>"
+          }
+        },
+        "pick-1": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "01 · La valeur sûre",
+            "title": "Nike Air Force 1 GS",
+            "description": "Solide, stable et simple à nettoyer. Noir-blanc ou avec une petite couleur contraste : le meilleur compromis pratique.",
+            "score_label": "Robustesse",
+            "score": 95,
+            "product": "gid://shopify/Product/9464055267617",
+            "collection": "gid://shopify/Collection/647318503810"
+          }
+        },
+        "pick-2": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "02 · Le confort",
+            "title": "Nike P-6000 GS",
+            "description": "Une runner légère pour les journées actives. Elle paraît sportive sans être une chaussure de performance dédiée.",
+            "score_label": "Confort",
+            "score": 96,
+            "product": "gid://shopify/Product/15373895303554",
+            "collection": "gid://shopify/Collection/647273644418"
+          }
+        },
+        "pick-3": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "03 · La paire rêvée",
+            "title": "Air Jordan 4 GS",
+            "description": "Iconique et très désirée, mais plus lourde. À réserver à l’enfant qui aime vraiment la silhouette et en prendra soin.",
+            "score_label": "Impact",
+            "score": 99,
+            "product": "gid://shopify/Product/15107002794370",
+            "collection": "gid://shopify/Collection/666573865346"
+          }
+        },
+        "pick-4": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "04 · Le classique basket",
+            "title": "Air Jordan 1 Low GS",
+            "description": "Moins encombrante qu’une Jordan 4 et facile à porter. Les coloris noir-blanc ou bleu-blanc sont de bons premiers choix.",
+            "score_label": "Polyvalence",
+            "score": 92,
+            "product": "gid://shopify/Product/15307194106242",
+            "collection": "gid://shopify/Collection/687874179458"
+          }
+        },
+        "pick-5": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "05 · La skate",
+            "title": "adidas Campus 00s GS",
+            "description": "Rembourrée et confortable, surtout avec un jean large ou un cargo. Le daim foncé est plus simple à vivre que le beige clair.",
+            "score_label": "Style",
+            "score": 91,
+            "product": "gid://shopify/Product/14908116730242",
+            "collection": "gid://shopify/Collection/668026438018"
+          }
+        },
+        "pick-6": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "L’alternative",
+            "title": "ASICS GEL-NYC GS",
+            "description": "Technique, stable et actuelle. Un très bon choix si l’enfant marche beaucoup et préfère les runners aux chaussures de basket.",
+            "score_label": "Équilibre",
+            "score": 95,
+            "product": "gid://shopify/Product/14963521323394",
+            "collection": "gid://shopify/Collection/666330825090"
+          }
+        },
+        "row-1": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Journée très active",
+            "col_2": "Runner légère et amortie",
+            "col_3": "P-6000 / GEL-NYC"
+          }
+        },
+        "row-2": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Usage quotidien facile",
+            "col_2": "Tige lisse et semelle stable",
+            "col_3": "Air Force 1"
+          }
+        },
+        "row-3": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Style streetwear",
+            "col_2": "Basket ou skate structurée",
+            "col_3": "Jordan 1 / Jordan 4 / Campus"
+          }
+        },
+        "related-1": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-fille",
+            "segment_label": "12–18 ans",
+            "title": "Guide ado fille"
+          }
+        },
+        "related-2": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-garcon",
+            "segment_label": "12–18 ans",
+            "title": "Guide ado garçon"
+          }
+        },
+        "related-3": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-fille",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant fille"
+          }
+        }
+      },
+      "block_order": [
+        "callout-main",
+        "section-main",
+        "pick-1",
+        "pick-2",
+        "pick-3",
+        "pick-4",
+        "pick-5",
+        "pick-6",
+        "row-1",
+        "row-2",
+        "row-3",
+        "related-1",
+        "related-2",
+        "related-3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "Guide enfant garçon · 6–12 ans · rentrée 2026",
+        "deck": "Du style qui tient la récré.",
+        "intro": "Pour un garçon de 6 à 12 ans, les modèles inspirés du basket, du running rétro et du skate sont les plus faciles à adopter. Mais une belle paire qui glisse, serre ou ne peut pas être attachée seul devient vite une mauvaise paire.",
+        "chips": "Résistante\nStable\nEasy clean\nSport style",
+        "hero_overlay": 66,
+        "table_col_1": "Usage",
+        "table_col_2": "Modèle",
+        "table_col_3": "Pourquoi",
+        "how_to_heading": "Le test de 5 minutes en magasin ou à la maison",
+        "how_to_body": "<p>Faire marcher l'enfant, monter quelques marches, s'accroupir puis faire un petit saut sur place. Demander ce qu'il sent, sans lui suggérer la réponse.</p>",
+        "checklist_parent": true,
+        "checklist": "Pas de pression sur le petit orteil\nTalon stable\nFermeture autonome\nSemelle adaptée au quotidien\nColoris compatible avec son niveau de soin",
+        "verdict": "<p>Le plus pratique : Air Force 1 sombre. Le plus confortable : P-6000 ou GEL-NYC. La paire plaisir : Jordan 4. Le bon entre-deux : Jordan 1 Low.</p>",
+        "hub_article_handle": "chaussures-sneakers-rentree-2026",
+        "show_promo": true,
+        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
+        "promo_primary_label": "Acheter la carte cadeau",
+        "padding_bottom": 60
+      }
+    },
+    "related": {
+      "type": "resell-blog-related",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "max_articles": 3,
+        "padding_top": 48,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

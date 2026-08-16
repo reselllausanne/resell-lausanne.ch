@@ -1,0 +1,196 @@
+{% comment %}
+  PLP brand strip — synced with mobile drawer Sneakers menu (header-drawer-demo-panels).
+
+  Primary: Air Jordan … Mizuno + Autres marques
+  Other: Hoka, On Running, Saucony … — target `collections/autres-marques` (Admin) or toutes-nos-paires?brand_strip=other
+
+  @param strip_settings {section.settings}
+  @param strip_blocks {section.blocks}
+{% endcomment %}
+{% liquid
+  assign sync_drawer = true
+  if strip_settings.sync_with_menu_drawer == false
+    assign sync_drawer = false
+  endif
+
+  capture rl_other_handles_csv
+    render 'menu-other-sneaker-brands', format: 'handles'
+  endcapture
+  assign other_handles = rl_other_handles_csv | strip | split: ','
+  if other_handles.size == 1 and other_handles[0] == blank
+    assign other_handles = '' | split: ','
+  endif
+  assign primary_handles = 'air-jordan,nike,asics,yeezy,adidas,new-balance,maison-mihara,saucony,mizuno' | split: ','
+
+  assign brand_strip_qs = ''
+  assign raw_query_string = request.query_string | default: '' | downcase
+  if raw_query_string contains 'brand_strip=other'
+    assign brand_strip_qs = 'other'
+  endif
+
+  assign strip_mode = 'primary'
+  if brand_strip_qs == 'other'
+    assign strip_mode = 'other'
+  elsif collection.handle == 'autres-marques' or collection.handle == 'autres-marques-sneakers'
+    assign strip_mode = 'other'
+  else
+    for oh in other_handles
+      if collection.handle == oh
+        assign strip_mode = 'other'
+        break
+      endif
+    endfor
+  endif
+
+  assign autres_active = false
+  if collection.handle == 'autres-marques' or collection.handle == 'autres-marques-sneakers'
+    assign autres_active = true
+  elsif brand_strip_qs == 'other'
+    if collection.handle == 'all' or collection.handle == 'toutes-nos-paires' or collection.handle == 'nouveautes'
+      assign autres_active = true
+    endif
+  endif
+
+  assign show_strip = false
+  if strip_settings.only_on_all_collection
+    if collection.handle == 'all' or collection.handle == 'toutes-nos-paires' or collection.handle == 'nouveautes' or collection.handle == 'autres-marques' or collection.handle == 'autres-marques-sneakers'
+      assign show_strip = true
+    elsif strip_mode == 'primary'
+      for ph in primary_handles
+        if collection.handle == ph
+          assign show_strip = true
+          break
+        endif
+      endfor
+    else
+      for oh in other_handles
+        if collection.handle == oh
+          assign show_strip = true
+          break
+        endif
+      endfor
+    endif
+  else
+    assign show_strip = true
+  endif
+
+  assign menu_handle = strip_settings.brand_menu
+  assign menu_links = nil
+  if menu_handle != blank
+    assign menu_links = linklists[menu_handle]
+  endif
+  assign use_menu = false
+  if menu_links != blank and menu_links.links.size > 0
+    assign use_menu = true
+    assign sync_drawer = false
+  endif
+
+  assign has_chips = false
+  if use_menu or sync_drawer or strip_blocks.size > 0
+    assign has_chips = true
+  endif
+
+  assign all_collection_url = routes.collections_url | append: '/all'
+  if collections.all != blank
+    assign all_collection_url = collections.all.url
+  endif
+  capture autres_url
+    render 'rl-autres-marques-url'
+  endcapture
+  assign autres_url = autres_url | strip
+
+  assign primary_catalog_url = routes.root_url | append: 'collections/toutes-nos-paires'
+  if collections['toutes-nos-paires'] != blank
+    assign primary_catalog_url = collections['toutes-nos-paires'].url
+  endif
+
+  assign autres_chip_url = autres_url
+  if strip_mode == 'other'
+    assign autres_chip_url = primary_catalog_url
+  endif
+
+  assign catalog_chip_strip = false
+  if sync_drawer and use_menu == false
+    if collection.handle == 'all' or collection.handle == 'toutes-nos-paires' or collection.handle == 'nouveautes' or collection.handle == 'autres-marques' or collection.handle == 'autres-marques-sneakers'
+      assign catalog_chip_strip = true
+    endif
+  endif
+%}
+
+{% if show_strip and has_chips %}
+  <div
+    class="collection-plp-brand-chips{% if strip_mode == 'other' %} collection-plp-brand-chips--other{% endif %}"
+    data-collection-plp-brand-chips
+    data-strip-mode="{{ strip_mode }}"
+    {% if catalog_chip_strip %}
+      data-rl-catalog-chips
+    {% endif %}
+  >
+      <div
+        class="collection-plp-brand-chips__scroller"
+        role="region"
+        aria-label="{{ strip_settings.aria_label | default: 'Filtrer par marque' | escape }}"
+        data-collection-plp-brand-scroller
+      >
+        <ul class="collection-plp-brand-chips__track" role="list">
+          {% if use_menu %}
+            {% for link in menu_links.links %}
+              {% liquid
+                assign chip_active = false
+                if link.active or link.url == collection.url
+                  assign chip_active = true
+                endif
+                assign chip_handle = link.url | split: '/collections/' | last | split: '?' | first
+              %}
+              {% render 'collection-plp-brand-chip',
+                title: link.title,
+                url: link.url,
+                handle: chip_handle,
+                active: chip_active
+              %}
+            {% endfor %}
+          {% elsif sync_drawer %}
+            {% render 'collection-plp-brand-chips-drawer-track',
+              mode: strip_mode,
+              autres_url: autres_chip_url,
+              autres_active: autres_active
+            %}
+          {% else %}
+            {% for block in strip_blocks %}
+              {% if block.type == 'brand' %}
+                {% liquid
+                  assign chip_title = block.settings.title | strip
+                  assign chip_link = block.settings.link | strip
+                  assign chip_handle = chip_link | split: '/collections/' | last | split: '?' | first
+                  assign chip_active = false
+                  if chip_link != blank
+                    if chip_link == collection.url or chip_link contains collection.handle
+                      assign chip_active = true
+                    endif
+                  endif
+                  assign chip_logo_url = ''
+                  if block.settings.image != blank
+                    assign chip_logo_url = block.settings.image | image_url: width: 180
+                  elsif block.settings.image_asset != blank
+                    assign chip_logo_url = block.settings.image_asset | asset_url
+                  elsif block.settings.image_url != blank
+                    assign chip_logo_url = block.settings.image_url | strip
+                  endif
+                %}
+                {% if chip_title != blank %}
+                  {% render 'collection-plp-brand-chip',
+                    title: chip_title,
+                    url: chip_link,
+                    handle: chip_handle,
+                    active: chip_active,
+                    logo_url: chip_logo_url,
+                    block_shopify_attributes: block.shopify_attributes
+                  %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+  </div>
+{% endif %}

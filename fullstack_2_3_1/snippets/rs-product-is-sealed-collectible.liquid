@@ -1,0 +1,53 @@
+{%- doc -%}
+  Sealed collectibles — no real shoe/apparel size UI (LEGO, watches, Pop Mart, etc.).
+
+  Matches Collectibles menu collections + Moonswatch + pseudo "One Size" on same products.
+
+  Outputs "1" when true.
+
+  @param {product} product
+{%- enddoc -%}
+
+{%- liquid
+  assign rs_is_sealed = false
+  assign rs_collectible_roots = 'pokemon,one-piece,pop-mart,labubu,moonswatch,sonny-angel,lego' | split: ','
+
+  for collection in product.collections
+    assign rs_col_handle = collection.handle | downcase
+    if rs_collectible_roots contains rs_col_handle
+      assign rs_is_sealed = true
+      break
+    endif
+    if rs_col_handle contains 'lego-'
+      assign rs_is_sealed = true
+      break
+    endif
+    if rs_col_handle contains 'montre' or rs_col_handle contains 'watch' or rs_col_handle contains 'moonswatch'
+      assign rs_is_sealed = true
+      break
+    endif
+  endfor
+
+  unless rs_is_sealed
+    assign rs_vendor = product.vendor | downcase | strip
+    assign rs_product_type = product.type | downcase | strip
+    assign rs_title_lower = product.title | downcase
+
+    if rs_vendor contains 'lego' or rs_vendor contains 'pokemon' or rs_vendor contains 'pop mart' or rs_vendor contains 'pop-mart' or rs_vendor contains 'labubu' or rs_vendor contains 'moonswatch' or rs_vendor contains 'swatch'
+      assign rs_is_sealed = true
+    endif
+
+    if rs_is_sealed == false
+      if rs_product_type contains 'lego' or rs_product_type contains 'pokemon' or rs_product_type contains 'montre' or rs_product_type contains 'watch' or rs_product_type contains 'collectible' or rs_product_type contains 'moonswatch'
+        assign rs_is_sealed = true
+      endif
+    endif
+
+    if rs_is_sealed == false
+      if rs_title_lower contains 'lego ' or rs_title_lower contains ' moonswatch' or rs_title_lower contains 'labubu' or rs_title_lower contains 'pop mart' or rs_title_lower contains 'pokémon' or rs_title_lower contains 'pokemon'
+        assign rs_is_sealed = true
+      endif
+    endif
+  endunless
+-%}
+{%- if rs_is_sealed -%}1{%- endif -%}

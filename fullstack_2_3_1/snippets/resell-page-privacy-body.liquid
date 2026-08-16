@@ -1,0 +1,130 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign contact_email = 'contact@resell-lausanne.ch'
+  assign contact_url = 'mailto:contact@resell-lausanne.ch'
+%}
+
+{% if locale_base == 'de' %}
+  <p class="rl-faq-page__legal-version">Datenschutzerklärung</p>
+  <h2>1. Erhobene personenbezogene Daten</h2>
+  <p>Wenn Sie in unserem Shop einkaufen, erheben wir die personenbezogenen Daten, die Sie uns mitteilen — insbesondere Name, Adresse und E-Mail-Adresse — im Rahmen des Kaufprozesses.</p>
+  <p>Beim Besuch unserer Website erhalten wir zudem automatisch die IP-Adresse Ihres Geräts, die Rückschlüsse auf Browser und Betriebssystem ermöglichen kann.</p>
+  <p>E-Mail-Marketing (falls zutreffend): Mit Ihrer Einwilligung können wir Ihnen E-Mails zu unserem Shop, neuen Produkten und weiteren Updates senden.</p>
+
+  <h2>2. Einwilligung</h2>
+  <h3>Wie erhalten wir Ihre Einwilligung?</h3>
+  <p>Wenn Sie uns personenbezogene Daten zur Abwicklung einer Transaktion, Zahlungsprüfung, Bestellung, Lieferung oder Retoure übermitteln, gehen wir davon aus, dass Sie der Erhebung und Nutzung zu diesem Zweck zustimmen.</p>
+  <p>Fragen wir Daten für einen anderen Zweck an (z.&nbsp;B. Marketing), holen wir Ihre ausdrückliche Zustimmung ein oder geben Ihnen die Möglichkeit, abzulehnen.</p>
+  <h3>Wie kann ich meine Einwilligung widerrufen?</h3>
+  <p>Sie können uns jederzeit unter <a href="{{ contact_url }}">{{ contact_email }}</a> kontaktieren, um Ihre Einwilligung zu widerrufen.</p>
+
+  <h2>3. Offenlegung</h2>
+  <p>Wir können personenbezogene Daten offenlegen, wenn wir gesetzlich dazu verpflichtet sind oder wenn Sie gegen unsere Verkaufs- bzw. Nutzungsbedingungen verstossen.</p>
+
+  <h2>4. Shopify</h2>
+  <p>Unser Shop wird von Shopify Inc. gehostet. Shopify stellt die E-Commerce-Plattform bereit, über die wir Produkte verkaufen.</p>
+  <p>Ihre Daten werden in den Speichersystemen und Datenbanken von Shopify sowie in der allgemeinen Shopify-Anwendung verarbeitet und auf einem durch eine Firewall geschützten Server gespeichert.</p>
+  <h3>Zahlung</h3>
+  <p>Bei Zahlung über ein Direct-Payment-Gateway speichert Shopify ggf. Kartendaten. Diese Informationen werden gemäss dem PCI-DSS-Standard verschlüsselt.</p>
+
+  <h2>5. Drittanbieter-Dienste</h2>
+  <p>Grundsätzlich werden die von Ihnen übermittelten personenbezogenen Daten nur an Dritte weitergegeben, die uns bei unserem Geschäft helfen — soweit diese Dienste für unseren Betrieb erforderlich sind.</p>
+
+  <h2>6. Sicherheit</h2>
+  <p>Zum Schutz Ihrer personenbezogenen Daten ergreifen wir angemessene Vorsichtsmassnahmen und befolgen Branchenstandards, um sicherzustellen, dass sie nicht verloren gehen, missbraucht, abgerufen, offengelegt, verändert oder zerstört werden.</p>
+
+  <h2>7. Cookies</h2>
+  <p>Wir verwenden Cookies, um die Funktionalität unseres Shops zu gewährleisten und das Einkaufserlebnis zu verbessern. Sie können Cookies in Ihrem Browser deaktivieren; bestimmte Funktionen des Shops können dann eingeschränkt sein.</p>
+
+  <h2>8. Alter der Einwilligung</h2>
+  <p>Durch die Nutzung dieser Website bestätigen Sie, dass Sie mindestens das Alter der Volljährigkeit in Ihrem Wohnsitzstaat haben oder dass Sie die Einwilligung eines Erziehungsberechtigten für Minderjährige in Ihrer Obhut erhalten haben.</p>
+
+  <h2>9. Änderungen dieser Erklärung</h2>
+  <p>Wir behalten uns vor, diese Datenschutzerklärung jederzeit zu ändern. Änderungen gelten ab Veröffentlichung auf dieser Seite.</p>
+
+  <h2>10. Kontakt</h2>
+  <p>Fragen zum Datenschutz: <a href="{{ contact_url }}">{{ contact_email }}</a></p>
+
+{% elsif locale_base == 'en' %}
+  <p class="rl-faq-page__legal-version">Privacy statement</p>
+  <h2>1. Personal information we collect</h2>
+  <p>When you make a purchase in our store, we collect the personal information you provide — such as your name, address and email — as part of the buying and selling process.</p>
+  <p>When you browse our store, we also automatically receive your device’s IP address, which may help us learn more about your browser and operating system.</p>
+  <p>Email marketing (if applicable): with your permission, we may send you emails about our store, new products and other updates.</p>
+
+  <h2>2. Consent</h2>
+  <h3>How do we obtain your consent?</h3>
+  <p>When you provide personal information to complete a transaction, verify a card, place an order, arrange delivery or return a purchase, we assume you consent to our collecting and using it for that purpose only.</p>
+  <p>If we ask for personal information for another reason (for example marketing), we will ask for your explicit consent or give you an opportunity to decline.</p>
+  <h3>How can I withdraw my consent?</h3>
+  <p>You may contact us at any time at <a href="{{ contact_url }}">{{ contact_email }}</a> to withdraw consent.</p>
+
+  <h2>3. Disclosure</h2>
+  <p>We may disclose your personal information if we are required by law to do so, or if you violate our Terms of Sale or Terms of Use.</p>
+
+  <h2>4. Shopify</h2>
+  <p>Our store is hosted on Shopify Inc. They provide us with the online e-commerce platform that allows us to sell our products to you.</p>
+  <p>Your data is stored through Shopify’s data storage, databases and the general Shopify application, on a secure server behind a firewall.</p>
+  <h3>Payment</h3>
+  <p>If you choose a direct payment gateway, Shopify may store your credit card information. That information is encrypted in accordance with the PCI-DSS standard.</p>
+
+  <h2>5. Third-party services</h2>
+  <p>In general, the third-party providers used by us will only collect, use and disclose your information to the extent necessary to allow them to perform the services they provide to us.</p>
+
+  <h2>6. Security</h2>
+  <p>To protect your personal information, we take reasonable precautions and follow industry best practices to make sure it is not inappropriately lost, misused, accessed, disclosed, altered or destroyed.</p>
+
+  <h2>7. Cookies</h2>
+  <p>We use cookies to keep our store functional and to improve your shopping experience. You can disable cookies in your browser; some store features may then be limited.</p>
+
+  <h2>8. Age of consent</h2>
+  <p>By using this site, you represent that you are at least the age of majority in your state or province of residence, or that you have given us your consent to allow any of your minor dependents to use this site.</p>
+
+  <h2>9. Changes to this privacy statement</h2>
+  <p>We reserve the right to modify this privacy statement at any time. Changes take effect once posted on this page.</p>
+
+  <h2>10. Contact</h2>
+  <p>Privacy questions: <a href="{{ contact_url }}">{{ contact_email }}</a></p>
+
+{% else %}
+  <p class="rl-faq-page__legal-version">Déclaration de confidentialité</p>
+  <h2>1. Renseignements personnels recueillis</h2>
+  <p>Lorsque vous effectuez un achat sur notre boutique, dans le cadre de notre processus d’achat et de vente, nous recueillons les renseignements personnels que vous nous fournissez, tels que votre nom, votre adresse et votre adresse e-mail.</p>
+  <p>Lorsque vous naviguez sur notre boutique, nous recevons également automatiquement l’adresse de protocole Internet (adresse IP) de votre appareil, qui nous permet d’obtenir plus de détails au sujet du navigateur et du système d’exploitation que vous utilisez.</p>
+  <p>Marketing par e-mail (le cas échéant)&nbsp;: avec votre permission, nous pourrions vous envoyer des e-mails au sujet de notre boutique, de nouveaux produits et d’autres mises à jour.</p>
+
+  <h2>2. Consentement</h2>
+  <h3>Comment obtenez-vous mon consentement&nbsp;?</h3>
+  <p>Lorsque vous nous fournissez vos renseignements personnels pour conclure une transaction, vérifier votre carte de crédit, passer une commande, planifier une livraison ou retourner un achat, nous présumons que vous consentez à ce que nous recueillions vos renseignements et à ce que nous les utilisions à cette fin uniquement.</p>
+  <p>Si nous vous demandons de nous fournir vos renseignements personnels pour une autre raison, à des fins de marketing par exemple, nous vous demanderons directement votre consentement explicite, ou nous vous donnerons la possibilité de refuser.</p>
+  <h3>Comment puis-je retirer mon consentement&nbsp;?</h3>
+  <p>Si après nous avoir donné votre consentement, vous changez d’avis, vous pouvez nous en aviser en nous contactant à <a href="{{ contact_url }}">{{ contact_email }}</a>.</p>
+
+  <h2>3. Divulgation</h2>
+  <p>Nous pouvons divulguer vos renseignements personnels si la loi nous oblige à le faire ou si vous violez nos conditions générales de vente ou d’utilisation.</p>
+
+  <h2>4. Shopify</h2>
+  <p>Notre boutique est hébergée sur Shopify Inc. Ils nous fournissent la plateforme e-commerce en ligne qui nous permet de vous vendre nos produits.</p>
+  <p>Vos données sont stockées dans le système de stockage de données et les bases de données de Shopify, et dans l’application générale de Shopify. Vos données sont conservées sur un serveur sécurisé protégé par un pare-feu.</p>
+  <h3>Paiement</h3>
+  <p>Si vous réalisez votre achat par le biais d’une passerelle de paiement direct, Shopify peut stocker vos renseignements de carte de crédit. Ces renseignements sont chiffrés conformément à la norme PCI-DSS.</p>
+
+  <h2>5. Services de tiers</h2>
+  <p>De manière générale, les fournisseurs tiers que nous utilisons ne recueillent, n’utilisent et ne divulguent vos renseignements que dans la mesure nécessaire pour leur permettre d’exécuter les services qu’ils nous fournissent.</p>
+
+  <h2>6. Sécurité</h2>
+  <p>Pour protéger vos renseignements personnels, nous prenons des précautions raisonnables et suivons les meilleures pratiques de l’industrie afin de nous assurer qu’ils ne sont pas perdus, détournés, consultés, divulgués, altérés ou détruits de manière inappropriée.</p>
+
+  <h2>7. Cookies</h2>
+  <p>Nous utilisons des cookies pour assurer le bon fonctionnement de notre boutique et améliorer votre expérience d’achat. Vous pouvez désactiver les cookies dans votre navigateur&nbsp;; certaines fonctionnalités de la boutique peuvent alors être limitées.</p>
+
+  <h2>8. Âge du consentement</h2>
+  <p>En utilisant ce site, vous déclarez que vous avez au moins l’âge de la majorité dans votre État ou province de résidence, ou que vous avez donné votre consentement pour permettre à toute personne mineure à votre charge d’utiliser ce site.</p>
+
+  <h2>9. Modifications de la présente déclaration</h2>
+  <p>Nous nous réservons le droit de modifier la présente déclaration de confidentialité à tout moment. Les modifications prennent effet dès leur publication sur cette page.</p>
+
+  <h2>10. Contact</h2>
+  <p>Questions relatives à la confidentialité&nbsp;: <a href="{{ contact_url }}">{{ contact_email }}</a></p>
+{% endif %}

@@ -1,0 +1,154 @@
+{% comment %}
+  Single PLP brand chip.
+
+  @param title {string}
+  @param url {string}
+  @param handle {string} collection handle for logo lookup
+  @param active {boolean}
+  @param placeholder {boolean} show "+" tile (Autres marques)
+  @param subcollection {boolean} sub-collection chip with product/collection thumb
+  @param block_shopify_attributes {string} optional
+  @param logo_url {string} optional override — Shopify image, theme asset, or CDN URL
+  @param chip_eager {boolean} load logo immediately when in first viewport chips
+  @param lightweight {boolean} skip thumb lookup — text/initials only (deferred overflow chips)
+{% endcomment %}
+{% liquid
+  assign chip_title = title | strip
+  assign chip_url = url | strip
+  assign chip_handle = handle | strip | downcase
+  assign chip_subcollection = subcollection | default: false
+  assign chip_placeholder = placeholder | default: false
+  assign chip_load_eager = chip_eager | default: false
+  assign chip_lightweight = lightweight | default: false
+
+  if chip_url == blank and chip_handle != blank
+    assign chip_col_for_url = collections[chip_handle]
+    if chip_col_for_url != blank and chip_col_for_url.url != blank
+      assign chip_url = chip_col_for_url.url
+    else
+      assign chip_url = '/collections/' | append: chip_handle
+    endif
+  endif
+  assign chip_active = false
+  if chip_placeholder and active
+    assign chip_active = true
+  elsif chip_handle != blank and collection.handle == chip_handle
+    assign chip_active = true
+  elsif chip_handle == 'fear-of-god-essentials' and collection.handle == 'essentials'
+    # Alias collection — keep Essentials chip active
+    assign chip_active = true
+  elsif chip_handle == 'adidas-spezial' and collection.handle == 'adidas-handball-spezial'
+    # Handball Spezial folded under Adidas Spezial nav — keep chip active on alias URL
+    assign chip_active = true
+  elsif active == true
+    assign chip_active = true
+  endif
+  assign chip_has_media = false
+  assign chip_has_image = false
+  assign chip_image_url = ''
+  assign chip_show_initials = false
+
+  assign chip_logo_override = logo_url | strip
+  if chip_logo_override != blank
+    assign chip_image_url = chip_logo_override
+    assign chip_has_image = true
+    assign chip_has_media = true
+  elsif chip_subcollection and chip_handle != blank
+    if chip_lightweight
+      if chip_title != blank
+        assign chip_has_media = true
+        assign chip_show_initials = true
+      endif
+    else
+      capture chip_image_url
+        render 'collection-plp-chip-thumb-url', handle: chip_handle
+      endcapture
+      assign chip_image_url = chip_image_url | strip
+      if chip_image_url != blank
+        assign chip_has_image = true
+        assign chip_has_media = true
+      elsif chip_title != blank
+        assign chip_has_media = true
+        assign chip_show_initials = true
+      endif
+    endif
+  elsif chip_placeholder != true
+    capture chip_image_url
+      render 'brand-menu-logo-url', handle: chip_handle
+    endcapture
+    assign chip_image_url = chip_image_url | strip
+    if chip_image_url != blank
+      assign chip_has_image = true
+      assign chip_has_media = true
+    endif
+  endif
+%}
+<li class="collection-plp-brand-chips__item"{% if block_shopify_attributes != blank %} {{ block_shopify_attributes }}{% endif %}>
+  {% if chip_url != blank %}
+    <a
+      class="collection-plp-brand-chips__chip{% if chip_placeholder %} collection-plp-brand-chips__chip--placeholder{% endif %}{% unless chip_has_media %} collection-plp-brand-chips__chip--text-only{% endunless %}{% if chip_active %} is-active{% endif %}"
+      href="{{ chip_url }}"
+      draggable="false"
+      data-no-locale-lock
+      {% if chip_active %}
+        aria-current="page"
+      {% endif %}
+    >
+      {% if chip_has_media or chip_placeholder %}
+        <span class="collection-plp-brand-chips__media" aria-hidden="true">
+          {% if chip_placeholder %}
+            <span class="collection-plp-brand-chips__placeholder" aria-hidden="true">+</span>
+          {% elsif chip_has_image %}
+            <img
+              src="{{ chip_image_url }}"
+              data-chip-image
+              {% if chip_load_eager %}
+                loading="eager"
+                fetchpriority="low"
+              {% else %}
+                loading="lazy"
+              {% endif %}
+              decoding="async"
+              alt=""
+              width="36"
+              height="36"
+              draggable="false"
+            >
+          {% elsif chip_show_initials %}
+            <span class="collection-plp-brand-chips__placeholder collection-plp-brand-chips__placeholder--initials" aria-hidden="true">{{ chip_title | slice: 0, 2 | upcase }}</span>
+          {% endif %}
+        </span>
+      {% endif %}
+      <span class="collection-plp-brand-chips__label">{{ chip_title }}</span>
+    </a>
+  {% else %}
+    <span class="collection-plp-brand-chips__chip collection-plp-brand-chips__chip--static{% if chip_placeholder %} collection-plp-brand-chips__chip--placeholder{% endif %}{% unless chip_has_media %} collection-plp-brand-chips__chip--text-only{% endunless %}{% if chip_active %} is-active{% endif %}">
+      {% if chip_has_media or chip_placeholder %}
+        <span class="collection-plp-brand-chips__media" aria-hidden="true">
+          {% if chip_placeholder %}
+            <span class="collection-plp-brand-chips__placeholder" aria-hidden="true">+</span>
+          {% elsif chip_has_image %}
+            <img
+              src="{{ chip_image_url }}"
+              data-chip-image
+              {% if chip_load_eager %}
+                loading="eager"
+                fetchpriority="low"
+              {% else %}
+                loading="lazy"
+              {% endif %}
+              decoding="async"
+              alt=""
+              width="36"
+              height="36"
+              draggable="false"
+            >
+          {% elsif chip_show_initials %}
+            <span class="collection-plp-brand-chips__placeholder collection-plp-brand-chips__placeholder--initials" aria-hidden="true">{{ chip_title | slice: 0, 2 | upcase }}</span>
+          {% endif %}
+        </span>
+      {% endif %}
+      <span class="collection-plp-brand-chips__label">{{ chip_title }}</span>
+    </span>
+  {% endif %}
+</li>

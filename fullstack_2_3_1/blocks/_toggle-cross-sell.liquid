@@ -48,12 +48,22 @@
     <div class="toggle-cross-sell__products">
       {%- for product in product_list -%}
         {%- if product.available -%}
+          {%- capture toggle_price_snapshot -%}
+            {% render 'rs-product-price-snapshot', product: product %}
+          {%- endcapture -%}
+          {%- assign toggle_price_parts = toggle_price_snapshot | strip | split: '|' -%}
+          {%- assign toggle_price_cents = toggle_price_parts[0] | plus: 0 -%}
+          {%- assign toggle_compare_cents = toggle_price_parts[1] | plus: 0 -%}
+          {%- assign toggle_product_is_free = false -%}
+          {%- if toggle_price_parts[6] == '1' -%}
+            {%- assign toggle_product_is_free = true -%}
+          {%- endif -%}
           <toggle-cross-sell
             class="toggle-cross-sell__product"
             data-ref="toggle-cross-sell"
-            data-price="{{ product.selected_or_first_available_variant.price }}"
-            {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
-              data-compare-at-price="{{ product.selected_or_first_available_variant.compare_at_price }}"
+            data-price="{{ toggle_price_cents }}"
+            {%- if toggle_compare_cents > toggle_price_cents and toggle_compare_cents > 0 -%}
+              data-compare-at-price="{{ toggle_compare_cents }}"
             {%- endif -%}
           >
             <div class="toggle-cross-sell__product-container">
@@ -94,16 +104,26 @@
                       aria-label="{{ product.title }} select"
                     >
                       {%- for variant in product.variants -%}
+                        {%- capture toggle_variant_effective_price_raw -%}
+                          {% render 'rs-variant-effective-price', variant: variant %}
+                        {%- endcapture -%}
+                        {%- assign toggle_variant_effective_price = toggle_variant_effective_price_raw | strip | plus: 0 -%}
+                        {%- assign toggle_variant_valid = false -%}
+                        {%- if toggle_product_is_free and variant.available and toggle_variant_effective_price == 0 -%}
+                          {%- assign toggle_variant_valid = true -%}
+                        {%- elsif variant.available and toggle_variant_effective_price > 0 -%}
+                          {%- assign toggle_variant_valid = true -%}
+                        {%- endif -%}
                         <option
                           value="{{ variant.id }}"
                           {%- if variant.featured_image != blank -%}
                             data-variant-image="{{ variant.featured_image | image_url: width: 110 }}"
                           {%- endif -%}
-                          data-price="{{ variant.price }}"
-                          {%- if variant.compare_at_price > variant.price -%}
+                          data-price="{{ toggle_variant_effective_price }}"
+                          {%- if variant.compare_at_price > toggle_variant_effective_price and variant.compare_at_price > 0 -%}
                             data-compare-at-price="{{ variant.compare_at_price }}"
                           {%- endif -%}
-                          {% if variant.available == false %}
+                          {% if toggle_variant_valid == false %}
                             disabled
                           {% endif %}
                         >
@@ -157,137 +177,6 @@
     </div>
   </toggle-cross-sell-list>
 {%- endif -%}
-
-{% stylesheet %}
-  .toggle-cross-sell {
-    display: block;
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-  }
-
-  shopify-visual-preview-block-list .toggle-cross-sell[data-visual-preview-mode] {
-    width: 400px;
-  }
-
-  .product-form__form .toggle-cross-sell:not(:first-of-type) {
-    display: none;
-  }
-
-  .toggle-cross-sell__content {
-    margin-bottom: var(--margin-sm);
-  }
-
-  .toggle-cross-sell__description p {
-    margin: 0;
-    line-height: normal;
-    font-size: var(--font-body--size);
-  }
-
-  .toggle-cross-sell__products {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-sm);
-    width: 100%;
-  }
-
-  .toggle-cross-sell__product {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    /* min-height: 50px; */
-    gap: var(--gap-md);
-    overflow: hidden;
-    cursor: pointer;
-    border-radius: var(--card-border-radius);
-    padding: var(--padding-xs);
-    color: var(--color-input-text);
-    background-color: var(--color-input-background);
-    border: var(--inputs-border-width) solid var(--color-input-border);
-  }
-
-  .toggle-cross-sell__product:has(input[type='checkbox']:checked) {
-    border-color: var(--color-selected-input-border);
-  }
-
-  .toggle-cross-sell__product-image img {
-    display: block;
-    min-width: 55px;
-    width: 55px;
-    border-radius: calc(var(--card-border-radius) - var(--margin-sm));
-  }
-
-  .toggle-cross-sell__product-image--wide img {
-    object-fit: cover;
-    min-height: 100%;
-    border-radius: 0;
-  }
-
-  .toggle-cross-sell__product-container {
-    display: flex;
-    flex-direction: row;
-    cursor: auto;
-    gap: var(--gap-sm);
-  }
-
-  .toggle-cross-sell__product-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--gap-sm);
-  }
-
-  .toggle-cross-sell__product-content--no-image {
-    margin-left: var(--margin-sm);
-  }
-
-  .toggle-cross-sell__product-header {
-    display: flex;
-    gap: var(--gap-xs);
-    flex-wrap: wrap;
-    flex-direction: column;
-  }
-
-  .toggle-cross-sell__product-title {
-    margin: 0;
-    font-size: var(--font-body--size);
-    font-weight: 500;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .toggle-cross-sell__product-price-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: var(--gap-sm);
-    font-size: var(--font-body--size-small);
-  }
-
-  .toggle-cross-sell__product .checkbox,
-  .toggle-cross-sell__product .button {
-    margin-right: var(--margin-sm);
-  }
-
-  .toggle-cross-sell__text-add,
-  .toggle-cross-sell__text-added,
-  .toggle-cross-sell__text-remove {
-    display: none;
-  }
-
-  .toggle-cross-sell__product .button.button--secondary .toggle-cross-sell__text-add {
-    display: block;
-  }
-
-  .toggle-cross-sell__product .button.button--active:not(:hover) .toggle-cross-sell__text-added {
-    display: block;
-  }
-
-  .toggle-cross-sell__product .button.button--active:hover .toggle-cross-sell__text-remove {
-    display: block;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

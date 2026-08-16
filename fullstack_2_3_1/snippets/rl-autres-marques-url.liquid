@@ -1,0 +1,26 @@
+{% comment %}
+  Sneakers — "Autres marques" PLP (locale-aware).
+
+  Prefer Admin smart collection handle `autres-marques` (other-tier sneaker brands only).
+  Fallback: toutes-nos-paires + ?brand_strip=other (sneakers catalog + other chip row).
+{% endcomment %}
+{% liquid
+  assign rl_autres_col = collections['autres-marques']
+  if rl_autres_col == blank
+    assign rl_autres_col = collections['autres-marques-sneakers']
+  endif
+
+  if rl_autres_col != blank
+    echo rl_autres_col.url
+  else
+    assign rl_sneakers_col = collections['toutes-nos-paires']
+    if rl_sneakers_col != blank
+      echo rl_sneakers_col.url | append: '?brand_strip=other'
+    else
+      capture rl_autres_fallback
+        render 'rl-localized-path', path: '/collections/toutes-nos-paires?brand_strip=other'
+      endcapture
+      echo rl_autres_fallback
+    endif
+  endif
+%}

@@ -3,6 +3,16 @@
     <div class="customer-account__account">
       <h1 class="h2 text-center">{{ 'customer.account.title' | t }}</h1>
 
+      {%- liquid
+        assign return_request_url = pages['demande-retour'].url | default: '/pages/demande-retour'
+      -%}
+      <a
+        href="{{ return_request_url }}"
+        class="button button--primary button--full-width customer-account__return-cta"
+      >
+        {{ 'customer.account.request_return' | t }}
+      </a>
+
       <div class="card card--with-border customer-account__orders">
         <h2 class="h4">{{ 'customer.orders.orders' | t }}</h2>
 

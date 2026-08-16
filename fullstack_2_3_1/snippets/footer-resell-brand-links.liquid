@@ -1,0 +1,20 @@
+{% liquid
+  assign url_notre_concept = routes.root_url | append: '/pages/notre-concept'
+  assign url_avis = routes.root_url | append: '/pages/avis-sur-resell-lausanne'
+
+  if pages['notre-concept'] != blank
+    assign url_notre_concept = pages['notre-concept'].url
+  endif
+
+  if pages['avis-sur-resell-lausanne'] != blank
+    assign url_avis = pages['avis-sur-resell-lausanne'].url
+  endif
+%}
+
+<div class="rl-footer-links">
+  <h3 class="rl-footer-heading">{{ 'rl_footer.learn_heading' | t }}</h3>
+  <ul class="rl-footer-links__list">
+    <li><a href="{{ url_notre_concept }}" class="rl-footer-links__link">{{ 'rl_footer.learn_concept' | t }}</a></li>
+    <li><a href="{{ url_avis }}" class="rl-footer-links__link">{{ 'rl_footer.learn_reviews' | t }}</a></li>
+  </ul>
+</div>

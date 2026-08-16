@@ -1,9 +1,12 @@
-<script src="{{ 'product-price.js' | asset_url }}" type="module"></script>
-
 {% liquid
   assign product = block.settings.product | default: closest.product | default: product
   if request.visual_preview_mode and product == blank
     assign product = collections.all.products.first
+  endif
+
+  assign use_plp_card_price = block.settings.use_plp_card_price
+  if use_plp_card_price == false and block.settings.additional_class contains 'product-card-plp-price'
+    assign use_plp_card_price = true
   endif
 %}
 
@@ -12,17 +15,29 @@
     {{ block.settings.text_style }}
     {%- if block.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
     {%- if block.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+    {%- if use_plp_card_price %} product-card-plp-price{% endif -%}
     {%- if block.settings.additional_class != blank %} {{ block.settings.additional_class }}{% endif -%}
   "
   data-sales-badge="{{ block.settings.sales_badge }}"
   {{ block.shopify_attributes }}
 >
-  <div data-ref="price-container">
-    {% render 'price',
-      from_product: product,
-      show_sales_badge_text: block.settings.show_sales_badge_text,
-      sales_badge: block.settings.sales_badge,
-      show_unit_price: block.settings.show_unit_price
+  <div class="rs-pdp-price-size-row">
+    <div class="rs-pdp-price-size-row__price" data-ref="price-container">
+      {%- if use_plp_card_price -%}
+        {% render 'product-card-plp-price', product: product %}
+      {%- else -%}
+        {% render 'price',
+          from_product: product,
+          show_sales_badge_text: block.settings.show_sales_badge_text,
+          sales_badge: block.settings.sales_badge,
+          show_unit_price: block.settings.show_unit_price
+        %}
+      {%- endif -%}
+    </div>
+    {% render 'rs-pdp-single-size',
+      product: product,
+      auto_detect: true,
+      class: 'rs-size-modal__single-size rs-size-modal__single-size--price'
     %}
   </div>
 </product-price>
@@ -33,6 +48,10 @@
     flex-direction: column;
     min-height: calc(2 * var(--padding-xxs) + var(--font-body--size-small) + var(--badge-primary-border-width) * 2);
     justify-content: center;
+  }
+
+  product-price.product-card-plp-price {
+    min-height: 0;
   }
 {% endstylesheet %}
 
@@ -107,6 +126,13 @@
     {
       "type": "header",
       "content": "t:advanced_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_plp_card_price",
+      "label": "PLP card price layout",
+      "info": "Use for collection/search product cards. Prefer this over Additional class — Translate & Adapt can break translated class names.",
+      "default": false
     },
     {
       "type": "text",

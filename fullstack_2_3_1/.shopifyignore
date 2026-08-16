@@ -1,0 +1,17 @@
+# Ignore accidental duplicated theme files with " 2" suffix.
+**/* 2.js
+**/* 2.css
+**/* 2.liquid
+**/* 2.json
+**/* 2.svg
+**/* 2.png
+**/* 2.jpg
+**/* 2.jpeg
+**/* 2.webp
+
+# Keep remote app embeds/app blocks untouched on push.
+# This prevents needing to re-enable Judge.me and other app embeds after each deploy.
+config/settings_data.json
+
+# Homepage content (hero images, section order) lives in theme editor on Shopify.
+templates/index.json

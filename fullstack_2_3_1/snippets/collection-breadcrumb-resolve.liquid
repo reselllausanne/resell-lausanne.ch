@@ -1,0 +1,209 @@
+{% comment %}
+  Resolve collection PLP breadcrumb labels/handles from taxonomy map + menu fallbacks.
+
+  Output: "Label1|Label2###handle1|handle2" or blank.
+
+  Priority:
+  1. breadcrumb-taxonomy-map for collection.handle
+  2. Handle alias remap (menu handle != taxonomy handle)
+  3. plp_child_map parent path + current collection as terminal level
+  4. Known vertical brand lists from menu (Sneakers > Brand, Streetwear > Brand, Active > Category)
+{% endcomment %}
+{% liquid
+  assign resolved_labels = ''
+  assign resolved_handles = ''
+  assign lookup_handle = collection.handle | default: '' | strip | handleize
+
+  capture taxonomy_payload
+    render 'breadcrumb-taxonomy-map', primary_collection_handle: lookup_handle
+  endcapture
+  assign taxonomy_payload = taxonomy_payload | strip
+
+  if taxonomy_payload == blank
+    case lookup_handle
+      when 'air-force-1'
+        assign lookup_handle = 'nike-air-force-1'
+      when 'jordan-4'
+        assign lookup_handle = 'air-jordan-4'
+      when 'essentials'
+        assign lookup_handle = 'fear-of-god-essentials'
+      when 'travis-scott'
+        assign lookup_handle = 'vetement-travis'
+    endcase
+    if lookup_handle != collection.handle
+      capture taxonomy_payload
+        render 'breadcrumb-taxonomy-map', primary_collection_handle: lookup_handle
+      endcapture
+      assign taxonomy_payload = taxonomy_payload | strip
+    endif
+  endif
+
+  if taxonomy_payload contains '###'
+    assign resolved_labels = taxonomy_payload | split: '###' | first | strip
+    assign resolved_handles = taxonomy_payload | split: '###' | last | strip
+  endif
+
+  if resolved_labels == blank
+    assign plp_parent = ''
+    capture plp_child_map_raw
+      render 'plp-brand-child-map'
+    endcapture
+    assign plp_child_map = plp_child_map_raw | strip | split: '|'
+
+    for brand_entry in plp_child_map
+      assign brand_parts = brand_entry | split: ':'
+      assign brand_key = brand_parts.first
+      assign brand_children = brand_parts.last | split: ','
+      for child_handle in brand_children
+        if lookup_handle == child_handle
+          assign plp_parent = brand_key
+          break
+        endif
+      endfor
+      if plp_parent != blank
+        break
+      endif
+    endfor
+
+    if plp_parent == blank
+      capture collectibles_child_map_raw
+        render 'plp-collectibles-child-map'
+      endcapture
+      assign collectibles_child_map = collectibles_child_map_raw | strip | split: '|'
+      for collectibles_entry in collectibles_child_map
+        assign collectibles_parts = collectibles_entry | split: ':'
+        assign collectibles_parent = collectibles_parts.first
+        assign collectibles_children = collectibles_parts.last | split: ','
+        for child_handle in collectibles_children
+          if lookup_handle == child_handle
+            assign plp_parent = collectibles_parent
+            break
+          endif
+        endfor
+        if plp_parent != blank
+          break
+        endif
+      endfor
+    endif
+
+    if plp_parent != blank
+      capture parent_payload
+        render 'breadcrumb-taxonomy-map', primary_collection_handle: plp_parent
+      endcapture
+      assign parent_payload = parent_payload | strip
+      if parent_payload contains '###'
+        assign parent_labels = parent_payload | split: '###' | first | strip
+        assign parent_handles = parent_payload | split: '###' | last | strip
+        if lookup_handle == plp_parent
+          assign resolved_labels = parent_labels
+          assign resolved_handles = parent_handles
+        else
+          capture child_payload
+            render 'breadcrumb-taxonomy-map', primary_collection_handle: lookup_handle
+          endcapture
+          assign child_payload = child_payload | strip
+          if child_payload contains '###'
+            assign resolved_labels = child_payload | split: '###' | first | strip
+            assign resolved_handles = child_payload | split: '###' | last | strip
+          else
+            assign resolved_labels = parent_labels | append: '|' | append: collection.title
+            assign resolved_handles = parent_handles | append: '|' | append: lookup_handle
+          endif
+        endif
+      else
+        assign parent_label = plp_parent | replace: '-', ' '
+        assign resolved_labels = 'Sneakers|' | append: parent_label | append: '|' | append: collection.title
+        assign resolved_handles = 'sneakers|' | append: plp_parent | append: '|' | append: lookup_handle
+        if lookup_handle == plp_parent
+          assign resolved_labels = 'Sneakers|' | append: parent_label
+          assign resolved_handles = 'sneakers|' | append: plp_parent
+        endif
+      endif
+    endif
+  endif
+
+  if resolved_labels == blank
+    assign collectibles_handles = 'lego,lego-star-wars,lego-technic,lego-harry-potter,lego-marvel,lego-icons,lego-city,lego-botanicals,lego-ninjago,lego-friends,lego-speed-champions,lego-disney,pop-mart,labubu,pokemon,one-piece,moonswatch,sonny-angel' | split: ','
+    if collectibles_handles contains lookup_handle
+      capture collectibles_taxonomy_payload
+        render 'breadcrumb-taxonomy-map', primary_collection_handle: lookup_handle
+      endcapture
+      assign collectibles_taxonomy_payload = collectibles_taxonomy_payload | strip
+      if collectibles_taxonomy_payload contains '###'
+        assign resolved_labels = collectibles_taxonomy_payload | split: '###' | first | strip
+        assign resolved_handles = collectibles_taxonomy_payload | split: '###' | last | strip
+      endif
+    endif
+  endif
+
+  if resolved_labels == blank
+    assign sneaker_brands = 'mizuno,crocs,hoka,converse,salomon,on,autry,alexander-mcqueen,veja,clarks,birkenstock,ugg,new-balance,adidas,nike,air-jordan,yeezy,asics' | split: ','
+    assign streetwear_brands = 'fear-of-god-essentials,sp5der,off-white,denim-tears,vetement-travis,gallery-dept,hellstar,jacquemus,ami-paris,the-north-face,stone-island,supreme,bape,chrome-hearts,aime-leon-dore,nike-x-nocta-apparel' | split: ','
+    assign streetwear_categories = 'vetements,t-shirt,hoodie,training,puffer,bonnet-et-casquette' | split: ','
+    assign active_roots = 'running,active-clothing,adidas-adizero,nike-running,skateboard,slide-mules,crampons-de-foot,court-tenis-retro,retro-sneakers,retro-basket' | split: ','
+    assign footwear_roots = 'dr-martens,timberland' | split: ','
+
+    if sneaker_brands contains lookup_handle
+      assign resolved_labels = 'Sneakers|' | append: collection.title
+      assign resolved_handles = 'sneakers|' | append: lookup_handle
+    elsif streetwear_categories contains lookup_handle
+      case lookup_handle
+        when 'vetements'
+          assign resolved_labels = 'Streetwear|Les Ensembles'
+        when 't-shirt'
+          assign resolved_labels = 'Streetwear|T-Shirts'
+        when 'hoodie'
+          assign resolved_labels = 'Streetwear|Sweatshirts'
+        when 'training'
+          assign resolved_labels = 'Streetwear|Pants, Jogging & Shorts'
+        when 'puffer'
+          assign resolved_labels = 'Streetwear|Vestes'
+        when 'bonnet-et-casquette'
+          assign resolved_labels = 'Streetwear|Casquettes & Bonnets'
+        else
+          assign resolved_labels = 'Streetwear|' | append: collection.title
+      endcase
+      assign resolved_handles = 'streetwear|' | append: lookup_handle
+    elsif streetwear_brands contains lookup_handle
+      assign resolved_labels = 'Streetwear|' | append: collection.title
+      assign resolved_handles = 'streetwear|' | append: lookup_handle
+    elsif active_roots contains lookup_handle
+      assign resolved_labels = 'Active|' | append: collection.title
+      assign resolved_handles = 'active|' | append: lookup_handle
+    elsif footwear_roots contains lookup_handle
+      assign resolved_labels = 'Chaussures|' | append: collection.title
+      assign resolved_handles = 'footwear|' | append: lookup_handle
+    elsif lookup_handle == 'air-jordan-x-travis-scott'
+      assign resolved_labels = 'Sneakers|Nike|Nike x Travis Scott'
+      assign resolved_handles = 'sneakers|nike|air-jordan-x-travis-scott'
+    elsif lookup_handle == 'autre-jordan'
+      assign resolved_labels = 'Sneakers|Air Jordan|Autres Jordan'
+      assign resolved_handles = 'sneakers|air-jordan|autre-jordan'
+    elsif lookup_handle == 'autre-yeezy'
+      assign resolved_labels = 'Sneakers|Yeezy|Autres Yeezy'
+      assign resolved_handles = 'sneakers|yeezy|autre-yeezy'
+    elsif lookup_handle == 'nike-cortez'
+      assign resolved_labels = 'Sneakers|Nike|Nike Cortez'
+      assign resolved_handles = 'sneakers|nike|nike-cortez'
+    elsif lookup_handle == 'nike-x-off-white'
+      assign resolved_labels = 'Sneakers|Nike|Nike x Off-White'
+      assign resolved_handles = 'sneakers|nike|nike-x-off-white'
+    elsif lookup_handle == 'adidas-handball-spezial'
+      assign resolved_labels = 'Sneakers|Adidas|Adidas Handball Spezial'
+      assign resolved_handles = 'sneakers|adidas|adidas-handball-spezial'
+    elsif lookup_handle == 'new-balance-1000' or lookup_handle == 'new-balance-100'
+      assign resolved_labels = 'Sneakers|New Balance|New Balance 1000'
+      assign resolved_handles = 'sneakers|new-balance|new-balance-1000'
+    elsif lookup_handle == 'new-balance-574' or lookup_handle == 'new-balance-990' or lookup_handle == 'new-balance-327' or lookup_handle == 'new-balance-other-models'
+      assign resolved_labels = 'Sneakers|New Balance|' | append: collection.title
+      assign resolved_handles = 'sneakers|new-balance|' | append: lookup_handle
+    elsif lookup_handle == 'saucony-progrid-omni-9' or lookup_handle == 'saucony-progrid-triumph-4'
+      assign resolved_labels = 'Sneakers|Saucony|' | append: collection.title
+      assign resolved_handles = 'sneakers|saucony|' | append: lookup_handle
+    elsif lookup_handle == 'ugg-lowmell' or lookup_handle == 'ugg-mini-boot'
+      assign resolved_labels = 'Sneakers|UGG|' | append: collection.title
+      assign resolved_handles = 'sneakers|ugg|' | append: lookup_handle
+    endif
+  endif
+-%}
+{%- if resolved_labels != blank -%}{{ resolved_labels }}###{{ resolved_handles }}{%- endif -%}

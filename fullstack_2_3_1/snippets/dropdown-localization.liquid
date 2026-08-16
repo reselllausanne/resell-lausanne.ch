@@ -6,14 +6,24 @@
   @param {string} [show_country_icon] - Affiche l'icône du pays.
   @param {boolean} [uppercase] - Indique si les éléments doivent être en majuscule.
   @param {number} [font_weight] - Poids de la police.
+  @param {string} [form_id] - Unique form id when multiple forms exist on the page.
+  @param {boolean} [drawer] - Mobile menu drawer: expand in footer on click, no viewport overlay.
 {%- enddoc -%}
+
+{% liquid
+  assign loc_form_id = form_id | default: 'LocalizationForm' | strip
+  if loc_form_id == blank
+    assign loc_form_id = 'LocalizationForm'
+  endif
+  assign loc_drawer = drawer | default: false
+%}
 
 {% if show_language and show_country == false %}
   <div class="dropdown-localization">
-    {% render 'localization-form', show_country: show_country, show_language: show_language, uppercase: uppercase, font_weight: font_weight %}
+    {% render 'localization-form', show_country: show_country, show_language: show_language, uppercase: uppercase, font_weight: font_weight, form_id: loc_form_id %}
   </div>
 {% elsif show_country %}
-  <dropdown-component class="dropdown-localization">
+  <dropdown-component class="dropdown-localization{% if loc_drawer %} dropdown-localization--drawer{% endif %}">
     <button
       type="button"
       class="dropdown-toggle dropdown-localization__toggle"
@@ -48,7 +58,7 @@
       class="dropdown-content dropdown-content--open-left dropdown-localization-content color-scheme-1"
       data-ref="dropdown-content"
     >
-      {% render 'localization-form', show_country: show_country, show_language: show_language, uppercase: uppercase, font_weight: font_weight %}
+      {% render 'localization-form', show_country: show_country, show_language: show_language, uppercase: uppercase, font_weight: font_weight, form_id: loc_form_id %}
     </div>
   </dropdown-component>
 {% endif %}
@@ -74,13 +84,59 @@
     padding: var(--padding-sm);
   }
 
+  /* Drawer menu footer: compact toggle, panel expands below (no fixed overlay). */
+  dropdown-component.dropdown-localization--drawer {
+    display: block;
+    width: 100%;
+  }
+
+  dropdown-component.dropdown-localization--drawer .dropdown-localization__toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  dropdown-component.dropdown-localization--drawer .dropdown-localization-content {
+    position: static;
+    transform: none;
+    width: 100%;
+    min-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin-top: 0;
+    opacity: 0;
+    visibility: hidden;
+    border: 0;
+    box-sizing: border-box;
+  }
+
+  dropdown-component.dropdown-localization--drawer[data-open='true'] .dropdown-localization-content {
+    max-height: min(260px, 42vh);
+    overflow-y: auto;
+    padding: var(--padding-sm);
+    margin-top: 8px;
+    opacity: 1;
+    visibility: visible;
+    border: var(--container-border-width) solid var(--color-border);
+    border-radius: var(--card-border-radius);
+  }
+
+  dropdown-component.dropdown-localization--drawer .localization-form__country-selector {
+    max-height: 9rem;
+  }
+
   @media (width <= 1000px) {
-    dropdown-component .dropdown-localization__toggle {
+    dropdown-component.dropdown-localization:not(.dropdown-localization--drawer) .dropdown-localization__toggle {
       width: 100%;
       padding: var(--padding-sm) var(--padding-xs);
     }
 
-    dropdown-component .dropdown-localization-content {
+    dropdown-component.dropdown-localization:not(.dropdown-localization--drawer) .dropdown-localization-content {
       position: fixed;
       top: auto;
       bottom: 0;

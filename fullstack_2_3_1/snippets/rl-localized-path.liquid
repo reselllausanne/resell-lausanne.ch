@@ -1,0 +1,16 @@
+{% comment %}
+  Locale-aware storefront path.
+  Usage: {% capture my_url %}{% render 'rl-localized-path', path: '/pages/wishlist' %}{% endcapture %}
+  @param {string} path - Must start with / (e.g. /pages/faq?category=livraison)
+{% endcomment %}
+{%- liquid
+  assign _path = path | default: ''
+  unless _path contains '/'
+    assign _path = '/' | append: _path
+  endunless
+  if routes.root_url == '/'
+    echo _path
+  else
+    echo routes.root_url | append: _path
+  endif
+-%}

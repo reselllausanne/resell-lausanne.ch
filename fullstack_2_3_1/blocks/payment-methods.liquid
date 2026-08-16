@@ -17,92 +17,89 @@
     data-visual-preview-mode
   {% endif %}
 >
+  {% if block.settings.show_heading %}
+    <p class="payment-methods__label">{{ block.settings.heading | escape }}</p>
+  {% endif %}
+  <span class="payment-methods__icons">
+  {% liquid
+    assign pay_id_prefix = 'pi-' | append: block.id | append: '-'
+    assign pay_id_token = 'id="pi-'
+    assign pay_id_replacement = 'id="' | append: pay_id_prefix
+  %}
   {% if settings.force_icons_display == false %}
     {%- for type in shop.enabled_payment_types -%}
-      {{ type | payment_type_svg_tag }}
+      {%- assign pay_svg = type | payment_type_svg_tag -%}
+      {%- assign pay_svg = pay_svg | replace: pay_id_token, pay_id_replacement -%}
+      {{ pay_svg }}
     {%- endfor -%}
   {% else %}
     {% if settings.show_visa %}
-      {{ 'visa' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'visa' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_master %}
-      {{ 'master' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'master' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_maestro %}
-      {{ 'maestro' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'maestro' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_apple_pay %}
-      {{ 'apple_pay' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'apple_pay' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_google_pay %}
-      {{ 'google_pay' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'google_pay' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_paypal %}
-      {{ 'paypal' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'paypal' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_klarna %}
-      {{ 'klarna' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'klarna' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_shopify_pay %}
-      {{ 'shopify_pay' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'shopify_pay' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_american_express %}
-      {{ 'american_express' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'american_express' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_diners_club %}
-      {{ 'diners_club' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'diners_club' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_discover %}
-      {{ 'discover' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'discover' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_twint %}
-      {{ 'twint' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'twint' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
 
     {% if settings.show_bancontact %}
-      {{ 'bancontact' | payment_type_svg_tag }}
+      {%- assign pay_svg = 'bancontact' | payment_type_svg_tag -%}
+      {{ pay_svg | replace: pay_id_token, pay_id_replacement }}
     {% endif %}
   {% endif %}
+  </span>
 </div>
-
-{% stylesheet %}
-  .payment-methods {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--gap-xs);
-    margin: var(--margin-top) 0 var(--margin-bottom) 0;
-    width: 100%;
-    justify-content: var(--alignment-mobile);
-  }
-
-  shopify-visual-preview-block-list .payment-methods[data-visual-preview-mode] {
-    width: max-content;
-  }
-
-  @media (width > 750px) {
-    .payment-methods {
-      justify-content: var(--alignment);
-    }
-  }
-
-  .payment-methods svg {
-    width: var(--icon-size);
-    height: auto;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
@@ -119,6 +116,19 @@
         { "value": "desktop_only", "label": "t:desktop_only" },
         { "value": "mobile_only", "label": "t:mobile_only" }
       ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Moyens de paiement",
+      "visible_if": "{{ block.settings.show_heading }}"
     },
     {
       "type": "header",

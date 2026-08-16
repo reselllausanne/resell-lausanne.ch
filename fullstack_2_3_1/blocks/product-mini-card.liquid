@@ -13,6 +13,8 @@
       height="{{ block.settings.image_width }}"
       class="product-mini-card__image"
       style="--width: {{ block.settings.image_width }}px; --height: {{ block.settings.image_width }}px;"
+      loading="lazy"
+      decoding="async"
     >
   {% endif %}
   <div class="product-mini-card__content">

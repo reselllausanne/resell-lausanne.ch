@@ -1,12 +1,21 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
-  "current": {}
+  "current": {
+    "social_instagram_link": "https://www.instagram.com/resell.lausanne/",
+    "social_tiktok_link": "https://www.tiktok.com/@resell.lausanne",
+    "social_twitter_link": "",
+    "social_facebook_link": "",
+    "social_pinterest_link": "",
+    "background_color": "#FFFFFF",
+    "foreground_color": "#333333",
+    "input_corner_radius": 4,
+    "color_schemes": {
+      "scheme-1": {
+        "settings": {
+          "background": "#FFFFFF",
+          "foreground": "#333333",
+          "accent": "#111111"
+        }
+      }
+    }
+  }
 }

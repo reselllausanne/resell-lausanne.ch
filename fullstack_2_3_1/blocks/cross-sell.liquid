@@ -14,8 +14,20 @@
   assign all_available = true
 
   for bundle_product in bundle_products
+    capture bundle_price_snapshot
+      render 'rs-product-price-snapshot', product: bundle_product
+    endcapture
+    assign bundle_price_parts = bundle_price_snapshot | strip | split: '|'
+    assign bundle_current_present = bundle_price_parts[7]
+    assign bundle_current_price = 0
+    assign bundle_current_compare = 0
+    if bundle_current_present == '1'
+      assign bundle_current_price = bundle_price_parts[0] | plus: 0
+      assign bundle_current_compare = bundle_price_parts[1] | plus: 0
+    endif
+
     # check si le produit est disponible
-    if bundle_product.selected_or_first_available_variant.available == false
+    if bundle_product.selected_or_first_available_variant.available == false or bundle_current_present == false
       assign all_available = false
     endif
 
@@ -24,12 +36,12 @@
     endif
 
     assign bundle_size = bundle_size | plus: 1
-    assign price = price | plus: bundle_product.selected_or_first_available_variant.price
+    assign price = price | plus: bundle_current_price
 
-    if bundle_product.selected_or_first_available_variant.compare_at_price > 0
-      assign compare_at_price = compare_at_price | plus: bundle_product.selected_or_first_available_variant.compare_at_price
+    if bundle_current_compare > bundle_current_price and bundle_current_compare > 0
+      assign compare_at_price = compare_at_price | plus: bundle_current_compare
     else
-      assign compare_at_price = compare_at_price | plus: bundle_product.selected_or_first_available_variant.price
+      assign compare_at_price = compare_at_price | plus: bundle_current_price
     endif
 
     if request.visual_preview_mode and forloop.first and block.settings.title != 'Bundle'
@@ -150,15 +162,19 @@
                     {% endif %}
                     data-handle="{{ bundle_product.handle }}"
                     data-ref="variant-select"
-                    data-price="{{ bundle_product.price }}"
-                    data-compare-at-price="{{ bundle_product.compare_at_price }}"
+                    data-price="{{ bundle_current_price }}"
+                    data-compare-at-price="{{ bundle_current_compare }}"
                   >
                     {% for variant in bundle_product.variants %}
-                      {% if variant.available %}
+                      {%- capture bundle_variant_effective_price_raw -%}
+                        {% render 'rs-variant-effective-price', variant: variant %}
+                      {%- endcapture -%}
+                      {%- assign bundle_variant_effective_price = bundle_variant_effective_price_raw | strip | plus: 0 -%}
+                      {%- if variant.available and bundle_variant_effective_price > 0 -%}
                         <option
                           value="{{ variant.id }}"
-                          data-price="{{ variant.price }}"
-                          data-compare-at-price="{{ variant.compare_at_price }}"
+                          data-price="{{ bundle_variant_effective_price }}"
+                          data-compare-at-price="{% if variant.compare_at_price > bundle_variant_effective_price and variant.compare_at_price > 0 %}{{ variant.compare_at_price }}{% else %}{{ bundle_variant_effective_price }}{% endif %}"
                           {% if variant.featured_image != blank %}
                             data-image="{{ variant.featured_image | image_url: width: 300 }}"
                           {% endif %}
@@ -219,196 +235,6 @@
     </div>
   </cross-sell-component>
 {% endif %}
-
-{% stylesheet %}
-  cross-sell-component {
-    display: block;
-    container-type: inline-size;
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-    width: 100%;
-    --cross-sell-padding: 0.65rem;
-  }
-
-  shopify-visual-preview-block-list cross-sell-component.cross-sell--row[data-visual-preview-mode] {
-    width: 400px;
-  }
-
-  shopify-visual-preview-block-list cross-sell-component.cross-sell--column[data-visual-preview-mode] {
-    width: 200px;
-  }
-
-  .cross-sell {
-    display: grid;
-    grid-template-columns: auto 1fr 1fr;
-    gap: var(--padding-sm);
-    grid-template-areas: 'image content content';
-    padding: var(--cross-sell-padding);
-  }
-
-  .cart__footer .cross-sell {
-    border-radius: calc(var(--card-border-radius) - (var(--card-padding) * 0.5));
-  }
-
-  .cross-sell--column .cross-sell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    .cross-sell__content,
-    .cross-sell__actions,
-    .cross-sell__heading {
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      text-align: center;
-    }
-
-    .cross-sell__content,
-    .cross-sell__actions,
-    .cross-sell__form,
-    .cross-sell__form .button {
-      min-width: 100%;
-    }
-  }
-
-  .cross-sell--no-image {
-    grid-template-areas: 'content content content';
-  }
-
-  .cross-sell__image {
-    width: 100%;
-    grid-area: image;
-    max-width: var(--image-width);
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    border-radius: calc(var(--card-border-radius) - var(--cross-sell-padding));
-  }
-
-  .cross-sell__content {
-    grid-area: content;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    gap: var(--padding-xs);
-  }
-
-  .cross-sell__heading {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--padding-xs);
-    /* flex-wrap: wrap; */
-  }
-
-  .cross-sell__heading .prices {
-    font-size: var(--font-body--size-small);
-    justify-content: flex-end;
-  }
-
-  .cross-sell__title-and-description {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-xxs);
-  }
-
-  .cross-sell__title {
-    line-height: normal;
-    font-weight: 600;
-    font-size: var(--font-body--size);
-    margin: 0;
-  }
-
-  .cross-sell__description p {
-    margin: 0;
-    /* line-height: normal; */
-    font-size: var(--font-body--size-small);
-  }
-
-  .cross-sell__actions {
-    display: flex;
-    gap: var(--padding-xs);
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-  .cross-sell__selects {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    width: 100%;
-    flex: 1;
-    gap: var(--gap-xs);
-  }
-
-  .cross-sell__select-label {
-    font-size: var(--font-body--size-small);
-    margin-bottom: var(--padding-xs);
-    line-height: normal;
-  }
-
-  .cross-sell__select {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  /* .cross-sell__select:not(.hidden):not(:last-child) {
-    margin-right: var(--padding-sm);
-  } */
-
-  @container (width < 350px) {
-    .cross-sell--row .cross-sell {
-      gap: var(--gap-sm);
-    }
-
-    .cross-sell__actions .button:not(.button--icon-only) {
-      min-width: 60px;
-      padding: calc(var(--button-padding-vertical) / 2) calc(var(--button-padding-horizontal) * var(--small-multiplier) / 2);
-    }
-
-    .cross-sell--row .cross-sell__image {
-      max-width: 65px;
-    }
-  }
-
-  /* Ajustements pour les sliders */
-
-  .slider-block--with-pagination:has(cross-sell-component) {
-    padding-bottom: var(--margin-md);
-
-    .splide__pagination {
-      bottom: calc(-1 * var(--margin-md));
-    }
-
-    .splide__arrow {
-      transform: translateY(calc(-50%));
-    }
-  }
-
-  .slider-block:has(.splide__arrows):has(cross-sell-component) {
-    .splide__arrow--prev {
-      margin-left: -10px;
-    }
-
-    .splide__arrow--next {
-      margin-right: -10px;
-    }
-
-    .splide__slide {
-      padding: 0 20px;
-    }
-  }
-
-  .slider-block:has(.splide__arrow.button--tertiary):has(cross-sell-component) {
-    .splide__slide {
-      padding: 0 35px;
-    }
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

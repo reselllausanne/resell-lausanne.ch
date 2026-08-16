@@ -1,0 +1,58 @@
+{% doc %}
+  Retail partner strip (Galaxus, Decathlon) for footer column under social icons.
+{% enddoc %}
+
+<div class="footer-partner-retailers">
+  <p class="footer-partner-retailers__intro">
+    {{ 'rl_footer.partner_intro' | t }}
+  </p>
+  <ul class="footer-partner-retailers__list" role="list">
+    <li>
+      <a
+        class="footer-partner-retailers__link"
+        href="https://www.galaxus.ch/fr/search?q=Sneakers%20nike"
+        rel="noopener noreferrer"
+        target="_blank" rel="noopener noreferrer"
+        aria-label="Galaxus — ouvrir la recherche partenaire"
+      >
+        <picture>
+          <source srcset="{{ 'partner-logo-galaxus.webp' | asset_url }}" type="image/webp">
+          <img
+            class="footer-partner-retailers__logo"
+            src="{{ 'partner-logo-galaxus.png' | asset_url }}"
+            width="762"
+            height="128"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+            alt="Galaxus"
+          >
+        </picture>
+      </a>
+    </li>
+    <li>
+      <a
+        class="footer-partner-retailers__link"
+        href="https://www.decathlon.ch/en/search?Ntt=resell+lausanne"
+        rel="noopener noreferrer"
+        target="_blank" rel="noopener noreferrer"
+        aria-label="Decathlon — ouvrir la recherche partenaire"
+      >
+        <picture>
+          <source srcset="{{ 'partner-logo-decathlon.webp' | asset_url }}" type="image/webp">
+          <img
+            class="footer-partner-retailers__logo"
+            src="{{ 'partner-logo-decathlon.png' | asset_url }}"
+            width="400"
+            height="60"
+            loading="lazy"
+            decoding="async"
+            fetchpriority="low"
+            alt="Decathlon"
+          >
+        </picture>
+      </a>
+    </li>
+  </ul>
+</div>
+

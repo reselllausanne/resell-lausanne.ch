@@ -2,10 +2,25 @@
   Affiche les badges sur les cartes de produits.
 
   @param {object} product - Le produit
+  @param {boolean} [skip_sales_badge] - Hide sale badge when promotional picto already shown on card
 
   @example
   {% render 'product-badges', product: product, settings: settings %}
 {%- enddoc -%}
+
+{%- liquid
+  capture price_snapshot
+    render 'rs-product-price-snapshot', product: product
+  endcapture
+  assign price_parts = price_snapshot | strip | split: '|'
+  assign min_present = price_parts[8]
+  assign min_price = 0
+  assign min_compare = 0
+  if min_present == '1'
+    assign min_price = price_parts[2] | plus: 0
+    assign min_compare = price_parts[3] | plus: 0
+  endif
+-%}
 
 <div
   class="product-badges product-badges--{{ settings.badge_position_on_cards }}"
@@ -22,11 +37,13 @@
     </div>
   {%- endif -%}
 
-  {%- if product.compare_at_price > product.price and settings.show_sales_badge_on_cards -%}
-    <div class="badge color-{{ settings.badge_color_scheme_sales }}">
-      {{ 'products.sales' | t }}
-    </div>
-  {%- endif -%}
+  {%- unless skip_sales_badge -%}
+    {%- if min_present == '1' and min_compare > min_price and min_compare > 0 and settings.show_sales_badge_on_cards -%}
+      <div class="badge color-{{ settings.badge_color_scheme_sales }}">
+        {{ 'products.sales' | t }}
+      </div>
+    {%- endif -%}
+  {%- endunless -%}
 </div>
 
 {% stylesheet %}

@@ -1,22 +1,23 @@
-<script src="{{ 'cart-icon.js' | asset_url }}" type="module"></script>
-
-<cart-icon
-  class="header__icon header__icon-cart"
+<a
+  href="{{ routes.cart_url }}"
+  class="header__icon header__icon-cart header__icon-button"
   data-add-to-cart-behavior="{{ settings.add_to_cart_behavior }}"
+  aria-label="{{ 'accessibility.cart' | t }}"
 >
-  <span class="material-symbols-{{ settings.icon_style }} notranslate icon" translate="no">
-    {{ cart_icon }}
-  </span>
-  <span class="header__icon-count-bubble{% if cart.item_count >=100 %} header__icon-count-bubble--long{% endif %}">
-    <span class="header__icon-count-bubble-inner" data-ref="cart-count">
+  <div class="header__icon-cart-wrapper">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path
+        d="M5 1.667L2.5 5v11.667a1.667 1.667 0 001.667 1.666h11.666a1.666 1.666 0 001.667-1.666V5L15 1.667H5zM2.5 5h15M13.333 8.333a3.333 3.333 0 01-6.666 0"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+      ></path>
+    </svg>
+  </div>
+  <span class="header__icon-count-bubble rs-cart-bubble{% if cart.item_count >= 100 %} header__icon-count-bubble--long{% endif %}{% if cart.item_count == 0 %} rs-cart-bubble--hidden{% endif %}">
+    <span class="header__icon-count-bubble-inner rs-cart-bubble__inner" data-ref="cart-count">
       {{- cart.item_count -}}
     </span>
   </span>
-</cart-icon>
-
-{% stylesheet %}
-  .header__icon-cart {
-    position: relative;
-    cursor: pointer;
-  }
-{% endstylesheet %}
+</a>

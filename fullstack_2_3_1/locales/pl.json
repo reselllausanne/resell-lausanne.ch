@@ -40,7 +40,7 @@
     "home": "Strona główna"
   },
   "cart": {
-    "checkout": "Zamów",
+    "checkout": "Kontynuuj",
     "code_already_applied": "Ten kod promocyjny jest już zastosowany",
     "code_not_applicable": "Ten kod promocyjny nie ma zastosowania",
     "continue_shopping": "Kontynuuj zakupy",
@@ -58,6 +58,8 @@
   "collections": {
     "collections_empty": "Nie znaleziono kolekcji",
     "empty": "Nie znaleziono produktów",
+    "quick_links_nav_label": "Popularne kategorie",
+    "results_count": "{{ count }} wyników",
     "filters": {
       "clear": "Zresetuj",
       "filter": "Filtry",
@@ -323,11 +325,18 @@
   },
   "search": {
     "collections": "Kolekcje",
+    "filter_sort": "Filtruj i sortuj",
     "no_results_html": "Nie znaleziono wyników dla {{ terms }}",
     "pages_and_articles": "Strony i artykuły",
     "placeholder": "Szukaj",
+    "predictive_results_label": "Wyniki",
+    "predictive_view_all": "Zobacz wszystkie wyniki",
     "products": "Produkty",
+    "results_count_for_html": "{{ count }} wyników dla {{ terms }}",
     "results_for_html": "Znaleziono {{ count }} wyników dla {{ terms }}",
+    "starting_from": "Od",
+    "landing_recent": "Ostatnie wyszukiwania",
+    "landing_popular": "Popularne wyszukiwania",
     "submit": "Szukaj",
     "title": "Wyszukiwanie"
   },

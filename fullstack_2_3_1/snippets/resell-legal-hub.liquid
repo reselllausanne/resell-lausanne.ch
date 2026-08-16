@@ -1,0 +1,176 @@
+{% doc %}
+  Legal hub — FAQ twin shell (WeTheNew FaqAndLegals).
+  @param {string} [legal_key] - cgv | mentions | privacy | cgu
+{% enddoc %}
+{% liquid
+  assign legal_key = legal_key | default: 'cgv'
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign faq_label = 'faq_page.label' | t
+  capture faq_base_url
+    render 'rl-localized-path', path: '/pages/faq'
+  endcapture
+  assign faq_base_url = faq_base_url | strip
+  if pages.faq != blank
+    assign faq_base_url = pages.faq.url
+  endif
+
+  assign url_mentions = blank
+  assign url_privacy = blank
+  assign url_cgu = blank
+  assign url_cgv = blank
+
+  if pages['mentions-legales'] != blank
+    assign url_mentions = pages['mentions-legales'].url
+  endif
+  if pages['politique-de-confidentialite'] != blank
+    assign url_privacy = pages['politique-de-confidentialite'].url
+  endif
+  if pages['conditions-generales-utilisation'] != blank
+    assign url_cgu = pages['conditions-generales-utilisation'].url
+  endif
+  if pages['conditions-generales-vente'] != blank
+    assign url_cgv = pages['conditions-generales-vente'].url
+  elsif pages.cgv != blank
+    assign url_cgv = pages.cgv.url
+  endif
+
+  for policy in shop.policies
+    if policy.url contains '/policies/legal-notice' and url_mentions == blank
+      assign url_mentions = policy.url
+    endif
+    if policy.url contains '/policies/privacy-policy' and url_privacy == blank
+      assign url_privacy = policy.url
+    endif
+    if policy.url contains '/policies/terms-of-service' and url_cgu == blank
+      assign url_cgu = policy.url
+    endif
+  endfor
+
+  if url_mentions == blank
+    assign url_mentions = '/policies/legal-notice'
+  endif
+  if url_privacy == blank
+    assign url_privacy = shop.privacy_policy.url | default: '/policies/privacy-policy'
+  endif
+  if url_cgu == blank
+    assign url_cgu = shop.terms_of_service.url | default: '/policies/terms-of-service'
+  endif
+  if url_cgv == blank
+    assign url_cgv = '/pages/conditions-generales-vente'
+  endif
+
+  assign legal_title = 'rl_legal.link_cgv' | t
+  case legal_key
+    when 'mentions'
+      assign legal_title = 'rl_legal.link_legal_notice' | t
+    when 'privacy'
+      assign legal_title = 'rl_legal.link_privacy' | t
+    when 'cgu'
+      assign legal_title = 'rl_legal.link_cgu' | t
+  endcase
+%}
+
+{% render 'resell-faq-shell-styles' %}
+
+<div class="rl-faq-page rl-faq-page--legal">
+  <div class="rl-faq-page__header">
+    <nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+      <ol class="breadcrumbs__list list-unstyled">
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+          <span class="breadcrumbs__separator" aria-hidden="true">›</span>
+        </li>
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link link" href="{{ faq_base_url }}">{{ faq_label }}</a>
+          <span class="breadcrumbs__separator" aria-hidden="true">›</span>
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="rl-faq-page__layout">
+    <nav class="rl-faq-page__sidebar" aria-label="{{ 'rl_legal.nav_aria' | t }}">
+      <p class="rl-faq-page__sidebar-title">{{ 'rl_legal.nav_title' | t }}</p>
+      <ul>
+        <li>
+          <a
+            class="rl-faq-page__sidebar-link{% if legal_key == 'mentions' %} is-active{% endif %}"
+            href="{{ url_mentions }}"
+            {% if legal_key == 'mentions' %}aria-current="page"{% endif %}
+          >
+            {{ 'rl_legal.link_legal_notice' | t }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </a>
+        </li>
+        <li>
+          <a
+            class="rl-faq-page__sidebar-link{% if legal_key == 'privacy' %} is-active{% endif %}"
+            href="{{ url_privacy }}"
+            {% if legal_key == 'privacy' %}aria-current="page"{% endif %}
+          >
+            {{ 'rl_legal.link_privacy' | t }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </a>
+        </li>
+        <li>
+          <a
+            class="rl-faq-page__sidebar-link{% if legal_key == 'cgv' %} is-active{% endif %}"
+            href="{{ url_cgv }}"
+            {% if legal_key == 'cgv' %}aria-current="page"{% endif %}
+          >
+            {{ 'rl_legal.link_cgv' | t }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </a>
+        </li>
+        <li>
+          <a
+            class="rl-faq-page__sidebar-link{% if legal_key == 'cgu' %} is-active{% endif %}"
+            href="{{ url_cgu }}"
+            {% if legal_key == 'cgu' %}aria-current="page"{% endif %}
+          >
+            {{ 'rl_legal.link_cgu' | t }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="rl-faq-page__content">
+      <h1 class="rl-faq-page__legal-title">{{ legal_title }}</h1>
+
+      {% if legal_key == 'cgv' %}
+        {% render 'resell-page-cgv-body' %}
+      {% elsif legal_key == 'privacy' %}
+        <div class="rl-faq-page__legal-body">
+          {% render 'resell-page-privacy-body' %}
+        </div>
+      {% else %}
+        {% liquid
+          assign policy_html = blank
+          if page.content != blank
+            assign policy_html = page.content
+          else
+            for policy in shop.policies
+              if legal_key == 'mentions' and policy.url contains '/policies/legal-notice'
+                assign policy_html = policy.body
+                break
+              endif
+              if legal_key == 'cgu' and policy.url contains '/policies/terms-of-service'
+                assign policy_html = policy.body
+                break
+              endif
+            endfor
+          endif
+        %}
+        <div class="rl-faq-page__legal-body">
+          {% if policy_html != blank %}
+            {{ policy_html }}
+          {% else %}
+            <p>{{ 'rl_legal.empty_fallback' | t }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

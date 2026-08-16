@@ -1,0 +1,57 @@
+{%- comment -%}
+  hreflang-crawlable-links.liquid
+
+  Why this exists: Shopify's native localization switcher (snippets/localization-form.liquid)
+  is a <select> + POST form, not real <a href> hyperlinks. Search-engine crawlers (and Ahrefs'
+  Site Audit) cannot follow a form submit, so every /de/* and /en/* page on this store is only
+  discoverable via the XML sitemap + <link rel="alternate" hreflang> tags, never via an actual
+  crawled internal link. This is the confirmed root cause of thousands of "orphan page (no
+  incoming internal links)" flags in the live Ahrefs crawl (see audit-results/*.md) — hreflang
+  tags let Google find the pages, but pass zero internal link equity, and link-graph-based tools
+  flag them as orphaned.
+
+  Fix: render one real, crawlable <a href> per available language, pointing to the CURRENT
+  page's equivalent path in that locale (same URL-building logic as hreflang-tags.liquid, kept
+  in sync intentionally). Visually hidden (not display:none, so it stays crawlable/accessible to
+  screen readers) — this changes zero visible UI/UX. It is additive only: the visible <select>
+  language switcher is untouched.
+
+  Safe by construction:
+  - No visual change (visually-hidden, not display:none/aria-hidden).
+  - Does not touch header, footer, cart, checkout, variant picker, or any existing markup.
+  - Reuses the same request.path + localization.language.root_url math already proven correct
+    in hreflang-tags.liquid, so URLs match what's already emitted in <head>.
+{%- endcomment -%}
+{%- if localization.available_languages.size > 1 -%}
+  <nav class="visually-hidden" aria-label="{{ 'content.language' | t | default: 'Language' }}" data-hreflang-crawlable-links>
+    {%- for language in localization.available_languages -%}
+      {%- liquid
+        assign language_path = request.path
+        if localization.language.root_url != '/'
+          assign language_path = request.path | remove_first: localization.language.root_url
+        endif
+        if language_path == blank
+          assign language_path = '/'
+        endif
+        if language.root_url == '/'
+          assign language_url = request.origin | append: language_path
+        elsif language_path == '/'
+          assign language_url = request.origin | append: language.root_url
+        else
+          assign locale_suffix = language_path | remove_first: '/'
+          assign language_root = language.root_url
+          assign language_root_last = language_root | slice: -1, 1
+          if language_root_last == '/'
+            assign language_url = request.origin | append: language_root | append: locale_suffix
+          else
+            assign language_url = request.origin | append: language_root | append: '/' | append: locale_suffix
+          endif
+        endif
+        if language_url contains '?'
+          assign language_url = language_url | split: '?' | first
+        endif
+      -%}
+      <a href="{{ language_url }}" hreflang="{{ language.iso_code }}" tabindex="-1">{{ language.endonym_name | capitalize }}</a>
+    {%- endfor -%}
+  </nav>
+{%- endif -%}

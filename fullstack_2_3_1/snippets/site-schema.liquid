@@ -1,0 +1,178 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": {{ schema_org_id | json }},
+  "name": {{ shop.name | json }},
+  "url": {{ schema_root | json }},
+  "logo": {{ schema_logo_url | json }},
+  "description": "Resell Lausanne — boutique suisse spécialisée dans les sneakers, streetwear et collectibles authentiques. Plus de 20 000 références, livraison en Suisse et en Europe.",
+  "foundingDate": "2020",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": {{ schema_business_street | json }},
+    "addressLocality": {{ schema_business_city | json }},
+    "postalCode": {{ schema_business_zip | json }},
+    "addressRegion": {{ schema_business_region | json }},
+    "addressCountry": {{ schema_business_country | json }}
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "email": {{ shop.email | json }},
+    "availableLanguage": ["French", "English", "German", "Italian"],
+    "areaServed": ["CH", "FR", "DE", "IT", "BE", "NL", "AT"],
+    "hoursAvailable": [
+      {%- for day in schema_open_days -%}
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": {{ day | json }},
+          "opens": {{ schema_opens | json }},
+          "closes": {{ schema_closes | json }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  },
+  "hasMerchantReturnPolicy": {
+    "@id": {{ schema_return_policy_id | json }}
+  }{%- comment -%}
+    aggregateRating removed — Judge.me owns review/rating structured data.
+  {%- endcomment -%}  {%- liquid
+    comment
+      Hardcoded entity URLs for GEO/AEO — no theme-editor action required.
+      Settings social_* links are merged in when present (deduped).
+    endcomment
+    assign org_same_as = 'https://www.instagram.com/resell_lausanne/||https://www.trustpilot.com/review/resell-lausanne.ch||https://judge.me/reviews/stores/www.resell-lausanne.ch||https://g.page/r/CeYZofa-lMfJEAI/review||https://www.resell-lausanne.ch'
+    if settings.social_instagram_link != blank
+      assign org_same_as = org_same_as | append: '||' | append: settings.social_instagram_link
+    endif
+    if settings.instagram_url != blank
+      assign org_same_as = org_same_as | append: '||' | append: settings.instagram_url
+    endif
+    if settings.social_facebook_link != blank
+      assign org_same_as = org_same_as | append: '||' | append: settings.social_facebook_link
+    endif
+    if settings.social_tiktok_link != blank
+      assign org_same_as = org_same_as | append: '||' | append: settings.social_tiktok_link
+    endif
+    if settings.social_youtube_link != blank
+      assign org_same_as = org_same_as | append: '||' | append: settings.social_youtube_link
+    endif
+    assign org_same_as_list = org_same_as | split: '||'
+    assign org_same_as_filtered = ''
+    assign org_same_as_filtered_count = 0
+    for link in org_same_as_list
+      assign link_clean = link | strip
+      if link_clean == blank
+        continue
+      endif
+      unless link_clean contains 'fullstack' or link_clean contains 'FullStack'
+        assign link_dup = false
+        if org_same_as_filtered_count > 0
+          assign org_same_as_check = org_same_as_filtered | split: '||'
+          for existing in org_same_as_check
+            if existing == link_clean
+              assign link_dup = true
+              break
+            endif
+          endfor
+        endif
+        unless link_dup
+          if org_same_as_filtered_count > 0
+            assign org_same_as_filtered = org_same_as_filtered | append: '||' | append: link_clean
+          else
+            assign org_same_as_filtered = link_clean
+          endif
+          assign org_same_as_filtered_count = org_same_as_filtered_count | plus: 1
+        endunless
+      endunless
+    endfor
+  -%}{%- if org_same_as_filtered_count > 0 -%},
+  "sameAs": [
+    {%- assign org_same_as_final = org_same_as_filtered | split: '||' -%}
+    {%- for link in org_same_as_final -%}
+      {{ link | json }}{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]{%- endif -%}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MerchantReturnPolicy",
+  "@id": {{ schema_return_policy_id | json }},
+  "applicableCountry": "CH",
+  "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+  "merchantReturnDays": 14,
+  "returnPolicyUrl": {{ schema_returns_policy_url | json }},
+  "returnMethod": "https://schema.org/ReturnByMail",
+  "refundType": "https://schema.org/StoreCreditRefund",
+  "itemCondition": "https://schema.org/NewCondition"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": {{ schema_lb_id | json }},
+  "name": {{ shop.name | json }},
+  "url": {{ schema_root | json }},
+  "image": {{ schema_logo_url | json }},
+  "description": "Resell Lausanne — boutique suisse spécialisée dans les sneakers, streetwear et collectibles authentiques. Plus de 20 000 références, livraison en Suisse et en Europe.",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": {{ schema_business_street | json }},
+    "addressLocality": {{ schema_business_city | json }},
+    "postalCode": {{ schema_business_zip | json }},
+    "addressRegion": {{ schema_business_region | json }},
+    "addressCountry": {{ schema_business_country | json }}
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": {{ schema_business_lat | json }},
+    "longitude": {{ schema_business_lng | json }}
+  },
+  "openingHoursSpecification": [
+    {%- for day in schema_open_days -%}
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": {{ day | json }},
+        "opens": {{ schema_opens | json }},
+        "closes": {{ schema_closes | json }}
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ],
+  "parentOrganization": {
+    "@type": "Organization",
+    "@id": {{ schema_org_id | json }}
+  },
+  "hasMerchantReturnPolicy": {
+    "@id": {{ schema_return_policy_id | json }}
+  }
+  {%- comment -%}
+    aggregateRating removed — Judge.me owns review/rating structured data.
+  {%- endcomment -%}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": {{ schema_website_id | json }},
+  "name": {{ shop.name | json }},
+  "url": {{ schema_root | json }},
+  "publisher": {
+    "@type": "Organization",
+    "@id": {{ schema_org_id | json }}
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": {{ schema_search_url_template | json }}
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>

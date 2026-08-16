@@ -1,0 +1,81 @@
+{% doc %}
+  Footer legal links — prefer custom /pages/* hub pages (FAQ twin shell), else Shopify policies.
+{% enddoc %}
+
+{% liquid
+  assign label_mentions = 'rl_legal.link_legal_notice' | t
+  assign label_privacy = 'rl_legal.link_privacy' | t
+  assign label_cgu = 'rl_legal.link_cgu' | t
+  assign label_cgv = 'rl_footer.legal_terms' | t
+
+  assign url_mentions = blank
+  assign url_privacy = blank
+  assign url_cgu = blank
+  assign url_cgv = blank
+
+  if pages['mentions-legales'] != blank
+    assign url_mentions = pages['mentions-legales'].url
+  endif
+  if pages['politique-de-confidentialite'] != blank
+    assign url_privacy = pages['politique-de-confidentialite'].url
+  endif
+  if pages['conditions-generales-utilisation'] != blank
+    assign url_cgu = pages['conditions-generales-utilisation'].url
+  endif
+  if pages['conditions-generales-vente'] != blank
+    assign url_cgv = pages['conditions-generales-vente'].url
+  else
+    assign url_cgv = routes.root_url | append: '/pages/conditions-generales-vente'
+  endif
+
+  for policy in shop.policies
+    if policy.url contains '/policies/legal-notice' and url_mentions == blank
+      assign url_mentions = policy.url
+      if policy.title != blank
+        assign label_mentions = policy.title
+      endif
+    endif
+    if policy.url contains '/policies/privacy-policy' and url_privacy == blank
+      assign url_privacy = policy.url
+      if policy.title != blank
+        assign label_privacy = policy.title
+      endif
+    endif
+    if policy.url contains '/policies/terms-of-service' and url_cgu == blank
+      assign url_cgu = policy.url
+      if policy.title != blank
+        assign label_cgu = policy.title
+      endif
+    endif
+  endfor
+%}
+
+<ul class="policy-list__links">
+  {% if url_mentions != blank %}
+    <li>
+      <a href="{{ url_mentions }}" class="policy-list__link">{{ label_mentions }}</a>
+    </li>
+  {% endif %}
+
+  {% if url_privacy != blank %}
+    <li>
+      <a href="{{ url_privacy }}" class="policy-list__link">{{ label_privacy }}</a>
+    </li>
+  {% endif %}
+
+  {% if url_cgu != blank %}
+    <li>
+      <a href="{{ url_cgu }}" class="policy-list__link">{{ label_cgu }}</a>
+    </li>
+  {% endif %}
+
+  {% if url_cgv != blank %}
+    <li>
+      <a href="{{ url_cgv }}" class="policy-list__link">{{ label_cgv }}</a>
+    </li>
+  {% endif %}
+
+  <li>
+    <a href="{{ shop.url }}/llms.txt" class="policy-list__link" data-no-locale-lock>LLMs.txt</a>
+  </li>
+</ul>

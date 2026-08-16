@@ -1,0 +1,42 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les Nike Dunk vendues sur Resell Lausanne sont-elles authentiques ?</summary>
+  <div class="rte">
+    <p>Oui. Chaque paire Nike Dunk et Nike SB Dunk est vérifiée par notre équipe (tampon SKU, Zoom Air pour les SB, alignement du Swoosh, qualité de la semelle gomme) et livrée avec certificat d'authenticité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Différence entre Nike Dunk Low et Nike SB Dunk Low ?</summary>
+  <div class="rte">
+    <p>La Dunk Low (lifestyle) reprend la silhouette de la chaussure basket college de 1985. La SB Dunk Low (Skateboarding) ajoute un padding premium sur la languette, du Zoom Air dans le talon et une semelle plus accrocheuse. Le tampon "Nike Skateboarding" sur la semelle intérieure identifie immédiatement une SB.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelle taille choisir pour une Nike Dunk ou SB Dunk ?</summary>
+  <div class="rte">
+    <p>La Dunk classique taille normalement. La SB Dunk taille légèrement grand ; en cas de pied normal, une demi-pointure en dessous est souvent confortable.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelles collaborations Nike Dunk avez-vous en stock ?</summary>
+  <div class="rte">
+    <p>Travis Scott, Ben & Jerry's Chunky Dunky, Concepts Lobster, Pigeon, Off-White × Dunk Low The 50, Supreme × SB Dunk, Tiffany × SB Dunk 1837, Stüssy Cherry, FTC.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel est le délai de livraison pour une commande Dunk ?</summary>
+  <div class="rte">
+    <p>Livraison standard 5 à 10 jours ouvrables en Suisse et en Europe, ou 2 à 5 jours ouvrables en express sur produits éligibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Puis-je retourner une paire Nike Dunk ou SB Dunk ?</summary>
+  <div class="rte">
+    <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
+  </div>
+</details>

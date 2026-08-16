@@ -57,6 +57,36 @@
     "name": "t:general.colors",
     "settings": [
       {
+        "type": "color_scheme_group",
+        "id": "color_schemes",
+        "definition": [
+          {
+            "type": "color",
+            "id": "background",
+            "default": "#FFFFFF",
+            "label": "Background"
+          },
+          {
+            "type": "color",
+            "id": "foreground",
+            "default": "#333333",
+            "label": "Text"
+          },
+          {
+            "type": "color",
+            "id": "accent",
+            "default": "#111111",
+            "label": "Accent"
+          }
+        ],
+        "role": {
+          "background": "background",
+          "text": "foreground",
+          "links": "accent",
+          "icons": "foreground"
+        }
+      },
+      {
         "type": "color",
         "id": "background_color",
         "default": "#FFFFFF",
@@ -77,6 +107,40 @@
         "unit": "px",
         "label": "t:labels.input_corner_radius",
         "default": 4
+      }
+    ]
+  },
+  {
+    "name": "Réseaux sociaux",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Liens réseaux sociaux"
+      },
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok_link",
+        "label": "TikTok"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter_link",
+        "label": "X (Twitter)"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_pinterest_link",
+        "label": "Pinterest"
       }
     ]
   }

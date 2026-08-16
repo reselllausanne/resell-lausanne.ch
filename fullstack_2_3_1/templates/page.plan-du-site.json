@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "sitemap": {
+      "type": "static-sitemap-products",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Plan du site",
+        "intro": "Retrouvez l'ensemble des sneakers, vêtements et accessoires authentiques disponibles sur Resell Lausanne, organisés par marque pour faciliter la navigation.",
+        "show_collections": true,
+        "show_pages": true,
+        "per_page": 250,
+        "padding_top": 40,
+        "padding_bottom": 60
+      }
+    }
+  },
+  "order": ["sitemap"]
+}

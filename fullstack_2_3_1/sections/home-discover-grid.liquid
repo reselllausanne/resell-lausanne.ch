@@ -1,0 +1,399 @@
+{% liquid
+  assign discover_tile_blocks = section.blocks | where: 'type', 'discover_tile'
+  assign rl_newsletter_title_default = 'La newsletter Resell Lausanne'
+  assign rl_newsletter_text_default = "Rejoignez la team et bénéficiez de 10 CHF offerts sur votre première commande dès 150.- d'achat."
+  assign newsletter_title = section.settings.newsletter_title | strip
+  assign newsletter_text = section.settings.newsletter_text | strip
+  assign newsletter_title_lc = newsletter_title | downcase
+  assign newsletter_text_lc = newsletter_text | downcase
+  if newsletter_title == blank
+    assign newsletter_title = rl_newsletter_title_default
+  endif
+  if newsletter_text == blank
+    assign newsletter_text = rl_newsletter_text_default
+  endif
+%}
+
+<section
+  class="rl-home rl-home--lower color-{{ section.settings.color_scheme }}"
+  style="
+    --rl-padding-top: {{ section.settings.section_padding_top }}px;
+    --rl-padding-bottom: {{ section.settings.section_padding_bottom }}px;
+  "
+>
+  <div class="page-width rl-home__content">
+    {% if discover_tile_blocks.size > 0 %}
+      <section class="rl-home__discover">
+        <div class="rl-home__discover-grid">
+          {% for block in discover_tile_blocks %}
+            {% if block.settings.title != blank and block.settings.link != blank %}
+              <a class="rl-home__discover-card" href="{{ block.settings.link }}">
+                <div class="rl-home__discover-media">
+                  {% if block.settings.image != blank %}
+                    {{
+                      block.settings.image
+                      | image_url: width: 1100
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '300,450,700,900,1100',
+                        sizes: '(min-width: 1000px) 31vw, (min-width: 750px) 33vw, 92vw',
+                        alt: block.settings.title
+                    }}
+                  {% else %}
+                    <span class="rl-home__discover-placeholder" aria-hidden="true"></span>
+                  {% endif %}
+                  <div class="rl-home__discover-overlay">
+                    <h3>{{ block.settings.title }}</h3>
+                    {% if block.settings.subtitle != blank %}
+                      <p>{{ block.settings.subtitle }}</p>
+                    {% endif %}
+                    {% if block.settings.cta != blank %}
+                      <span class="rl-home__discover-cta">{{ block.settings.cta }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    <section class="resell-home__newsletter" aria-labelledby="resell-home-newsletter-heading-{{ section.id }}">
+      <div class="resell-home__newsletter-card">
+        <h2 id="resell-home-newsletter-heading-{{ section.id }}">{{ newsletter_title }}</h2>
+        <p>{{ newsletter_text }}</p>
+        <div class="resell-home__newsletter-form">
+          <div class="resell-home__newsletter-row">
+            <input
+              type="email"
+              class="resell-home__newsletter-input"
+              placeholder="Adresse email"
+              aria-label="Adresse email"
+            >
+            <button type="button" class="button resell-home__newsletter-btn">
+              {{ section.settings.newsletter_button_label | default: "S'inscrire" }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+{% stylesheet %}
+  .rl-home--lower {
+    padding-top: var(--rl-padding-top);
+    padding-bottom: var(--rl-padding-bottom);
+  }
+
+  .rl-home__content {
+    padding-top: 0.75rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .rl-home__discover-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .rl-home__discover-card {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .rl-home__discover-card:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .rl-home__discover-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #ececec;
+  }
+
+  .rl-home__discover-card:first-child .rl-home__discover-media {
+    aspect-ratio: 16 / 10;
+  }
+
+  .rl-home__discover-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rl-home__discover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: linear-gradient(150deg, #3a3a3a 0%, #1a1a1a 100%);
+  }
+
+  .rl-home__discover-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.2rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 50%);
+    gap: 0.2rem;
+  }
+
+  .rl-home__discover-overlay h3,
+  .rl-home__discover-overlay p {
+    margin: 0;
+    color: #fff;
+  }
+
+  .rl-home__discover-overlay h3 {
+    font-size: 1.15rem;
+    line-height: 1.15;
+    font-weight: 600;
+  }
+
+  .rl-home__discover-overlay p {
+    display: none;
+  }
+
+  .rl-home__discover-cta {
+    display: inline;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .resell-home__newsletter-card {
+    background: #f5f5f5;
+    color: #111;
+    padding: 2rem 1.4rem;
+    display: grid;
+    gap: 0.6rem;
+    text-align: center;
+    justify-items: center;
+  }
+
+  .resell-home__newsletter-card h2,
+  .resell-home__newsletter-card p {
+    margin: 0;
+  }
+
+  .resell-home__newsletter-card h2 {
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+
+  .resell-home__newsletter-card p {
+    font-size: 0.9rem;
+    color: #666;
+    max-width: 40ch;
+    line-height: 1.4;
+  }
+
+  .resell-home__newsletter-form {
+    margin-top: 0.4rem;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .resell-home__newsletter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .resell-home__newsletter-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #111;
+    font-size: 0.92rem;
+    outline: none;
+  }
+
+  .resell-home__newsletter-input::placeholder {
+    color: #999;
+  }
+
+  .resell-home__newsletter-card .resell-home__newsletter-btn.button {
+    background: #111;
+    border-color: #111;
+    color: #fff;
+    white-space: nowrap;
+    width: 100%;
+    padding: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    max-width: none;
+  }
+
+  @media (width > 750px) {
+    .rl-home__content {
+      gap: 2.8rem;
+    }
+
+    .rl-home__discover-grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .rl-home__discover-card:first-child {
+      grid-column: auto;
+    }
+
+    .rl-home__discover-media {
+      aspect-ratio: 3 / 4;
+    }
+
+    .rl-home__discover-card:first-child .rl-home__discover-media {
+      aspect-ratio: 3 / 4;
+    }
+
+    .rl-home__discover-overlay h3 {
+      font-size: 1.3rem;
+    }
+
+    .resell-home__newsletter-card {
+      padding: 3rem 2.4rem;
+    }
+
+    .resell-home__newsletter-row {
+      flex-direction: row;
+      gap: 0;
+    }
+
+    .resell-home__newsletter-input {
+      border-radius: 4px 0 0 4px;
+      border-right: 0;
+    }
+
+    .resell-home__newsletter-card .resell-home__newsletter-btn.button {
+      width: auto;
+      flex: 0 0 auto;
+      border-radius: 0 4px 4px 0;
+      padding: 0.75rem 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Home discover grid",
+  "tag": "section",
+  "class": "section-home-discover-grid",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.cart_drawer", "custom.breadcrumbs"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter section"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter title",
+      "default": "La newsletter Resell Lausanne"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "Rejoignez la team et bénéficiez de 10 CHF offerts sur votre première commande dès 150.- d'achat."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_label",
+      "label": "Newsletter button label",
+      "default": "S'inscrire"
+    },
+    {
+      "type": "url",
+      "id": "newsletter_button_link",
+      "label": "Newsletter button link"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 56,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "discover_tile",
+      "name": "Discover tile",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Summer Essentials"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "-"
+        },
+        {
+          "type": "text",
+          "id": "cta",
+          "label": "CTA label",
+          "default": "D\u00e9couvrir"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home discover grid",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

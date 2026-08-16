@@ -12,6 +12,10 @@
   @param {boolean} [autoplay] - Activer l'autoplay
   @param {number} [autoplay_speed] - Vitesse de lecture automatique en millisecondes
   @param {boolean} [rewind] - Remettre à zéro le slider lorsqu'il arrive à la fin
+  @param {string} [no_drag_extra] - Sélecteurs CSS additionnels où le drag Splide est désactivé (ex. sliders imbriqués)
+  @param {boolean} [disable_bleed] - Si true, pas d’élargissement négatif du slider (aligné au conteneur parent, ex. en-tête + grille premium)
+  @param {boolean} [omit_end] - Splide omitEnd : évite la dernière page avec slide partiellement visible
+  @param {boolean} [auto_height] - Splide autoHeight (défaut true). Mettre false pour aligner la hauteur des slides (ex. carrousel produits)
 
   @example
   {% render 'slider', id: 'slider', slides: slides, per_page_mobile: 1, per_page_desktop: 4, gap: 20, show_arrows: true, show_pagination: true, autoplay: true, autoplay_speed: 5000, rewind: true %}
@@ -22,8 +26,13 @@
   data-per-page-desktop="{{ per_page_desktop }}"
   data-gap="{{ gap }}"
   data-show-arrows="{{ show_arrows }}"
+  data-show-arrows-mobile="{{ show_arrows }}"
   data-show-pagination="{{ show_pagination }}"
   data-show-pagination-mobile="{{ show_pagination }}"
+  data-no-drag-extra="{{ no_drag_extra | default: '' | escape }}"
+  data-disable-bleed="{% if disable_bleed %}true{% else %}false{% endif %}"
+  data-omit-end="{% if omit_end %}true{% else %}false{% endif %}"
+  data-auto-height="{% if auto_height == false %}false{% else %}true{% endif %}"
   data-autoplay="{{ autoplay }}"
   data-autoplay-speed="{{ autoplay_speed }}"
   data-rewind="{{ rewind }}"

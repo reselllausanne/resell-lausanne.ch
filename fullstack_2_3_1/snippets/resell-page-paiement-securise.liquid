@@ -1,0 +1,131 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+%}
+
+<div class="resell-content-page">
+  <nav class="breadcrumbs breadcrumbs--slash resell-content-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">
+        {% if locale_base == 'de' %}
+          Sichere zahlung
+        {% elsif locale_base == 'en' %}
+          Secure payment
+        {% else %}
+          Paiement sécurisé
+        {% endif %}
+      </li>
+    </ol>
+  </nav>
+
+  <header>
+    <h1>
+      {% if locale_base == 'de' %}
+        Sichere zahlung
+      {% elsif locale_base == 'en' %}
+        Secure payment
+      {% else %}
+        Paiement sécurisé
+      {% endif %}
+    </h1>
+  </header>
+
+  {% if locale_base == 'de' %}
+    <p>Alle Zahlungen bei Resell Lausanne sind gesichert. Kartendaten werden nicht auf unseren Servern gespeichert und laufen über zertifizierte Zahlungsanbieter mit SSL.</p>
+
+    <h2>Akzeptierte Zahlungsmethoden</h2>
+    <p>Verfügbare Optionen erscheinen automatisch im Checkout je nach Lieferland und Bestellwert.</p>
+
+    <h3>Schweiz</h3>
+    <ul>
+      <li>Visa, MasterCard, American Express</li>
+      <li>Apple Pay</li>
+      <li>Twint</li>
+      <li>PostFinance</li>
+      <li>Powerpay (Ratenzahlung bei Berechtigung)</li>
+    </ul>
+
+    <h3>Europa</h3>
+    <ul>
+      <li>Visa, MasterCard, American Express</li>
+      <li>Apple Pay</li>
+      <li>Alma (2x, 3x oder 4x ohne Gebühren bei berechtigten Bestellungen)</li>
+    </ul>
+
+    {% render 'resell-powerpay-cgv-block' %}
+
+    <h2>Datenschutz</h2>
+    <p>Resell Lausanne speichert keine Bankdaten. Zahlungsabwicklung erfolgt über Shopify Payments und PCI-DSS-zertifizierte Partner.</p>
+    <p>Bei Zahlungsproblem schreiben Sie an <a href="mailto:contact@resell-lausanne.ch">contact@resell-lausanne.ch</a> mit Bestellnummer und Fehler-Screenshot.</p>
+  {% elsif locale_base == 'en' %}
+    <p>All transactions on Resell Lausanne are secure. Card data is never stored on our servers and payments are processed via certified providers over SSL.</p>
+
+    <h2>Accepted payment methods</h2>
+    <p>Available options are shown automatically at checkout based on delivery country and order amount.</p>
+
+    <h3>Switzerland</h3>
+    <ul>
+      <li>Visa, MasterCard, American Express</li>
+      <li>Apple Pay</li>
+      <li>Twint</li>
+      <li>PostFinance</li>
+      <li>Powerpay (installments when eligible)</li>
+    </ul>
+
+    <h3>Europe</h3>
+    <ul>
+      <li>Visa, MasterCard, American Express</li>
+      <li>Apple Pay</li>
+      <li>Alma (2x, 3x or 4x without fees on eligible orders)</li>
+    </ul>
+
+    {% render 'resell-powerpay-cgv-block' %}
+
+    <h2>Data protection</h2>
+    <p>Resell Lausanne does not store banking information. Payment processing is handled by Shopify Payments and PCI DSS certified partners.</p>
+    <p>If payment fails, contact <a href="mailto:contact@resell-lausanne.ch">contact@resell-lausanne.ch</a> with your order number and an error screenshot.</p>
+  {% else %}
+    <p>
+      Toutes les transactions sur Resell Lausanne sont sécurisées. Vos données bancaires ne sont jamais stockées sur nos serveurs : le paiement est traité par des prestataires certifiés via une connexion chiffrée SSL.
+    </p>
+
+    <h2>Moyens de paiement acceptés</h2>
+    <p>Les options disponibles apparaissent automatiquement au moment du paiement, selon votre pays de livraison et le montant de la commande.</p>
+
+    <h3>En Suisse</h3>
+    <ul>
+      <li>Visa, MasterCard, American Express</li>
+      <li>Apple Pay</li>
+      <li>Twint</li>
+      <li>PostFinance</li>
+      <li>Powerpay (paiement en plusieurs fois, selon éligibilité)</li>
+    </ul>
+
+    <h3>En Europe</h3>
+    <ul>
+      <li>Visa, MasterCard, American Express</li>
+      <li>Apple Pay</li>
+      <li>Alma (paiement en 2, 3 ou 4 fois sans frais sur commandes éligibles)</li>
+    </ul>
+
+    {% render 'resell-powerpay-cgv-block' %}
+
+    <h2>Paiement en plusieurs fois (Alma)</h2>
+    <p>
+      En Europe, Alma propose un paiement en 2, 3 ou 4 fois sans frais pour les commandes éligibles.
+    </p>
+
+    <h2>Protection de vos données</h2>
+    <p>
+      Resell Lausanne ne conserve aucune information bancaire. Le traitement du paiement est confié à Shopify Payments et à ses partenaires certifiés PCI DSS.
+    </p>
+    <p>
+      Si vous rencontrez un problème lors du paiement, contactez-nous à <a href="mailto:contact@resell-lausanne.ch">contact@resell-lausanne.ch</a> en indiquant votre numéro de commande ou une capture de l’erreur affichée.
+    </p>
+  {% endif %}
+</div>
+
+{% render 'resell-content-page-styles' %}

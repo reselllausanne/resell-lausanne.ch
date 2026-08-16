@@ -1,0 +1,64 @@
+{%- doc -%}
+  Minimal validated Product JSON-LD for non-PDP product renderers.
+
+  @param {product} product
+{%- enddoc -%}
+
+{%- if product != blank -%}
+  {%- capture schema_price_snapshot -%}
+    {% render 'rs-product-price-snapshot', product: product %}
+  {%- endcapture -%}
+  {%- assign schema_price_parts = schema_price_snapshot | strip | split: '|' -%}
+  {%- assign schema_product_genuine_free = false -%}
+  {%- if schema_price_parts[6] == '1' -%}
+    {%- assign schema_product_genuine_free = true -%}
+  {%- endif -%}
+  {%- assign schema_price_valid_until = 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "url": {{ product.url | prepend: request.origin | json }},
+      {%- if product.featured_image != blank -%}
+        "image": {{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }},
+      {%- endif -%}
+      "description": {{ product.description | strip_html | strip | json }},
+      "brand": {
+        "@type": "Brand",
+        "name": {{ product.vendor | json }}
+      },
+      "offers": [
+        {%- assign schema_offer_rendered = 0 -%}
+        {%- for variant in product.variants -%}
+          {%- liquid
+            capture schema_effective_price_raw
+              render 'rs-variant-effective-price', variant: variant
+            endcapture
+            assign schema_effective_price = schema_effective_price_raw | strip | plus: 0
+            assign schema_variant_valid = false
+            if schema_product_genuine_free and variant.available and schema_effective_price == 0
+              assign schema_variant_valid = true
+            elsif variant.available and schema_effective_price > 0
+              assign schema_variant_valid = true
+            endif
+          -%}
+          {%- unless schema_variant_valid -%}
+            {%- continue -%}
+          {%- endunless -%}
+          {%- assign schema_offer_rendered = schema_offer_rendered | plus: 1 -%}
+          {%- unless schema_offer_rendered == 1 -%},{%- endunless -%}
+          {
+            "@type": "Offer",
+            {%- if variant.sku != blank -%}"sku": {{ variant.sku | json }},{%- endif -%}
+            "url": {{ product.url | append: '?variant=' | append: variant.id | prepend: request.origin | json }},
+            "priceCurrency": {{ cart.currency.iso_code | default: 'CHF' | json }},
+            "price": "{{ schema_effective_price | divided_by: 100.0 }}",
+            "priceValidUntil": {{ schema_price_valid_until | json }},
+            "availability": "https://schema.org/InStock"
+          }
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}

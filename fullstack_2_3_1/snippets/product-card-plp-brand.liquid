@@ -1,0 +1,44 @@
+{% doc %}
+  PLP product card — one visible name line (full title). Brand kept for schema / a11y only.
+
+  @param {product} product - Product object
+{% enddoc %}
+
+{%- liquid
+  assign card_product = product | default: closest.product
+  assign brand_label = card_product.vendor | strip
+  assign title_label = card_product.title | strip
+-%}
+
+{%- comment -%}
+  Microdata Product itemtype removed. Each PLP card previously emitted
+  `itemtype="https://schema.org/Product"` with only name/brand/url and no
+  offers/image/aggregateRating, which produced thousands of schema.org +
+  Google rich-result validation errors across every collection page.
+  Visible markup unchanged.
+{%- endcomment -%}
+{%- if title_label != blank -%}
+  <div class="product-card-plp-meta">
+    <h2 class="product-card-plp-title">{{ title_label }}</h2>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .product-card-plp-meta {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .product-card-plp-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.35;
+    color: #080808;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+{% endstylesheet %}

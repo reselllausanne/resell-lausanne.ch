@@ -1,0 +1,69 @@
+{%- doc -%}
+  Unified 48h delivery picto — cards, PDP, rails, search.
+
+  TRUE only when at least one in-stock variant has custom.delivery_48h.
+  Sold-out warehouse stock hides this picto. soldes_48h alone does not show it.
+
+  @param {product} product
+  @param {string} [class] - Extra CSS classes on the img
+  @param {string} [loading] - Image loading attribute (default lazy)
+  @param {boolean} [stacked] - Wrap in positioned stack (PDP / landing cards)
+{%- enddoc -%}
+
+{%- liquid
+  assign rs_48h_show = false
+
+  capture rs_picto_flags
+    render 'rs-promotional-picto-signals', product: product
+  endcapture
+  assign rs_picto_parts = rs_picto_flags | strip | split: '|'
+  if rs_picto_parts[1] == '1'
+    assign rs_48h_show = true
+  endif
+
+  assign rs_48h_src = 'rl-picto-48h.svg' | asset_url
+  if product.metafields.custom.delivery_48h_picto.value != blank
+    assign rs_48h_src = product.metafields.custom.delivery_48h_picto.value | image_url: width: 100
+  endif
+
+  assign rs_48h_class = class | default: 'rs-48h-picto'
+  assign rs_48h_loading = loading | default: 'lazy'
+-%}
+
+{%- if rs_48h_show -%}
+  {%- if stacked -%}
+    <div class="rs-48h-picto-stack" aria-hidden="true">
+  {%- endif -%}
+  <img
+    class="{{ rs_48h_class | escape }}"
+    src="{{ rs_48h_src }}"
+    alt=""
+    width="50"
+    height="26"
+    loading="{{ rs_48h_loading }}"
+    decoding="async"
+  >
+  {%- if stacked -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .rs-48h-picto-stack {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .rs-48h-picto {
+    display: block;
+    width: 50px;
+    height: 26px;
+    max-width: 50px;
+    max-height: 26px;
+    object-fit: contain;
+    object-position: center;
+  }
+{% endstylesheet %}

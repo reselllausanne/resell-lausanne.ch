@@ -1,0 +1,29 @@
+{% comment %}
+  Rewrite legacy StockX/import HTML asset paths to valid Shopify CDN URLs.
+
+  @param html {string} - Rich HTML (product description, editorial body)
+{% endcomment %}
+{% liquid
+  assign sanitized_html = html | default: ''
+
+  assign sanitized_html = sanitized_html | replace: 'https://www.resell-lausanne.ch/products/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: 'https://www.resell-lausanne.ch/products/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: 'https://www.resell-lausanne.ch/products/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: 'https://www.resell-lausanne.ch/products/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: '/de/products/files/', '/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: '/en/products/files/', '/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: '/products/files/', '/cdn/shop/files/'
+
+  assign sanitized_html = sanitized_html | replace: 'https://www.resell-lausanne.ch/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: 'http://www.resell-lausanne.ch/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: 'https://resell-lausanne.ch/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: 'http://resell-lausanne.ch/files/', 'https://www.resell-lausanne.ch/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: 'src="/files/', 'src="/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: "src='/files/", "src='/cdn/shop/files/"
+  assign sanitized_html = sanitized_html | replace: 'href="/files/', 'href="/cdn/shop/files/'
+  assign sanitized_html = sanitized_html | replace: "href='/files/", "href='/cdn/shop/files/"
+
+  assign sanitized_html = sanitized_html | replace: 'http://www.resell-lausanne.ch/', 'https://www.resell-lausanne.ch/'
+  assign sanitized_html = sanitized_html | replace: 'http://resell-lausanne.ch/', 'https://www.resell-lausanne.ch/'
+%}
+{{- sanitized_html -}}

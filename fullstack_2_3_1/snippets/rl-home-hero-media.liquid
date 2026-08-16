@@ -1,0 +1,110 @@
+{% doc %}
+  Home hero slide media — <picture> with art direction (phone vs laptop crop).
+  Each <source> uses srcset of capped widths so browser picks correct file.
+
+  Priority chain:
+  1. LCP first slide → Shopify Files (matches <head> preload URLs)
+  2. Theme editor pickers (image_picker) for other slides
+  3. Per-slide / section default Files filenames
+
+  @param {image} [desktop_image] - Slide laptop image
+  @param {image} [mobile_image] - Slide phone image
+  @param {string} [desktop_filename] - Per-slide laptop Files override
+  @param {string} [mobile_filename] - Per-slide phone Files override
+  @param {string} default_desktop_filename - Section default laptop filename
+  @param {string} default_mobile_filename - Section default phone filename
+  @param {string} alt - Image alt text
+  @param {boolean} [is_first] - LCP / eager load for first slide
+{% enddoc %}
+
+{% liquid
+  assign rl_loading = 'lazy'
+  assign rl_fetchpriority = blank
+  assign rl_decoding = 'async'
+  if is_first
+    assign rl_loading = 'eager'
+    assign rl_fetchpriority = 'high'
+    assign rl_decoding = 'sync'
+  endif
+
+  assign rl_desktop_file = desktop_filename | default: '' | strip
+  if rl_desktop_file == blank
+    assign rl_desktop_file = default_desktop_filename | strip
+  endif
+
+  assign rl_mobile_file = mobile_filename | default: '' | strip
+  if rl_mobile_file == blank
+    assign rl_mobile_file = default_mobile_filename | strip
+  endif
+  if rl_mobile_file == blank
+    assign rl_mobile_file = rl_desktop_file
+  endif
+%}
+
+{%- comment -%}
+  LCP first slide: always use Files path when filenames exist so <head> preload
+  URLs match rendered srcset (image_picker uses different CDN v= → duplicate download).
+{%- endcomment -%}
+{% if is_first and rl_desktop_file != blank %}
+  {% render 'rl-hero-files-media',
+    mode: 'picture',
+    mobile_file: rl_mobile_file,
+    desktop_file: rl_desktop_file,
+    alt: alt,
+    is_first: true
+  %}
+
+{% elsif desktop_image != blank or mobile_image != blank %}
+  {%- comment -%} Image picker path (Shopify CDN auto AVIF/WebP) {%- endcomment -%}
+  {% liquid
+    assign rl_desk = desktop_image
+    if rl_desk == blank
+      assign rl_desk = mobile_image
+    endif
+    assign rl_mob = mobile_image
+    if rl_mob == blank
+      assign rl_mob = rl_desk
+    endif
+  %}
+  <picture>
+    <source
+      media="(max-width: 749px)"
+      srcset="
+        {{ rl_mob | image_url: width: 480 }} 480w,
+        {{ rl_mob | image_url: width: 750 }} 750w,
+        {{ rl_mob | image_url: width: 960 }} 960w,
+        {{ rl_mob | image_url: width: 1100 }} 1100w
+      "
+      sizes="100vw"
+    >
+    <source
+      media="(min-width: 750px)"
+      srcset="
+        {{ rl_desk | image_url: width: 960 }} 960w,
+        {{ rl_desk | image_url: width: 1280 }} 1280w,
+        {{ rl_desk | image_url: width: 1600 }} 1600w,
+        {{ rl_desk | image_url: width: 2000 }} 2000w
+      "
+      sizes="100vw"
+    >
+    <img
+      src="{{ rl_mob | image_url: width: 750 }}"
+      class="rl-home__hero-image"
+      width="1100"
+      height="1375"
+      loading="{{ rl_loading }}"
+      decoding="{{ rl_decoding }}"
+      {% if rl_fetchpriority != blank %}fetchpriority="{{ rl_fetchpriority }}"{% endif %}
+      alt="{{ alt | escape }}"
+    >
+  </picture>
+
+{% elsif rl_desktop_file != blank %}
+  {% render 'rl-hero-files-media',
+    mode: 'picture',
+    mobile_file: rl_mobile_file,
+    desktop_file: rl_desktop_file,
+    alt: alt,
+    is_first: is_first
+  %}
+{% endif %}

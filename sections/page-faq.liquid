@@ -1,0 +1,153 @@
+<div class="page-faq page-width">
+  <h1 class="page-faq__title">{{ page.title }}</h1>
+
+  <div class="page-faq__content">
+    {{ page.content }}
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="page-faq__accordion">
+      {%- for block in section.blocks -%}
+        <details class="page-faq__item" {{ block.shopify_attributes }}>
+          <summary class="page-faq__question">
+            <span>{{ block.settings.question }}</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </summary>
+          <div class="page-faq__answer">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .page-faq {
+    padding: 60px 0;
+  }
+
+  .page-faq__title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 32px;
+  }
+
+  .page-faq__content {
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+
+  .page-faq__accordion {
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .page-faq__item {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .page-faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    list-style: none;
+  }
+
+  .page-faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .page-faq__question svg {
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  details[open] .page-faq__question svg {
+    transform: rotate(180deg);
+  }
+
+  .page-faq__answer {
+    padding: 0 0 20px;
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.7;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page FAQ",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "Question FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Réponse"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page FAQ",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Comment fonctionne le processus d'authentification ?",
+            "answer": "<p>Chaque produit passe par un contrôle qualité rigoureux. Nos experts vérifient l'authenticité de chaque article avant expédition.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Quels sont les délais de livraison ?",
+            "answer": "<p>Les délais varient entre 3 et 7 jours ouvrés selon votre localisation. La livraison express est disponible en 24-48h.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Quelles sont les options de paiement ?",
+            "answer": "<p>Nous acceptons Visa, Mastercard, et le paiement en plusieurs fois. Toutes les transactions sont sécurisées.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Comment vendre un produit ?",
+            "answer": "<p>Rendez-vous sur notre page \"Vendez votre produit\" pour soumettre votre article. Notre équipe évaluera votre produit et vous fera une offre.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Quelle est la politique de retour ?",
+            "answer": "<p>Vous disposez de 14 jours pour retourner un article non porté dans son emballage d'origine. Consultez notre page échanges et remboursements pour plus de détails.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Les produits sont-ils neufs ?",
+            "answer": "<p>Oui, tous nos produits sont authentiques et neufs (jamais portés). Ils sont livrés dans leur boîte d'origine.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

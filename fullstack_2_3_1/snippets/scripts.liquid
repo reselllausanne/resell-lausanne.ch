@@ -1,3 +1,14 @@
+<script src="{{ 'rl-deferred-images.js' | asset_url }}" defer></script>
+{%- if template.name == 'collection' or template.name == 'search' -%}
+  <script src="{{ 'rl-product-image-preload.js' | asset_url }}" defer></script>
+{%- endif -%}
+{%- if template.name == 'collection' or template.name == 'search' -%}
+  <script src="{{ 'rl-search-grid-perf.js' | asset_url }}" defer></script>
+{%- endif -%}
+{%- if template.name == 'collection' or template.name == 'index' -%}
+  <script src="{{ 'rl-collection-chip-nav.js' | asset_url }}" defer></script>
+{%- endif -%}
+
 <script type="importmap">
   {
     "imports": {
@@ -7,30 +18,279 @@
   }
 </script>
 
+{%- unless template.name == 'index' or template.name == 'search' -%}
 <link rel="modulepreload" fetchpriority="low" href="{{ 'utilities.js' | asset_url }}">
 <link rel="modulepreload" fetchpriority="low" href="{{ 'events.js' | asset_url }}">
+{%- endunless -%}
 
 <script type="module" src="{{ 'header.js' | asset_url }}"></script>
-<script type="module" src="{{ 'splide.js' | asset_url }}"></script>
-<script type="module" src="{{ 'slider.js' | asset_url }}"></script>
+{%- if template.name == 'index' -%}
+  <script type="module">
+    (function () {
+      var loaded = false;
+      function loadHomeProductModules() {
+        if (loaded) return;
+        loaded = true;
+        import({{ 'product-card.js' | asset_url | json }});
+        import({{ 'product-price.js' | asset_url | json }});
+      }
+      document.addEventListener('pointerdown', loadHomeProductModules, { once: true, passive: true });
+      window.addEventListener('scroll', loadHomeProductModules, { once: true, passive: true });
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadHomeProductModules, { timeout: 4500 });
+      } else {
+        setTimeout(loadHomeProductModules, 2500);
+      }
+    })();
+  </script>
+{%- elsif template.name == 'product' -%}
+  <script type="module">
+    (function () {
+      var loaded = false;
+      function loadPdpCardModule() {
+        if (loaded) return;
+        loaded = true;
+        import({{ 'product-card.js' | asset_url | json }});
+      }
+      document.addEventListener('pointerdown', loadPdpCardModule, { once: true, passive: true });
+      window.addEventListener('scroll', loadPdpCardModule, { once: true, passive: true });
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadPdpCardModule, { timeout: 5000 });
+      } else {
+        setTimeout(loadPdpCardModule, 3000);
+      }
+    })();
+  </script>
+  <script type="module" src="{{ 'product-price.js' | asset_url }}"></script>
+{%- elsif template.name == 'collection' or template.name == 'search' -%}
+  <script type="module">
+    (function () {
+      var loaded = false;
+      function loadGridCardModule() {
+        if (loaded) return;
+        loaded = true;
+        import({{ 'product-card.js' | asset_url | json }});
+      }
+      document.addEventListener('pointerdown', loadGridCardModule, { once: true, passive: true });
+      window.addEventListener('scroll', loadGridCardModule, { once: true, passive: true });
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadGridCardModule, { timeout: 4500 });
+      } else {
+        setTimeout(loadGridCardModule, 2500);
+      }
+    })();
+  </script>
+  <script type="module" src="{{ 'product-price.js' | asset_url }}"></script>
+{%- else -%}
+  <script type="module" src="{{ 'product-card.js' | asset_url }}"></script>
+  <script type="module" src="{{ 'product-price.js' | asset_url }}"></script>
+{%- endif -%}
+{%- comment -%}
+  Load slider engine only when a slider surface exists.
+  Keeps non-slider pages lighter while preserving slider behavior where needed.
+{%- endcomment -%}
+{%- unless template.name == 'index' -%}
+  <script type="module">
+    (async function () {
+      const hasSliderSurface = () =>
+        Boolean(document.querySelector('slider-component, .splide, [data-ref="main-slider"]'));
+
+      let loaded = false;
+      async function loadSliderModules() {
+        if (loaded) return;
+        loaded = true;
+        await import({{ 'splide.js' | asset_url | json }});
+        await import({{ 'slider.js' | asset_url | json }});
+      }
+
+      if (hasSliderSurface()) {
+        await loadSliderModules();
+        return;
+      }
+
+      const observer = new MutationObserver(async function () {
+        if (!hasSliderSurface()) return;
+        observer.disconnect();
+        await loadSliderModules();
+      });
+
+      observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+      setTimeout(function () {
+        observer.disconnect();
+      }, 5000);
+    })();
+  </script>
+{%- endunless -%}
 
 {% if settings.activate_wishlist %}
-  <script type="module" src="{{ 'wishlist.js' | asset_url }}"></script>
+  <script type="module">
+    (function () {
+      const src = {{ 'wishlist.js' | asset_url | json }};
+      let loaded = false;
+      let loading = false;
+
+      function loadWishlist() {
+        if (loaded || loading) return;
+        loading = true;
+        import(src)
+          .then(() => {
+            loaded = true;
+          })
+          .catch(() => {})
+          .finally(() => {
+            loading = false;
+          });
+      }
+
+      function hasWishlistSurface() {
+        return Boolean(
+          document.querySelector(
+            '[data-rl-action="wishlist"], [data-ref="wishlist-drawer"], [data-add-to-wishlist], .swish-add-to-wishlist'
+          )
+        );
+      }
+
+      function onIntent(event) {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (
+          target.closest(
+            '[data-rl-action="wishlist"], [data-add-to-wishlist], .swish-add-to-wishlist, [href*="liste-de-souhaits"]'
+          )
+        ) {
+          loadWishlist();
+        }
+      }
+
+      document.addEventListener('pointerdown', onIntent, true);
+      document.addEventListener('focusin', onIntent, true);
+
+      if (hasWishlistSurface()) {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadWishlist, { timeout: 3000 });
+        } else {
+          setTimeout(loadWishlist, 1500);
+        }
+      }
+    })();
+  </script>
 {% endif %}
 
-<script type="module" fetchpriority="low" src="{{ 'toast-notification.js' | asset_url }}"></script>
-<script type="module" fetchpriority="low" src="{{ 'accordion.js' | asset_url }}"></script>
-<script type="module" fetchpriority="low" src="{{ 'quantity-selector.js' | asset_url }}"></script>
-<script type="module" fetchpriority="low" src="{{ 'dropdown.js' | asset_url }}"></script>
-<script type="module" fetchpriority="low" src="{{ 'popup.js' | asset_url }}"></script>
+<script type="module">
+  (function () {
+    const modules = [
+      {
+        key: 'toast-notification',
+        src: {{ 'toast-notification.js' | asset_url | json }},
+        selector: 'toast-notification',
+        idle: true,
+      },
+      {
+        key: 'accordion',
+        src: {{ 'accordion.js' | asset_url | json }},
+        selector: 'accordion-component, .main-collection__faq details, .rte details',
+        idle: true,
+      },
+      {
+        key: 'quantity-selector',
+        src: {{ 'quantity-selector.js' | asset_url | json }},
+        selector: 'quantity-selector, .quantity-selector',
+        idle: true,
+      },
+      {
+        key: 'dropdown',
+        src: {{ 'dropdown.js' | asset_url | json }},
+        selector: 'dropdown-component, [data-ref=\"dropdown\"]',
+        idle: true,
+      },
+      {
+        key: 'popup',
+        src: {{ 'popup.js' | asset_url | json }},
+        selector: 'dialog-component, [data-ref=\"dialog\"], [data-popup]',
+        idle: true,
+      },
+    ];
+
+    const loaded = new Set();
+    const loading = new Set();
+
+    function loadModule(mod) {
+      if (!mod || loaded.has(mod.key) || loading.has(mod.key)) return;
+      loading.add(mod.key);
+      import(mod.src)
+        .then(() => {
+          loaded.add(mod.key);
+        })
+        .catch(() => {})
+        .finally(() => {
+          loading.delete(mod.key);
+        });
+    }
+
+    function hasSurface(mod) {
+      if (!mod || !mod.selector) return false;
+      return Boolean(document.querySelector(mod.selector));
+    }
+
+    function idleLoad() {
+      modules.forEach((mod) => {
+        if (mod.idle && hasSurface(mod)) loadModule(mod);
+      });
+    }
+
+    function intentLoad(target) {
+      if (!(target instanceof Element)) return;
+      modules.forEach((mod) => {
+        if (loaded.has(mod.key) || loading.has(mod.key)) return;
+        if (target.closest(mod.selector)) loadModule(mod);
+      });
+    }
+
+    document.addEventListener(
+      'pointerdown',
+      (event) => {
+        intentLoad(event.target);
+      },
+      true
+    );
+
+    document.addEventListener(
+      'focusin',
+      (event) => {
+        intentLoad(event.target);
+      },
+      true
+    );
+
+    function scheduleDeepIdleLoad() {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(idleLoad, { timeout: 8000 });
+      } else {
+        setTimeout(idleLoad, 6000);
+      }
+    }
+
+    if (document.readyState === 'complete') {
+      setTimeout(scheduleDeepIdleLoad, 3000);
+    } else {
+      window.addEventListener(
+        'load',
+        function () {
+          setTimeout(scheduleDeepIdleLoad, 3000);
+        },
+        { once: true }
+      );
+    }
+  })();
+</script>
 
 <script>
   const Theme = {
     version: '2.3.1',
     routes: {
-      root: '/',
+      root: '{{ routes.root_url }}',
       cart_add_url: '{{ routes.cart_add_url | append: '.js' }}',
-      cart_change_url: '{{ routes.cart_change_url }}',
+      cart_change_url: '{{ routes.cart_change_url | append: '.js' }}',
       cart_update_url: '{{ routes.cart_update_url }}',
       cart_url: '{{ routes.cart_url }}',
       predictive_search_url: '{{ routes.predictive_search_url }}',
@@ -40,6 +300,7 @@
       name: '{{ template.name }}',
     },
     translations: {
+      startingFrom: {{ 'collections.filters.from' | t | json }},
       addToCartNotificationMessage: '{{ 'cart.product_added_to_cart' | t }}',
       consoleLogFullstack: '{{ 'theme.consoleLogFullstack' | t }}',
       consoleLogFullstackUrl: '{{ 'theme.consoleLogFullstackUrl' | t }}',
@@ -52,9 +313,158 @@
     domain: '{{ shop.permanent_domain }}',
   };
 </script>
-
 <script>
-  console.log(Theme.translations.consoleLogFullstack);
-  console.log('Version: ' + Theme.version);
-  console.log(Theme.translations.consoleLogFullstackUrl);
+  (function () {
+    function getActiveLocalePrefix() {
+      const match = window.location.pathname.match(/^\/([a-z]{2})(?:\/|$)/i);
+      if (!match) return '';
+      const code = (match[1] || '').toLowerCase();
+      if (!code || code === 'fr') return '';
+      return `/${code}`;
+    }
+
+    function shouldSkipLink(anchor, url) {
+      if (!anchor || !url) return true;
+      if (anchor.hasAttribute('data-no-locale-lock')) return true;
+      if (anchor.matches && anchor.matches('link[rel="llms-txt"], link[rel="alternate"][type="text/markdown"]')) return true;
+      if (anchor.getAttribute('href') === null) return true;
+      if (url.origin !== window.location.origin) return true;
+      if (url.pathname === '/llms.txt' || url.pathname === '/agents.md') return true;
+      if (url.pathname.indexOf('/cdn/') !== -1) return true;
+      const rawHref = anchor.getAttribute('href') || '';
+      if (
+        rawHref.startsWith('#') ||
+        rawHref.startsWith('mailto:') ||
+        rawHref.startsWith('tel:') ||
+        rawHref.startsWith('javascript:') ||
+        rawHref.startsWith('data:') ||
+        rawHref.startsWith('https://') ||
+        rawHref.startsWith('http://') ||
+        rawHref.startsWith('//')
+      ) {
+        return true;
+      }
+      return false;
+    }
+
+    function isNonLocalizablePath(pathname) {
+      if (!pathname || pathname[0] !== '/') return true;
+      if (pathname === '/llms.txt' || pathname === '/agents.md') return true;
+      if (pathname.indexOf('/cdn/') !== -1) return true;
+      var blockedPrefixes = [
+        '/cdn/',
+        '/checkouts/',
+        '/cart',
+        '/apps/',
+        '/services/',
+        '/tools/',
+        '/community/',
+        '/account',
+        '/policies/',
+        '/wpm/',
+        '/web-pixels/',
+      ];
+      return blockedPrefixes.some(function (blocked) {
+        return pathname === blocked.replace(/\/$/, '') || pathname.indexOf(blocked) === 0;
+      });
+    }
+
+    function applyLocalePrefixToPath(pathname, prefix) {
+      if (!prefix || !pathname || pathname[0] !== '/') return pathname;
+      if (isNonLocalizablePath(pathname)) return pathname;
+      if (pathname === prefix || pathname.indexOf(`${prefix}/`) === 0) return pathname;
+      if (/^\/[a-z]{2}(\/|$)/i.test(pathname)) return pathname;
+      return `${prefix}${pathname}`;
+    }
+
+    function localizeAnchorHref(anchor, prefix) {
+      if (!prefix || !anchor) return false;
+      let url;
+      try {
+        url = new URL(anchor.href, window.location.origin);
+      } catch (e) {
+        return false;
+      }
+      if (shouldSkipLink(anchor, url)) return false;
+      const localizedPathname = applyLocalePrefixToPath(url.pathname, prefix);
+      if (localizedPathname === url.pathname) return false;
+      anchor.href = `${localizedPathname}${url.search}${url.hash}`;
+      return true;
+    }
+
+    function normalizeAllLinks(prefix) {
+      if (!prefix) return;
+      Array.from(document.links).forEach(function (anchor) {
+        localizeAnchorHref(anchor, prefix);
+      });
+    }
+
+    const localePrefix = getActiveLocalePrefix();
+    if (!localePrefix) return;
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () {
+        normalizeAllLinks(localePrefix);
+      });
+    } else {
+      normalizeAllLinks(localePrefix);
+    }
+
+    const pendingNodes = new Set();
+    let flushHandle = 0;
+
+    function flushLocalizedNodes() {
+      flushHandle = 0;
+      pendingNodes.forEach(function (node) {
+        if (!(node instanceof Element)) return;
+        if (node.matches && node.matches('a[href]')) {
+          localizeAnchorHref(node, localePrefix);
+        }
+        if (node.querySelectorAll) {
+          node.querySelectorAll('a[href]').forEach(function (anchor) {
+            localizeAnchorHref(anchor, localePrefix);
+          });
+        }
+      });
+      pendingNodes.clear();
+    }
+
+    function queueLocalizedNode(node) {
+      if (!(node instanceof Element)) return;
+      pendingNodes.add(node);
+      if (flushHandle) return;
+      if ('requestIdleCallback' in window) {
+        flushHandle = requestIdleCallback(flushLocalizedNodes, { timeout: 700 });
+      } else {
+        flushHandle = setTimeout(flushLocalizedNodes, 80);
+      }
+    }
+
+    const observer = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        mutation.addedNodes.forEach(queueLocalizedNode);
+      });
+    });
+    observer.observe(document.body || document.documentElement, { childList: true, subtree: true });
+
+    document.addEventListener(
+      'click',
+      function (event) {
+        const anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+        if (!anchor) return;
+        let url;
+        try {
+          url = new URL(anchor.href, window.location.origin);
+        } catch (e) {
+          return;
+        }
+        if (shouldSkipLink(anchor, url)) return;
+        const localizedPathname = applyLocalePrefixToPath(url.pathname, localePrefix);
+        if (localizedPathname === url.pathname) return;
+        event.preventDefault();
+        window.location.assign(`${localizedPathname}${url.search}${url.hash}`);
+      },
+      true
+    );
+  })();
 </script>

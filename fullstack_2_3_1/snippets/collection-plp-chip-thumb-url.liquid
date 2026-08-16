@@ -1,0 +1,51 @@
+{% comment %}
+  Sub-collection chip thumbnail URL — same priority as drawer-menu-collection-image.
+
+  @param handle {string} collection handle
+{% endcomment %}
+{% liquid
+  assign thumb_handle = handle | strip | downcase
+  assign image_url = ''
+  assign chip_col = collections[thumb_handle]
+
+  if collection.handle == thumb_handle
+    assign chip_col = collection
+  endif
+
+  if chip_col != blank
+    if chip_col.metafields.custom.menu_brand_image != blank
+      assign menu_img = chip_col.metafields.custom.menu_brand_image.value | default: chip_col.metafields.custom.menu_brand_image
+      if menu_img != blank
+        assign image_url = menu_img | image_url: width: 72
+      endif
+    endif
+
+    if image_url == blank and chip_col.metafields.custom.brand_logo != blank
+      assign brand_logo = chip_col.metafields.custom.brand_logo.value | default: chip_col.metafields.custom.brand_logo
+      if brand_logo != blank
+        assign image_url = brand_logo | image_url: width: 72
+      endif
+    endif
+
+    if image_url == blank and chip_col.featured_image != blank
+      assign image_url = chip_col.featured_image | image_url: width: 72
+    endif
+
+    if image_url == blank and chip_col.products.size > 0
+      assign first_product = chip_col.products.first
+      if first_product.featured_image != blank
+        assign image_url = first_product.featured_image | image_url: width: 72
+      elsif first_product.images.size > 0
+        assign image_url = first_product.images.first | image_url: width: 72
+      endif
+    endif
+  endif
+
+  if image_url == blank
+    capture brand_logo_fallback
+      render 'brand-menu-logo-url', handle: thumb_handle
+    endcapture
+    assign image_url = brand_logo_fallback | strip
+  endif
+%}
+{{- image_url -}}

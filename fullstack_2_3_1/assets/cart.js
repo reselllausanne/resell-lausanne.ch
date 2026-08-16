@@ -1,21 +1,27 @@
 class CartComponent extends HTMLElement {
   constructor() {
     super();
-    this.checkoutButton = null;
+    this.checkoutButtons = [];
+    this.checkoutClickHandler = (event) => this.#handleCheckoutButtonClick(event);
   }
 
   connectedCallback() {
-    this.checkoutButton = this.querySelector('[data-ref="checkout-button"]');
-
-    this.checkoutButton.addEventListener('click', (event) => this.#handleCheckoutButtonClick(event));
+    this.checkoutButtons = Array.from(document.querySelectorAll('[data-ref="checkout-button"]'));
+    this.checkoutButtons.forEach((button) => {
+      button.addEventListener('click', this.checkoutClickHandler);
+    });
   }
 
   disconnectedCallback() {
-    this.checkoutButton.removeEventListener('click', (event) => this.#handleCheckoutButtonClick(event));
+    this.checkoutButtons.forEach((button) => {
+      button.removeEventListener('click', this.checkoutClickHandler);
+    });
   }
 
   #handleCheckoutButtonClick(event) {
-    event.target.classList.add('is-loading');
+    document.querySelectorAll('[data-ref="checkout-button"]').forEach((button) => {
+      button.classList.add('is-loading');
+    });
   }
 }
 
@@ -37,13 +43,23 @@ class CartItem extends HTMLElement {
     this.quantitySelectorInput = this.querySelector('[data-ref="quantity-selector-input"]');
     this.cartForm = this.closest('[data-ref="cart-form"]');
 
-    this.removeItemButton.addEventListener('click', (event) => this.#handleItemRemove(event));
-    this.quantitySelectorInput.addEventListener('change', (event) => this.#handleQuantityInputChange(event));
+    this.removeItemButton?.addEventListener('click', (event) => this.#handleItemRemove(event));
+    this.quantitySelectorInput?.addEventListener('change', (event) => this.#handleQuantityInputChange(event));
+    this.addEventListener('click', (event) => this.#handleItemNavigate(event));
   }
 
   disconnectedCallback() {
-    this.quantitySelectorInput.removeEventListener('change', (event) => this.#handleQuantityInputChange(event));
-    this.removeItemButton.removeEventListener('click', (event) => this.#handleItemRemove(event));
+    this.quantitySelectorInput?.removeEventListener('change', (event) => this.#handleQuantityInputChange(event));
+    this.removeItemButton?.removeEventListener('click', (event) => this.#handleItemRemove(event));
+    this.removeEventListener('click', (event) => this.#handleItemNavigate(event));
+  }
+
+  #handleItemNavigate(event) {
+    if (event.defaultPrevented) return;
+    if (event.target.closest('button, select, label, input, textarea, a')) return;
+
+    const url = this.dataset.productUrl;
+    if (url) window.location.assign(url);
   }
 
   #handleItemRemove(event) {
@@ -90,10 +106,64 @@ class CartItem extends HTMLElement {
   }
 
   #enableLoading() {
-    this.cartForm.classList.add('cart__form--loading');
+    this.cartForm.classList.add('cart__form--loading', 'rs-cart__form--loading');
   }
 }
 
 if (!customElements.get('cart-item')) {
   customElements.define('cart-item', CartItem);
 }
+
+(function initMobileCartSticky() {
+  const sticky = document.getElementById('rs-cart-mobile-sticky');
+  if (!sticky) return;
+
+  const mobileMq = window.matchMedia('(max-width: 767px)');
+
+  function zoneTop(selector) {
+    const node = document.querySelector(selector);
+    if (!node) return null;
+    return node.getBoundingClientRect().top;
+  }
+
+  function shouldShowSticky() {
+    if (!mobileMq.matches) return false;
+
+    const viewportBottom = window.innerHeight;
+    const stickyReserve = sticky.offsetHeight + 16;
+
+    const checkoutTop = zoneTop('.rs-cart__checkout');
+    if (checkoutTop != null && checkoutTop < viewportBottom - 8) return false;
+
+    const prefooterTop = zoneTop('.shopify-section-group-prefooter-group');
+    if (prefooterTop != null && prefooterTop < viewportBottom - stickyReserve) return false;
+
+    const footerTop = zoneTop('footer[data-ref="footer"]');
+    if (footerTop != null && footerTop < viewportBottom - stickyReserve) return false;
+
+    return true;
+  }
+
+  function updateSticky() {
+    const show = shouldShowSticky();
+    sticky.classList.toggle('rs-cart__mobile-sticky--hidden', !show);
+    sticky.setAttribute('aria-hidden', show ? 'false' : 'true');
+  }
+
+  function bind() {
+    updateSticky();
+    window.addEventListener('scroll', updateSticky, { passive: true });
+    window.addEventListener('resize', updateSticky, { passive: true });
+    if (typeof mobileMq.addEventListener === 'function') {
+      mobileMq.addEventListener('change', updateSticky);
+    } else if (typeof mobileMq.addListener === 'function') {
+      mobileMq.addListener(updateSticky);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bind, { once: true });
+  } else {
+    bind();
+  }
+})();

@@ -1,0 +1,23 @@
+{% doc %}
+  Retina-safe thumbnail for mobile drawer menu rows.
+
+  @param {object} image - Shopify image object
+  @param {string} alt - Alt text
+  @param {string} [loading] - loading attribute (default lazy)
+{% enddoc %}
+{% liquid
+  assign thumb_loading = loading | default: 'lazy'
+%}
+{% if image != blank %}
+  {{
+    image
+    | image_url: width: 180
+    | image_tag:
+      loading: thumb_loading,
+      alt: alt,
+      class: 'header__mobile-menu-link-image',
+      widths: '80, 96, 120, 180',
+      sizes: '45px',
+      decoding: 'async'
+  }}
+{% endif %}

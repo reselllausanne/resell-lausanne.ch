@@ -1,0 +1,81 @@
+{% comment %}
+  Curated "Autres marques" sneaker brands — synced drawer + PLP chips.
+
+  Registry: handle:label:panel_id:tier
+  - tier featured (core brands): show if collection exists + products_count >= 1
+  - tier extended: products_count >= 2 only
+
+  @param format {string} drawer | chips | handles
+  @param link_class {string} drawer link modifier (default header__mobile-menu-link--child)
+  @param min_extended {number} min products for extended tier (default 2)
+{% endcomment %}
+{% liquid
+  assign rl_format = format | default: 'drawer'
+  assign rl_link_class = link_class | default: 'header__mobile-menu-link--child'
+  assign rl_min_extended = min_extended | default: 2
+  assign rl_brand_rows = 'hoka:Hoka:demo-sneakers-other-hoka:featured,on:On Running::featured,autry:Autry::featured,crocs:Crocs::featured,puma:Puma:demo-sneakers-other-puma:featured,salomon:Salomon:demo-sneakers-other-salomon:featured,converse:Converse:demo-sneakers-other-converse:featured,alexander-mcqueen:Alexander McQueen::extended,veja:Veja::extended' | split: ','
+  assign rl_handle_list = ''
+%}
+
+{% for rl_row in rl_brand_rows %}
+  {% liquid
+    assign rl_parts = rl_row | split: ':'
+    assign rl_handle = rl_parts[0] | strip
+    assign rl_label = rl_parts[1] | strip
+    assign rl_panel = rl_parts[2] | strip
+    assign rl_tier = rl_parts[3] | strip
+    assign rl_col = collections[rl_handle]
+    assign rl_show = false
+
+    if rl_col != blank
+      if rl_tier == 'featured' and rl_col.products_count >= 1
+        assign rl_show = true
+      elsif rl_tier == 'extended' and rl_col.products_count >= rl_min_extended
+        assign rl_show = true
+      endif
+    endif
+  %}
+
+  {% unless rl_show %}
+    {% continue %}
+  {% endunless %}
+
+  {% if rl_format == 'handles' %}
+    {% if rl_handle_list != blank %}
+      {% assign rl_handle_list = rl_handle_list | append: ',' %}
+    {% endif %}
+    {% assign rl_handle_list = rl_handle_list | append: rl_handle %}
+  {% elsif rl_format == 'chips' %}
+    {% render 'collection-plp-brand-chip',
+      title: rl_label,
+      url: rl_col.url,
+      handle: rl_handle,
+      chip_eager: forloop.index <= 3
+    %}
+  {% else %}
+    {% if rl_panel != blank %}
+      <button type="button" class="header__mobile-menu-link {{ rl_link_class }}" data-panel-target="{{ rl_panel }}">
+        <span class="header__mobile-menu-link-main">
+          <span class="header__mobile-menu-link-image-wrap is-badge-image">
+            {% render 'menu-brand-image', handle: rl_handle, alt: rl_label %}
+          </span>
+          <span class="header__mobile-menu-link-text">{{ rl_label }}</span>
+        </span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+      </button>
+    {% else %}
+      <a href="{{ rl_col.url }}" class="header__mobile-menu-link {{ rl_link_class }}">
+        <span class="header__mobile-menu-link-main">
+          <span class="header__mobile-menu-link-image-wrap is-badge-image">
+            {% render 'menu-brand-image', handle: rl_handle, alt: rl_label %}
+          </span>
+          <span class="header__mobile-menu-link-text">{{ rl_label }}</span>
+        </span>
+      </a>
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% if rl_format == 'handles' %}
+  {{- rl_handle_list -}}
+{% endif %}

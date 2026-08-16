@@ -1,0 +1,79 @@
+{% comment %}
+  Editorial blog card — image, title, excerpt, meta, tags.
+
+  @param article {article} required
+  @param eager {boolean} first cards LCP
+{% endcomment %}
+{% liquid
+  assign card_article = article
+  assign card_eager = eager | default: false
+  assign card_excerpt = card_article.excerpt | strip_html | strip
+  if card_excerpt == blank
+    assign card_excerpt = card_article.content | strip_html | strip | truncate: 160
+  endif
+  assign card_loading = 'lazy'
+  assign card_fetchpriority = 'auto'
+  if card_eager
+    assign card_loading = 'eager'
+    assign card_fetchpriority = 'high'
+  endif
+%}
+
+<article class="resell-blog-card">
+  <a href="{{ card_article.url }}" class="resell-blog-card__link" tabindex="-1" aria-hidden="true">
+    <span class="visually-hidden">{{ card_article.title }}</span>
+  </a>
+
+  <div class="resell-blog-card__media">
+    {% if card_article.image != blank %}
+      {{
+        card_article.image
+        | image_url: width: 960
+        | image_tag:
+          loading: card_loading,
+          fetchpriority: card_fetchpriority,
+          widths: '480, 640, 960',
+          sizes: '(min-width: 990px) 30vw, (min-width: 750px) 45vw, 92vw',
+          alt: card_article.image.alt | default: card_article.title,
+          class: 'resell-blog-card__image'
+      }}
+    {% else %}
+      <img
+        src="{{ 'placeholder-article.jpg' | asset_img_url: '960x640' }}"
+        alt="{{ card_article.title | escape }}"
+        width="960"
+        height="640"
+        loading="{{ card_loading }}"
+        class="resell-blog-card__image resell-blog-card__image--placeholder"
+      >
+    {% endif %}
+  </div>
+
+  <div class="resell-blog-card__body">
+    {% if card_article.tags.size > 0 %}
+      <ul class="resell-blog-card__tags" aria-label="Tags">
+        {% for tag in card_article.tags limit: 2 %}
+          <li><span class="resell-blog-card__tag">{{ tag }}</span></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <h2 class="resell-blog-card__title">
+      <a href="{{ card_article.url }}">{{ card_article.title }}</a>
+    </h2>
+
+    {% if card_excerpt != blank %}
+      <p class="resell-blog-card__excerpt">{{ card_excerpt }}</p>
+    {% endif %}
+
+    <p class="resell-blog-card__meta">
+      {% if card_article.author != blank %}
+        <span class="resell-blog-card__author">{{ card_article.author }}</span>
+        <span class="resell-blog-card__meta-sep" aria-hidden="true">·</span>
+      {% endif %}
+      <time datetime="{{ card_article.published_at | date: '%Y-%m-%d' }}">
+        {{ card_article.published_at | time_tag: format: 'date' }}
+      </time>
+    </p>
+  </div>
+</article>

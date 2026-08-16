@@ -1,0 +1,52 @@
+{%- comment -%}
+  Collection/search LCP preload for the first visible product card image.
+  Mirrors _product-card-media-gallery.liquid widths/sizes and adds fetchpriority.
+{%- endcomment -%}
+{%- liquid
+  assign lcp_product = blank
+  assign lcp_target_width = 560
+  assign lcp_sizes = '(min-width: 750px) 25vw, 50vw'
+  assign lcp_widths = '280, 420, 560, 720'
+
+  if request.page_type == 'collection'
+    assign lcp_target_width = 420
+    assign lcp_product = collection.products.first
+  elsif request.page_type == 'search'
+    assign lcp_target_width = 260
+    assign lcp_widths = '180, 260, 360'
+    assign lcp_sizes = '(min-width: 750px) 25vw, 50vw'
+    for result in search.results
+      if result.object_type == 'product'
+        assign lcp_product = result
+        break
+      endif
+    endfor
+  endif
+
+  assign lcp_media = blank
+  if lcp_product != blank
+    assign lcp_media = lcp_product.selected_or_first_available_variant.featured_media | default: lcp_product.featured_media
+  endif
+-%}
+{%- if lcp_media != blank and lcp_media.preview_image != blank -%}
+  {%- assign lcp_srcset = '' -%}
+  {%- assign lcp_widths_list = lcp_widths | split: ',' -%}
+  {%- for raw_width in lcp_widths_list -%}
+    {%- assign width_value = raw_width | strip | times: 1 -%}
+    {%- if width_value > 0 -%}
+      {%- assign lcp_entry_url = lcp_media.preview_image | image_url: width: width_value -%}
+      {%- if lcp_srcset != '' -%}
+        {%- assign lcp_srcset = lcp_srcset | append: ', ' -%}
+      {%- endif -%}
+      {%- assign lcp_srcset = lcp_srcset | append: lcp_entry_url | append: ' ' | append: width_value | append: 'w' -%}
+    {%- endif -%}
+  {%- endfor -%}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ lcp_media.preview_image | image_url: width: lcp_target_width }}"
+    imagesrcset="{{ lcp_srcset }}"
+    imagesizes="{{ lcp_sizes }}"
+    fetchpriority="high"
+  >
+{%- endif -%}

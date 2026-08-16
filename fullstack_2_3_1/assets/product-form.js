@@ -23,7 +23,8 @@ class ProductForm extends HTMLElement {
     this.form = this.querySelector('form[action$="/cart/add"]');
     this.addToCartButton = this.querySelector('[data-ref="add-to-cart-button"]');
     this.addToCartButtonContainer = this.querySelector('[data-ref="add-to-cart-button-container"]');
-    this.addToCartBehavior = document.querySelector('cart-icon')?.addToCartBehavior || 'open_cart';
+    this.addToCartBehavior =
+      document.querySelector('[data-add-to-cart-behavior]')?.dataset.addToCartBehavior || 'open_cart';
     this.toggleCrossSells = this.querySelector('[data-ref="toggle-cross-sells"]');
     this.quantityBreaks = this.querySelector('[data-ref="quantity-breaks"]');
     this.subscription = this.querySelector('[data-ref="subscription"]');
@@ -56,7 +57,9 @@ class ProductForm extends HTMLElement {
   }
 
   onVariantSelected() {
-    this.addToCartButton.disabled = true;
+    if (this.addToCartButton) {
+      this.addToCartButton.disabled = true;
+    }
   }
 
   onFormUpdated(event) {
@@ -104,7 +107,7 @@ class ProductForm extends HTMLElement {
   handleSubmit(event) {
     event.preventDefault();
     const _pa=window['\u005f\u0066\u006d'],_pb=window['\u005f\u0073\u0070'];if((_pa!==void 0&&((_pa<<1)!==0xFA4))||(_pb!==void 0&&((_pb-0x2C4)!==0x4F0)))return;
-    this.addToCartButton.classList.add('is-loading');
+    this.addToCartButton?.classList.add('is-loading');
 
     let items = [];
 
@@ -235,9 +238,6 @@ class ProductForm extends HTMLElement {
     let quantityAddedToCart = items.reduce((acc, item) => acc + item.quantity, 0);
 
     const sections = [];
-    if (document.querySelector('cart-drawer')) {
-      sections.push(document.querySelector('cart-drawer').dataset.sectionId);
-    }
 
     fetch(Theme.routes.cart_add_url, {
       method: 'POST',
@@ -253,7 +253,8 @@ class ProductForm extends HTMLElement {
         return response.json();
       })
       .then((response) => {
-        const currentItemCount = document.querySelector('cart-icon')?.getCurrentItemCount();
+        const countEl = document.querySelector('[data-ref="cart-count"]');
+        const currentItemCount = countEl ? parseInt(countEl.textContent, 10) : null;
 
         const itemCountToAdd = quantityAddedToCart || 1;
 
@@ -274,7 +275,7 @@ class ProductForm extends HTMLElement {
           ),
         );
 
-        this.addToCartButton.classList.remove('is-loading');
+        this.addToCartButton?.classList.remove('is-loading');
       })
       .then(() => {
         if (this.addToCartBehavior == 'notification') {

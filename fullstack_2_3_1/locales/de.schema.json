@@ -1030,6 +1030,8 @@
   "show_language": "Sprachauswahl anzeigen",
   "show_minutes": "Minuten anzeigen",
   "show_note": "Notiz anzeigen",
+  "show_dynamic_checkout": "Dynamische Checkout-Buttons anzeigen",
+  "show_dynamic_checkout_info": "Zeigt die nativen Shopify-Buttons fuer beschleunigten Checkout (Shop Pay, Apple Pay, Google Pay, PayPal) unter dem In-den-Warenkorb-Button.",
   "show_on_display": "Anzeigen auf",
   "show_on_option_name": "Name der Option, bei der das Popup angezeigt werden soll",
   "show_on_option_name_default": "Größe",

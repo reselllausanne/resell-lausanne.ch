@@ -1,0 +1,83 @@
+{% comment %}
+  Locale-specific PLP header title/intro fallbacks when metafields are blank.
+  Sets: plp_header_title, plp_header_intro
+{% endcomment %}
+{%- liquid
+  assign plp_header_title = blank
+  assign plp_header_intro = blank
+  assign _h = collection.handle | downcase
+
+  case _h
+      assign plp_header_title = 'Travis Scott x Nike'
+      if locale_base == 'de'
+        assign plp_header_intro = 'Authentische Travis Scott × Nike Sneakers: Jordan 1 Low Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack und Nike SB Dunk Low — geliefert in der ganzen Schweiz.'
+      elsif locale_base == 'en'
+        assign plp_header_intro = 'Authentic Travis Scott × Nike sneakers: Jordan 1 Low Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack and Nike SB Dunk Low — delivered across Switzerland.'
+      else
+        assign plp_header_intro = 'Jordan 1 Low Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack et Nike SB Dunk Low Travis Scott authentiques, livrés partout en Suisse.'
+      endif
+    when 'essentials', 'fear-of-god-essentials'
+      assign plp_header_title = 'Fear of God Essentials'
+      if locale_base == 'de'
+        assign plp_header_intro = 'Essentials Fear of God — minimalistischer Streetwear von Jerry Lorenzo: authentische Hoodies, Tees, Jogginghosen und Crewnecks in der Schweiz.'
+      elsif locale_base == 'en'
+        assign plp_header_intro = 'Fear of God Essentials — Jerry Lorenzo minimalist streetwear: authentic hoodies, tees, joggers and crewnecks in Switzerland.'
+      else
+        assign plp_header_intro = 'Essentials Fear of God, le streetwear minimaliste signe Jerry Lorenzo : hoodies, tees, joggings et crewnecks authentiques disponibles en Suisse.'
+      endif
+    when 'nike-air-max-plus-tn', 'air-max-plus', 'tn', 'nike-tn'
+      if locale_base == 'de'
+        assign plp_header_intro = 'Nike Air Max Plus TN authentisch in der Schweiz: Hyper Blue, Voltage Purple, Volt, Triple Black, Corteiz, Patta, Skepta und mehr.'
+      elsif locale_base == 'en'
+        assign plp_header_intro = 'Authentic Nike Air Max Plus TN in Switzerland: Hyper Blue, Voltage Purple, Volt, Triple Black, Corteiz, Patta, Skepta and more.'
+      else
+        assign plp_header_intro = 'Nike TN Air Max Plus authentiques en Suisse : Hyper Blue, Voltage Purple, Volt, Triple Black, Corteiz, Patta, Skepta — livrés partout en Suisse.'
+      endif
+    when 'nike-air-max-95', 'air-max-95'
+      if locale_base == 'de'
+        assign plp_header_intro = 'Nike Air Max 95 authentisch in der Schweiz: Neon OG, Big Bubble, Triple Black, Corteiz — für Herren und Damen.'
+      elsif locale_base == 'en'
+        assign plp_header_intro = 'Authentic Nike Air Max 95 in Switzerland: Neon OG, Big Bubble, Triple Black, Corteiz — men and women.'
+      else
+        assign plp_header_intro = 'Nike Air Max 95 authentiques en Suisse : Neon OG, Big Bubble, Triple Black, Corteiz, homme et femme.'
+      endif
+    when 'air-jordan-4', 'jordan-4'
+      if locale_base == 'de'
+        assign plp_header_intro = 'Air Jordan 4 authentisch in der Schweiz: Bred, White Cement, Military Black, Travis Scott, Off-White, Union LA und mehr.'
+      elsif locale_base == 'en'
+        assign plp_header_intro = 'Authentic Air Jordan 4 in Switzerland: Bred, White Cement, Military Black, Travis Scott, Off-White, Union LA and more.'
+      else
+        assign plp_header_intro = 'Air Jordan 4 authentiques en Suisse : Bred, White Cement, Military Black, Travis Scott, Off-White, Union LA — livrées partout en Suisse.'
+      endif
+    when 'asics-gel-kayano-14', 'gel-kayano-14', 'kayano-14'
+      if locale_base == 'de'
+        assign plp_header_intro = 'ASICS Gel-Kayano 14 authentisch in der Schweiz: White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY.'
+      elsif locale_base == 'en'
+        assign plp_header_intro = 'Authentic ASICS Gel-Kayano 14 in Switzerland: White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY.'
+      else
+        assign plp_header_intro = 'ASICS Gel-Kayano 14 authentiques en Suisse : White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY.'
+      endif
+    when 'onitsuka-tiger', 'onitsuka', 'onitsuka-tokuten'
+      if locale_base == 'de'
+        assign plp_header_intro = 'Authentische Onitsuka Tiger Mexico 66, Tokuten, Serrano und Mexico 66 SD — geprüft und in der ganzen Schweiz geliefert.'
+      elsif locale_base == 'en'
+        assign plp_header_intro = 'Authentic Onitsuka Tiger Mexico 66, Tokuten, Serrano and Mexico 66 SD — verified and delivered across Switzerland.'
+      else
+        assign plp_header_intro = 'Onitsuka Tiger Mexico 66, Tokuten, Serrano et Mexico 66 SD authentiques — vérifiés et livrés partout en Suisse.'
+      endif
+    when 'crampons-de-foot', 'crampons', 'football'
+      assign plp_header_title = 'Crampons de foot'
+      if locale_base == 'de'
+        assign plp_header_title = 'Fußballschuhe'
+        assign plp_header_intro = 'Nike Mercurial, Tiempo, Phantom, Adidas Predator, F50 und Copa: authentische FG-, SG-, AG- und TF-Schuhe für jeden Untergrund.'
+      elsif locale_base == 'en'
+        assign plp_header_title = 'Football boots'
+        assign plp_header_intro = 'Nike Mercurial, Tiempo, Phantom, Adidas Predator, F50 and Copa: authentic FG, SG, AG and TF boots for every surface.'
+      else
+        assign plp_header_intro = 'Nike Mercurial, Tiempo, Phantom, Adidas Predator, F50 et Copa: crampons FG, SG, AG, TF authentiques pour tous les terrains.'
+      endif
+    when 'new-balance-1000'
+      assign plp_header_title = 'New Balance 1000'
+  endcase
+  echo plp_header_title | append: '|||' | append: plp_header_intro
+-%}

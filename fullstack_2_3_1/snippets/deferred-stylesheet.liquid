@@ -1,0 +1,19 @@
+{%- comment -%}
+  Non-blocking CSS load. Use for below-fold or post-LCP styles only.
+  @param asset {string} theme asset filename, e.g. 'mobile-floating-nav.css'
+  @param href {string} full URL when deferring Shopify-injected stylesheets
+{%- endcomment -%}
+{%- liquid
+  if href != blank
+    assign stylesheet_href = href
+  else
+    assign stylesheet_href = asset | asset_url
+  endif
+-%}
+<link
+  rel="stylesheet"
+  href="{{ stylesheet_href }}"
+  media="print"
+  onload="this.media='all'"
+>
+<noscript><link rel="stylesheet" href="{{ stylesheet_href }}"></noscript>

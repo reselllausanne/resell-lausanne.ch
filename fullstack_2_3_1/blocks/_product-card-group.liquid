@@ -5,7 +5,25 @@
   {% content_for 'block', type: 'group', id: 'group' %}
 {% enddoc %}
 
-<a href="{{ closest.product.url }}" class="product-card-group-link">
+{% liquid
+  assign pdp_preload_image_url = ''
+  assign card_product = closest.product
+  assign card_featured_media = card_product.featured_media
+  assign card_selected_variant = card_product.selected_or_first_available_variant
+  if card_selected_variant.featured_media != blank
+    assign card_featured_media = card_selected_variant.featured_media
+  endif
+  if card_featured_media != blank
+    assign pdp_preload_image_url = card_featured_media.preview_image | image_url: width: 1400
+  endif
+%}
+
+<a
+  href="{{ closest.product.url }}"
+  class="product-card-group-link"
+  aria-label="{{ closest.product.title | escape }}"
+  {% if pdp_preload_image_url != blank %}data-pdp-preload="{{ pdp_preload_image_url }}"{% endif %}
+>
   <div
     class="
       product-card-group
@@ -78,6 +96,9 @@
   "name": "t:group",
   "tag": null,
   "blocks": [
+    {
+      "type": "_product-card-plp-brand"
+    },
     {
       "type": "_product-card-group"
     },

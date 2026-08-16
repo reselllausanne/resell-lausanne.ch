@@ -1,0 +1,627 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign contact_url = 'mailto:contact@resell-lausanne.ch'
+  capture faq_base_url
+    render 'rl-localized-path', path: '/pages/faq'
+  endcapture
+  assign faq_base_url = faq_base_url | strip
+  assign faq_label = 'faq_page.label' | t
+  assign faq_sidebar_aria = 'faq_page.sidebar_aria' | t
+  assign faq_process_auth_label = 'faq_page.process_auth' | t
+  assign faq_title_livraison = 'faq_page.categories.livraison' | t
+  assign faq_title_authenticite = 'faq_page.categories.authenticite' | t
+  assign faq_title_echanges = 'faq_page.categories.echanges_et_retours' | t
+  assign faq_title_options = 'faq_page.categories.options_de_paiement' | t
+  assign faq_title_prix = 'faq_page.categories.prix_et_reductions' | t
+  assign faq_title_guide = 'faq_page.categories.guide_des_tailles' | t
+  assign faq_title_apropos = 'faq_page.categories.a_propos_de_nous' | t
+  assign faq_guide_url = routes.root_url | append: '/pages/guide-des-tailles'
+  assign faq_process_auth_url = routes.root_url | append: '/pages/notre-processus-d-authentification'
+  if pages['guide-des-tailles'] != blank
+    assign faq_guide_url = pages['guide-des-tailles'].url
+  endif
+  if pages['notre-processus-d-authentification'] != blank
+    assign faq_process_auth_url = pages['notre-processus-d-authentification'].url
+  endif
+  capture faq_return_url
+    render 'rl-resolved-page-url', handle: 'demande-retour'
+  endcapture
+  assign faq_return_url = faq_return_url | strip
+  assign faq_category_slugs = 'livraison|authenticite|echanges-et-retours|options-de-paiement|prix-et-reductions|guide-des-tailles|a-propos-de-nous' | split: '|'
+  assign faq_meta_categories = shop.metaobjects.page_faq_category.values
+  assign faq_use_metaobjects = false
+  if faq_meta_categories != blank and faq_meta_categories.size > 0 and locale_base == 'fr'
+    assign faq_use_metaobjects = true
+    for faq_meta_category in faq_meta_categories
+      assign faq_meta_slug = faq_meta_category.slug.value | default: faq_meta_category.slug
+      assign faq_meta_title = faq_meta_category.title.value | default: faq_meta_category.title
+      if faq_meta_slug == 'livraison'
+        assign faq_title_livraison = faq_meta_title
+      elsif faq_meta_slug == 'authenticite'
+        assign faq_title_authenticite = faq_meta_title
+      elsif faq_meta_slug == 'echanges-et-retours'
+        assign faq_title_echanges = faq_meta_title
+      elsif faq_meta_slug == 'options-de-paiement'
+        assign faq_title_options = faq_meta_title
+      elsif faq_meta_slug == 'prix-et-reductions'
+        assign faq_title_prix = faq_meta_title
+      elsif faq_meta_slug == 'guide-des-tailles'
+        assign faq_title_guide = faq_meta_title
+      elsif faq_meta_slug == 'a-propos-de-nous'
+        assign faq_title_apropos = faq_meta_title
+      endif
+    endfor
+  endif
+  assign faq_active_title = blank
+  case active_category
+    when 'livraison'
+      assign faq_active_title = faq_title_livraison
+    when 'authenticite'
+      assign faq_active_title = faq_title_authenticite
+    when 'echanges-et-retours'
+      assign faq_active_title = faq_title_echanges
+    when 'options-de-paiement'
+      assign faq_active_title = faq_title_options
+    when 'prix-et-reductions'
+      assign faq_active_title = faq_title_prix
+    when 'a-propos-de-nous'
+      assign faq_active_title = faq_title_apropos
+    when 'guide-des-tailles'
+      assign faq_active_title = faq_title_guide
+  endcase
+  assign url_notre_concept = routes.root_url | append: '/pages/notre-concept'
+  if pages['notre-concept'] != blank
+    assign url_notre_concept = pages['notre-concept'].url
+  endif
+%}
+<script src="{{ 'resell-faq-page.js' | asset_url }}" defer></script>
+
+<style>
+  .rl-faq-page {
+    padding-top: 48px;
+    padding-bottom: 80px;
+  }
+
+  .rl-faq-page__header {
+    margin-bottom: 40px;
+  }
+
+  .rl-faq-page__header h1 {
+    margin-top: 16px;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  /* ── two-column layout ── */
+  .rl-faq-page__layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  @media (max-width: 767px) {
+    .rl-faq-page__layout {
+      grid-template-columns: 1fr;
+    }
+    .rl-faq-page__sidebar {
+      margin-bottom: 32px;
+    }
+  }
+
+  /* ── sidebar ── */
+  .rl-faq-page__sidebar {
+    position: sticky;
+    top: 100px;
+  }
+
+  .rl-faq-page__sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .rl-faq-page__sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rl-faq-page__sidebar li {
+    border-top: 1px solid rgb(245, 245, 245);
+  }
+
+  .rl-faq-page__sidebar li:last-child {
+    border-bottom: 1px solid rgb(245, 245, 245);
+  }
+
+  .rl-faq-page__sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: rgb(110, 110, 110);
+    text-align: left;
+    font-family: inherit;
+    transition: color 0.15s ease;
+  }
+
+  .rl-faq-page__sidebar-link:hover,
+  .rl-faq-page__sidebar-link.is-active {
+    color: rgb(8, 8, 8);
+  }
+
+  .rl-faq-page__sidebar-link svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    opacity: 0.35;
+    transition: opacity 0.15s ease;
+  }
+
+  .rl-faq-page__sidebar-link:hover svg,
+  .rl-faq-page__sidebar-link.is-active svg {
+    opacity: 1;
+  }
+
+  /* ── content area ── */
+  .rl-faq-page__content {
+    min-width: 0;
+  }
+
+  .rl-faq-page__category {
+    margin-bottom: 48px;
+  }
+
+  .rl-faq-page__category.is-hidden {
+    display: none;
+  }
+
+  .rl-faq-page__category > h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgb(230, 230, 230);
+  }
+
+  /* ── accordion items (details/summary) ── */
+  .rl-faq-page__item {
+    border-bottom: 1px solid rgb(245, 245, 245);
+  }
+
+  .rl-faq-page__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(8, 8, 8);
+    list-style: none;
+    user-select: none;
+  }
+
+  .rl-faq-page__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .rl-faq-page__item summary::after {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath stroke='%23666' stroke-linecap='round' stroke-linejoin='round' d='M5 7.5l5 5 5-5'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.2s ease;
+  }
+
+  .rl-faq-page__item[open] summary::after {
+    transform: rotate(180deg);
+  }
+
+  .rl-faq-page__answer {
+    padding: 0 0 20px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgb(80, 80, 80);
+  }
+
+  .rl-faq-page__answer p {
+    margin-bottom: 12px;
+  }
+
+  .rl-faq-page__answer p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rl-faq-page__answer a {
+    color: rgb(8, 8, 8);
+    text-decoration: underline;
+  }
+
+  .rl-faq-page__answer ul,
+  .rl-faq-page__answer ol {
+    padding-left: 20px;
+    margin-bottom: 12px;
+  }
+
+  /* ── category-focus mode: JS adds .is-hidden to non-active sections ── */
+  .rl-faq-page__category.is-hidden {
+    display: none !important;
+  }
+</style>
+
+<div
+  class="rl-faq-page"
+  data-faq-url="{{ faq_base_url }}"
+  {% if active_category != blank %}data-active-category="{{ active_category }}"{% endif %}
+>
+
+  <div class="rl-faq-page__header">
+    <nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+      <ol class="breadcrumbs__list list-unstyled">
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+          <span class="breadcrumbs__separator" aria-hidden="true">›</span>
+        </li>
+        <li class="breadcrumbs__item rl-faq-page__breadcrumb-faq">{{ faq_label }}</li>
+        <li class="breadcrumbs__item rl-faq-page__breadcrumb-category" hidden></li>
+      </ol>
+    </nav>
+
+    {% if faq_active_title != blank %}
+      <h1>{{ faq_label }} — {{ faq_active_title }}</h1>
+    {% else %}
+      <h1>{{ faq_label }}</h1>
+    {% endif %}
+  </div>
+
+  <div class="rl-faq-page__layout">
+
+    <nav class="rl-faq-page__sidebar" aria-label="{{ faq_sidebar_aria }}">
+      <p class="rl-faq-page__sidebar-title">{{ faq_label }}</p>
+      <ul>
+        <li>
+          <button class="rl-faq-page__sidebar-link{% if active_category == 'livraison' %} is-active{% endif %}" data-category="livraison" type="button">
+            {{ faq_title_livraison }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </button>
+        </li>
+        <li>
+          <button class="rl-faq-page__sidebar-link{% if active_category == 'authenticite' %} is-active{% endif %}" data-category="authenticite" type="button">
+            {{ faq_title_authenticite }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </button>
+        </li>
+        <li>
+          <button class="rl-faq-page__sidebar-link{% if active_category == 'echanges-et-retours' %} is-active{% endif %}" data-category="echanges-et-retours" type="button">
+            {{ faq_title_echanges }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </button>
+        </li>
+        <li>
+          <button class="rl-faq-page__sidebar-link{% if active_category == 'options-de-paiement' %} is-active{% endif %}" data-category="options-de-paiement" type="button">
+            {{ faq_title_options }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </button>
+        </li>
+        <li>
+          <button class="rl-faq-page__sidebar-link{% if active_category == 'prix-et-reductions' %} is-active{% endif %}" data-category="prix-et-reductions" type="button">
+            {{ faq_title_prix }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </button>
+        </li>
+        <li>
+          <a class="rl-faq-page__sidebar-link{% if active_category == 'guide-des-tailles' %} is-active{% endif %}" href="{{ faq_guide_url }}" style="text-decoration:none;">
+            {{ faq_title_guide }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </a>
+        </li>
+        <li>
+          <a class="rl-faq-page__sidebar-link" href="{{ faq_process_auth_url }}" style="text-decoration:none;">
+            {{ faq_process_auth_label }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </a>
+        </li>
+        <li>
+          <button class="rl-faq-page__sidebar-link{% if active_category == 'a-propos-de-nous' %} is-active{% endif %}" data-category="a-propos-de-nous" type="button">
+            {{ faq_title_apropos }}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"/></svg>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="rl-faq-page__content">
+      {% if faq_use_metaobjects %}
+        {% for faq_slug in faq_category_slugs %}
+          {% liquid
+            assign faq_meta_category = blank
+            for faq_meta_category_candidate in faq_meta_categories
+              assign faq_meta_slug = faq_meta_category_candidate.slug.value | default: faq_meta_category_candidate.slug
+              if faq_meta_slug == faq_slug
+                assign faq_meta_category = faq_meta_category_candidate
+                break
+              endif
+            endfor
+          %}
+          {% if faq_meta_category != blank %}
+            {% if active_category == blank or active_category == faq_slug %}
+              {% liquid
+                assign faq_meta_title = faq_meta_category.title.value | default: faq_meta_category.title
+                assign faq_meta_items = faq_meta_category.items.value
+                assign faq_section_title = faq_meta_title
+                case faq_slug
+                  when 'livraison'
+                    assign faq_section_title = faq_title_livraison
+                  when 'authenticite'
+                    assign faq_section_title = faq_title_authenticite
+                  when 'echanges-et-retours'
+                    assign faq_section_title = faq_title_echanges
+                  when 'options-de-paiement'
+                    assign faq_section_title = faq_title_options
+                  when 'prix-et-reductions'
+                    assign faq_section_title = faq_title_prix
+                  when 'guide-des-tailles'
+                    assign faq_section_title = faq_title_guide
+                  when 'a-propos-de-nous'
+                    assign faq_section_title = faq_title_apropos
+                endcase
+              %}
+              <section id="faq-{{ faq_slug }}" class="rl-faq-page__category">
+                <h2>{{ faq_section_title }}</h2>
+                {% if faq_slug == 'livraison' %}
+                  {% comment %} Liquid article is source of truth for livraison (seed + EN/DE parity). {% endcomment %}
+                  {% render 'resell-faq-livraison-article' %}
+                {% elsif faq_slug == 'echanges-et-retours' %}
+                  {% comment %} Liquid source of truth for return policy updates. {% endcomment %}
+                  {% render 'resell-faq-echanges-article', contact_url: contact_url, faq_return_url: faq_return_url %}
+                {% elsif faq_meta_items != blank %}
+                  {% for faq_meta_item in faq_meta_items %}
+                    {% assign faq_meta_question = faq_meta_item.question.value | default: faq_meta_item.question %}
+                    {% capture faq_meta_answer_html %}
+                      {% render 'metaobject-rich-text', source: faq_meta_item.answer, fallback: faq_meta_item.content %}
+                    {% endcapture %}
+                    {% assign faq_meta_answer_html = faq_meta_answer_html | strip %}
+                    {% if faq_meta_question != blank and faq_meta_answer_html != blank %}
+                      <details class="rl-faq-page__item">
+                        <summary>{{ faq_meta_question }}</summary>
+                        <div class="rl-faq-page__answer">{{ faq_meta_answer_html }}</div>
+                      </details>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </section>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      {% elsif locale_base == 'de' %}
+        {% render 'resell-faq-content-categories-de',
+          active_category: active_category,
+          contact_url: contact_url,
+          faq_return_url: faq_return_url,
+          faq_guide_url: faq_guide_url,
+          faq_process_auth_url: faq_process_auth_url,
+          url_notre_concept: url_notre_concept,
+          faq_title_livraison: faq_title_livraison,
+          faq_title_authenticite: faq_title_authenticite,
+          faq_title_echanges: faq_title_echanges,
+          faq_title_options: faq_title_options,
+          faq_title_prix: faq_title_prix,
+          faq_title_guide: faq_title_guide,
+          faq_title_apropos: faq_title_apropos
+        %}
+      {% elsif locale_base == 'en' %}
+        {% render 'resell-faq-content-categories-en',
+          active_category: active_category,
+          contact_url: contact_url,
+          faq_return_url: faq_return_url,
+          faq_guide_url: faq_guide_url,
+          faq_process_auth_url: faq_process_auth_url,
+          url_notre_concept: url_notre_concept,
+          faq_title_livraison: faq_title_livraison,
+          faq_title_authenticite: faq_title_authenticite,
+          faq_title_echanges: faq_title_echanges,
+          faq_title_options: faq_title_options,
+          faq_title_prix: faq_title_prix,
+          faq_title_guide: faq_title_guide,
+          faq_title_apropos: faq_title_apropos
+        %}
+      {% else %}
+
+      {% if active_category == blank or active_category == 'livraison' %}
+        <section id="faq-livraison" class="rl-faq-page__category">
+          <h2>{{ faq_title_livraison }}</h2>
+          {% render 'resell-faq-livraison-article' %}
+        </section>
+      {% endif %}
+
+      {% if active_category == blank or active_category == 'authenticite' %}
+        <section id="faq-authenticite" class="rl-faq-page__category">
+          <h2>{{ faq_title_authenticite }}</h2>
+
+          <details class="rl-faq-page__item">
+            <summary>Comment Resell Lausanne garantit-il l'authenticité des produits ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Chaque produit vendu sur Resell Lausanne est soigneusement contrôlé par notre équipe d'experts avant expédition. Nous vérifions la boîte, les étiquettes, les matières, les coutures, la semelle et les détails propres à chaque modèle.</p>
+              <p>Nous travaillons exclusivement avec des revendeurs professionnels et des partenaires certifiés. Aucun produit ne peut être expédié sans avoir passé notre processus de contrôle interne.</p>
+              <p>Découvrez le détail de notre méthode en cinq étapes&nbsp;: <a href="{{ faq_process_auth_url }}">Notre processus d'authentification</a>.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Est-ce que je reçois un certificat d'authenticité ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Oui. Chaque commande est accompagnée d'un certificat d'authenticité Resell Lausanne. Ce document atteste que le produit a été contrôlé et validé par notre équipe.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Que se passe-t-il si un produit s'avère non authentique ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Dans le cas très improbable où un produit ne passerait pas notre contrôle final, il ne vous sera pas expédié. Vous serez immédiatement contacté et intégralement remboursé.</p>
+              <p>Si vous avez un doute sur un produit reçu, contactez-nous à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>D'où proviennent vos produits ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Nos produits proviennent de revendeurs professionnels, de boutiques spécialisées et de partenaires sélectionnés en Suisse, en Europe et à l'international. Nous n'achetons jamais auprès de particuliers sans vérification préalable.</p>
+            </div>
+          </details>
+        </section>
+      {% endif %}
+
+      {% if active_category == blank or active_category == 'echanges-et-retours' %}
+        <section id="faq-echanges-et-retours" class="rl-faq-page__category">
+          <h2>{{ faq_title_echanges }}</h2>
+          {% render 'resell-faq-echanges-article', contact_url: contact_url, faq_return_url: faq_return_url %}
+        </section>
+      {% endif %}
+
+      {% if active_category == blank or active_category == 'options-de-paiement' %}
+        <section id="faq-options-de-paiement" class="rl-faq-page__category">
+          <h2>{{ faq_title_options }}</h2>
+
+          <details class="rl-faq-page__item">
+            <summary>Quels moyens de paiement acceptez-vous ?</summary>
+            <div class="rl-faq-page__answer">
+              <p><strong>En Suisse</strong> : Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay (paiement en plusieurs fois).</p>
+              <p><strong>En Europe</strong> : Visa, MasterCard, Amex, Apple Pay, Alma (paiement en 2, 3 ou 4 fois pour les commandes éligibles).</p>
+              <p>Les options disponibles apparaissent automatiquement au moment du paiement selon votre pays de livraison.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Le paiement en plusieurs fois est-il disponible ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Oui. En Suisse, Powerpay permet de payer en plusieurs fois. En Europe, Alma propose un paiement en 2, 3 ou 4 fois sans frais pour les commandes éligibles.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Le paiement est-il sécurisé ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Oui. Toutes les transactions sont sécurisées via le protocole SSL et traitées par des prestataires de paiement certifiés. Resell Lausanne ne stocke aucune donnée bancaire.</p>
+            </div>
+          </details>
+
+          {% render 'resell-powerpay-cgv-block' %}
+        </section>
+      {% endif %}
+
+      {% if active_category == blank or active_category == 'prix-et-reductions' %}
+        <section id="faq-prix-et-reductions" class="rl-faq-page__category">
+          <h2>{{ faq_title_prix }}</h2>
+
+          <details class="rl-faq-page__item">
+            <summary>Comment sont fixés vos prix ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Nos prix reflètent la valeur de marché des produits au moment de la mise en vente, en intégrant le coût d'approvisionnement, le contrôle d'authenticité et les frais opérationnels. Les prix sont affichés en CHF.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Pourquoi les prix varient-ils selon les pointures ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Contrairement aux idées reçues, chaque pointure possède son propre marché et sa propre disponibilité. Certaines tailles sont beaucoup plus recherchées que d'autres, tandis que certaines sont produites en quantités plus limitées par les marques.</p>
+              <p>Comme nous nous approvisionnons en temps réel auprès de différents partenaires, le prix d'une paire dépend directement du coût auquel la pointure concernée est disponible au moment de votre commande.</p>
+              <p>Il est donc tout à fait normal que deux pointures d'un même modèle soient proposées à des prix différents. Dans certains cas, les écarts peuvent être importants lorsque certaines tailles sont particulièrement rares ou demandées.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Avez-vous des codes promo ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Oui. Bénéficiez de <strong>CHF 10 offerts</strong> sur votre première commande avec le code <strong>FIRST10</strong>. D'autres offres sont communiquées via notre newsletter.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Les prix incluent-ils la TVA ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Oui, tous les prix affichés incluent la TVA suisse applicable. Pour les livraisons hors Suisse, des taxes locales peuvent s'appliquer.</p>
+            </div>
+          </details>
+        </section>
+      {% endif %}
+
+      {% if active_category == blank or active_category == 'guide-des-tailles' %}
+        <section id="faq-guide-des-tailles" class="rl-faq-page__category">
+          <h2>{{ faq_title_guide }}</h2>
+
+          <details class="rl-faq-page__item">
+            <summary>Comment choisir ma taille de sneaker ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Les tailles sont affichées en pointure EU. Chaque fiche produit précise le sizing habituel (taille réelle, grande ou petite). En cas de doute, prenez une demi-pointure au-dessus.</p>
+              <p>Afin de vous conseiller au mieux, veuillez consulter le <a href="{{ faq_guide_url }}"><strong>guide des tailles détaillé</strong></a> que nous avons créé — vous y trouverez les tableaux de conversion EU / US / UK / CM pour chaque marque (Nike, Jordan, Adidas, New Balance, Asics, Yeezy, UGG, Converse, Salomon, Puma…).</p>
+              <p>Contactez-nous à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a> pour un conseil personnalisé.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Comment convertir les tailles US, UK et EU ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Les conversions varient selon les marques. Consultez notre <a href="{{ faq_guide_url }}">guide des tailles par marque</a> pour les tableaux détaillés. À titre indicatif :</p>
+              <ul>
+                <li>EU 40 = US 7 = UK 6</li>
+                <li>EU 42 = US 8.5 = UK 7.5</li>
+                <li>EU 44 = US 10 = UK 9</li>
+                <li>EU 45 = US 11 = UK 10</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Où trouver le guide des tailles complet par marque ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Nous avons créé un <a href="{{ faq_guide_url }}"><strong>guide des tailles détaillé</strong></a> avec les tableaux de conversion pour toutes les marques que nous vendons : Nike, Air Jordan, Adidas, New Balance, Asics, Yeezy, UGG, Converse, Salomon, Puma, Veja et On Running.</p>
+              <p>Chaque marque dispose de ses propres conseils de chausse et d'un tableau EU / US Homme / US Femme / UK / CM.</p>
+            </div>
+          </details>
+        </section>
+      {% endif %}
+
+      {% if active_category == blank or active_category == 'a-propos-de-nous' %}
+        <section id="faq-a-propos-de-nous" class="rl-faq-page__category">
+          <h2>{{ faq_title_apropos }}</h2>
+
+          <details class="rl-faq-page__item">
+            <summary>Qui est Resell Lausanne ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Resell Lausanne est une boutique en ligne suisse spécialisée dans la vente de sneakers authentiques, de streetwear premium et de collectibles. Basée à Lausanne, notre équipe sélectionne chaque produit avec soin. <a href="{{ url_notre_concept }}">Découvrez notre concept</a>.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Comment vous contacter ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Écrivez-nous à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>. Nous répondons généralement sous 24 à 48 heures ouvrables.</p>
+            </div>
+          </details>
+
+          <details class="rl-faq-page__item">
+            <summary>Proposez-vous un service en magasin ?</summary>
+            <div class="rl-faq-page__answer">
+              <p>Resell Lausanne opère principalement en ligne. Pour un rendez-vous ou un retrait sur place à Lausanne, contactez-nous par e-mail pour convenir d'un créneau.</p>
+            </div>
+          </details>
+        </section>
+      {% endif %}
+      {% endif %}
+
+    </div>
+  </div>
+</div>

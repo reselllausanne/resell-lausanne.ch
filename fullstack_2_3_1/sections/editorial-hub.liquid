@@ -1,0 +1,278 @@
+{% comment %}
+  Editorial hub — summary page linking to child guides (no full article duplication).
+{% endcomment %}
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign mf = article.metafields.custom
+  assign hub_eyebrow = section.settings.eyebrow | default: mf.editorial_eyebrow.value | default: mf.editorial_eyebrow
+  assign hub_intro_text = section.settings.intro | default: mf.editorial_intro.value | default: mf.editorial_intro
+  assign hub_stamp = section.settings.stamp_text
+  assign hub_display_title = article.title
+  assign blog_home = blog.url | default: routes.root_url
+  assign editorial_i18n_bundle = mf.editorial_i18n.value
+  assign editorial_i18n = blank
+
+  if editorial_i18n_bundle != blank
+    case locale_base
+      when 'de'
+        assign editorial_i18n = editorial_i18n_bundle.de
+      when 'en'
+        assign editorial_i18n = editorial_i18n_bundle.en
+      else
+        assign editorial_i18n = editorial_i18n_bundle.fr
+    endcase
+    if editorial_i18n == blank
+      assign editorial_i18n = editorial_i18n_bundle.fr
+    endif
+  endif
+
+  if editorial_i18n != blank and locale_base != 'fr'
+    if editorial_i18n.display_title != blank
+      assign hub_display_title = editorial_i18n.display_title
+    endif
+    if editorial_i18n.eyebrow != blank
+      assign hub_eyebrow = editorial_i18n.eyebrow
+    endif
+    if editorial_i18n.intro != blank
+      assign hub_intro_text = editorial_i18n.intro
+    endif
+    if editorial_i18n.stamp_text != blank
+      assign hub_stamp = editorial_i18n.stamp_text
+    endif
+  endif
+%}
+
+{{ 'editorial-guide.css' | asset_url | stylesheet_tag }}
+
+<article class="editorial-guide editorial-hub color-{{ section.settings.color_scheme }}">
+  <div class="editorial-guide__shell">
+    {% render 'editorial-article-nav', blog: blog %}
+    <nav class="editorial-guide__breadcrumb" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+      <a href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      <span aria-hidden="true">/</span>
+      <a href="{{ blog_home }}">{{ blog.title }}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ hub_display_title | escape }}</span>
+    </nav>
+
+    <header class="editorial-hub__intro">
+      <div>
+        {% if hub_eyebrow != blank %}
+          <p class="editorial-hub__eyebrow">{{ hub_eyebrow | escape }}</p>
+        {% endif %}
+        <h1 class="editorial-hub__title">{{ hub_display_title | escape }}</h1>
+        {% if hub_intro_text != blank %}
+          <p class="editorial-hub__lede">{{ hub_intro_text | strip_html | escape }}</p>
+        {% elsif article.excerpt != blank %}
+          <p class="editorial-hub__lede">{{ article.excerpt | strip_html | escape }}</p>
+        {% endif %}
+      </div>
+      {% if hub_stamp != blank %}
+        <div class="editorial-hub__stamp">{{ hub_stamp | escape | newline_to_br }}</div>
+      {% endif %}
+    </header>
+
+    {% assign nav_blocks = section.blocks | where: 'type', 'guide_nav' %}
+    {% if nav_blocks.size > 0 %}
+      <p class="editorial-hub__nav-hint">{{ 'editorial.hub_nav_hint' | t }}</p>
+      <nav class="editorial-hub__nav" aria-label="{{ article.title | escape }}">
+        {% for block in nav_blocks %}
+          {% assign nav_article = blank %}
+          {% if block.settings.article_handle != blank %}
+            {% assign nav_article_key = 'news/' | append: block.settings.article_handle %}
+            {% assign nav_article = articles[nav_article_key] %}
+          {% endif %}
+          {% if nav_article != blank %}
+            <a
+              class="editorial-hub__nav-link{% if request.path == nav_article.url %} is-active{% endif %}"
+              href="{{ nav_article.url }}"
+              {{ block.shopify_attributes }}
+            >
+              {% if block.settings.segment_label != blank %}
+                <span>{{ block.settings.segment_label | escape }}</span>
+              {% endif %}
+              <strong>{{ block.settings.title | default: nav_article.title | escape }}</strong>
+            </a>
+          {% endif %}
+        {% endfor %}
+      </nav>
+    {% endif %}
+
+    <div class="editorial-hub__cards">
+      {% for block in section.blocks %}
+        {% if block.type == 'guide_card' %}
+          {% assign card_article = blank %}
+          {% if block.settings.article_handle != blank %}
+            {% assign card_article_key = 'news/' | append: block.settings.article_handle %}
+            {% assign card_article = articles[card_article_key] %}
+          {% endif %}
+
+          {% if card_article != blank %}
+            {% assign card_image = block.settings.image | default: card_article.image %}
+            {% assign card_excerpt = block.settings.excerpt | default: card_article.excerpt | strip_html | strip %}
+            {% if card_excerpt == blank %}
+              {% assign card_excerpt = card_article.content | strip_html | strip | truncate: 160 %}
+            {% endif %}
+
+            <a class="editorial-hub__card" href="{{ card_article.url }}" {{ block.shopify_attributes }}>
+              <div class="editorial-hub__card-media">
+                {% if card_image != blank %}
+                  {{
+                    card_image
+                    | image_url: width: 960
+                    | image_tag:
+                      class: 'editorial-hub__card-image',
+                      loading: 'lazy',
+                      widths: '480, 640, 960',
+                      sizes: '(min-width: 900px) 45vw, 92vw',
+                      alt: block.settings.image_alt | default: card_image.alt | default: card_article.title
+                  }}
+                {% else %}
+                  <img
+                    src="{{ 'placeholder-article.jpg' | asset_img_url: '960x640' }}"
+                    alt="{{ card_article.title | escape }}"
+                    width="960"
+                    height="640"
+                    loading="lazy"
+                    class="editorial-hub__card-image"
+                  >
+                {% endif %}
+              </div>
+              <div class="editorial-hub__card-body">
+                {% if block.settings.eyebrow != blank %}
+                  <span class="editorial-hub__card-eyebrow">{{ block.settings.eyebrow | escape }}</span>
+                {% endif %}
+                <h2 class="editorial-hub__card-title">{{ block.settings.title | default: card_article.title | escape }}</h2>
+                {% if card_excerpt != blank %}
+                  <p class="editorial-hub__card-excerpt">{{ card_excerpt | escape }}</p>
+                {% endif %}
+                <span class="editorial-hub__card-cta">{{ 'editorial.hub_read_guide' | t }} →</span>
+              </div>
+            </a>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_promo %}
+      {% render 'editorial-promo-card', section: section %}
+    {% endif %}
+
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Editorial hub",
+  "tag": "section",
+  "class": "section-editorial-hub",
+  "enabled_on": {
+    "templates": ["article"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Introduction hub"
+    },
+    {
+      "type": "textarea",
+      "id": "stamp_text",
+      "label": "Badge stamp (HTML autorisé: sauts de ligne)",
+      "default": "4 GUIDES\n20 MODÈLES\n100% RENTRÉE"
+    },
+    {
+      "type": "header",
+      "content": "Carte cadeau / promo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo",
+      "label": "Afficher le bloc promo",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_eyebrow",
+      "label": "Promo surtitre"
+    },
+    {
+      "type": "text",
+      "id": "promo_title",
+      "label": "Promo titre"
+    },
+    {
+      "type": "textarea",
+      "id": "promo_text",
+      "label": "Promo description"
+    },
+    {
+      "type": "text",
+      "id": "promo_primary_label",
+      "label": "Promo CTA principal"
+    },
+    {
+      "type": "url",
+      "id": "promo_primary_url",
+      "label": "Promo lien principal"
+    },
+    {
+      "type": "product",
+      "id": "promo_product",
+      "label": "Produit carte cadeau (fallback URL)"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_image",
+      "label": "Image carte cadeau (vide = asset theme)"
+    },
+    {
+      "type": "text",
+      "id": "promo_image_alt",
+      "label": "Alt image carte cadeau"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "guide_nav",
+      "name": "Onglet navigation",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "article_handle", "label": "Handle article guide" },
+        { "type": "text", "id": "segment_label", "label": "Label segment (ex. 12–18 ans)" },
+        { "type": "text", "id": "title", "label": "Titre court (override)" }
+      ]
+    },
+    {
+      "type": "guide_card",
+      "name": "Carte guide",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "article_handle", "label": "Handle article guide" },
+        { "type": "text", "id": "eyebrow", "label": "Surtitre carte" },
+        { "type": "text", "id": "title", "label": "Titre (override)" },
+        { "type": "textarea", "id": "excerpt", "label": "Excerpt (override)" },
+        { "type": "image_picker", "id": "image", "label": "Image carte" },
+        { "type": "text", "id": "image_alt", "label": "Alt image carte" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial hub"
+    }
+  ]
+}
+{% endschema %}

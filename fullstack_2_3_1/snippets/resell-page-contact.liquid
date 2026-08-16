@@ -1,0 +1,338 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign faq_url = routes.root_url | append: '/pages/faq'
+  if pages.faq != blank
+    assign faq_url = pages.faq.url
+  endif
+
+  assign page_title = 'Nous contacter'
+  assign intro_text = "Une question sur votre commande, un retour ou un produit ? Remplissez le formulaire ci-dessous. Notre équipe vous répond sous 24 à 48 heures ouvrées."
+  assign aside_label = 'Informations de contact'
+  assign prewrite_title = 'Avant de nous écrire'
+  assign prewrite_body = 'Consultez la FAQ pour les réponses aux questions les plus fréquentes : livraison, retours, paiements et tailles.'
+  assign prewrite_link = 'Voir la FAQ'
+  assign response_title = 'Délai de réponse'
+  assign response_body = 'Nous traitons les demandes du lundi au vendredi. Les messages reçus le week-end sont traités dès le lundi suivant.'
+  assign direct_email_title = 'E-mail direct'
+  assign order_label = 'Numéro de commande (optionnel)'
+  assign subject_label = 'Sujet'
+  assign subject_placeholder = 'Sélectionnez un sujet'
+  assign subject_1 = 'Commande et suivi'
+  assign subject_2 = 'Retour ou échange'
+  assign subject_3 = 'Taille ou produit'
+  assign subject_4 = 'Paiement ou facture'
+  assign subject_5 = 'Autre demande'
+
+  if locale_base == 'de'
+    assign page_title = 'Kontakt'
+    assign intro_text = 'Frage zu Bestellung, Rückgabe oder Produkt? Nutzen Sie Formular unten. Team antwortet in 24 bis 48 Arbeitsstunden.'
+    assign aside_label = 'Kontaktinformationen'
+    assign prewrite_title = 'Vor dem Schreiben'
+    assign prewrite_body = 'In FAQ finden Sie schnelle Antworten zu Lieferung, Rückgaben, Zahlungen und Größen.'
+    assign prewrite_link = 'FAQ ansehen'
+    assign response_title = 'Antwortzeit'
+    assign response_body = 'Wir bearbeiten Anfragen Montag bis Freitag. Nachrichten vom Wochenende bearbeiten wir ab Montag.'
+    assign direct_email_title = 'Direkte E-Mail'
+    assign order_label = 'Bestellnummer (optional)'
+    assign subject_label = 'Betreff'
+    assign subject_placeholder = 'Betreff wählen'
+    assign subject_1 = 'Bestellung und Sendungsverfolgung'
+    assign subject_2 = 'Rückgabe oder Umtausch'
+    assign subject_3 = 'Größe oder Produkt'
+    assign subject_4 = 'Zahlung oder Rechnung'
+    assign subject_5 = 'Andere Anfrage'
+  elsif locale_base == 'en'
+    assign page_title = 'Contact us'
+    assign intro_text = 'Question about order, return or product? Fill form below. Team replies within 24 to 48 business hours.'
+    assign aside_label = 'Contact information'
+    assign prewrite_title = 'Before writing to us'
+    assign prewrite_body = 'Check FAQ for quick answers about shipping, returns, payments and sizing.'
+    assign prewrite_link = 'View FAQ'
+    assign response_title = 'Response time'
+    assign response_body = 'We handle requests Monday to Friday. Messages received on weekends are processed from Monday.'
+    assign direct_email_title = 'Direct email'
+    assign order_label = 'Order number (optional)'
+    assign subject_label = 'Subject'
+    assign subject_placeholder = 'Select a subject'
+    assign subject_1 = 'Order and tracking'
+    assign subject_2 = 'Return or exchange'
+    assign subject_3 = 'Sizing or product'
+    assign subject_4 = 'Payment or invoice'
+    assign subject_5 = 'Other request'
+  endif
+%}
+
+<div class="rl-contact-page">
+  <nav class="breadcrumbs breadcrumbs--slash rl-contact-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">{{ page_title }}</li>
+    </ol>
+  </nav>
+
+  <header class="rl-contact-page__header">
+    <h1>{{ page_title }}</h1>
+    <p class="rl-contact-page__intro">
+      {{ intro_text }}
+    </p>
+  </header>
+
+  <div class="rl-contact-page__layout">
+    <aside class="rl-contact-page__aside" aria-label="{{ aside_label }}">
+      <div class="rl-contact-page__card">
+        <h2 class="rl-contact-page__card-title">{{ prewrite_title }}</h2>
+        <p>{{ prewrite_body }}</p>
+        <p><a class="rl-contact-page__link" href="{{ faq_url }}">{{ prewrite_link }}</a></p>
+      </div>
+
+      <div class="rl-contact-page__card">
+        <h2 class="rl-contact-page__card-title">{{ response_title }}</h2>
+        <p>{{ response_body }}</p>
+      </div>
+
+      <div class="rl-contact-page__card">
+        <h2 class="rl-contact-page__card-title">{{ direct_email_title }}</h2>
+        <p>
+          <a class="rl-contact-page__link" href="mailto:contact@resell-lausanne.ch">contact@resell-lausanne.ch</a>
+        </p>
+      </div>
+    </aside>
+
+    <div class="rl-contact-page__form-wrap">
+      {% form 'contact', class: 'rl-contact-page__form contact-form' %}
+        {% liquid
+          assign first_name_label = 'contact.first_name' | t
+          assign last_name_label = 'contact.last_name' | t
+          assign phone_label = 'contact.phone' | t
+          assign email_label = 'contact.email' | t
+          assign message_label = 'contact.message' | t
+          assign submit_label = 'contact.submit' | t
+        %}
+
+        <div class="rl-contact-page__fields-row">
+          {% render 'textfield', label: first_name_label, name: 'contact[first_name]', id: 'contact-first-name', full_width: true, required: true %}
+          {% render 'textfield', label: last_name_label, name: 'contact[last_name]', id: 'contact-last-name', full_width: true, required: true %}
+        </div>
+
+        {% render 'textfield', label: email_label, name: 'contact[email]', id: 'contact-email', type: 'email', full_width: true, required: true %}
+
+        {% render 'textfield', label: phone_label, name: 'contact[phone]', id: 'contact-phone', type: 'tel', full_width: true %}
+
+        {% render 'textfield', label: order_label, name: 'contact[order_number]', id: 'contact-order-number', full_width: true %}
+
+        <div class="rl-contact-page__select">
+          <label class="rl-contact-page__select-label" for="contact-subject">{{ subject_label }}</label>
+          <select id="contact-subject" name="contact[subject]" required>
+            <option value="" disabled selected>{{ subject_placeholder }}</option>
+            <option value="{{ subject_1 }}">{{ subject_1 }}</option>
+            <option value="{{ subject_2 }}">{{ subject_2 }}</option>
+            <option value="{{ subject_3 }}">{{ subject_3 }}</option>
+            <option value="{{ subject_4 }}">{{ subject_4 }}</option>
+            <option value="{{ subject_5 }}">{{ subject_5 }}</option>
+          </select>
+        </div>
+
+        {% render 'textarea', placeholder: message_label, name: 'contact[body]', id: 'contact-message', full_width: true %}
+
+        {% render 'button', label: submit_label, type: 'submit', button_shape: 'full-width' %}
+
+        {%- if form.errors -%}
+          <div class="rl-contact-page__notice rl-contact-page__notice--error" role="alert">
+            {% render 'icon', icon: 'cancel' %}
+            <span>{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</span>
+          </div>
+        {%- endif -%}
+
+        {%- if form.posted_successfully? -%}
+          <div class="rl-contact-page__notice rl-contact-page__notice--success" role="status">
+            {% render 'icon', icon: 'check_circle' %}
+            <span>{{ 'contact.success' | t }}</span>
+          </div>
+        {%- endif -%}
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .rl-contact-page {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding-top: 48px;
+    padding-bottom: 80px;
+  }
+
+  .rl-contact-page__breadcrumbs {
+    margin-bottom: 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .rl-contact-page__header {
+    margin-bottom: 40px;
+  }
+
+  .rl-contact-page__header h1 {
+    margin: 0 0 12px;
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .rl-contact-page__intro {
+    margin: 0;
+    max-width: 38rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgb(80, 80, 80);
+  }
+
+  .rl-contact-page__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  .rl-contact-page__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .rl-contact-page__card {
+    padding: 20px;
+    border: 1px solid rgb(230, 230, 230);
+    border-radius: 8px;
+    background: rgb(250, 250, 250);
+  }
+
+  .rl-contact-page__card-title {
+    margin: 0 0 8px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .rl-contact-page__card p {
+    margin: 0 0 8px;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgb(80, 80, 80);
+  }
+
+  .rl-contact-page__card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rl-contact-page__link {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .rl-contact-page__link:hover {
+    opacity: 0.75;
+  }
+
+  .rl-contact-page__form-wrap {
+    min-width: 0;
+    padding: 28px;
+    border: 1px solid rgb(230, 230, 230);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .rl-contact-page__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .rl-contact-page__fields-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .rl-contact-page__select {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rl-contact-page__select-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: rgb(40, 40, 40);
+  }
+
+  .rl-contact-page__select select {
+    width: 100%;
+    min-height: var(--inputs-min-height);
+    padding: 0 var(--inputs-padding);
+    border: var(--inputs-border-width) solid var(--color-input-border);
+    border-radius: var(--inputs-border-radius);
+    background: var(--color-input-background);
+    color: var(--color-input-text);
+    font-size: var(--inputs-font-size);
+    font-family: inherit;
+  }
+
+  .rl-contact-page__select select:focus {
+    outline: none;
+    border-color: var(--color-selected-input-border);
+  }
+
+  .rl-contact-page__notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .rl-contact-page__notice svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+  }
+
+  .rl-contact-page__notice--error {
+    background: rgb(255, 244, 244);
+    color: rgb(140, 30, 30);
+  }
+
+  .rl-contact-page__notice--success {
+    background: rgb(240, 250, 244);
+    color: rgb(20, 90, 45);
+  }
+
+  @media (max-width: 767px) {
+    .rl-contact-page {
+      padding-top: 32px;
+      padding-bottom: 56px;
+    }
+
+    .rl-contact-page__layout {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .rl-contact-page__fields-row {
+      grid-template-columns: 1fr;
+    }
+
+    .rl-contact-page__form-wrap {
+      padding: 20px;
+    }
+  }
+</style>

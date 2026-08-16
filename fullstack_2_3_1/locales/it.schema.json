@@ -1030,6 +1030,8 @@
   "show_language": "Mostra il selettore della lingua",
   "show_minutes": "Mostra i minuti",
   "show_note": "Mostra la nota",
+  "show_dynamic_checkout": "Mostra pulsanti di checkout accelerato",
+  "show_dynamic_checkout_info": "Mostra i pulsanti nativi Shopify (Shop Pay, Apple Pay, Google Pay, PayPal) sotto il pulsante Aggiungi al carrello.",
   "show_on_display": "Mostra su",
   "show_on_option_name": "Nome dell'opzione su cui visualizzare il popup",
   "show_on_option_name_default": "Taglia",

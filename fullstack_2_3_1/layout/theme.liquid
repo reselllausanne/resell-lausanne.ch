@@ -1,28 +1,116 @@
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
-    {% render 'meta-tags' %}
-
-    {%- if settings.favicon != blank -%}
-      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- comment -%} LCP image preload first — before CSS/JS {%- endcomment -%}
+    {%- if template.name == 'index' -%}
+      {% render 'lcp-preload-home' %}
+    {%- elsif template.name == 'product' -%}
+      {% render 'lcp-preload-pdp' %}
+    {%- elsif template.name == 'collection' or template.name == 'search' -%}
+      {% render 'lcp-preload-plp' %}
     {%- endif -%}
 
-    {% render 'material-icons-header' %}
+    {% render 'rl-defer-non-critical', template_name: template.name, template_suffix: template.suffix | default: '' %}
 
-    {% # Charger et précharger le CSS critique %}
-    {{ 'reset.css' | asset_url | stylesheet_tag: preload: true }}
+    {% render 'meta-tags' %}
+
+    {%- comment -%} Preconnect only origins used during LCP {%- endcomment -%}
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    
+
+    {%- comment -%}
+      Critical CSS: header chrome, base core, PLP on collection/search.
+      Overlays + mobile nav: inline ATF subset, full sheets deferred (print→media trick).
+    {%- endcomment -%}
+    {{ 'rl-header.css' | asset_url | stylesheet_tag: preload: true }}
     {{ 'base.css' | asset_url | stylesheet_tag: preload: true }}
-    {{ 'slider.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- if template.name == 'index' -%}
+      <style>{{ 'rl-home-hero.css' | inline_asset_content }}</style>
+      {% render 'rl-home-critical' %}
+      {% render 'deferred-stylesheet', asset: 'rl-home-below-fold.css' %}
+    {%- endif -%}
+    {%- if template.name == 'collection' or template.name == 'search' -%}
+      {{ 'base-plp.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- endif -%}
+    {%- if template.name == 'product' -%}
+      {{ 'pdp.css' | asset_url | stylesheet_tag: preload: true }}
+      <script src="{{ 'product-size-selection-modal.js' | asset_url }}" defer></script>
+    {%- endif -%}
+    {%- if template.name == 'cart' -%}
+      {{ 'cart.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- endif -%}
+    {%- if template.name == 'search' -%}
+      {{ 'search.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- endif -%}
+    {%- if template.name == 'blog' or template.name == 'article' -%}
+      {{ 'resell-blog.css' | asset_url | stylesheet_tag: preload: true }}
+    {%- endif -%}
+    {%- if template.name == 'collection' -%}
+      {% render 'deferred-stylesheet', asset: 'collection-plp-seo-readmore.css' %}
+    {%- endif -%}
+    {{ 'footer.css' | asset_url | stylesheet_tag }}
+    {% render 'base-overlays-critical' %}
+    {%- if template.name == 'index' or template.name == 'product' or template.name == 'collection' or template.name == 'search' or template.name == 'page' or template.name == 'blog' or template.name == 'article' -%}
+      {% render 'deferred-stylesheet', asset: 'base-overlays.css' %}
+    {%- else -%}
+      {{ 'base-overlays.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- unless template.name == 'index' -%}
+    {%- if template.name == 'collection' or template.name == 'search' or template.name == 'product' -%}
+        {% render 'deferred-stylesheet', asset: 'slider.css' %}
+      {%- else -%}
+        {{ 'slider.css' | asset_url | stylesheet_tag: preload: true }}
+      {%- endif -%}
+    {%- endunless -%}
+    {% render 'mobile-floating-nav-critical' %}
 
+    {% render 'material-icons-header' %}
     {% render 'fonts' %}
     {% render 'scripts' %}
     {% render 'css-variables' %}
     {% render 'color-schemes' %}
 
-    {{ content_for_header }}
+    {%- capture shopify_header -%}{{ content_for_header }}{%- endcapture -%}
+    {% render 'content-for-header', shopify_header: shopify_header, template_name: template.name %}
+
+    {% render 'head-favicon' %}
+
+    {%- comment -%} Ahrefs Web Analytics (deferred to idle after load) {%- endcomment -%}
+    {% comment %} theme-check-disable RemoteAsset {% endcomment %}
+    <script>
+      (function () {
+        var loaded = false;
+        function loadAhrefs() {
+          if (loaded) return;
+          loaded = true;
+          var script = document.createElement('script');
+          script.src = 'https://analytics.ahrefs.com/analytics.js';
+          script.async = true;
+          script.setAttribute('data-key', 'iyPB6w3dIULUVTxueHjR2w');
+          document.head.appendChild(script);
+        }
+        function scheduleLoad() {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadAhrefs, { timeout: 5000 });
+          } else {
+            setTimeout(loadAhrefs, 2000);
+          }
+        }
+        if (document.readyState === 'complete') {
+          scheduleLoad();
+        } else {
+          window.addEventListener('load', scheduleLoad, { once: true });
+        }
+      })();
+    </script>
+    {% comment %} theme-check-enable RemoteAsset {% endcomment %}
+
+  <link rel="llms-txt" href="{{ shop.url }}/llms.txt" type="text/plain" data-no-locale-lock>
+  <link rel="alternate" href="{{ shop.url }}/agents.md" type="text/markdown" title="Agent commerce guide" data-no-locale-lock>
   </head>
 
-  <body>
+  <body class="template-{{ template.name | handle }}">
+    <a href="#main-content" class="skip-to-content-link">{{ 'accessibility.skip_to_text' | t | default: 'Aller au contenu' }}</a>
     {% render 'toast-notification' %}
 
     {% if settings.activate_wishlist %}
@@ -31,15 +119,105 @@
 
     {% sections 'header-group' %}
 
-    {% if settings.cart_type == 'drawer' %}
-      {% sections 'cart-drawer-group' %}
-    {% endif %}
+    {% comment %} Cart drawer removed — all cart entry points link to /cart for performance. {% endcomment %}
 
     {% sections 'breadcrumbs-group' %}
 
-    {{ content_for_layout }}
+    <main id="main-content" role="main">
+      {{ content_for_layout }}
+    </main>
 
+    {% sections 'prefooter-group' %}
     {% sections 'footer-group' %}
+
+    {% render 'hreflang-crawlable-links' %}
+
+    {% render 'mobile-floating-nav' %}
+    {%- if template.name == 'index' -%}
+      {% render 'rl-home-idle-css' %}
+    {%- endif -%}
+    <script>
+      (function () {
+        if (window.__rlMobileNavExtrasBoot) return;
+        window.__rlMobileNavExtrasBoot = true;
+
+        var mobileMediaQuery = window.matchMedia ? window.matchMedia('(max-width: 749px)') : null;
+        var navIntentListenerBound = false;
+
+        function isMobileViewport() {
+          return mobileMediaQuery ? mobileMediaQuery.matches : true;
+        }
+
+        function loadMobileNavExtras() {
+          if (window.__rlMobileNavExtrasLoaded) return;
+          window.__rlMobileNavExtrasLoaded = true;
+
+          if (navIntentListenerBound) {
+            document.removeEventListener('pointerdown', onMobileNavIntent, true);
+            navIntentListenerBound = false;
+          }
+
+          var js = document.createElement('script');
+          js.src = {{ 'mobile-floating-nav.js' | asset_url | json }};
+          js.defer = true;
+          document.body.appendChild(js);
+        }
+
+        function onMobileNavIntent(event) {
+          var target = event.target;
+          if (!(target instanceof Element)) return;
+          var navAction = target.closest('[data-rl-mobile-floating-nav] [data-rl-action]');
+          if (!navAction) return;
+
+          var action = navAction.getAttribute('data-rl-action');
+          if (action === 'account' || action === 'cart') return;
+
+          loadMobileNavExtras();
+        }
+
+        function bindIntentLoad() {
+          if (navIntentListenerBound) return;
+          navIntentListenerBound = true;
+          document.addEventListener('pointerdown', onMobileNavIntent, true);
+        }
+
+        function scheduleIdleLoad() {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadMobileNavExtras, { timeout: 4500 });
+          } else {
+            setTimeout(loadMobileNavExtras, 2200);
+          }
+        }
+
+        function startMobileFlow() {
+          if (!isMobileViewport()) return;
+          bindIntentLoad();
+          window.addEventListener('scroll', loadMobileNavExtras, { once: true, passive: true });
+          scheduleIdleLoad();
+        }
+
+        if (document.readyState === 'complete') {
+          startMobileFlow();
+        } else {
+          window.addEventListener('load', startMobileFlow, { once: true });
+        }
+
+        if (mobileMediaQuery) {
+          var onViewportChange = function (event) {
+            if (event.matches) {
+              startMobileFlow();
+              loadMobileNavExtras();
+            }
+          };
+
+          if (typeof mobileMediaQuery.addEventListener === 'function') {
+            mobileMediaQuery.addEventListener('change', onViewportChange);
+          } else if (typeof mobileMediaQuery.addListener === 'function') {
+            mobileMediaQuery.addListener(onViewportChange);
+          }
+        }
+      })();
+    </script>
 
     {% render 'material-icons-body' %}
   </body>

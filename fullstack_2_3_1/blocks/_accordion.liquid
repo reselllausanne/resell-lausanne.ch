@@ -2,6 +2,19 @@
   {% content_for 'blocks' %}
 {% endcapture %}
 
+{% liquid
+  assign heading_down = block.settings.heading | strip_html | downcase
+  assign show_preview = false
+  if heading_down contains 'description'
+    assign show_preview = true
+  endif
+
+  capture preview_text
+    echo content | strip_html | replace: '&nbsp;', ' ' | strip_newlines | strip
+  endcapture
+  assign preview_text = preview_text | truncate: 180
+%}
+
 <div
   class="
     accordion-block
@@ -23,7 +36,9 @@
     heading_style: block.settings.heading_style,
     heading_tag: block.settings.heading_tag,
     open_by_default: block.settings.open_by_default,
-    icon: icon
+    icon: icon,
+    show_preview: show_preview,
+    preview_text: preview_text
   %}
 </div>
 

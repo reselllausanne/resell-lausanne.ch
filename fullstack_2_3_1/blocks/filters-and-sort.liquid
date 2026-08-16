@@ -2,10 +2,52 @@
   Affiche les filtres et le tri pour une collection.
 {% enddoc %}
 
-<script src="{{ 'filter-and-sort.js' | asset_url }}" type="module"></script>
+<script type="module">
+  (function () {
+    let loaded = false;
+    const modules = [
+      {{ 'filter-and-sort.js' | asset_url | json }},
+      {{ 'filter.js' | asset_url | json }},
+      {{ 'filters-sheet.js' | asset_url | json }},
+      {{ 'sort.js' | asset_url | json }},
+    ];
 
-{% assign show_filters = block.settings.show_filters %}
-{% assign show_sorting = block.settings.show_sorting %}
+    async function loadFilterModules() {
+      if (loaded) return;
+      loaded = true;
+      await Promise.all(modules.map((src) => import(src)));
+    }
+
+    function onIntent(event) {
+      if (!(event.target instanceof Element)) return;
+      if (
+        event.target.closest(
+          '[data-ref="sheet-toggle"], .pagination a[href], filter-and-sort-component, filter-component'
+        )
+      ) {
+        loadFilterModules();
+      }
+    }
+
+    document.addEventListener('pointerdown', onIntent, { capture: true, passive: true });
+    window.addEventListener('scroll', loadFilterModules, { once: true, passive: true });
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadFilterModules, { timeout: 6500 });
+    } else {
+      setTimeout(loadFilterModules, 4500);
+    }
+  })();
+</script>
+
+{% liquid
+  assign show_filters = block.settings.show_filters
+  assign show_sorting = block.settings.show_sorting
+  if template.name == 'search'
+    assign plp_filters_source = search
+  else
+    assign plp_filters_source = collection
+  endif
+%}
 
 <div
   class="
@@ -17,38 +59,42 @@
     {%- if block.settings.additional_class != blank %} {{ block.settings.additional_class }}{% endif -%}
   "
 >
-  <filter-and-sort-component class="filter-and-sort__inline">
-    {% if show_filters and show_sorting %}
-      {% render 'filters-inline', collection: collection %}
-      {% render 'sort-inline', collection: collection %}
-    {% elsif show_filters and show_sorting == false %}
-      {% render 'filters-inline', collection: collection %}
-    {% elsif show_filters == false and show_sorting %}
-      <div class="filter-and-sort__sort-only">
-        {% render 'sort-inline', collection: collection %}
+  <filter-and-sort-component class="filter-and-sort__host">
+    {% unless block.settings.display_mode == 'menu' %}
+      <div class="filter-and-sort__inline">
+        {% if show_filters and show_sorting %}
+          {% render 'filters-inline', collection: plp_filters_source %}
+          {% render 'sort-inline', collection: plp_filters_source %}
+        {% elsif show_filters and show_sorting == false %}
+          {% render 'filters-inline', collection: plp_filters_source %}
+        {% elsif show_filters == false and show_sorting %}
+          <div class="filter-and-sort__sort-only">
+            {% render 'sort-inline', collection: plp_filters_source %}
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
+
+      <div class="filter-and-sort__sidebar">
+        {% if block.settings.wrap_in_card and block.settings.card_color_scheme %}
+          <div class="card color-{{ block.settings.card_color_scheme }}">
+            {% render 'filters-sidebar', collection: plp_filters_source, show_sorting: show_sorting, show_filters: show_filters %}
+          </div>
+        {% else %}
+          {% render 'filters-sidebar', collection: plp_filters_source, show_sorting: show_sorting, show_filters: show_filters %}
+        {% endif %}
+      </div>
+    {% endunless %}
+
+    <div class="filter-and-sort__mobile">
+      {% if show_filters %}
+        {% render 'filters-modal', collection: plp_filters_source, show_sorting: show_sorting %}
+      {% elsif show_filters == false and show_sorting %}
+        <div class="filter-and-sort__sort-only">
+          {% render 'sort-inline', collection: plp_filters_source %}
+        </div>
+      {% endif %}
+    </div>
   </filter-and-sort-component>
-
-  <div class="filter-and-sort__sidebar">
-    {% if block.settings.wrap_in_card and block.settings.card_color_scheme %}
-      <div class="card color-{{ block.settings.card_color_scheme }}">
-        {% render 'filters-sidebar', collection: collection, show_sorting: show_sorting, show_filters: show_filters %}
-      </div>
-    {% else %}
-      {% render 'filters-sidebar', collection: collection, show_sorting: show_sorting, show_filters: show_filters %}
-    {% endif %}
-  </div>
-
-  <div class="filter-and-sort__mobile">
-    {% if show_filters %}
-      {% render 'filters-modal', collection: collection, show_sorting: show_sorting %}
-    {% elsif show_filters == false and show_sorting %}
-      <div class="filter-and-sort__sort-only">
-        {% render 'sort-inline', collection: collection %}
-      </div>
-    {% endif %}
-  </div>
 </div>
 
 {% stylesheet %}
@@ -58,6 +104,17 @@
   .filter-and-sort--loading .filters__clear-all {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  .main-collection__product-grid-wrap--loading {
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 120ms ease;
+  }
+
+  .main-collection--paginating .pagination {
+    pointer-events: none;
+    opacity: 0.65;
   }
 
   .filter-and-sort__inline,
@@ -71,9 +128,18 @@
     width: 100%;
   }
 
+  .filter-and-sort__host {
+    display: contents;
+  }
+
   @media (width > 750px) {
-    .filter-and-sort:not(.filter-and-sort--menu) .filter-and-sort__mobile {
+    .filter-and-sort:not(.filter-and-sort--menu):not(:has(filters-sheet-component)) .filter-and-sort__mobile {
       display: none;
+    }
+
+    .filter-and-sort:has(filters-sheet-component) .filter-and-sort__inline,
+    .filter-and-sort:has(filters-sheet-component) .filter-and-sort__sidebar {
+      display: none !important;
     }
 
     .filter-and-sort--inline .filter-and-sort__inline {

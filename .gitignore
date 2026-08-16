@@ -20,3 +20,12 @@ release
 *.log
 .env
 .env.*
+
+# Large generated Admin/SEO data exports (raw catalog dumps, regenerate via scripts/)
+audit-inputs/*.csv
+seo-system/*.generated.csv
+seo-system/SEO_METADATA_SUGGESTIONS.csv
+seo-system/PRODUCT_SEO_DATA_GAPS.generated.csv
+
+# MCP secrets (Ahrefs bearer etc)
+.cursor/mcp.json

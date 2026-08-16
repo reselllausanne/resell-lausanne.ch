@@ -1,9 +1,17 @@
-{% if section.blocks.size > 0 %}
+{% liquid
+  assign use_launch_promo_strip = false
+  if section.settings.use_launch_promo or section.settings.additional_class contains 'rl-promo-strip'
+    assign use_launch_promo_strip = true
+  endif
+%}
+
+{% if use_launch_promo_strip or section.blocks.size > 0 %}
   <div
     class="
       announcement-bar color-{{ section.settings.color_scheme }}
       {%- if section.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
       {%- if section.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+      {%- if use_launch_promo_strip %} rl-promo-strip{% endif -%}
       {{ section.settings.additional_class }}
     "
     style="
@@ -12,54 +20,43 @@
     "
   >
     <div class="announcement-bar__content">
-      {% capture announcements %}
-        {% content_for 'blocks' %}
-      {% endcapture %}
-
-      {% if section.blocks.size > 1 %}
-        {% render 'slider',
-          slides: announcements,
-          per_page_desktop: 1,
-          per_page_mobile: 1,
-          gap: 0,
-          show_arrows: section.settings.show_arrows,
-          arrows_button_style: section.settings.arrows_button_style,
-          show_pagination: false,
-          autoplay: section.settings.autoplay,
-          autoplay_speed: section.settings.autoplay_speed,
-          rewind: section.settings.rewind
-        %}
+      {% if use_launch_promo_strip %}
+        <ul class="announcement-bar__list list-unstyled" role="list">
+          <li class="announcement">
+            <div class="slide resell-launch-promo--strip">
+              {% render 'resell-launch-promo', context: 'strip' %}
+            </div>
+          </li>
+        </ul>
       {% else %}
-        {{ announcements }}
+        {% capture announcements %}
+          {% content_for 'blocks' %}
+        {% endcapture %}
+
+        {% if section.blocks.size > 1 %}
+          {% render 'slider',
+            slides: announcements,
+            per_page_desktop: 1,
+            per_page_mobile: 1,
+            gap: 0,
+            show_arrows: section.settings.show_arrows,
+            arrows_button_style: section.settings.arrows_button_style,
+            show_pagination: false,
+            autoplay: section.settings.autoplay,
+            autoplay_speed: section.settings.autoplay_speed,
+            rewind: section.settings.rewind
+          %}
+        {% else %}
+          <ul class="announcement-bar__list list-unstyled" role="list">
+            {{ announcements }}
+          </ul>
+        {% endif %}
       {% endif %}
     </div>
   </div>
 {% endif %}
 
-{% stylesheet %}
-  .announcement-bar {
-    width: 100%;
-    padding-top: var(--padding-top);
-    padding-bottom: var(--padding-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  .announcement-bar__content {
-    width: 100%;
-  }
-
-  .announcement-bar__content .splide__arrow {
-    background: transparent;
-    border: none;
-
-    .icon {
-      font-size: 20px !important;
-    }
-  }
-{% endstylesheet %}
+{% comment %} Announcement bar styles → assets/rl-header.css {% endcomment %}
 
 {% schema %}
 {
@@ -84,6 +81,13 @@
     {
       "type": "header",
       "content": "t:style"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_launch_promo",
+      "label": "Promo lancement (LAUNCH10)",
+      "info": "Affiche le texte depuis resell-launch-promo.liquid au lieu du bloc texte theme editor.",
+      "default": true
     },
     {
       "type": "color_scheme",

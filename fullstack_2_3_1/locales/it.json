@@ -40,7 +40,7 @@
     "home": "Home"
   },
   "cart": {
-    "checkout": "Cassa",
+    "checkout": "Continua",
     "code_already_applied": "Questo codice sconto è già stato applicato",
     "code_not_applicable": "Questo codice sconto non è applicabile",
     "continue_shopping": "Continua lo shopping",
@@ -58,6 +58,8 @@
   "collections": {
     "collections_empty": "Nessuna collezione trovata",
     "empty": "Nessun prodotto trovato",
+    "quick_links_nav_label": "Categorie popolari",
+    "results_count": "{{ count }} risultati",
     "filters": {
       "clear": "Reimposta",
       "filter": "Filtri",
@@ -323,11 +325,18 @@
   },
   "search": {
     "collections": "Collezioni",
+    "filter_sort": "Filtra e ordina",
     "no_results_html": "Nessun risultato trovato per {{ terms }}",
     "pages_and_articles": "Pagine e articoli",
     "placeholder": "Cerca",
+    "predictive_results_label": "Risultati",
+    "predictive_view_all": "Vedi tutti i risultati",
     "products": "Prodotti",
+    "results_count_for_html": "{{ count }} risultati per {{ terms }}",
     "results_for_html": "{{ count }} risultati trovati per {{ terms }}",
+    "starting_from": "Da",
+    "landing_recent": "Ricerche recenti",
+    "landing_popular": "Ricerche popolari",
     "submit": "Cerca",
     "title": "Cerca"
   },

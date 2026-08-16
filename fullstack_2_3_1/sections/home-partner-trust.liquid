@@ -1,0 +1,254 @@
+{% liquid
+  assign heading = section.settings.heading | default: 'Ils nous font confiances'
+  assign subtext = section.settings.subtext
+  assign galaxus_url = section.settings.galaxus_url | default: 'https://www.galaxus.ch/fr/search?q=Sneakers%20nike'
+  assign decathlon_url = section.settings.decathlon_url | default: 'https://www.decathlon.ch/en/search?Ntt=resell+lausanne'
+%}
+
+<section
+  class="home-partner-trust color-{{ section.settings.color_scheme }}"
+  style="
+    --home-partner-padding-top: {{ section.settings.padding_top }}px;
+    --home-partner-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <motion-element
+    class="home-partner-trust__inner page-width"
+    data-motion="fade-up"
+    data-motion-delay="0"
+  >
+    {% if heading != blank or subtext != blank %}
+      <div class="home-partner-trust__copy">
+        {% if heading != blank %}
+          <h2 class="home-partner-trust__heading">{{ heading }}</h2>
+        {% endif %}
+        {% if subtext != blank %}
+          <p class="home-partner-trust__subtext">{{ subtext }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <ul class="home-partner-trust__list" role="list">
+      <li>
+        <a
+          class="home-partner-trust__link"
+          href="{{ galaxus_url }}"
+          rel="noopener noreferrer"
+          target="_blank"
+          aria-label="Galaxus — ouvrir la recherche partenaire"
+        >
+          <picture>
+            <source srcset="{{ 'partner-logo-galaxus.webp' | asset_url }}" type="image/webp" width="762" height="128">
+            <img
+              class="home-partner-trust__logo"
+              src="{{ 'partner-logo-galaxus.png' | asset_url }}"
+              width="762"
+              height="128"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              alt="Galaxus"
+            >
+          </picture>
+        </a>
+      </li>
+      <li>
+        <a
+          class="home-partner-trust__link"
+          href="{{ decathlon_url }}"
+          rel="noopener noreferrer"
+          target="_blank"
+          aria-label="Decathlon — ouvrir la recherche partenaire"
+        >
+          <picture>
+            <source srcset="{{ 'partner-logo-decathlon.webp' | asset_url }}" type="image/webp" width="400" height="60">
+            <img
+              class="home-partner-trust__logo"
+              src="{{ 'partner-logo-decathlon.png' | asset_url }}"
+              width="400"
+              height="60"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+              alt="Decathlon"
+            >
+          </picture>
+        </a>
+      </li>
+    </ul>
+  </motion-element>
+</section>
+
+{% stylesheet %}
+  .home-partner-trust {
+    padding-top: var(--home-partner-padding-top);
+    padding-bottom: var(--home-partner-padding-bottom);
+  }
+
+  .home-partner-trust__inner {
+    display: grid;
+    gap: 0.625rem;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .home-partner-trust__copy {
+    display: grid;
+    gap: 0.25rem;
+    max-width: 42rem;
+  }
+
+  .home-partner-trust__heading {
+    margin: 0;
+    font-size: clamp(0.9375rem, 2.4vw, 1.0625rem);
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: rgb(var(--color-foreground));
+  }
+
+  .home-partner-trust__subtext {
+    margin: 0;
+    font-size: clamp(0.75rem, 2.2vw, 0.8125rem);
+    line-height: 1.35;
+    font-weight: 400;
+    color: rgba(var(--color-foreground), 0.72);
+    letter-spacing: 0.01em;
+  }
+
+  .home-partner-trust__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.75rem, 3vw, 1.5rem);
+    width: 100%;
+    max-width: 36rem;
+  }
+
+  .home-partner-trust__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.45rem 0.75rem;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  .home-partner-trust__link:hover,
+  .home-partner-trust__link:focus-visible {
+    background: #f7f7f7;
+    border-color: rgba(0, 0, 0, 0.16);
+    outline: none;
+  }
+
+  .home-partner-trust__link:active {
+    transform: scale(0.98);
+  }
+
+  .home-partner-trust__logo {
+    --partner-logo-height: clamp(24px, 5.2vw, 30px);
+    display: block;
+    height: var(--partner-logo-height);
+    width: auto;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  @media (width <= 400px) {
+    .home-partner-trust__list {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .home-partner-trust__link {
+      justify-content: center;
+    }
+  }
+
+  @media (width > 750px) {
+    .home-partner-trust__inner {
+      gap: 0.75rem;
+    }
+
+    .home-partner-trust__list {
+      max-width: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Home — Partenaires",
+  "tag": "section",
+  "class": "section-home-partner-trust",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.cart_drawer", "custom.breadcrumbs"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ils nous font confiances"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Retrouvez les produits Resell Lausanne sur les plus grandes marketplaces, de Suisse et d'Europe"
+    },
+    {
+      "type": "url",
+      "id": "galaxus_url",
+      "label": "Galaxus link"
+    },
+    {
+      "type": "url",
+      "id": "decathlon_url",
+      "label": "Decathlon link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home — Partenaires"
+    }
+  ]
+}
+{% endschema %}

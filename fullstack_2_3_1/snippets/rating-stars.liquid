@@ -4,12 +4,13 @@
   @param {number} rating - Note du produit
   @param {number} [rating_count] - Nombre d'avis
   @param {boolean} [show_note] - Afficher la note
+  @param {string} [size] - Taille d'affichage : default ou compact
 
   @example
   {% render 'rating-stars', rating: 4.5, rating_count: 100 %}
 {% enddoc %}
 
-<div class="rating">
+<div class="rating{% if size == 'compact' %} rating--compact{% endif %}">
   <div class="rating__stars">
     {% assign rating = rating | replace: '.0', '' | plus: 0 %}
     {% assign rating_plus_one = rating | plus: 1 %}
@@ -20,7 +21,7 @@
       {% if i <= rating %}
         {% render 'icon', icon: 'star_rate', class: 'rating-star rating-star--filled' %}
       {% elsif i <= rating_plus_one and has_decimal > 0 %}
-        {% render 'icon', icon: 'star_rate_half', class: 'rating-star' %}
+        {% render 'icon', icon: 'star_rate_half', class: 'rating-star rating-star--half' %}
       {% else %}
         {% render 'icon', icon: 'star_rate', class: 'rating-star rating-star--unfilled' %}
       {% endif %}
@@ -59,11 +60,35 @@
     font-variation-settings: 'FILL' 1, 'wght' var(--icon-weight), 'GRAD' 0, 'opsz' 24;
   }
 
+  .rating-star--half {
+    font-variation-settings: 'FILL' 1, 'wght' var(--icon-weight), 'GRAD' 0, 'opsz' 24;
+  }
+
   .rating-star--unfilled {
     font-variation-settings: 'FILL' 0, 'wght' var(--icon-weight), 'GRAD' 0, 'opsz' 24;
   }
 
   .rating__count {
     line-height: 22px;
+  }
+
+  .rating--compact {
+    gap: 6px;
+  }
+
+  .rating--compact .rating__stars {
+    height: 14px;
+  }
+
+  .rating--compact .rating-star {
+    font-size: 14px !important;
+    margin: 0 -3px;
+  }
+
+  .rating--compact .rating__note,
+  .rating--compact .rating__count {
+    font-size: 12px;
+    line-height: 14px;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
   }
 {% endstylesheet %}

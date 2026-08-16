@@ -1,0 +1,33 @@
+{%- comment -%}
+  Render metaobject / metafield rich text as HTML (or plain text for schema).
+  Params:
+  - source: primary field (e.g. faq_item.answer)
+  - fallback: optional secondary field (e.g. faq_item.content)
+  - plain_text: when true, strip HTML for JSON-LD
+{%- endcomment -%}
+{%- liquid
+  assign rich_html = ''
+  if source != blank
+    capture rich_html
+      echo source | metafield_tag
+    endcapture
+    assign rich_html = rich_html | strip
+  endif
+  if rich_html == blank and fallback != blank
+    capture rich_html
+      echo fallback | metafield_tag
+    endcapture
+    assign rich_html = rich_html | strip
+  endif
+  if rich_html == blank and source != blank
+    assign rich_html = source.value | default: source
+  endif
+  if rich_html == blank and fallback != blank
+    assign rich_html = fallback.value | default: fallback
+  endif
+-%}
+{%- if plain_text -%}
+  {{- rich_html | strip_html | strip -}}
+{%- else -%}
+  {{- rich_html -}}
+{%- endif -%}

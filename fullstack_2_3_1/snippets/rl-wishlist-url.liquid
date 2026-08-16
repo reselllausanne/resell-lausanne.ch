@@ -1,0 +1,16 @@
+{% comment %}
+  Resolves the storefront wishlist page URL (locale-aware).
+  Prefer Admin page handle liste-de-souhaits, then wishlist.
+{% endcomment %}
+{% liquid
+  if pages['liste-de-souhaits'] != blank
+    echo pages['liste-de-souhaits'].url
+  elsif pages['wishlist'] != blank
+    echo pages['wishlist'].url
+  else
+    capture rl_wishlist_fallback
+      render 'rl-localized-path', path: '/pages/liste-de-souhaits'
+    endcapture
+    echo rl_wishlist_fallback
+  endif
+%}

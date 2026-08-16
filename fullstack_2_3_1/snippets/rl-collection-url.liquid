@@ -1,0 +1,17 @@
+{% comment %}
+  Locale-aware collection URL. Prefer over href="/collections/handle".
+  @param {string} handle - collection handle
+{% endcomment %}
+{%- liquid
+  assign _h = handle | default: '' | strip | downcase
+  assign _col = collections[_h]
+  if _col != blank and _col.url != blank
+    echo _col.url
+  else
+    assign _path = '/collections/' | append: _h
+    capture _fallback
+      render 'rl-localized-path', path: _path
+    endcapture
+    echo _fallback | strip
+  endif
+-%}

@@ -1,0 +1,38 @@
+{%- doc -%}
+  Returns the lowest customer-facing sell price for one variant.
+  Rule:
+    - express_price empty -> base price
+    - express_price > base -> base price (mixed; user can pick)
+    - express_price <= base -> express_price (express-only)
+
+  @param {variant} variant
+{%- enddoc -%}
+
+{% liquid
+  assign express_price_cents = 0
+  assign express_price_defined = false
+  if variant.metafields.custom.express_price != blank
+    assign exp_mv = variant.metafields.custom.express_price.value
+    if exp_mv.amount != blank
+      assign express_price_cents = exp_mv.amount | times: 100 | round
+      assign express_price_defined = true
+    elsif exp_mv != blank
+      assign exp_mv_str = exp_mv | append: '' | strip
+      if exp_mv_str contains '.'
+        assign express_price_cents = exp_mv_str | times: 100 | round
+      else
+        assign express_price_cents = exp_mv_str | plus: 0
+      endif
+      assign express_price_defined = true
+    endif
+  endif
+  if express_price_defined and express_price_cents <= 0
+    assign express_price_defined = false
+  endif
+
+  assign effective_price = variant.price
+  if express_price_defined and express_price_cents <= variant.price
+    assign effective_price = express_price_cents
+  endif
+%}
+{{- effective_price -}}

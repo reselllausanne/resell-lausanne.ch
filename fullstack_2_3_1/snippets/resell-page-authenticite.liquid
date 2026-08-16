@@ -1,0 +1,74 @@
+{% liquid
+  assign collections_url = routes.collections_url
+  if collections.all != blank
+    assign collections_url = collections.all.url
+  endif
+%}
+<div class="resell-content-page">
+  <nav class="breadcrumbs breadcrumbs--slash resell-content-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">Authenticité garantie</li>
+    </ol>
+  </nav>
+
+  <header>
+    <h1>Authenticité garantie</h1>
+  </header>
+
+  <p>
+    Chez Resell Lausanne, chaque produit est vérifié avant expédition. Nous appliquons un processus rigoureux d'authentification pour vous assurer que chaque article que vous recevez est 100 % authentique — sans exception.
+  </p>
+
+  <h2>Notre processus de vérification</h2>
+  <p>
+    Chaque commande passe par quatre étapes de contrôle avant d'être expédiée :
+  </p>
+  <ol>
+    <li>
+      <strong>Réception &amp; inspection initiale</strong> — à la réception de l'article, nous vérifions sa provenance, son état général et sa cohérence avec la référence commandée.
+    </li>
+    <li>
+      <strong>Contrôle des matériaux</strong> — analyse des matières, des coutures, de la semelle et des coloris pour s'assurer de la conformité avec les standards du fabricant d'origine.
+    </li>
+    <li>
+      <strong>Vérification des détails</strong> — examen minutieux des étiquettes, de la boîte d'origine et de tous les accessoires inclus (lacets, cartes, papiers de protection).
+    </li>
+    <li>
+      <strong>Certification</strong> — émission d'un certificat d'authenticité joint à la commande, attestant que l'article a passé toutes les étapes de contrôle avec succès.
+    </li>
+  </ol>
+
+  <h2>Ce que garantit notre certificat</h2>
+  <p>
+    Le certificat d'authenticité Resell Lausanne couvre les éléments suivants :
+  </p>
+  <ul>
+    <li>Conformité de la référence produit (modèle, coloris, taille)</li>
+    <li>Authenticité des matériaux et de la construction</li>
+    <li>Intégrité des étiquettes et marquages d'origine</li>
+    <li>Présence et conformité de la boîte d'origine</li>
+    <li>Absence de contrefaçon ou de modification non officielle</li>
+    <li>Contrôle effectué par l'équipe Resell Lausanne avant expédition</li>
+  </ul>
+
+  <h2>En cas de doute</h2>
+  <p>
+    Si vous avez le moindre doute sur l'authenticité d'un article reçu, contactez-nous directement à <a href="mailto:contact@resell-lausanne.ch">contact@resell-lausanne.ch</a>.
+  </p>
+  <p>
+    Tout article jugé non conforme après vérification donne droit à un <strong>remboursement intégral</strong>. Votre confiance est notre priorité — nous n'expédions aucun article dont l'authenticité ne peut pas être certifiée.
+  </p>
+
+  <h2>Découvrir notre sélection</h2>
+  <p>
+    Tous les produits disponibles sur Resell Lausanne ont été sélectionnés selon ces mêmes exigences.
+  </p>
+  <p>
+    <a href="{{ collections_url }}">Découvrir nos produits</a>
+  </p>
+</div>
+
+{% render 'resell-content-page-styles' %}

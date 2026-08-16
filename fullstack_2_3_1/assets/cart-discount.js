@@ -1,4 +1,5 @@
 import { CartUpdatedEvent } from '@theme/events';
+import { eventTargetElement } from '@theme/utilities';
 
 class CartDiscount extends HTMLElement {
   constructor() {
@@ -42,7 +43,8 @@ class CartDiscount extends HTMLElement {
 
     const abortController = new AbortController();
 
-    const badge = event.target.closest('[data-ref="discount-badge"]');
+    const clickTarget = eventTargetElement(event);
+    const badge = clickTarget ? clickTarget.closest('[data-ref="discount-badge"]') : null;
     if (!(badge instanceof HTMLElement)) return;
 
     const discountCode = badge.dataset.discountCode;
@@ -54,13 +56,6 @@ class CartDiscount extends HTMLElement {
 
     existingDiscounts.splice(index, 1);
 
-    // On ajoute la section cart-drawer à la requête pour la mettre à jour
-    const sections = [];
-    if (document.querySelector('cart-drawer')) {
-      const section_cart_drawer_id = document.querySelector('cart-drawer').dataset.sectionId;
-      sections.push(section_cart_drawer_id);
-    }
-
     try {
       const config = {
         method: 'POST',
@@ -70,7 +65,6 @@ class CartDiscount extends HTMLElement {
         },
         body: JSON.stringify({
           discount: existingDiscounts.join(','),
-          sections: sections.join(','),
         }),
         signal: abortController.signal,
       };
@@ -101,13 +95,6 @@ class CartDiscount extends HTMLElement {
         return;
       }
 
-      // On ajoute la section cart-drawer à la requête pour la mettre à jour
-      const sections = [];
-      if (document.querySelector('cart-drawer')) {
-        const section_cart_drawer_id = document.querySelector('cart-drawer').dataset.sectionId;
-        sections.push(section_cart_drawer_id);
-      }
-
       const config = {
         method: 'POST',
         headers: {
@@ -116,7 +103,6 @@ class CartDiscount extends HTMLElement {
         },
         body: JSON.stringify({
           discount: [...existingDiscounts, discountCode].join(','),
-          sections: sections.join(','),
         }),
         signal: abortController.signal,
       };

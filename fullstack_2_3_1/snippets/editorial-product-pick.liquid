@@ -1,0 +1,157 @@
+{% comment %}
+  Editorial product pick card — dynamic Shopify product data.
+
+  @param block {block} section block with settings
+  @param eager_image {boolean} LCP-adjacent picks
+  @param i18n_pick {object} optional locale overrides
+{% endcomment %}
+{% liquid
+  assign pick_product = blank
+  assign pick_collection = blank
+  assign pick_url = blank
+  assign pick_link_label = 'editorial.view_product' | t
+  assign pick_rank = block.settings.rank_label
+  assign pick_title = block.settings.title
+  assign pick_description = block.settings.description
+  assign pick_score_label = block.settings.score_label
+  assign pick_score = block.settings.score | at_most: 100 | at_least: 0
+
+  if i18n_pick != blank
+    if i18n_pick.rank != blank
+      assign pick_rank = i18n_pick.rank
+    endif
+    if i18n_pick.title != blank
+      assign pick_title = i18n_pick.title
+    endif
+    if i18n_pick.description != blank
+      assign pick_description = i18n_pick.description
+    endif
+    if i18n_pick.score_label != blank
+      assign pick_score_label = i18n_pick.score_label
+    endif
+    if i18n_pick.score != blank
+      assign pick_score = i18n_pick.score | at_most: 100 | at_least: 0
+    endif
+  endif
+
+  if block.settings.product != blank
+    assign pick_product = block.settings.product
+  elsif block.settings.products != blank and block.settings.products.size > 0
+    assign pick_product = block.settings.products.first
+  endif
+
+  if block.settings.collection != blank
+    assign pick_collection = block.settings.collection
+  endif
+
+  if pick_product != blank
+    unless pick_product.available
+      if block.settings.hide_when_unavailable
+        assign pick_product = blank
+      endif
+    endunless
+  endif
+
+  if pick_product == blank and block.settings.hide_when_unavailable
+    assign show_pick = false
+  else
+    assign show_pick = true
+  endif
+
+  if pick_product != blank
+    assign pick_url = pick_product.url
+    if block.settings.link_label != blank
+      assign pick_link_label = block.settings.link_label
+    elsif pick_collection != blank
+      assign pick_link_label = 'editorial.view_colors' | t
+      assign pick_url = pick_collection.url
+    endif
+  elsif pick_collection != blank
+    assign pick_url = pick_collection.url
+    if block.settings.link_label != blank
+      assign pick_link_label = block.settings.link_label
+    else
+      assign pick_link_label = 'editorial.view_collection' | t
+    endif
+  elsif block.settings.title != blank or block.settings.description != blank
+    assign show_pick = true
+    assign pick_url = blank
+  else
+    assign show_pick = false
+  endif
+
+  assign pick_loading = 'lazy'
+  assign pick_fetchpriority = 'auto'
+  if eager_image
+    assign pick_loading = 'eager'
+    assign pick_fetchpriority = 'high'
+  endif
+%}
+
+{% if show_pick %}
+  <article class="editorial-pick" {{ block.shopify_attributes }}>
+    {% if pick_rank != blank %}
+      <span class="editorial-pick__rank">{{ pick_rank | escape }}</span>
+    {% endif %}
+
+    {% if pick_product != blank and pick_product.featured_media != blank %}
+      <div class="editorial-pick__media">
+        <a href="{{ pick_url }}" tabindex="-1" aria-hidden="true">
+          {{
+            pick_product.featured_media
+            | image_url: width: 700
+            | image_tag:
+              class: 'editorial-pick__image',
+              loading: pick_loading,
+              fetchpriority: pick_fetchpriority,
+              widths: '240, 360, 500, 700',
+              sizes: '(min-width: 900px) 25vw, 45vw',
+              alt: pick_product.featured_media.alt | default: pick_product.title
+          }}
+        </a>
+      </div>
+    {% endif %}
+
+    <h3 class="editorial-pick__name">
+      {% if pick_product != blank %}
+        <a href="{{ pick_url }}">{{ pick_title | default: pick_product.title | escape }}</a>
+      {% else %}
+        {{ pick_title | escape }}
+      {% endif %}
+    </h3>
+
+    {% if pick_product != blank and pick_product.vendor != blank %}
+      <p class="editorial-pick__vendor">{{ pick_product.vendor | escape }}</p>
+    {% endif %}
+
+    {% if pick_description != blank %}
+      <p class="editorial-pick__desc">{{ pick_description | escape }}</p>
+    {% endif %}
+
+    {% if pick_product != blank %}
+      {% capture pick_price_snapshot %}
+        {% render 'rs-product-price-snapshot', product: pick_product %}
+      {% endcapture %}
+      {% assign pick_price_parts = pick_price_snapshot | strip | split: '|' %}
+      {% if pick_product.available and pick_price_parts[8] == '1' %}
+        <p class="editorial-pick__price">
+          {% if pick_price_parts[5] == '1' %}{{ 'editorial.from_price' | t }} {% endif -%}
+          {{- pick_price_parts[2] | plus: 0 | money_without_trailing_zeros -}}
+        </p>
+      {% elsif pick_product.available == false %}
+        <p class="editorial-pick__price">{{ 'editorial.sold_out' | t }}</p>
+      {% endif %}
+    {% endif %}
+
+    {% if pick_score_label != blank and pick_score > 0 %}
+      <span class="editorial-pick__score-label">{{ pick_score_label | escape }}</span>
+      <div class="editorial-pick__meter" role="img" aria-label="{{ pick_score_label | escape }}: {{ pick_score }}%">
+        <span class="editorial-pick__meter-bar" style="width: {{ pick_score }}%;"></span>
+      </div>
+    {% endif %}
+
+    {% if pick_url != blank %}
+      <a class="editorial-pick__link" href="{{ pick_url }}">{{ pick_link_label | escape }}</a>
+    {% endif %}
+  </article>
+{% endif %}

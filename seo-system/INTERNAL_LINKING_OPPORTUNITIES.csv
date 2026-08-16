@@ -1,0 +1,26 @@
+source_page,target_page,anchor_text,link_module,reason,priority
+Nike PLP,/collections/nike-air-max-97,Nike Air Max 97,subcollection chip registry,Missing model chip -> orphan-risk,P1
+Nike PLP,/collections/nike-air-max,Nike Air Max,subcollection chip registry,Parent model not chipped,P1
+Adidas PLP,/collections/adidas-ultra-boost,Adidas Ultra Boost,subcollection chip registry,Missing model chip,P2
+Adidas PLP,/collections/adidas-taekwendo,Adidas Taekwondo,subcollection chip registry,Missing model chip,P2
+ASICS PLP,/collections/asics-running,ASICS Running,subcollection chip registry,Missing model chip,P2
+ASICS PLP,/collections/asics-gel-lyt-iii,ASICS Gel-Lyte III,subcollection chip registry,Missing model chip,P2
+Home,/collections/vomero,Nike Vomero 5,homepage strip rail,High-demand model deserves homepage link,P1
+Home,/collections/puma-speedcat,Puma Speedcat,homepage strip rail,Trend model,P1
+Home,/collections/labubu,Labubu,homepage trend rail,Trend collectible,P1
+Home,/collections/off-white,Off-White,homepage streetwear rail,Brand not in rail,P2
+/collections/nike-x-off-white,/collections/off-white,Off-White,related collections block,Cross-link collab->brand,P2
+/collections/air-jordan-x-travis-scott,/collections/air-jordan-4,Air Jordan 4 Travis Scott,related collections,Model cross-link,P2
+/collections/nike,/collections/air-jordan,Air Jordan,related brand rail,Nike<->Jordan affinity,P1
+/collections/air-jordan,/collections/nike,Nike,related brand rail,Jordan<->Nike affinity,P1
+/collections/asics,/collections/onitsuka-tiger,Onitsuka Tiger,related brand rail,ASICS<->Onitsuka affinity,P2
+/collections/adidas,/collections/yeezy,Yeezy,related brand rail,Adidas<->Yeezy affinity,P2
+Collection SEO read-more,adjacent model collections,model names,SEO text internal links,Topical clustering brand->models,P1
+PDP,/collections/{brand},brand name,breadcrumb,Product->brand crawl path,P1
+PDP,/collections/{model},model name,breadcrumb,Product->model crawl path,P1
+Size guide page,/collections/nike;/collections/adidas;/collections/new-balance,brand names,guide body links,Guide->commercial pages,P2
+Authenticity page,/collections/air-jordan;/collections/dunk-low,model names,guide body links,Trust content->money pages,P2
+HTML sitemap,all indexable brand+model collections,collection titles,sitemap listing,Ensure every collection linked once,P1
+Footer,/collections/nike;/collections/air-jordan;/collections/new-balance;/collections/adidas,brand names,footer brand column,Site-wide equity to money pages,P1
+/pages/guide-des-tailles,/collections/{brand},brand size charts,guide internal links,Size guide->brand collections,P2
+Blog article (model guide),/collections/{model},model collection,article body auto-link,Guide->collection,P2

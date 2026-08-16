@@ -24,11 +24,12 @@ class ProductPrice extends HTMLElement {
     const priceContainer = this.querySelector('[data-ref="price-container"]');
     if (!priceContainer) return;
 
+    const priceElement = priceContainer.querySelector('[data-ref="price"]');
+    if (priceElement?.dataset.isFromPrefix === 'true') return;
+
     // Récupérer les prix depuis l'événement
     const { price, compare_at_price, difference_price } = event.detail.prices;
 
-    // Mettre à jour le prix
-    const priceElement = priceContainer.querySelector('[data-ref="price"]');
     if (priceElement) {
       priceElement.innerHTML = formatMoney(price);
     }

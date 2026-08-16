@@ -1,0 +1,118 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign related_title = section.settings.heading
+  assign related_all_label = section.settings.view_all_label
+  assign max_items = section.settings.max_articles | default: 3
+  assign related_count = 0
+
+  if related_title == blank
+    if locale_base == 'de'
+      assign related_title = 'Weitere Artikel'
+    elsif locale_base == 'en'
+      assign related_title = 'More articles'
+    else
+      assign related_title = 'Autres articles'
+    endif
+  endif
+
+  if related_all_label == blank
+    if locale_base == 'de'
+      assign related_all_label = 'Alle ansehen'
+    elsif locale_base == 'en'
+      assign related_all_label = 'View all'
+    else
+      assign related_all_label = 'Tout voir'
+    endif
+  endif
+%}
+
+{% capture related_cards %}
+  {% for item in blog.articles limit: 12 %}
+    {% if item.id != article.id and related_count < max_items %}
+      {% assign related_count = related_count | plus: 1 %}
+      {% render 'resell-blog-article-card', article: item, eager: false %}
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% if related_count > 0 %}
+  <section
+    class="resell-blog-related color-{{ section.settings.color_scheme }}"
+    style="
+      --padding-top: {{ section.settings.padding_top }}px;
+      --padding-bottom: {{ section.settings.padding_bottom }}px;
+    "
+  >
+    <div class="page-width">
+      <div class="resell-blog-related__head">
+        <h2 class="resell-blog-related__title">{{ related_title | escape }}</h2>
+        <a class="resell-blog-related__all" href="{{ blog.url }}">{{ related_all_label | escape }}</a>
+      </div>
+      <div class="resell-blog-related__grid">
+        {{ related_cards }}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Resell blog related",
+  "tag": "section",
+  "class": "section-resell-blog-related",
+  "enabled_on": {
+    "templates": ["article"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "Lien tout voir"
+    },
+    {
+      "type": "range",
+      "id": "max_articles",
+      "label": "Nombre d'articles",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "Resell blog related"
+    }
+  ]
+}
+{% endschema %}

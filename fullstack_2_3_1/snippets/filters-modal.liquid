@@ -1,55 +1,508 @@
-<script src="{{ 'side-menu.js' | asset_url }}" type="module"></script>
+{% comment %}
+  premium filters sheet (right drawer on desktop, full-screen modal on mobile).
+  Staged: changes only commit on Appliquer click.
+  JS: idle-loaded via blocks/filters-and-sort.liquid
+{% endcomment %}
 
-<side-menu-component>
+{%- liquid
+  assign active_filter_total = 0
+  assign has_price_active = false
+  for filter in collection.filters
+    if filter.type == 'price_range'
+      if filter.min_value.value != null or filter.max_value.value != null
+        assign active_filter_total = active_filter_total | plus: 1
+        assign has_price_active = true
+      endif
+    else
+      assign active_filter_total = active_filter_total | plus: filter.active_values.size
+    endif
+  endfor
+-%}
+
+<filters-sheet-component class="filters-sheet">
   <button
-    class="side-menu__toggle-link"
+    class="filters-sheet__toggle"
     type="button"
-    data-ref="sidebar-toggle"
+    data-ref="sheet-toggle"
   >
-    {% render 'icon', icon: 'page_info' %}
-    <span>
-      {% if show_sorting %}
+    <svg
+      class="filters-sheet__toggle-icon"
+      width="14"
+      height="12"
+      viewBox="0 0 14 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M13 8.667H7M4.333 8.667H1M13 3.333H9.667M7 3.333H1M4.333 10.667v-4M9.667 5.333v-4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+    <span class="filters-sheet__toggle-label">
+      {%- if show_sorting -%}
         {{ 'collections.filters.filter_and_sort' | t }}
-      {% else %}
+      {%- else -%}
         {{ 'collections.filters.filter' | t }}
-      {% endif %}
+      {%- endif -%}
+    </span>
+    <span
+      class="filters-sheet__count"
+      data-commerce-filter-count
+      aria-hidden="true"
+      {% if active_filter_total == 0 %}hidden{% endif %}
+    >
+      {{ active_filter_total }}
     </span>
   </button>
 
-  <div class="header__mobile-menu-overlay" data-ref="sidebar-overlay">
-    <div class="header__mobile-menu" data-ref="sidebar-menu">
-      <div class="header__mobile-menu-header">
+  <div class="filters-sheet__overlay" data-ref="sheet-overlay" hidden>
+    <div
+      class="filters-sheet__panel"
+      data-ref="sheet-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Filtres"
+    >
+      <header class="filters-sheet__header">
+        <h2 class="filters-sheet__title">Filtres</h2>
         <button
-          class="button button--tertiary button--small button--icon-only"
+          class="filters-sheet__close"
           type="button"
-          data-ref="sidebar-close"
+          data-ref="sheet-close"
+          aria-label="Fermer"
         >
           {% render 'icon', icon: 'close' %}
         </button>
-      </div>
-      <div class="filters-side-panel">
-        {% render 'filters-sidebar', collection: collection, show_sorting: show_sorting, show_filters: true %}
+      </header>
+
+      <div class="filters-sheet__inner">
+        <div class="filters-sheet__body">
+          {% if active_filter_total > 0 %}
+            <section class="filters-sheet__applied">
+              <h3 class="filters-sheet__applied-title">FILTRES APPLIQUÉS</h3>
+              <ul class="filters-sheet__chips">
+                {%- for filter in collection.filters -%}
+                  {%- case filter.type -%}
+                    {%- when 'price_range' -%}
+                      {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                        {%- liquid
+                          assign price_min = filter.min_value.value | default: 0 | money_without_currency | strip
+                          assign price_max = filter.max_value.value | default: filter.range_max | money_without_currency | strip
+                        -%}
+                        <li>
+                          <a class="filters-sheet__chip" href="{{ filter.url_to_remove }}">
+                            <span>{{ filter.label }}: {{ price_min }} - {{ price_max }}</span>
+                            <span class="filters-sheet__chip-x" aria-hidden="true">×</span>
+                          </a>
+                        </li>
+                      {%- endif -%}
+                    {%- else -%}
+                      {%- for value in filter.active_values -%}
+                        <li>
+                          <a class="filters-sheet__chip" href="{{ value.url_to_remove }}">
+                            <span>{{ filter.label }}: {{ value.label }}</span>
+                            <span class="filters-sheet__chip-x" aria-hidden="true">×</span>
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                  {%- endcase -%}
+                {%- endfor -%}
+              </ul>
+            </section>
+          {% endif %}
+
+          {% if show_sorting %}
+            <details class="filters-sheet__group">
+              <summary class="filters-sheet__group-summary">
+                <span>{{ 'collections.sorting.sort_by' | t }}</span>
+                <span class="filters-sheet__chevron" aria-hidden="true">
+                  {% render 'icon', icon: 'keyboard_arrow_down' %}
+                </span>
+              </summary>
+              <div class="filters-sheet__group-content">
+                {% render 'sort-select', collection: collection %}
+              </div>
+            </details>
+          {% endif %}
+
+          <filter-component data-ref="filters-sheet-host" data-staged="true">
+            <form class="filters" data-ref="filters-form">
+              {%- for filter in collection.filters -%}
+                <details class="filters-sheet__group">
+                  <summary class="filters-sheet__group-summary">
+                    <span class="filters-sheet__group-label">
+                      {{ filter.label }}
+                      {%- if filter.active_values.size > 0 -%}
+                        <span class="filters-sheet__group-count">{{ filter.active_values.size }}</span>
+                      {%- endif -%}
+                    </span>
+                    <span class="filters-sheet__chevron" aria-hidden="true">
+                      {% render 'icon', icon: 'keyboard_arrow_down' %}
+                    </span>
+                  </summary>
+                  <div class="filters-sheet__group-content">
+                    {%- case filter.type -%}
+                      {%- when 'boolean' -%}
+                        {% render 'filter-boolean', filter: filter %}
+                      {%- when 'list' -%}
+                        {% render 'filter-list', filter: filter %}
+                      {%- when 'price_range' -%}
+                        {% render 'filter-price-range', filter: filter %}
+                    {%- endcase -%}
+                  </div>
+                </details>
+              {%- endfor -%}
+            </form>
+          </filter-component>
+        </div>
+
+        <div class="filters-sheet__footer" role="group" aria-label="Actions filtres">
+          <button
+            class="filters-sheet__btn filters-sheet__btn--reset"
+            type="button"
+            data-ref="sheet-reset"
+          >
+            Réinitialiser
+          </button>
+          <button
+            class="filters-sheet__btn filters-sheet__btn--apply"
+            type="button"
+            data-ref="sheet-apply"
+          >
+            Appliquer
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</side-menu-component>
+</filters-sheet-component>
 
 {% stylesheet %}
-  .side-menu__toggle-link {
-    display: flex;
+  .filters-sheet {
+    display: inline-flex;
     align-items: center;
-    gap: var(--gap-sm);
-    background-color: transparent;
-    color: var(--color-foreground);
-    border: none;
+  }
+
+  html.filters-sheet-open .rl-mobile-floating-nav {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .filters-sheet__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
     padding: 0;
     margin: 0;
+    border: none;
+    background: transparent;
+    color: #080808;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .filters-sheet__toggle-icon {
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .filters-sheet__toggle-label {
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .filters-sheet__count {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    background-color: #4b56d2;
+    color: #fff;
+  }
+
+  .filters-sheet__count[hidden] {
+    display: none;
+  }
+
+  .filters-sheet__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    content-visibility: auto;
+    contain-intrinsic-size: 0 480px;
+  }
+
+  .filters-sheet__overlay[hidden] {
+    display: none;
+  }
+
+  .filters-sheet__panel {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    background: #fff;
+    color: #080808;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.22s ease;
+    overflow: hidden;
+  }
+
+  .filters-sheet__panel.is-visible {
+    transform: translateX(0);
+  }
+
+  @media (min-width: 750px) {
+    .filters-sheet__overlay {
+      background: rgba(0, 0, 0, 0.25);
+      padding: calc(var(--header-height, 80px) + 8px) 16px 16px;
+      align-items: flex-start;
+    }
+
+    .filters-sheet__panel {
+      width: 388px;
+      max-width: 388px;
+      height: auto;
+      max-height: calc(100vh - var(--header-height, 80px) - 24px);
+      border-radius: 12px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18);
+    }
+  }
+
+  .filters-sheet__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #ededed;
+    flex: 0 0 auto;
+  }
+
+  .filters-sheet__title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .filters-sheet__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #080808;
     cursor: pointer;
   }
 
-  .filters-side-panel {
+  .filters-sheet__close:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 750px) {
+    .filters-sheet__header {
+      display: none;
+    }
+  }
+
+  .filters-sheet__inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .filters-sheet__body {
+    flex: 1 1 auto;
+    min-height: 0;
     overflow-y: auto;
-    height: 100%;
     padding: 20px;
+  }
+
+  .filters-sheet__applied {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #ededed;
+  }
+
+  .filters-sheet__applied-title {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #080808;
+  }
+
+  .filters-sheet__chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .filters-sheet__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #f3f3f3;
+    color: #080808;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.2;
+    transition: background-color 0.15s ease;
+  }
+
+  .filters-sheet__chip:hover {
+    background: #e8e8e8;
+  }
+
+  .filters-sheet__chip-x {
+    font-size: 14px;
+    line-height: 1;
+    opacity: 0.7;
+  }
+
+  .filters-sheet__group {
+    border-bottom: 1px solid #ededed;
+  }
+
+  .filters-sheet__group:last-of-type {
+    border-bottom: 0;
+  }
+
+  .filters-sheet__group-summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #080808;
+  }
+
+  .filters-sheet__group-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .filters-sheet__group-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .filters-sheet__group-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #4b56d2;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .filters-sheet__chevron {
+    display: inline-flex;
+    transition: transform 0.18s ease;
+    color: #080808;
+  }
+
+  .filters-sheet__group[open] .filters-sheet__chevron {
+    transform: rotate(180deg);
+  }
+
+  .filters-sheet__group-content {
+    padding: 4px 0 16px;
+  }
+
+  /* Avoid content-visibility:hidden — Safari/iOS dead-clicks on just-opened groups. */
+
+  .filters-sheet__footer {
+    flex: 0 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px 20px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid #ededed;
+    background: #fff;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Larger tap targets inside the sheet (Clarity: rage/dead clicks on Size). */
+  .filters-sheet__group-content .checkbox {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+  }
+
+  .filters-sheet__group-content .checkbox > span {
+    min-height: 44px;
+  }
+
+  .filters-sheet__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    padding: 0 18px;
+    border-radius: 4px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #080808;
+    background: #fff;
+    color: #080808;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .filters-sheet__btn--reset:hover {
+    background: #f5f5f5;
+  }
+
+  .filters-sheet__btn--apply {
+    background: #080808;
+    color: #fff;
+  }
+
+  .filters-sheet__btn--apply:hover {
+    background: #1a1a1a;
   }
 {% endstylesheet %}

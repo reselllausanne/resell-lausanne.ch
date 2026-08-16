@@ -1,0 +1,193 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article-editorial",
+      "blocks": {
+        "callout-main": {
+          "type": "callout",
+          "settings": {
+            "title": "Ne pas confondre “hype” et bon achat",
+            "text": "Une collab chère peut être cool, mais pour une paire portée 4 jours sur 5, priorité au confort, à la disponibilité de la taille et à un coloris qu'on n'aura pas peur de salir. L'avantage : ce sont des modèles sport conçus pour durer, résister au sport et se nettoyer facilement — en plus d'être tendance."
+          }
+        },
+        "section-main": {
+          "type": "content_section",
+          "settings": {
+            "heading": "Les signaux à regarder",
+            "body": "<p>Les sélections Back to School mettent en avant ASICS GEL-NYC/GEL-1130, Saucony, Air Force 1, Jordan et Dunk SB. Les réseaux sociaux renforcent le mesh argenté, les pantalons larges et les silhouettes basses. La bonne stratégie : choisir une famille de silhouette — runner, court, skate ou basket — puis un coloris assez neutre pour tenir cinq jours d'école.</p><p>Les signaux les plus utiles : son look du quotidien — training de sport ou jean large type skate. Training → Saucony, GEL-NYC ou GEL-1130. Skate/streetwear → Dunk Low SB ou Jordan 4. Style simple → Samba, Spezial ou Air Force 1. Avant d'acheter : tester la paire avec le pantalon le plus porté et une veste ou un hoodie.</p>"
+          }
+        },
+        "pick-1": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "01 · Le meilleur all-rounder",
+            "title": "ASICS GEL-NYC",
+            "description": "Look technique, bon amorti, suffisamment de volume avec un jean baggy sans paraître énorme. Gris, noir ou silver fonctionnent presque toujours.",
+            "score_label": "Équilibre",
+            "score": 97,
+            "product": "gid://shopify/Product/14963521323394",
+            "collection": "gid://shopify/Collection/666330825090"
+          }
+        },
+        "pick-2": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "02 · La runner qui monte",
+            "title": "Saucony",
+            "description": "ProGrid, Shadow ou Triumph : le mesh structuré et le confort quotidien séduisent de plus en plus en cour d'école. Silver, gris ou navy passent partout.",
+            "score_label": "Tendance",
+            "score": 96,
+            "product": "gid://shopify/Product/15118796718466",
+            "collection": "gid://shopify/Collection/676877533570"
+          }
+        },
+        "pick-3": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "03 · Le mesh fiable",
+            "title": "ASICS GEL-1130",
+            "description": "Légère, amortie et très présente sur les réseaux. Idéale en deuxième paire ou pour un ado qui marche beaucoup. Silver ou gris = safe.",
+            "score_label": "Confort",
+            "score": 95,
+            "product": "gid://shopify/Product/14963521651074",
+            "collection": "gid://shopify/Collection/666330694018"
+          }
+        },
+        "pick-4": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "04 · Le classique propre",
+            "title": "Nike Air Force 1",
+            "description": "Blanche pour le look net, noire pour le côté pratique, color-block pour sortir du lot. Lourde, mais robuste et simple à associer.",
+            "score_label": "Polyvalence",
+            "score": 92,
+            "product": "gid://shopify/Product/9464055267617",
+            "collection": "gid://shopify/Collection/647318503810"
+          }
+        },
+        "pick-5": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "05 · Le choix sneakerhead",
+            "title": "Air Jordan 4",
+            "description": "La paire statement du guide. Elle fonctionne mieux avec des volumes amples et mérite un coloris portable si elle doit être souvent portée.",
+            "score_label": "Impact",
+            "score": 99,
+            "product": "gid://shopify/Product/15107002794370",
+            "collection": "gid://shopify/Collection/666573865346"
+          }
+        },
+        "pick-6": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "06 · Le skate crédible",
+            "title": "Nike Dunk SB",
+            "description": "Plus crédible que le Campus pour un style skate ou streetwear. Fonctionne avec jean large, cargo et hoodie — surtout en coloris sombre ou neutre.",
+            "score_label": "Style",
+            "score": 94,
+            "product": "gid://shopify/Product/14896790995330",
+            "collection": "gid://shopify/Collection/647273546114"
+          }
+        },
+        "row-1": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Confort quotidien",
+            "col_2": "GEL-NYC / GEL-1130",
+            "col_3": "Air Force 1"
+          }
+        },
+        "row-2": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Streetwear / skate",
+            "col_2": "Jordan 4",
+            "col_3": "Dunk SB"
+          }
+        },
+        "row-3": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Style simple",
+            "col_2": "Samba / Spezial",
+            "col_3": "Runner silver (Saucony)"
+          }
+        },
+        "related-1": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-fille",
+            "segment_label": "12–18 ans",
+            "title": "Guide ado fille"
+          }
+        },
+        "related-2": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-fille",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant fille"
+          }
+        },
+        "related-3": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-garcon",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant garçon"
+          }
+        }
+      },
+      "block_order": [
+        "callout-main",
+        "section-main",
+        "pick-1",
+        "pick-2",
+        "pick-3",
+        "pick-4",
+        "pick-5",
+        "pick-6",
+        "row-1",
+        "row-2",
+        "row-3",
+        "related-1",
+        "related-2",
+        "related-3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "Guide ado garçon · 12–18 ans · rentrée 2026",
+        "deck": "Saucony, GEL-NYC ou Dunk SB ?",
+        "intro": "À 15-16 ans, le choix se joue d'abord sur TikTok, Instagram et dans la cour : ce qui a des vues, ce que portent les copains, ce qui colle au style qu'on veut montrer. Saucony, GEL-NYC, Dunk SB et Air Force 1 remplacent de plus en plus les TN — pas un discours parent sur le chaussant.",
+        "chips": "ASICS / Saucony\nDunk SB\nCourt classic\nRéseaux sociaux",
+        "hero_overlay": 66,
+        "table_col_1": "Profil",
+        "table_col_2": "Premier choix",
+        "table_col_3": "Deuxième paire",
+        "how_to_heading": "Une paire, deux paires ou une rotation ?",
+        "how_to_body": "<p>Avec une seule paire, évitez le mesh : privilégiez cuir, daim ou synthétique facile à nettoyer (Air Force 1, Dunk classique, Saucony structurée). Avec deux paires, le duo le plus malin : une mesh confortable type ASICS GEL-1130 + une Dunk classique ou SB pour le style.</p><p>Mesure les deux pieds debout, en fin de journée. Garde environ 8 à 12 mm devant les orteils. Marche plusieurs minutes en magasin : le pied gonfle, surtout avec une runner.</p>",
+        "checklist_parent": false,
+        "checklist": "Choisir la silhouette avant le coloris\nTester avec le pantalon le plus porté\nMarcher 10 minutes à l’intérieur\nPrévoir pluie et transports\nNe pas surpayer une tendance de 3 semaines",
+        "verdict": "<p>Une seule paire : Air Force 1 ou Saucony structurée, sans mesh. Deux paires : GEL-1130 confort + Dunk SB ou Jordan 4 pour le style. Le safe absolu : GEL-NYC gris/silver.</p>",
+        "hub_article_handle": "chaussures-sneakers-rentree-2026",
+        "show_promo": true,
+        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
+        "promo_primary_label": "Acheter la carte cadeau",
+        "padding_bottom": 60
+      }
+    },
+    "related": {
+      "type": "resell-blog-related",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "max_articles": 3,
+        "padding_top": 48,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

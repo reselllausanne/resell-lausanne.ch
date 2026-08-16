@@ -1,0 +1,39 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+%}
+
+<div class="resell-content-page">
+  <nav class="breadcrumbs breadcrumbs--slash resell-content-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">
+        {% if locale_base == 'de' %}
+          Rückgabe &amp; Erstattung
+        {% elsif locale_base == 'en' %}
+          Returns &amp; refunds
+        {% else %}
+          Retours &amp; remboursements
+        {% endif %}
+      </li>
+    </ol>
+  </nav>
+
+  <header>
+    <h1>
+      {% if locale_base == 'de' %}
+        Rückgabe- und Erstattungsrichtlinie
+      {% elsif locale_base == 'en' %}
+        Return and refund policy
+      {% else %}
+        Politique de retour et de remboursement
+      {% endif %}
+    </h1>
+  </header>
+
+  {% render 'resell-page-return-policy-body' %}
+</div>
+
+{% render 'resell-content-page-styles' %}

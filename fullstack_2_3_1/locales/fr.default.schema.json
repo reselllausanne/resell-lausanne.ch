@@ -1030,6 +1030,8 @@
   "show_language": "Afficher le choix de langue",
   "show_minutes": "Afficher les minutes",
   "show_note": "Afficher la note",
+  "show_dynamic_checkout": "Afficher les boutons de paiement accéléré",
+  "show_dynamic_checkout_info": "Affiche les boutons natifs Shopify (Shop Pay, Apple Pay, Google Pay, PayPal) sous le bouton « Ajouter au panier ».",
   "show_on_display": "Afficher sur",
   "show_on_option_name": "Nom de l'option sur lequel afficher le popup",
   "show_on_option_name_default": "Taille",

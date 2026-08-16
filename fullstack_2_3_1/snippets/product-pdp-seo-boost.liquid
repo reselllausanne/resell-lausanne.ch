@@ -1,0 +1,78 @@
+
+{% doc %}
+  Keyword-rich PDP intro for high-intent product families (ASICS rose, Tokuten, Margiela GATS).
+
+  @param {product} product - Product object
+  @returns {string} rl_pdp_seo_family - matched family handle for meta/schema reuse
+{% enddoc %}
+
+{% liquid
+  assign pdp_product = product | default: closest.product
+  assign _ph = pdp_product.handle | downcase
+  assign _pt = pdp_product.title | downcase
+  assign _is_asics_rose = false
+  if pdp_product != blank and _ph contains 'gel-nyc'
+    if _ph contains 'rose' or _ph contains 'pink' or _ph contains 'sweet-pink' or _ph contains 'barely-rose' or _ph contains 'mineral-beige-pink'
+      assign _is_asics_rose = true
+    endif
+  endif
+%}
+
+{% if _is_asics_rose %}
+  <div class="product-pdp-seo-boost rte">
+    <p>
+      La <strong>{{ pdp_product.title }}</strong> fait partie des coloris <strong>ASICS rose</strong> les plus recherchés sur la <strong>Gel-NYC</strong> en Suisse : palette beige, rose poudré et accents pastel très demandée sur TikTok et en retail lifestyle. Silhouette hybride ASICS (Gel-Nimbus 9, Gel-MC Plus V, Gel-Cumulus 16), semelle Gel visible, mesh respirant et overlays premium.
+    </p>
+    <p>
+      Chez Resell Lausanne, chaque paire ASICS Gel-NYC rose est <strong>authentifiée</strong> avant expédition (étiquette style, mesh, semelle Gel, finitions) et livrée avec certificat. Livraison gratuite en Suisse dès 50 CHF (10 CHF en Europe), paiement Twint, PostFinance, Powerpay et Alma 2×–4× sur commandes éligibles.
+    </p>
+    <p>
+      Découvrez toute la sélection sur notre collection <a href="/collections/gel-nyc">ASICS Gel-NYC</a> ou comparez avec la <a href="/collections/asics-gel-kayano-14">Gel-Kayano 14</a> et la <a href="/collections/gel-1130">Gel-1130</a>.
+    </p>
+  </div>
+{% elsif _ph contains 'double-lace' or _ph contains 'double-laces' %}
+  <div class="product-pdp-seo-boost rte">
+    <p>
+      Les éditions <strong>ASICS Gel-NYC double lacets</strong> se distinguent par leurs deux jeux de lacets (souvent contrastés) sur la tige basse — détail esthétique très recherché sur les coloris <strong>rose</strong>, gris cloud et pink glo. Silhouette lifestyle hybride ASICS avec semelle Gel et mesh technique.
+    </p>
+    <p>
+      Resell Lausanne authentifie chaque paire double lacets avant expédition. Livraison gratuite en Suisse dès 50 CHF (10 CHF en Europe), tailles EU disponibles selon stock, paiement sécurisé Twint &amp; Alma.
+    </p>
+    <p>
+      Voir aussi la collection <a href="/collections/asics-double-laces">ASICS Double Laces</a> et <a href="/collections/gel-nyc">Gel-NYC</a>.
+    </p>
+  </div>
+{% elsif _ph contains 'tokuten' %}
+  <div class="product-pdp-seo-boost rte">
+    <p>
+      La <strong>Onitsuka Tiger Tokuten</strong> ({{ pdp_product.title }}) reprend les codes des chaussures de marathon Onitsuka des années 1980 : mesh respirant, tige basse, gel intégré, semelle bidensité. Modèle phare des défilés Cecilie Bahnsen et très porté par la scène mode sud-coréenne et japonaise.
+    </p>
+    <p>
+      Chaque Tokuten vendue sur Resell Lausanne est contrôlée par notre équipe (logo Tiger, étiquette, semelle, finitions) et livrée avec certificat d'authenticité. Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe.
+    </p>
+    <p>
+      Explorez toute la gamme <a href="/collections/onitsuka-tiger">Onitsuka Tiger</a> : Mexico 66, Tokuten, Serrano et collaborations.
+    </p>
+  </div>
+{% elsif _ph contains 'margiela-replica' or _pt contains 'gats' or _pt contains 'german army trainer' or _pt contains ' german army trainer' %}
+  <div class="product-pdp-seo-boost rte">
+    <p>
+      La <strong>Maison Margiela Replica German Army Trainer</strong> (GATs) — {{ pdp_product.title }} — reprend la silhouette militaire allemande des années 1970 : cuir lisse, toe cap en daim, semelle gomme et numérotation Replica caractéristique. L'une des sneakers les plus recherchées au keyword <strong>Margiela GATS</strong> en Suisse et en Europe.
+    </p>
+    <p>
+      Resell Lausanne authentifie chaque paire Margiela Replica (numérotation, cuir, semelle, boîte et finitions) avant expédition. Livraison gratuite en Suisse dès 50 CHF (10 CHF en Europe), paiement Twint, PostFinance et Alma 2×–4× sur commandes éligibles.
+    </p>
+    <p>
+      Conseil taille : la Replica GATs taille en général <strong>grand</strong> — prenez une demi-pointure EU en dessous si vous êtes entre deux tailles.
+    </p>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .product-pdp-seo-boost {
+    margin: 0 0 1rem;
+  }
+  .product-pdp-seo-boost p:last-child {
+    margin-bottom: 0;
+  }
+{% endstylesheet %}

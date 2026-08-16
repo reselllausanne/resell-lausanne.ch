@@ -1,0 +1,36 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les Chrome Hearts vendus sur Resell Lausanne sont-ils authentiques ?</summary>
+  <div class="rte">
+    <p>Oui. Chaque pièce Chrome Hearts (hoodie, t-shirt, jean, bijoux argent 925, lunettes optiques) est vérifiée par notre équipe (broderie, étiquette intérieure, qualité du coton, tampon CH sur l'argent) et livrée avec certificat d'authenticité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel hoodie Chrome Hearts choisir et quelle taille prendre ?</summary>
+  <div class="rte">
+    <p>Le hoodie Chrome Hearts est oversize : pour un fit standard, prenez votre taille habituelle. Pour un fit relax, prenez une taille au-dessus. Les coloris Black, Heather Grey, White, Navy, Forest Green sont les références saisonnières les plus stables.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelles collaborations Chrome Hearts sont disponibles ?</summary>
+  <div class="rte">
+    <p>Nous sourçons régulièrement des collaborations Chrome Hearts × Comme des Garçons, Bella Hadid, Matty Boy et certaines collaborations confidentielles avec Drake et Travis Scott.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel est le délai de livraison pour une commande Chrome Hearts ?</summary>
+  <div class="rte">
+    <p>Livraison standard 5 à 10 jours ouvrables en Suisse et en Europe, ou 2 à 5 jours ouvrables en express sur produits éligibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Puis-je retourner une pièce Chrome Hearts ?</summary>
+  <div class="rte">
+    <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
+  </div>
+</details>

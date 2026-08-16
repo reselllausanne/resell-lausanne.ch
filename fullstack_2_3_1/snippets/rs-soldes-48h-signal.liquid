@@ -1,0 +1,19 @@
+{%- doc -%}
+  Soldes warehouse stock signal (soldes price + 48h delivery).
+
+  Primary: product.metafields.custom.soldes_48h == true
+  Legacy: tag soldes-48h, collection soldes-48h
+
+  Outputs "1" when active — capture in parent:
+  {% capture flag %}{% render 'rs-soldes-48h-signal', product: product %}{% endcapture %}
+
+  @param {product} product
+{%- enddoc -%}
+
+{%- liquid
+  capture rs_picto_flags
+    render 'rs-promotional-picto-signals', product: product
+  endcapture
+  assign rs_picto_parts = rs_picto_flags | strip | split: '|'
+-%}
+{%- if rs_picto_parts[0] == '1' -%}1{%- endif -%}

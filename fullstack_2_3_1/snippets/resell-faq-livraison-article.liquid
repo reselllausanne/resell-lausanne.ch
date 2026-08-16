@@ -1,0 +1,182 @@
+{% liquid
+  assign contact_url = 'mailto:contact@resell-lausanne.ch'
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+%}
+{% if locale_base == 'de' %}
+  {% render 'resell-faq-livraison-article-de', contact_url: contact_url %}
+{% elsif locale_base == 'en' %}
+  {% render 'resell-faq-livraison-article-en', contact_url: contact_url %}
+{% else %}
+<details class="rl-faq-page__item">
+  <summary>Comment se déroule la livraison ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Resell Lausanne livre ses produits en Suisse et en Europe avec des transporteurs fiables tels que La Poste Suisse, DHL ou FedEx, selon la destination, le type de produit et le mode d’expédition le plus adapté.</p>
+    <p>La majorité de nos commandes sont livrées en 5 à 10 jours ouvrables. Certains produits éligibles à la livraison express peuvent être livrés en 2 à 5 jours ouvrables. Ces délais peuvent varier selon la disponibilité du produit, son lieu d’approvisionnement, le transporteur et les éventuelles périodes de forte demande.</p>
+    <p>Chaque produit commandé sur Resell Lausanne est traité individuellement afin de garantir une expérience d’achat simple, sécurisée et transparente.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Pourquoi certains produits prennent-ils plus de temps à être livrés ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Resell Lausanne fonctionne avec un très large catalogue de produits. Certains articles sont déjà disponibles rapidement, tandis que d’autres sont sourcés auprès de notre réseau de revendeurs et partenaires professionnels en Suisse, en Europe ou à l’international.</p>
+    <p>Lorsqu’un produit n’est pas immédiatement disponible dans nos locaux, il est d’abord recherché auprès de notre réseau de partenaires. Une fois trouvé, il est acheminé vers notre équipe, contrôlé, puis préparé avant d’être expédié au client.</p>
+    <p>Ce fonctionnement nous permet de proposer un catalogue beaucoup plus large et des prix compétitifs, tout en maintenant une exigence forte sur l’authenticité des articles.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Comment se passe une commande ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Après avoir passé votre commande, vous recevez automatiquement un e-mail de confirmation avec une estimation du délai de livraison.</p>
+    <p>Votre commande passe ensuite par plusieurs étapes :</p>
+    <ol>
+      <li>
+        <strong>Recherche et commande de la paire</strong><br>
+        Nous nous occupons de trouver et commander votre paire auprès de notre réseau de fournisseurs et vendeurs partenaires.
+      </li>
+      <li>
+        <strong>Expédition vers notre centre d’authentification</strong><br>
+        Une fois la paire trouvée, elle est envoyée vers notre centre d’authentification/logistique. À ce stade, il est possible que le suivi indique que le colis a été “livré”. Cela signifie simplement que la paire est arrivée chez nous ou auprès de notre centre partenaire, et non encore à votre adresse finale.
+      </li>
+      <li>
+        <strong>Réception et vérification</strong><br>
+        Dès réception, la paire est contrôlée afin de vérifier son authenticité, son état et sa conformité avec votre commande.
+      </li>
+      <li>
+        <strong>Préparation de votre colis</strong><br>
+        Une fois la paire validée, nous l’emballons soigneusement pour l’expédition finale.
+      </li>
+      <li>
+        <strong>Expédition par La Poste</strong><br>
+        Votre commande est ensuite expédiée à votre adresse. Vous recevrez un nouvel e-mail de suivi directement lié à l’expédition finale par La Poste.
+      </li>
+    </ol>
+    <p>Vous recevez des e-mails de mise à jour à chaque étape importante du processus.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Que se passe-t-il après ma commande ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Après validation de votre commande, vous recevez un e-mail de confirmation.</p>
+    <p>Si le produit doit être sourcé auprès de notre réseau, il est d’abord acheminé vers nos locaux ou vers notre centre de traitement. Vous pouvez recevoir des mises à jour liées à son acheminement, notamment lorsque le produit est en route depuis notre fournisseur vers notre équipe.</p>
+    <p>Une fois le produit réceptionné, il est contrôlé, remis dans son emballage d’origine lorsque cela est applicable, conditionné avec soin, puis expédié vers votre adresse de livraison.</p>
+    <p>Dès l’expédition finale, vous recevez un e-mail contenant un numéro de suivi afin de suivre l’acheminement de votre colis.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Quels sont les délais de livraison ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Nos délais estimés sont de 5 à 10 jours ouvrables pour la livraison standard en Suisse et en Europe.</p>
+    <p>Pour certains produits sélectionnés, une livraison express en 2 à 5 jours ouvrables est également proposée.</p>
+    <p>Ces délais sont donnés à titre indicatif. Ils peuvent être légèrement dépassés selon la disponibilité du produit, les délais de traitement de nos partenaires, les périodes de forte activité ou les éventuels retards liés au transporteur.</p>
+    <p>Notre objectif est toujours de traiter et d’expédier chaque commande le plus rapidement possible, tout en garantissant un contrôle sérieux des articles envoyés.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>J'ai commandé plusieurs articles mais je n'en ai reçu qu'un seul. Est-ce normal ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Oui. Chaque produit est approvisionné individuellement auprès de notre réseau de partenaires.</p>
+    <p>Si votre commande contient plusieurs articles, ceux-ci peuvent être expédiés séparément et arriver à des dates différentes.</p>
+    <p>Il est donc tout à fait normal de recevoir une partie de votre commande avant le reste.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Les délais incluent-ils les week-ends ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Non. Tous les délais affichés sur notre site sont exprimés en jours ouvrables.</p>
+    <p>Les week-ends et les jours fériés ne sont donc pas pris en compte dans le calcul des délais de livraison.</p>
+    <p>Par exemple, un délai de 10 jours ouvrables correspond généralement à environ deux semaines calendaires.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Qu’est-ce que la livraison express ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>La livraison express est disponible uniquement sur certains produits sélectionnés.</p>
+    <p>Ces articles sont déjà disponibles dans notre réseau logistique ou bénéficient d'un approvisionnement prioritaire, ce qui permet une expédition plus rapide que les délais habituels.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Pourquoi certains produits sont-ils livrés plus rapidement que d’autres ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Chaque produit possède sa propre disponibilité et son propre circuit d'approvisionnement.</p>
+    <p>Certaines références sont immédiatement accessibles auprès de nos partenaires, tandis que d'autres nécessitent davantage de temps pour être localisées, vérifiées et acheminées.</p>
+    <p>Il est donc normal que les délais varient d'un produit à l'autre.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Livraison en Suisse</summary>
+  <div class="rl-faq-page__answer">
+    <p>La livraison est gratuite en Suisse dès 50 CHF d'achat (frais fixes appliqués au checkout en dessous).</p>
+    <p>Les commandes sont généralement expédiées avec La Poste Suisse ou un transporteur équivalent lorsque cela permet un traitement plus rapide ou plus fiable.</p>
+    <p>Une fois le colis remis au transporteur, vous recevez un lien de suivi par e-mail.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Livraison en Europe</summary>
+  <div class="rl-faq-page__answer">
+    <p>Nous livrons également en Europe.</p>
+    <p>Forfait de livraison de 10 CHF en Europe. Selon le pays de destination, l’expédition peut être effectuée avec DHL, FedEx, La Poste Suisse ou un transporteur partenaire.</p>
+    <p>Pour les commandes livrées en dehors de la Suisse, des frais de TVA, de douane ou d’importation peuvent être appliqués par les autorités locales. Ces frais restent à la charge du client.</p>
+    <p>Lorsque cela est possible, nous nous efforçons d’expédier les commandes européennes depuis l’Europe afin de limiter les frais et d’améliorer les délais de livraison.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Combien coûte la livraison ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Livraison gratuite en Suisse dès 50 CHF d'achat. Forfait de 10 CHF pour les livraisons en Europe.</p>
+    <p>Des frais supplémentaires peuvent toutefois être appliqués par les autorités locales pour certaines commandes internationales, notamment en cas de TVA, frais de douane ou frais d’importation.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Comment suivre mon colis ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Une fois votre commande expédiée, vous recevez un e-mail contenant un lien de suivi.</p>
+    <p>Avant cette étape, votre commande peut encore être en cours de traitement, notamment si le produit est en cours d’acheminement depuis notre fournisseur vers notre équipe.</p>
+    <p>Dans certains cas, vous pouvez recevoir des informations de suivi liées à l’acheminement du produit avant son expédition finale vers votre adresse.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Pourquoi je n’ai pas encore reçu mon numéro de suivi ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Le numéro de suivi final est envoyé uniquement lorsque votre commande a été préparée et remise au transporteur pour l’expédition vers votre adresse.</p>
+    <p>Si votre commande est encore en cours de sourcing, de réception ou de contrôle, il est normal que le suivi final ne soit pas encore disponible.</p>
+    <p>Cela ne signifie pas que la commande est bloquée. Elle est simplement encore dans le processus de traitement.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Mon délai semble dépassé, que faire ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Il peut arriver qu’un délai estimé soit dépassé en raison de la disponibilité du produit, d’un retard fournisseur, d’un contrôle supplémentaire ou d’un ralentissement du transporteur.</p>
+    <p>Si votre commande dépasse le délai annoncé, vous pouvez nous contacter à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+    <p>Notre équipe vérifiera l'état de votre commande et vous apportera une réponse dès que possible.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Que se passe-t-il si mon colis n’est pas réclamé&nbsp;?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Si votre colis n’est pas retiré ou accepté dans le délai imparti par le transporteur (La Poste ou autre), il nous est renvoyé.</p>
+    <p>Une réexpédition est possible sur demande, moyennant des <strong>frais forfaitaires de CHF&nbsp;20.–</strong>. Ce montant couvre&nbsp;:</p>
+    <ul>
+      <li>environ CHF&nbsp;9.– pour l’étiquette / facturation de retour Poste&nbsp;;</li>
+      <li>environ CHF&nbsp;7.– pour la nouvelle étiquette d’envoi&nbsp;;</li>
+      <li>le solde pour la recherche et la manutention du colis.</li>
+    </ul>
+    <p>Sans demande de réexpédition (ou sans règlement de ces frais), le colis reste en attente selon nos conditions. Contactez-nous à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+  </div>
+</details>
+{% endif %}

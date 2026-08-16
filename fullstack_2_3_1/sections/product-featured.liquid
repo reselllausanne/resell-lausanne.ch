@@ -16,9 +16,7 @@
 {% comment %} theme-check-enable {% endcomment %}
 
 {% if request.page_type != 'product' and product != blank %}
-  <script type="application/ld+json">
-    {{ product | structured_data }}
-  </script>
+  {% render 'rs-product-structured-data', product: product %}
 {% endif %}
 
 <div

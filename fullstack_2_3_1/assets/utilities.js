@@ -1,5 +1,16 @@
 /**
- * Vérifie si le clic est en dehors de l'élément.
+ * Resolve a click/pointer event target to an Element (handles Text nodes).
+ * @param {Event} event
+ * @returns {Element | null}
+ */
+export function eventTargetElement(event) {
+  const target = event?.target;
+  if (target instanceof Element) return target;
+  if (target?.parentElement instanceof Element) return target.parentElement;
+  return null;
+}
+
+/**
  * @param {MouseEvent} event L'événement de la souris.
  * @param {Element} element L'élément à vérifier.
  * @returns {boolean} True si le clic est en dehors de l'élément, false sinon.
@@ -183,4 +194,49 @@ export function isElementInViewport(element) {
     top += element.offsetTop;
   }
   return top < window.pageYOffset + window.innerHeight && top + height > window.pageYOffset;
+}
+
+/**
+ * Show sticky commerce UI only after the primary CTA has scrolled above the viewport.
+ * @param {Element | null} anchor Primary CTA (size trigger or add-to-cart)
+ * @param {Element | null} footer Site footer — hide sticky before footer reaches dock zone
+ * @param {Element | null} [dockEl] Sticky dock node used to reserve bottom space near footer
+ */
+function getStickyAnchorRect(anchor) {
+  if (!anchor) return null;
+
+  let rect = anchor.getBoundingClientRect();
+  if (rect.height < 1 && rect.width < 1) {
+    const wrap = anchor.closest('.rs-size-modal__trigger-wrap');
+    if (wrap) rect = wrap.getBoundingClientRect();
+  }
+
+  if (rect.height < 1 && rect.width < 1) return null;
+  return rect;
+}
+
+export function shouldShowStickyAfterAnchor(anchor, footer, dockEl) {
+  const anchorRect = getStickyAnchorRect(anchor);
+  if (!anchorRect) return false;
+
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+  if (anchorRect.bottom > 0 && anchorRect.top < viewportHeight) return false;
+  if (anchorRect.top >= viewportHeight) return false;
+
+  if (footer) {
+    const footerRect = footer.getBoundingClientRect();
+    let bottomReserve = 16;
+
+    if (dockEl) {
+      const dockStyles = getComputedStyle(dockEl);
+      const dockHeight = dockEl.offsetHeight || 58;
+      const dockBottom = Number.parseFloat(dockStyles.bottom) || 0;
+      bottomReserve = dockHeight + dockBottom + 16;
+    }
+
+    if (footerRect.top <= viewportHeight - bottomReserve) return false;
+  }
+
+  return true;
 }

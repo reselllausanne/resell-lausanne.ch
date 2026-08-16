@@ -1,0 +1,194 @@
+{% doc %}
+  FAQ categories (no metaobjects) — English.
+  @param active_category {string}
+  @param contact_url {string}
+  @param faq_return_url {string}
+  @param faq_guide_url {string}
+  @param faq_process_auth_url {string}
+  @param url_notre_concept {string}
+  @param faq_title_livraison {string}
+  @param faq_title_authenticite {string}
+  @param faq_title_echanges {string}
+  @param faq_title_options {string}
+  @param faq_title_prix {string}
+  @param faq_title_guide {string}
+  @param faq_title_apropos {string}
+{% enddoc %}
+
+{% if active_category == blank or active_category == 'livraison' %}
+  <section id="faq-livraison" class="rl-faq-page__category">
+    <h2>{{ faq_title_livraison }}</h2>
+    {% render 'resell-faq-livraison-article-en', contact_url: contact_url %}
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'authenticite' %}
+  <section id="faq-authenticite" class="rl-faq-page__category">
+    <h2>{{ faq_title_authenticite }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>How does Resell Lausanne guarantee authenticity?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Every product is checked by experts before shipping: box, labels, materials, stitching, sole and model-specific details.</p>
+        <p>We work only with professional resellers and certified partners. Nothing ships without internal control.</p>
+        <p>Five-step process: <a href="{{ faq_process_auth_url }}">Our authentication process</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Do I receive a certificate of authenticity?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Yes. Every order includes a Resell Lausanne certificate confirming our inspection.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>What if a product is not authentic?</summary>
+      <div class="rl-faq-page__answer">
+        <p>If it fails final control, it will not ship. You are notified immediately and fully refunded.</p>
+        <p>If in doubt after delivery: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Where do your products come from?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Professional resellers, specialist stores and partners in Switzerland, Europe and internationally — never unverified private sellers.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'echanges-et-retours' %}
+  <section id="faq-echanges-et-retours" class="rl-faq-page__category">
+    <h2>{{ faq_title_echanges }}</h2>
+    {% render 'resell-faq-echanges-article-en', contact_url: contact_url, faq_return_url: faq_return_url %}
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'options-de-paiement' %}
+  <section id="faq-options-de-paiement" class="rl-faq-page__category">
+    <h2>{{ faq_title_options }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>Which payment methods do you accept?</summary>
+      <div class="rl-faq-page__answer">
+        <p><strong>Switzerland:</strong> Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay (installments).</p>
+        <p><strong>Europe:</strong> Visa, MasterCard, Amex, Apple Pay, Alma (2, 3 or 4 installments on eligible orders).</p>
+        <p>Available options depend on delivery country.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Is installment payment available?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Switzerland: Powerpay. Europe: Alma in 2, 3 or 4 installments without fees (eligible orders).</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Is payment secure?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Yes. SSL-encrypted via certified payment providers. Resell Lausanne does not store card details.</p>
+      </div>
+    </details>
+
+    {% render 'resell-powerpay-cgv-block' %}
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'prix-et-reductions' %}
+  <section id="faq-prix-et-reductions" class="rl-faq-page__category">
+    <h2>{{ faq_title_prix }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>How are prices set?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Market value at time of sale including sourcing, authentication and operations. Prices in CHF.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Why do prices vary by size?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Each size has its own demand and availability. Real-time sourcing → different prices per size is normal.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Do you have promo codes?</summary>
+      <div class="rl-faq-page__answer">
+        <p><strong>CHF 10 off</strong> first order with code <strong>FIRST10</strong>. More offers via newsletter.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Are prices VAT-inclusive?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Yes, including Swiss VAT. Outside Switzerland local taxes may apply.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'guide-des-tailles' %}
+  <section id="faq-guide-des-tailles" class="rl-faq-page__category">
+    <h2>{{ faq_title_guide }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>How do I choose my sneaker size?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Sizes in EU. Product page shows fit (true to size, large, small). When unsure, go half a size up.</p>
+        <p><a href="{{ faq_guide_url }}"><strong>Detailed size guide</strong></a> with EU/US/UK/CM for Nike, Jordan, Adidas, New Balance, ASICS, Yeezy, UGG and more.</p>
+        <p>Advice: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>How do I convert US, UK and EU sizes?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Varies by brand. See <a href="{{ faq_guide_url }}">size chart</a>. Indicative:</p>
+        <ul>
+          <li>EU 40 = US 7 = UK 6</li>
+          <li>EU 42 = US 8.5 = UK 7.5</li>
+          <li>EU 44 = US 10 = UK 9</li>
+          <li>EU 45 = US 11 = UK 10</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Where is the full brand size guide?</summary>
+      <div class="rl-faq-page__answer">
+        <p><a href="{{ faq_guide_url }}"><strong>Size guide</strong></a> for Nike, Air Jordan, Adidas, New Balance, ASICS, Yeezy, UGG, Converse, Salomon, Puma, Veja, On Running — EU/US/UK/CM.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}
+
+{% if active_category == blank or active_category == 'a-propos-de-nous' %}
+  <section id="faq-a-propos-de-nous" class="rl-faq-page__category">
+    <h2>{{ faq_title_apropos }}</h2>
+
+    <details class="rl-faq-page__item">
+      <summary>Who is Resell Lausanne?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Swiss online store for authentic sneakers, premium streetwear and collectibles from Lausanne. <a href="{{ url_notre_concept }}">Our concept</a>.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>How can I contact you?</summary>
+      <div class="rl-faq-page__answer">
+        <p><a href="{{ contact_url }}">contact@resell-lausanne.ch</a> — reply usually within 24–48 business hours.</p>
+      </div>
+    </details>
+
+    <details class="rl-faq-page__item">
+      <summary>Do you offer in-store service?</summary>
+      <div class="rl-faq-page__answer">
+        <p>Mainly online. Pick-up or appointment in Lausanne by email arrangement.</p>
+      </div>
+    </details>
+  </section>
+{% endif %}

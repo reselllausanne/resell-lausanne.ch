@@ -1,0 +1,93 @@
+{
+  "sections": {
+    "main": {
+      "type": "editorial-hub",
+      "blocks": {
+        "nav-teen-girl": {
+          "type": "guide_nav",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-fille",
+            "segment_label": "12–18 ans",
+            "title": "Ado fille"
+          }
+        },
+        "nav-teen-boy": {
+          "type": "guide_nav",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-garcon",
+            "segment_label": "12–18 ans",
+            "title": "Ado garçon"
+          }
+        },
+        "nav-kid-girl": {
+          "type": "guide_nav",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-fille",
+            "segment_label": "6–12 ans",
+            "title": "Enfant fille"
+          }
+        },
+        "nav-kid-boy": {
+          "type": "guide_nav",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-garcon",
+            "segment_label": "6–12 ans",
+            "title": "Enfant garçon"
+          }
+        },
+        "card-teen-girl": {
+          "type": "guide_card",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-fille",
+            "eyebrow": "Guide ado fille · rentrée 2026",
+            "title": "Fine, rétro ou argentée ?"
+          }
+        },
+        "card-teen-boy": {
+          "type": "guide_card",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-garcon",
+            "eyebrow": "Guide ado garçon · rentrée 2026",
+            "title": "Runner rétro ou grosse Jordan ?"
+          }
+        },
+        "card-kid-girl": {
+          "type": "guide_card",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-fille",
+            "eyebrow": "Guide enfant fille · rentrée 2026",
+            "title": "Jolie, oui. Pratique, surtout."
+          }
+        },
+        "card-kid-boy": {
+          "type": "guide_card",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-garcon",
+            "eyebrow": "Guide enfant garçon · rentrée 2026",
+            "title": "Du style qui tient la récré."
+          }
+        }
+      },
+      "block_order": [
+        "nav-teen-girl",
+        "nav-teen-boy",
+        "nav-kid-girl",
+        "nav-kid-boy",
+        "card-teen-girl",
+        "card-teen-boy",
+        "card-kid-girl",
+        "card-kid-boy"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "Le guide de la rentrée · édition 2026",
+        "intro": "Pas seulement la sneaker qui marche sur TikTok cette semaine : celle qui correspond à leur style, tient toute la journée et ne finit pas oubliée au fond du placard en octobre.",
+        "stamp_text": "4 GUIDES\n20 MODÈLES\n100% RENTRÉE",
+        "show_promo": true,
+        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
+        "promo_primary_label": "Acheter la carte cadeau"
+      }
+    }
+  },
+  "order": ["main"]
+}

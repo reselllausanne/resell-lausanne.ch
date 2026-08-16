@@ -1,0 +1,218 @@
+{% doc %}
+  Shared FAQ / legal hub layout styles (WeTheNew FaqAndLegals shell).
+{% enddoc %}
+<style>
+  .rl-faq-page {
+    padding-top: 48px;
+    padding-bottom: 80px;
+    width: 100%;
+  }
+
+  .rl-faq-page__header {
+    margin-bottom: 40px;
+  }
+
+  .rl-faq-page__header h1 {
+    margin-top: 16px;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .rl-faq-page--legal .rl-faq-page__header {
+    margin-bottom: 28px;
+  }
+
+  .rl-faq-page--legal .rl-faq-page__header h1 {
+    display: none;
+  }
+
+  .rl-faq-page__layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    column-gap: 64px;
+    align-items: start;
+  }
+
+  @media (max-width: 767px) {
+    .rl-faq-page__layout {
+      grid-template-columns: 1fr;
+    }
+    .rl-faq-page__sidebar {
+      margin-bottom: 32px;
+    }
+  }
+
+  .rl-faq-page__sidebar {
+    position: sticky;
+    top: 100px;
+  }
+
+  .rl-faq-page__sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+
+  .rl-faq-page__sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rl-faq-page__sidebar li {
+    border-top: 1px solid rgb(245, 245, 245);
+  }
+
+  .rl-faq-page__sidebar li:last-child {
+    border-bottom: 1px solid rgb(245, 245, 245);
+  }
+
+  .rl-faq-page__sidebar-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    color: rgb(110, 110, 110);
+    text-align: left;
+    font-family: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .rl-faq-page__sidebar-link:hover,
+  .rl-faq-page__sidebar-link.is-active {
+    color: rgb(8, 8, 8);
+  }
+
+  .rl-faq-page__sidebar-link svg {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    opacity: 0.35;
+    transition: opacity 0.15s ease;
+  }
+
+  .rl-faq-page__sidebar-link:hover svg,
+  .rl-faq-page__sidebar-link.is-active svg {
+    opacity: 1;
+  }
+
+  .rl-faq-page__content {
+    min-width: 0;
+  }
+
+  .rl-faq-page__legal-title {
+    margin: 0 0 12px;
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .rl-faq-page__legal-version {
+    margin: 0 0 28px;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(8, 8, 8);
+  }
+
+  .rl-faq-page__legal-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgb(40, 40, 40);
+  }
+
+  .rl-faq-page__legal-body h2 {
+    margin: 2rem 0 0.85rem;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .rl-faq-page__legal-body h2:first-child {
+    margin-top: 0;
+  }
+
+  .rl-faq-page__legal-body h3 {
+    margin: 1.25rem 0 0.65rem;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .rl-faq-page__legal-body p {
+    margin: 0 0 0.9rem;
+  }
+
+  .rl-faq-page__legal-body ul {
+    margin: 0 0 0.9rem;
+    padding-left: 1.25rem;
+  }
+
+  .rl-faq-page__legal-body li {
+    margin-bottom: 0.3rem;
+  }
+
+  .rl-faq-page__legal-body a {
+    color: rgb(8, 8, 8);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Kill Admin / Shopify policy inline colors (e.g. pasted #2b00ff blue spans). */
+  .rl-faq-page__legal-body,
+  .rl-faq-page__legal-body * {
+    color: rgb(40, 40, 40) !important;
+  }
+
+  .rl-faq-page__legal-body a,
+  .rl-faq-page__legal-body a * {
+    color: rgb(8, 8, 8) !important;
+  }
+
+  .rl-faq-page__legal-body .rl-faq-page__legal-version,
+  .rl-faq-page__legal-body .rl-faq-page__legal-version * {
+    color: rgb(8, 8, 8) !important;
+    font-weight: 700;
+  }
+
+  .rl-faq-page__legal-body strong {
+    font-weight: 700;
+  }
+
+  .rl-faq-page__legal-powerpay {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(230 230 230);
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgb(40, 40, 40);
+  }
+
+  .rl-faq-page__legal-powerpay h3 {
+    margin: 0 0 0.65rem;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .rl-faq-page__legal-powerpay p {
+    margin: 0 0 0.9rem;
+  }
+
+  .rl-faq-page__legal-powerpay p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rl-faq-page__legal-powerpay a {
+    color: rgb(8, 8, 8);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

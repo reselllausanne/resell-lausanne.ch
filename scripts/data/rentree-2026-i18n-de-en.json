@@ -1,0 +1,730 @@
+{
+  "chaussures-sneakers-rentree-2026": {
+    "de": {
+      "display_title": "Welche Sneakers für den Schulstart 2026?",
+      "meta_title": "Welche Sneakers für den Schulstart 2026?",
+      "meta_description": "Welche Sneakers für den Schulstart 2026? Resell Lausanne Guides für Teens und Kinder: Trends, Komfort, Grössen und praktische Tipps in der Schweiz.",
+      "eyebrow": "Schulstart-Guide · Ausgabe 2026",
+      "intro": "Nicht nur der Sneaker, der diese Woche auf TikTok viral geht — sondern das Paar, das zu ihrem Stil passt, den ganzen Schultag hält und im Oktober nicht im Schrank vergessen wird."
+    },
+    "en": {
+      "display_title": "Which sneakers to pick for back-to-school 2026?",
+      "meta_title": "Which sneakers to pick for back-to-school 2026?",
+      "meta_description": "Which sneakers for back-to-school 2026? Resell Lausanne guides for teens and kids: trends, comfort, sizing and practical tips in Switzerland.",
+      "eyebrow": "Back-to-school guide · 2026 edition",
+      "intro": "Not just the sneaker trending on TikTok this week — the pair that fits their style, lasts the whole school day and doesn't end up forgotten at the back of the wardrobe by October."
+    }
+  },
+  "sneakers-rentree-2026-ado-fille": {
+    "de": {
+      "display_title": "Sneakers Schulstart 2026 Teen Mädchen — Kompletter Guide",
+      "meta_title": "Sneakers Schulstart 2026 Teen Mädchen — Resell Lausanne Guide",
+      "meta_description": "Sneakers für Teen Mädchen 2026: Spezial, GEL-1130, Saucony, Samba, Birkenstock, Ballerinas. Komfort, Style und Grössen in der Schweiz.",
+      "eyebrow": "Guide Teen Mädchen · 12–18 J. · Schulstart 2026",
+      "deck": "Spezial, GEL-1130 oder Ballerina?",
+      "intro": "Mit 15-16 entscheidet zuerst TikTok, Instagram und der Schulhof: Views, was Freundinnen tragen, welches Image man zeigen will. Spezial, GEL-1130, Ballerinas, Birkenstock-Mules und silberne Runner — kein Eltern-Vortrag über den Leisten.",
+      "chips": [
+        "ASICS / Saucony",
+        "Ballerina-Sneaker",
+        "Birkenstock-Mule",
+        "Social Media"
+      ],
+      "callout_title": "Nicht verwechseln: Hype und guter Kauf",
+      "callout_text": "Eine teure Collab kann cool sein. Für ein Paar, das 4 von 5 Tagen getragen wird, zählen Komfort, Grössenverfügbarkeit und ein Colorway, den man nicht vor Schmutz fürchtet. Vorteil: Modelle, die den Tag mitmachen und leicht zu reinigen sind.",
+      "section_heading": "Die Signale, die zählen",
+      "section_body": "<p>Back-to-School-Listen setzen auf Spezial, Samba, GEL-1130, Saucony, Ballerina-Sneakers und Birkenstock-Mules. Social Media pusht silbernes Mesh, Röcke und weite Hosen, Charms und flache Silhouetten. Smart: Silhouetten-Familie wählen — Runner, Terrace, Ballerina oder Mule — dann neutraler Colorway für fünf Schultage.</p><p>Am nützlichsten: Rock/Kleid und Cardigan (→ Ballerina, Spezial, Samba), weite Jeans (→ silberner Runner oder Saucony), minimaler Komfort-Look (→ Birkenstock-Mule oder Samba). Vor dem Kauf: Jeans, schwarze Hose und Rock/Short testen.</p>",
+      "how_to_heading": "Ein Paar, zwei Paare oder eine Rotation?",
+      "how_to_body": "<p>Mit einem Paar: kein Mesh — Wildleder, Leder oder strukturierte Ballerina. Mit zwei Paaren: bequemes Mesh wie GEL-1130 + Spezial, Samba oder Ballerina für den Style.</p><p>Beide Füsse stehend messen, am Abend. Etwa 8–12 mm vor den Zehen lassen. Im Laden mehrere Minuten laufen — der Fuss schwillt an, besonders in einem Runner.</p>",
+      "table_cols": [
+        "Profil",
+        "Erste Wahl",
+        "Zweites Paar"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Täglicher Komfort",
+          "col_2": "GEL-1130 / Saucony",
+          "col_3": "Spezial / Samba"
+        },
+        {
+          "col_1": "Mode / feminin",
+          "col_2": "Ballerina-Sneaker",
+          "col_3": "Birkenstock-Mule"
+        },
+        {
+          "col_1": "Einfacher Style",
+          "col_2": "Samba / Spezial",
+          "col_3": "Silberner Runner"
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · Le choix mode facile",
+          "title": "adidas Handball Spezial",
+          "description": "Schmales Profil, Wildleder und Gummisohle. Texturierter als Samba — easy mit Denim, langem Rock oder weiten Hosen.",
+          "score_label": "Polyvalence"
+        },
+        {
+          "rank": "02 · La runner qui monte",
+          "title": "Saucony",
+          "description": "ProGrid oder Shadow: Alltagskomfort und Silver-Look am Schulhof. Passt zu Jeans, Jogging oder kurzem Rock.",
+          "score_label": "Tendance"
+        },
+        {
+          "rank": "03 · Le mesh fiable",
+          "title": "ASICS GEL-1130",
+          "description": "Die richtige Wahl für lange Tage. Silbernes Mesh, Retro-Linien und mehr Dämpfung als flache Sneakers.",
+          "score_label": "Confort"
+        },
+        {
+          "rank": "04 · L'icône minimaliste",
+          "title": "adidas Samba OG",
+          "description": "Weiterhin relevant in Schwarz, Weiss, Bordeaux oder Braun. Für minimalen Style und dünne Sohle.",
+          "score_label": "Style"
+        },
+        {
+          "rank": "05 · La mule confort",
+          "title": "Birkenstock Boston",
+          "description": "Mule-/Clog-Trend mit maximalem Komfort. Ideal in Rotation neben einer echten Sneaker.",
+          "score_label": "Confort"
+        },
+        {
+          "rank": "06 · Le statement féminin",
+          "title": "Ballerine sneaker / Mary Jane",
+          "description": "Glaubwürdigere Alternative zur Jordan 4 für Teen-Girls: Adidas Ballerina, ASICS Mary Jane oder sport-chic Silhouetten.",
+          "score_label": "Impact"
+        }
+      ],
+      "checklist": [
+        "3 tenues compatibles (jean, pantalon, jupe)",
+        "8–12 mm devant les orteils",
+        "Pas de glissement au talon",
+        "Coloris compatible avec la pluie",
+        "Budget porté, pas juste budget achat"
+      ],
+      "verdict": "<p>Une seule paire : Spezial ou Samba, sans mesh. Deux paires : GEL-1130 confort + ballerine ou Spezial pour le style. Le confort pur : Birkenstock en rotation, pas comme seule paire d'école.</p>"
+    },
+    "en": {
+      "display_title": "Back-to-school sneakers 2026 — teen girls' guide",
+      "meta_title": "Back-to-school sneakers 2026 — teen girls' guide | Resell Lausanne",
+      "meta_description": "Sneakers for teen girls in 2026: Spezial, GEL-1130, Saucony, Samba, Birkenstock, ballet sneakers. Comfort, style and sizing in Switzerland.",
+      "eyebrow": "Teen girls' guide · ages 12–18 · back-to-school 2026",
+      "deck": "Spezial, GEL-1130 or ballet sneaker?",
+      "intro": "At 15-16, TikTok, Instagram and the schoolyard call the shots first: views, what friends wear, the image you want to project. Spezial, GEL-1130, ballet sneakers, Birkenstock mules and silver runners — not a parent lecture on shoe fit.",
+      "chips": [
+        "ASICS / Saucony",
+        "Ballet sneaker",
+        "Birkenstock mule",
+        "Social-first"
+      ],
+      "callout_title": "Don't confuse hype with a good buy",
+      "callout_text": "An expensive collab can be cool. For a pair worn 4 days out of 5, comfort, size availability and a colourway you won't fear scuffing come first. Plus: models built to last the school day and clean easily.",
+      "section_heading": "Signals worth watching",
+      "section_body": "<p>Back-to-school picks highlight Spezial, Samba, GEL-1130, Saucony, ballet sneakers and Birkenstock mules. Social feeds push silver mesh, skirts and wide trousers, charms and low silhouettes. Smart move: pick a family — runner, terrace, ballet or mule — then a neutral colourway for five school days.</p><p>Most useful signals: skirt/dress and cardigan (→ ballet sneaker, Spezial, Samba), wide jeans (→ silver runner or Saucony), minimal comfort look (→ Birkenstock mule or Samba). Before buying: test with wide jeans, black/grey trousers and a skirt or shorts.</p>",
+      "how_to_heading": "One pair, two pairs or a rotation?",
+      "how_to_body": "<p>With one pair, skip mesh: suede, leather or a structured ballet sneaker. With two: comfortable mesh like GEL-1130 + Spezial, Samba or ballet sneaker for style.</p><p>Measure both feet standing, at end of day. Keep about 8–12 mm in front of the toes. Walk several minutes in store — feet swell, especially in a runner.</p>",
+      "table_cols": [
+        "Profile",
+        "First pick",
+        "Second pair"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Daily comfort",
+          "col_2": "GEL-1130 / Saucony",
+          "col_3": "Spezial / Samba"
+        },
+        {
+          "col_1": "Fashion / feminine",
+          "col_2": "Ballet sneaker",
+          "col_3": "Birkenstock mule"
+        },
+        {
+          "col_1": "Simple style",
+          "col_2": "Samba / Spezial",
+          "col_3": "Silver runner"
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · The choix mode facile",
+          "title": "adidas Handball Spezial",
+          "description": "Slim profile, suede and gum sole. More textured than Samba — easy with denim, long skirts or wide trousers.",
+          "score_label": "Polyvalence"
+        },
+        {
+          "rank": "02 · La runner qui monte",
+          "title": "Saucony",
+          "description": "ProGrid or Shadow: daily comfort and silver schoolyard look. Works with jeans, joggers or a short skirt.",
+          "score_label": "Tendance"
+        },
+        {
+          "rank": "03 · The mesh fiable",
+          "title": "ASICS GEL-1130",
+          "description": "The right pick for long days. Silver mesh, retro lines and more cushioning than flat sneakers.",
+          "score_label": "Confort"
+        },
+        {
+          "rank": "04 · The icône minimaliste",
+          "title": "adidas Samba OG",
+          "description": "Still relevant in black, white, burgundy or brown. Best when the wardrobe is already minimal.",
+          "score_label": "Style"
+        },
+        {
+          "rank": "05 · La mule confort",
+          "title": "Birkenstock Boston",
+          "description": "Strong mule/clog trend with maximum comfort. Best in rotation alongside a proper sneaker.",
+          "score_label": "Confort"
+        },
+        {
+          "rank": "06 · The statement féminin",
+          "title": "Ballerine sneaker / Mary Jane",
+          "description": "More credible than Jordan 4 for teen girls: Adidas ballerinas, ASICS Mary Janes or sporty-chic silhouettes.",
+          "score_label": "Impact"
+        }
+      ],
+      "checklist": [
+        "3 tenues compatibles (jean, pantalon, skirt)",
+        "8–12 mm devant les orteils",
+        "Pas de glissement au talon",
+        "Coloris compatible avec la pluie",
+        "Budget porté, pas juste budget achat"
+      ],
+      "verdict": "<p>One pair: Spezial or Samba, no mesh. Two pairs: GEL-1130 comfort + ballet sneaker or Spezial for style. Pure comfort: Birkenstock in rotation, not as the only school shoe.</p>"
+    }
+  },
+  "sneakers-rentree-2026-ado-garcon": {
+    "de": {
+      "display_title": "Sneakers Schulstart 2026 Teen Junge — Kompletter Guide",
+      "meta_title": "Sneakers Schulstart 2026 Teen Junge — Resell Lausanne Guide",
+      "meta_description": "Sneakers für Teen Jungen 2026: GEL-NYC, GEL-1130, Saucony, Air Force 1, Jordan 4, Dunk SB. Alltag, Komfort und Grössen in der Schweiz.",
+      "eyebrow": "Guide Teen Junge · 12–18 J. · Schulstart 2026",
+      "deck": "Saucony, GEL-NYC oder Dunk SB?",
+      "intro": "Mit 15-16 entscheidet zuerst TikTok, Instagram und der Schulhof: Views, was Kumpels tragen, welchen Style man zeigen will. Saucony, GEL-NYC, Dunk SB und Air Force 1 ersetzen zunehmend TN — kein Eltern-Vortrag über den Leisten.",
+      "chips": [
+        "ASICS / Saucony",
+        "Dunk SB",
+        "Court Classic",
+        "Social Media"
+      ],
+      "callout_title": "Nicht verwechseln: Hype und guter Kauf",
+      "callout_text": "Eine teure Collab kann cool sein. Für ein Paar, das 4 von 5 Tagen getragen wird, zählen Komfort, Grössenverfügbarkeit und ein Colorway, den man nicht vor Schmutz fürchtet. Vorteil: Sportmodelle, die länger halten, Sport aushalten und leicht zu reinigen sind.",
+      "section_heading": "Die Signale, die zählen",
+      "section_body": "<p>Back-to-School-Listen setzen auf ASICS GEL-NYC/GEL-1130, Saucony, Air Force 1, Jordan und Dunk SB. Social Media verstärkt silbernes Mesh, weite Hosen und flache Silhouetten. Smart: eine Silhouetten-Familie wählen — Runner, Court, Skate oder Basketball — dann einen neutralen Colorway für fünf Schultage.</p><p>Am nützlichsten: der Alltags-Look — Sport-Training oder weite Skate-Jeans. Training → Saucony, GEL-NYC oder GEL-1130. Skate/Streetwear → Dunk Low SB oder Jordan 4. Einfacher Style → Samba, Spezial oder Air Force 1. Vor dem Kauf: mit der am meisten getragenen Hose und Hoodie testen.</p>",
+      "how_to_heading": "Ein Paar, zwei Paare oder eine Rotation?",
+      "how_to_body": "<p>Mit einem Paar: kein Mesh — Leder, Wildleder oder leicht zu reinigendes Synthet (Air Force 1, klassischer Dunk, strukturierte Saucony). Mit zwei Paaren: bequemes Mesh wie GEL-1130 + klassischer Dunk oder Dunk SB für den Style.</p><p>Beide Füsse stehend messen, am Abend. Etwa 8–12 mm vor den Zehen lassen. Mehrere Minuten im Laden laufen — der Fuss schwillt an, besonders bei Runnern.</p>",
+      "table_cols": [
+        "Profil",
+        "Erste Wahl",
+        "Zweites Paar"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Täglicher Komfort",
+          "col_2": "GEL-NYC / GEL-1130",
+          "col_3": "Air Force 1"
+        },
+        {
+          "col_1": "Streetwear / Skate",
+          "col_2": "Jordan 4",
+          "col_3": "Dunk SB"
+        },
+        {
+          "col_1": "Einfacher Style",
+          "col_2": "Samba / Spezial",
+          "col_3": "Silberner Runner (Saucony)"
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · Der beste Allrounder",
+          "title": "ASICS GEL-NYC",
+          "description": "Technischer Look, gute Dämpfung, genug Volumen zur Baggy-Jeans ohne riesig zu wirken. Grau, Schwarz oder Silber funktionieren fast immer.",
+          "score_label": "Balance"
+        },
+        {
+          "rank": "02 · Der Runner im Aufwind",
+          "title": "Saucony",
+          "description": "ProGrid, Shadow oder Triumph: strukturiertes Mesh und Alltagskomfort gewinnen am Schulhof. Silber, Grau oder Navy passen fast überall.",
+          "score_label": "Trend"
+        },
+        {
+          "rank": "03 · Das zuverlässige Mesh",
+          "title": "ASICS GEL-1130",
+          "description": "Leicht, gedämpft und sehr präsent in Social Feeds. Ideal als zweites Paar oder für viel Laufen. Silber oder Grau = safe.",
+          "score_label": "Komfort"
+        },
+        {
+          "rank": "04 · Der saubere Klassiker",
+          "title": "Nike Air Force 1",
+          "description": "Weiss für den cleanen Look, Schwarz für Praktikabilität, Color-Block um aufzufallen. Schwer, aber robust und leicht zu kombinieren.",
+          "score_label": "Vielseitigkeit"
+        },
+        {
+          "rank": "05 · Der Sneakerhead-Pick",
+          "title": "Air Jordan 4",
+          "description": "Das Statement-Paar im Guide. Funktioniert besser mit oversize Volumen und verdient einen tragbaren Colorway, wenn es oft getragen wird.",
+          "score_label": "Impact"
+        },
+        {
+          "rank": "06 · Der glaubwürdige Skate-Pick",
+          "title": "Nike Dunk SB",
+          "description": "Glaubwürdiger als Campus für Skate- oder Streetwear-Look. Passt zu weitem Denim, Cargo und Hoodie — besonders in dunklen oder neutralen Colorways.",
+          "score_label": "Style"
+        }
+      ],
+      "checklist": [
+        "Silhouette vor Colorway wählen",
+        "Mit der am meisten getragenen Hose testen",
+        "10 Minuten drinnen laufen",
+        "Regen und ÖV einplanen",
+        "Nicht zu viel für einen 3-Wochen-Trend zahlen"
+      ],
+      "verdict": "<p>Ein Paar: Air Force 1 oder strukturierte Saucony, ohne Mesh. Zwei Paare: GEL-1130 Komfort + Dunk SB oder Jordan 4 für Style. Der sicherste Pick: GEL-NYC Grau/Silber.</p>"
+    },
+    "en": {
+      "display_title": "Back-to-school sneakers 2026 — teen boys' guide",
+      "meta_title": "Back-to-school sneakers 2026 — teen boys' guide | Resell Lausanne",
+      "meta_description": "Sneakers for teen boys in 2026: GEL-NYC, GEL-1130, Saucony, Air Force 1, Jordan 4, Dunk SB. Everyday wear, comfort and sizing in Switzerland.",
+      "eyebrow": "Teen boys' guide · ages 12–18 · back-to-school 2026",
+      "deck": "Saucony, GEL-NYC or Dunk SB?",
+      "intro": "At 15-16, TikTok, Instagram and the schoolyard call the shots first: views, what mates wear, the style you want to show. Saucony, GEL-NYC, Dunk SB and Air Force 1 are increasingly replacing TNs — not a parent lecture on shoe fit.",
+      "chips": [
+        "ASICS / Saucony",
+        "Dunk SB",
+        "Court classic",
+        "Social-first"
+      ],
+      "callout_title": "Don't confuse hype with a good buy",
+      "callout_text": "An expensive collab can be cool. For a pair worn 4 days out of 5, prioritise comfort, size availability and a colourway they're not afraid to scuff. Plus: sports models built to last, handle activity and clean easily.",
+      "section_heading": "Signals worth watching",
+      "section_body": "<p>Back-to-school picks highlight ASICS GEL-NYC/GEL-1130, Saucony, Air Force 1, Jordan and Dunk SB. Social platforms reinforce silver mesh, wide trousers and low-profile shoes. Smart move: pick a silhouette family — runner, court, skate or basketball — then a neutral colourway for five school days.</p><p>Most useful signal: everyday look — sports tracksuit or baggy skate jeans. Tracksuit → Saucony, GEL-NYC or GEL-1130. Skate/streetwear → Dunk Low SB or Jordan 4. Simpler style → Samba, Spezial or Air Force 1. Before buying: test with their most-worn trousers and a hoodie.</p>",
+      "how_to_heading": "One pair, two pairs or a rotation?",
+      "how_to_body": "<p>With one pair, skip mesh: leather, suede or easy-clean synthetics (Air Force 1, classic Dunk, structured Saucony). With two: comfortable mesh like GEL-1130 + classic Dunk or Dunk SB for style.</p><p>Measure both feet standing, end of day. Leave about 8–12 mm in front of the toes. Walk several minutes in store — feet swell, especially in runners.</p>",
+      "table_cols": [
+        "Profile",
+        "First pick",
+        "Second pair"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Daily comfort",
+          "col_2": "GEL-NYC / GEL-1130",
+          "col_3": "Air Force 1"
+        },
+        {
+          "col_1": "Streetwear / skate",
+          "col_2": "Jordan 4",
+          "col_3": "Dunk SB"
+        },
+        {
+          "col_1": "Simple style",
+          "col_2": "Samba / Spezial",
+          "col_3": "Silver runner (Saucony)"
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · The best all-rounder",
+          "title": "ASICS GEL-NYC",
+          "description": "Technical look, solid cushioning, enough volume with baggy jeans without looking huge. Grey, black or silver almost always work.",
+          "score_label": "Balance"
+        },
+        {
+          "rank": "02 · The rising runner",
+          "title": "Saucony",
+          "description": "ProGrid, Shadow or Triumph: structured mesh and daily comfort are winning the schoolyard. Silver, grey or navy go with almost everything.",
+          "score_label": "Trend"
+        },
+        {
+          "rank": "03 · Reliable mesh",
+          "title": "ASICS GEL-1130",
+          "description": "Light, cushioned and all over social feeds. Great as a second pair or for teens who walk a lot. Silver or grey = safe.",
+          "score_label": "Comfort"
+        },
+        {
+          "rank": "04 · The clean classic",
+          "title": "Nike Air Force 1",
+          "description": "White for a sharp look, black for practicality, colour-block to stand out. Heavy, but tough and easy to pair.",
+          "score_label": "Versatility"
+        },
+        {
+          "rank": "05 · The sneakerhead pick",
+          "title": "Air Jordan 4",
+          "description": "The statement pair in this guide. Works better with oversized volume and deserves a wearable colourway if it's going to be worn often.",
+          "score_label": "Impact"
+        },
+        {
+          "rank": "06 · Credible skate pick",
+          "title": "Nike Dunk SB",
+          "description": "More credible than Campus for skate or streetwear. Works with wide denim, cargos and hoodies — especially in dark or neutral colourways.",
+          "score_label": "Style"
+        }
+      ],
+      "checklist": [
+        "Pick silhouette before colourway",
+        "Test with their most-worn trousers",
+        "Walk 10 minutes indoors",
+        "Plan for rain and public transport",
+        "Don't overpay for a 3-week trend"
+      ],
+      "verdict": "<p>One pair: Air Force 1 or structured Saucony, no mesh. Two pairs: GEL-1130 comfort + Dunk SB or Jordan 4 for style. Safest bet: grey/silver GEL-NYC.</p>"
+    }
+  },
+  "chaussures-rentree-2026-fille": {
+    "de": {
+      "display_title": "Schuhe Schulstart 2026 Mädchen — Kompletter Guide",
+      "meta_title": "Schuhe Schulstart 2026 Mädchen — Resell Lausanne Guide",
+      "meta_description": "Praktische Sneakers für Mädchen 2026: Air Force 1 GS, P-6000, Samba, Campus, Jordan 1 Mid, NB 530. Komfort, Selbstständigkeit und Grössen in der Schweiz.",
+      "eyebrow": "Guide Kind Mädchen · 6–12 J. · Schulstart 2026",
+      "deck": "Praktisch zuerst. Schön auch.",
+      "intro": "Für ein Mädchen von 6 bis 12 Jahren zählt zuerst der Alltag: zieht sie allein an, rennt und spielt ohne zu meckern, sitzt der Fuss stabil? Style zählt, sobald sie mitreden will — aber ein hübscher Schuh, den sie nicht anzieht, nützt nichts.",
+      "chips": [
+        "Leicht anzuziehen",
+        "Waschbar",
+        "Stabile Sohle",
+        "Echte Grösse"
+      ],
+      "callout_title": "Der Test, den Eltern vergessen",
+      "callout_text": "Das Kind zweimal allein an- und ausziehen lassen. Dauert es zu lange oder wird die Ferse jedes Mal zerdrückt, ist der Schuh im Alltag unpraktisch.",
+      "section_heading": "Trends, die tragbar bleiben",
+      "section_body": "<p>2026 sind silberne Sneakers, Pastell-Akzente, Charms und Retro-Silhouetten präsent. Erwachsenen-inspirierte Modelle in GS sind beliebt — aber ein Kinderschuh muss zur Selbstständigkeit passen. Für Jüngere können Klett oder elastische Schnürsenkel den Unterschied machen. Für Grössere bringen Samba, Campus oder ein leichter Runner einen «grösseren» Look ohne fragiles Colorway.</p>",
+      "how_to_heading": "Grösse: wachsen lassen, ohne zu schwimmen",
+      "how_to_body": "<p>Beide Füsse stehend messen. Etwa 10 mm Reserve ist meist sinnvoll — aber eine grosse Grösse «für das ganze Jahr» spart nichts, wenn die Ferse schon im ersten Monat schlappt.</p>",
+      "table_cols": [
+        "Modell",
+        "Hauptvorteil",
+        "Achtung"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Weite",
+          "col_2": "Die Zehen bewegen sich frei.",
+          "col_3": "Das Mesh spannt oder der kleine Zeh drückt."
+        },
+        {
+          "col_1": "Ferse",
+          "col_2": "Bleibt beim Gehen an Ort und Stelle.",
+          "col_3": "Rutscht bei jedem Schritt hoch und runter."
+        },
+        {
+          "col_1": "Selbstständigkeit",
+          "col_2": "Das Paar geht ohne Hilfe an.",
+          "col_3": "Ferse wird zerdrückt oder Schnürsenkel hängen."
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · Das easy Paar",
+          "title": "Nike Air Force 1 GS",
+          "description": "Stabil, leicht zu reinigen und vertraut. Weiss-Rosa für einen soften Touch, Schwarz-Weiss für weniger Alltagsstress.",
+          "score_label": "Pflege"
+        },
+        {
+          "rank": "02 · Die Leichte",
+          "title": "Nike P-6000 GS",
+          "description": "Atmungsaktiv, bequem und aktuell. Silber oder Pastell signalisiert Trend, ohne schwer kombinierbar zu werden.",
+          "score_label": "Komfort"
+        },
+        {
+          "rank": "03 · Die Schmale",
+          "title": "adidas Samba OG GS",
+          "description": "Sehr hübsch mit Jeans, Leggings oder Rock. Wählen, wenn das Kind den Boden nah spüren mag und keine weiche Dämpfung braucht.",
+          "score_label": "Style"
+        },
+        {
+          "rank": "04 · Die Skate",
+          "title": "adidas Campus 00s GS",
+          "description": "Mehr Polster, Wildleder und stimmig zu oversize Looks. Vorsicht bei sehr hellen Colorways an Regentagen.",
+          "score_label": "Halt"
+        },
+        {
+          "rank": "05 · Die Bunte",
+          "title": "Jordan 1 Mid GS",
+          "description": "Ein guter Kompromiss für alle, die Farbe und eine ikonische Silhouette wollen — mit mehr Struktur um den Knöchel.",
+          "score_label": "Persönlichkeit"
+        },
+        {
+          "rank": "Die Bequeme",
+          "title": "New Balance 530 GS",
+          "description": "Weich, retro und leicht. Begleitet lange Schultage und sieht aus wie die Modelle der Teens.",
+          "score_label": "Komfort"
+        }
+      ],
+      "checklist": [
+        "Beide Füsse messen",
+        "Treppen und kurzen Sprint testen",
+        "Selbstständigkeit prüfen",
+        "Material anschauen, nicht nur Farbe",
+        "Kaufdatum notieren für Nachkontrolle"
+      ],
+      "verdict": "<p>Zum unbeschwerten Spielen: P-6000 oder NB 530. Zum leichten Reinigen: Air Force 1. Für einen «grösseren» Look: Samba oder Campus 00s.</p>"
+    },
+    "en": {
+      "display_title": "Back-to-school shoes 2026 — girls' guide",
+      "meta_title": "Back-to-school shoes 2026 — girls' guide | Resell Lausanne",
+      "meta_description": "Practical sneakers for girls in 2026: Air Force 1 GS, P-6000, Samba, Campus, Jordan 1 Mid, NB 530. Comfort, independence and sizing in Switzerland.",
+      "eyebrow": "Girls' guide · ages 6–12 · back-to-school 2026",
+      "deck": "Practical first. Pretty too.",
+      "intro": "For a girl aged 6-12, buy for daily use first: can she put them on alone, run and play without complaining, and stay stable all day? Style matters once she has an opinion — but pretty trainers she refuses to wear are useless.",
+      "chips": [
+        "Easy on/off",
+        "Washable",
+        "Stable sole",
+        "True to size"
+      ],
+      "callout_title": "The test parents forget",
+      "callout_text": "Ask the child to put the pair on and take it off alone twice. If it takes too long or they crush the heel counter every time, the shoe won't work day to day.",
+      "section_heading": "Trends that stay wearable",
+      "section_body": "<p>In 2026, silver sneakers, pastel accents, charms and retro silhouettes are everywhere. Adult-inspired models in GS are popular — but a kids' shoe still has to match their independence. For younger ones, velcro or elastic laces can make the difference. For older ones, a Samba, Campus or light runner brings a more \"grown-up\" look without a fragile colourway.</p>",
+      "how_to_heading": "Sizing: room to grow without swimming",
+      "how_to_body": "<p>Measure both feet standing up. About 10 mm of room is usually reasonable — but sizing up \"for the whole year\" isn't a saving if the heel slips from month one.</p>",
+      "table_cols": [
+        "Model",
+        "Main strength",
+        "Watch out"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Width",
+          "col_2": "Toes move freely.",
+          "col_3": "Mesh bulges or the little toe pinches."
+        },
+        {
+          "col_1": "Heel",
+          "col_2": "Stays put while walking.",
+          "col_3": "Rides up and down every step."
+        },
+        {
+          "col_1": "Independence",
+          "col_2": "They can get the pair on alone.",
+          "col_3": "Heel gets crushed or laces drag."
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · The easy pair",
+          "title": "Nike Air Force 1 GS",
+          "description": "Stable, easy to clean and familiar. White-pink for a soft touch, black-white for less daily stress.",
+          "score_label": "Care"
+        },
+        {
+          "rank": "02 · The light one",
+          "title": "Nike P-6000 GS",
+          "description": "Breathable, comfortable and current. A silver or pastel version signals trend without becoming hard to style.",
+          "score_label": "Comfort"
+        },
+        {
+          "rank": "03 · The slim one",
+          "title": "adidas Samba OG GS",
+          "description": "Very pretty with jeans, leggings or a skirt. Choose it if they like feeling close to the ground and don't need soft cushioning.",
+          "score_label": "Style"
+        },
+        {
+          "rank": "04 · The skate pair",
+          "title": "adidas Campus 00s GS",
+          "description": "More padded, suede and very coherent with oversized looks. Be careful with very light colourways on rainy days.",
+          "score_label": "Support"
+        },
+        {
+          "rank": "05 · The colourful one",
+          "title": "Jordan 1 Mid GS",
+          "description": "A good compromise for anyone who wants colour and an iconic silhouette, with more structure around the ankle.",
+          "score_label": "Personality"
+        },
+        {
+          "rank": "The comfortable one",
+          "title": "New Balance 530 GS",
+          "description": "Soft, retro and light. Handles long school days while looking like the models teens wear.",
+          "score_label": "Comfort"
+        }
+      ],
+      "checklist": [
+        "Measure both feet",
+        "Test stairs and a short sprint",
+        "Check independence",
+        "Look at material, not just colour",
+        "Note purchase date for a recheck"
+      ],
+      "verdict": "<p>For carefree play: P-6000 or NB 530. For easy cleaning: Air Force 1. For a more \"grown-up\" look: Samba or Campus 00s.</p>"
+    }
+  },
+  "chaussures-rentree-2026-garcon": {
+    "de": {
+      "display_title": "Schuhe Schulstart 2026 Junge — Kompletter Guide",
+      "meta_title": "Schuhe Schulstart 2026 Junge — Resell Lausanne Guide",
+      "meta_description": "Sneakers für Jungen 2026: Air Force 1 GS, P-6000, Jordan 4 GS, Jordan 1 Low, Campus, GEL-NYC GS. Halt, Alltag und Grössen in der Schweiz.",
+      "eyebrow": "Guide Kind Junge · 6–12 J. · Schulstart 2026",
+      "deck": "Style, der die Pause mitmacht.",
+      "intro": "Für einen Jungen von 6 bis 12 Jahren sind Basketball-, Retro-Runner- und Skate-inspirierte Modelle am leichtesten anzunehmen. Aber ein schönes Paar, das rutscht, drückt oder allein nicht zugebunden werden kann, wird schnell ein schlechtes Paar.",
+      "chips": [
+        "Robust",
+        "Stabil",
+        "Leicht zu reinigen",
+        "Sport-Style"
+      ],
+      "callout_title": "Schule + Sport: Achtung",
+      "callout_text": "Ein Lifestyle-Sneaker ist nicht automatisch ein Sportschuh. Wenn die Schule ein separates Paar fürs Turnen verlangt, lieber ein dediziertes, sauberes Modell planen — statt einen Schuh zu kaufen, der «alles können soll».",
+      "section_heading": "Das richtige Gleichgewicht für 2026",
+      "section_body": "<p>Air Force 1 bleiben eine Schulstart-Referenz, während Retro-Runner dank Komfort an Boden gewinnen. Jordan haben weiterhin starken Wunschwert, besonders in GS-Grössen. Für ein einziges Paar ist Grau, Schwarz-Weiss oder Dunkelblau oft realistischer als komplett Weiss. Glatte Materialien lassen sich leichter reinigen; Mesh trocknet schneller, lässt aber Feuchtigkeit durch; Wildleder braucht mehr Pflege.</p>",
+      "how_to_heading": "Der 5-Minuten-Test im Laden oder zu Hause",
+      "how_to_body": "<p>Das Kind laufen lassen, ein paar Stufen hoch, in die Hocke gehen und einen kleinen Sprung auf der Stelle. Fragen, was es spürt — ohne die Antwort vorzuschlagen.</p>",
+      "table_cols": [
+        "Einsatz",
+        "Modell",
+        "Warum"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Sehr aktiver Tag",
+          "col_2": "Leichter, gedämpfter Runner",
+          "col_3": "P-6000 / GEL-NYC"
+        },
+        {
+          "col_1": "Einfacher Alltag",
+          "col_2": "Glatte Oberfläche und stabile Sohle",
+          "col_3": "Air Force 1"
+        },
+        {
+          "col_1": "Streetwear-Style",
+          "col_2": "Strukturierte Basketball- oder Skate-Silhouette",
+          "col_3": "Jordan 1 / Jordan 4 / Campus"
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · Der sichere Wert",
+          "title": "Nike Air Force 1 GS",
+          "description": "Solide, stabil und einfach zu reinigen. Schwarz-Weiss oder mit kleinem Kontrast: der beste praktische Kompromiss.",
+          "score_label": "Robustheit"
+        },
+        {
+          "rank": "02 · Der Komfort",
+          "title": "Nike P-6000 GS",
+          "description": "Ein leichter Runner für aktive Tage. Wirkt sportlich, ohne ein dedizierter Performance-Schuh zu sein.",
+          "score_label": "Komfort"
+        },
+        {
+          "rank": "03 · Das Traumpaar",
+          "title": "Air Jordan 4 GS",
+          "description": "Ikonisch und sehr begehrt, aber schwerer. Reservieren für Kinder, die die Silhouette wirklich lieben und gut damit umgehen.",
+          "score_label": "Impact"
+        },
+        {
+          "rank": "04 · Der Basketball-Klassiker",
+          "title": "Air Jordan 1 Low GS",
+          "description": "Weniger sperrig als eine Jordan 4 und leicht zu tragen. Schwarz-Weiss oder Blau-Weiss sind gute Erstwahl-Colorways.",
+          "score_label": "Vielseitigkeit"
+        },
+        {
+          "rank": "05 · Die Skate",
+          "title": "adidas Campus 00s GS",
+          "description": "Gepolstert und bequem, besonders mit weiter Jeans oder Cargo. Dunkles Wildleder ist einfacher im Alltag als helles Beige.",
+          "score_label": "Style"
+        },
+        {
+          "rank": "Die Alternative",
+          "title": "ASICS GEL-NYC GS",
+          "description": "Technisch, stabil und aktuell. Sehr gut, wenn das Kind viel läuft und Runner Basketball-Schuhen vorzieht.",
+          "score_label": "Balance"
+        }
+      ],
+      "checklist": [
+        "Kein Druck auf dem kleinen Zeh",
+        "Stabile Ferse",
+        "Selbstständiges Schliessen",
+        "Sohle für den Alltag",
+        "Colorway passend zum Pflege-Level"
+      ],
+      "verdict": "<p>Am praktischsten: dunkle Air Force 1. Am bequemsten: P-6000 oder GEL-NYC. Das Wunschpaar: Jordan 4. Der gute Mittelweg: Jordan 1 Low.</p>"
+    },
+    "en": {
+      "display_title": "Back-to-school shoes 2026 — boys' guide",
+      "meta_title": "Back-to-school shoes 2026 — boys' guide | Resell Lausanne",
+      "meta_description": "Sneakers for boys in 2026: Air Force 1 GS, P-6000, Jordan 4 GS, Jordan 1 Low, Campus, GEL-NYC GS. Support, everyday wear and sizing in Switzerland.",
+      "eyebrow": "Boys' guide · ages 6–12 · back-to-school 2026",
+      "deck": "Style that survives break time.",
+      "intro": "For a boy aged 6-12, basketball-, retro runner- and skate-inspired models are the easiest to adopt. But a good-looking pair that slips, pinches or can't be laced alone quickly becomes a bad pair.",
+      "chips": [
+        "Tough",
+        "Stable",
+        "Easy clean",
+        "Sport style"
+      ],
+      "callout_title": "School + PE: watch out",
+      "callout_text": "A lifestyle sneaker isn't automatically a sports shoe. If school requires a separate pair for gym, plan a dedicated clean model rather than buying one shoe that's \"meant to do everything\".",
+      "section_heading": "The right balance for 2026",
+      "section_body": "<p>Air Force 1 remain a back-to-school reference, while retro runners gain ground thanks to comfort. Jordans still carry strong desire, especially in GS sizes. For a single pair, grey, black-white or dark blue is often more realistic than all-white. Smooth materials clean more easily; mesh dries faster but lets moisture through; suede needs more care.</p>",
+      "how_to_heading": "The 5-minute test in store or at home",
+      "how_to_body": "<p>Have them walk, climb a few steps, squat and do a small jump on the spot. Ask what they feel — without suggesting the answer.</p>",
+      "table_cols": [
+        "Use",
+        "Model",
+        "Why"
+      ],
+      "table_rows": [
+        {
+          "col_1": "Very active day",
+          "col_2": "Light, cushioned runner",
+          "col_3": "P-6000 / GEL-NYC"
+        },
+        {
+          "col_1": "Easy everyday wear",
+          "col_2": "Smooth upper and stable sole",
+          "col_3": "Air Force 1"
+        },
+        {
+          "col_1": "Streetwear style",
+          "col_2": "Structured basketball or skate silhouette",
+          "col_3": "Jordan 1 / Jordan 4 / Campus"
+        }
+      ],
+      "products": [
+        {
+          "rank": "01 · The safe bet",
+          "title": "Nike Air Force 1 GS",
+          "description": "Solid, stable and easy to clean. Black-white or with a small contrast hit: the best practical compromise.",
+          "score_label": "Durability"
+        },
+        {
+          "rank": "02 · The comfort pick",
+          "title": "Nike P-6000 GS",
+          "description": "A light runner for active days. Looks sporty without being a dedicated performance shoe.",
+          "score_label": "Comfort"
+        },
+        {
+          "rank": "03 · The dream pair",
+          "title": "Air Jordan 4 GS",
+          "description": "Iconic and highly wanted, but heavier. Save it for a child who really loves the silhouette and will look after it.",
+          "score_label": "Impact"
+        },
+        {
+          "rank": "04 · The basketball classic",
+          "title": "Air Jordan 1 Low GS",
+          "description": "Less bulky than a Jordan 4 and easy to wear. Black-white or blue-white are strong first colourways.",
+          "score_label": "Versatility"
+        },
+        {
+          "rank": "05 · The skate pair",
+          "title": "adidas Campus 00s GS",
+          "description": "Padded and comfortable, especially with wide jeans or cargos. Dark suede is easier day to day than light beige.",
+          "score_label": "Style"
+        },
+        {
+          "rank": "The alternative",
+          "title": "ASICS GEL-NYC GS",
+          "description": "Technical, stable and current. A very good pick if they walk a lot and prefer runners to basketball shoes.",
+          "score_label": "Balance"
+        }
+      ],
+      "checklist": [
+        "No pressure on the little toe",
+        "Stable heel",
+        "Can fasten alone",
+        "Sole suited to daily wear",
+        "Colourway matched to their care level"
+      ],
+      "verdict": "<p>Most practical: dark Air Force 1. Most comfortable: P-6000 or GEL-NYC. The wish-list pair: Jordan 4. The smart middle ground: Jordan 1 Low.</p>"
+    }
+  }
+}

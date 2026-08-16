@@ -1,0 +1,49 @@
+{%- liquid
+  assign origin = request.origin
+  assign hreflang_default_path = request.path
+  if localization.language.root_url != '/'
+    assign hreflang_default_path = request.path | remove_first: localization.language.root_url
+  endif
+  if hreflang_default_path == blank
+    assign hreflang_default_path = '/'
+  endif
+  assign hreflang_default = origin | append: hreflang_default_path
+  if hreflang_default contains '?'
+    assign hreflang_default = hreflang_default | split: '?' | first
+  endif
+-%}
+<link rel="alternate" hreflang="x-default" href="{{ hreflang_default }}">
+{%- for language in localization.available_languages -%}
+  {%- liquid
+    assign language_path = request.path
+    if localization.language.root_url != '/'
+      assign language_path = request.path | remove_first: localization.language.root_url
+    endif
+    if language_path == blank
+      assign language_path = '/'
+    endif
+    if language.root_url == '/'
+      assign language_url = origin | append: language_path
+    elsif language_path == '/'
+      assign language_url = origin | append: language.root_url
+    else
+      assign locale_suffix = language_path | remove_first: '/'
+      assign language_root = language.root_url
+      assign language_root_last = language_root | slice: -1, 1
+      if language_root_last == '/'
+        assign language_url = origin | append: language_root | append: locale_suffix
+      else
+        assign language_url = origin | append: language_root | append: '/' | append: locale_suffix
+      endif
+    endif
+    if language_url contains '?'
+      assign language_url = language_url | split: '?' | first
+    endif
+
+    assign hreflang_code = language.iso_code
+    if hreflang_code == 'fr' and language.root_url == '/'
+      assign hreflang_code = 'fr-CH'
+    endif
+  -%}
+  <link rel="alternate" hreflang="{{ hreflang_code }}" href="{{ language_url }}">
+{%- endfor -%}

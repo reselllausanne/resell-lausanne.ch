@@ -1,0 +1,12 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+-%}
+{% case locale_base %}
+  {% when 'de' %}
+    {% render 'collection-plp-faq-onitsuka-tiger-content-de' %}
+  {% when 'en' %}
+    {% render 'collection-plp-faq-onitsuka-tiger-content-en' %}
+  {% else %}
+    {% render 'collection-plp-faq-onitsuka-tiger-content-fr' %}
+{% endcase %}

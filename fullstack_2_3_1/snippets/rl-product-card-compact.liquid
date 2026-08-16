@@ -1,0 +1,39 @@
+{% doc %}
+  Renders compact product card in premium homepage rails.
+
+  @param {product} product - Product object
+{% enddoc %}
+
+{% if product != blank %}
+  {% capture compact_price_snapshot %}
+    {% render 'rs-product-price-snapshot', product: product %}
+  {% endcapture %}
+  {% assign compact_price_parts = compact_price_snapshot | strip | split: '|' %}
+  <article class="rl-product-card">
+    <a class="rl-product-card__link" href="{{ product.url }}">
+      <div class="rl-product-card__media">
+        {% if product.featured_media != blank %}
+          {% capture card_srcset %}
+            {{ product.featured_media | image_url: width: 240 }} 240w, {{ product.featured_media | image_url: width: 360 }} 360w, {{ product.featured_media | image_url: width: 500 }} 500w, {{ product.featured_media | image_url: width: 700 }} 700w
+          {% endcapture %}
+          {% assign rl_card_img_src = product.featured_media | image_url: width: 700 %}
+          {% render 'rl-deferred-img',
+            lazy_src: rl_card_img_src,
+            lazy_srcset: card_srcset,
+            sizes: '(min-width: 1000px) 21vw, (min-width: 750px) 24vw, 45vw',
+            alt: product.title,
+            width: 500,
+            height: 625
+          %}
+        {% endif %}
+      </div>
+
+      <h3 class="rl-product-card__title">{{ product.title }}</h3>
+      {% if compact_price_parts[8] == '1' %}
+        <p class="rl-product-card__price">
+          {% if compact_price_parts[5] == '1' %}A partir de {% endif %}{{ compact_price_parts[2] | plus: 0 | money_without_trailing_zeros }}
+        </p>
+      {% endif %}
+    </a>
+  </article>
+{% endif %}

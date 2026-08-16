@@ -1,0 +1,51 @@
+{% comment %}
+  Store-wide Judge.me trust line (all reviews rating + count).
+
+  Priority:
+  1. Shop metafields (SSR, no JS) when Judge.me has synced them
+  2. Manual fallback values from block settings
+
+  We intentionally avoid Judge.me JS "all reviews" placeholders here because
+  some themes render star icon ligatures as plain text (ex: "star_rate").
+{% endcomment %}
+
+{% liquid
+  assign jm_rating = shop.metafields.judgeme.all_reviews_rating.value | default: shop.metafields.judgeme.all_reviews_rating
+  assign jm_count = shop.metafields.judgeme.all_reviews_count.value | default: shop.metafields.judgeme.all_reviews_count
+
+  if jm_rating == blank
+    assign jm_rating = shop.metafields.reviews.rating.value.rating | default: shop.metafields.reviews.rating
+  endif
+  if jm_count == blank
+    assign jm_count = shop.metafields.reviews.rating_count.value | default: shop.metafields.reviews.rating_count
+  endif
+
+  assign jm_has_metafields = false
+  if jm_rating != blank and jm_count != blank
+    assign jm_has_metafields = true
+  endif
+%}
+
+<span class="resell-store-trust__rating">
+  {% if jm_has_metafields %}
+    {% render 'rating-stars', rating: jm_rating, show_note: false, size: 'compact' %}
+  {% else %}
+    {% if fallback_rating != blank %}
+      <span class="resell-store-trust__fallback" data-judgeme-fallback>
+        {% render 'rating-stars', rating: fallback_rating, show_note: false, size: 'compact' %}
+      </span>
+    {% endif %}
+  {% endif %}
+</span>
+
+<span class="resell-store-trust__label">{{ 'store_trust.over' | t }}</span>
+
+<span class="resell-store-trust__count">
+  {% if jm_has_metafields %}
+    {{ jm_count }}
+  {% else %}
+    {% if fallback_count != blank %}
+      <span class="resell-store-trust__fallback" data-judgeme-fallback>{{ fallback_count }}</span>
+    {% endif %}
+  {% endif %}
+</span>

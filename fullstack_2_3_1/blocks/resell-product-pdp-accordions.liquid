@@ -1,0 +1,150 @@
+{% liquid
+  assign pdp_product = closest.product | default: product
+  if request.visual_preview_mode and pdp_product == blank
+    assign pdp_product = collections.all.products.first
+  endif
+
+  assign heading_description = 'products.pdp.accordion_description' | t
+  assign heading_authenticity = 'products.pdp.accordion_authenticity' | t
+  assign heading_delivery = 'products.pdp.accordion_delivery' | t
+  assign heading_payment = 'products.pdp.accordion_payment' | t
+%}
+
+<div
+  class="
+    accordions accordions--{{ block.id }} accordions--{{ block.settings.icon }} accordions--padding-{{ block.settings.accordion_padding }}
+    {%- if block.settings.dividers %} accordions--dividers{% endif -%}
+    {%- if block.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
+    {%- if block.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+    {%- if block.settings.additional_class != blank %} {{ block.settings.additional_class }}{% endif -%}
+  "
+  {{ block.shopify_attributes }}
+>
+  {% capture description_content %}
+    {% render 'product-pdp-description-content', product: pdp_product %}
+  {% endcapture %}
+
+  {% capture description_preview %}
+    {{ pdp_product.description | default: pdp_product.body_html }}
+  {% endcapture %}
+  {% assign description_preview = description_preview | strip_html | strip | truncate: 180 %}
+
+  <div class="accordion-block">
+    {% render 'accordion',
+      content: description_content,
+      heading: heading_description,
+      heading_style: 'paragraph',
+      heading_tag: 'p',
+      open_by_default: false,
+      show_preview: true,
+      preview_text: description_preview
+    %}
+  </div>
+
+  {% capture auth_content %}
+    <div class="rte product-pdp-accordion-trust">
+      {{ 'products.pdp.auth_html' | t }}
+    </div>
+  {% endcapture %}
+
+  <div class="accordion-block">
+    {% render 'accordion',
+      content: auth_content,
+      heading: heading_authenticity,
+      heading_style: 'paragraph',
+      heading_tag: 'p',
+      open_by_default: false
+    %}
+  </div>
+
+  {% capture delivery_content %}
+    <div class="rte product-pdp-accordion-trust">
+      {{ 'products.pdp.delivery_html' | t }}
+    </div>
+  {% endcapture %}
+
+  <div class="accordion-block">
+    {% render 'accordion',
+      content: delivery_content,
+      heading: heading_delivery,
+      heading_style: 'paragraph',
+      heading_tag: 'p',
+      open_by_default: false
+    %}
+  </div>
+
+  {% capture payment_content %}
+    <div class="rte product-pdp-accordion-trust">
+      {{ 'products.pdp.payment_html' | t }}
+    </div>
+  {% endcapture %}
+
+  <div class="accordion-block">
+    {% render 'accordion',
+      content: payment_content,
+      heading: heading_payment,
+      heading_style: 'paragraph',
+      heading_tag: 'p',
+      open_by_default: false
+    %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Accordéons PDP Resell",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "show_on_display",
+      "label": "t:show_on_display",
+      "default": "desktop_and_mobile",
+      "options": [
+        { "value": "desktop_and_mobile", "label": "t:desktop_and_mobile" },
+        { "value": "desktop_only", "label": "t:desktop_only" },
+        { "value": "mobile_only", "label": "t:mobile_only" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:icon",
+      "options": [
+        { "value": "caret", "label": "t:icons_list.caret" },
+        { "value": "add", "label": "t:icons_list.add" }
+      ],
+      "default": "add"
+    },
+    {
+      "type": "select",
+      "id": "accordion_padding",
+      "label": "t:accordion_padding",
+      "options": [
+        { "value": "small", "label": "t:small" },
+        { "value": "medium", "label": "t:medium" },
+        { "value": "large", "label": "t:large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "checkbox",
+      "id": "dividers",
+      "label": "t:show_dividers",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "additional_class",
+      "label": "t:additional_class",
+      "info": "t:additional_class_info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordéons PDP Resell",
+      "category": "t:product"
+    }
+  ]
+}
+{% endschema %}

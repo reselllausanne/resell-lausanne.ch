@@ -1,0 +1,402 @@
+{%- liquid
+  assign per_page = section.settings.per_page | default: 250
+  if per_page > 250
+    assign per_page = 250
+  endif
+
+  assign url_catalog = '/collections/all'
+  if collections.all != blank
+    assign url_catalog = collections.all.url
+  endif
+-%}
+
+<div
+  class="rl-sitemap color-{{ section.settings.color_scheme }}"
+  style="
+    --padding-top: {{ section.settings.padding_top }}px;
+    --padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="rl-sitemap__inner page-width">
+    {%- if section.settings.heading != blank -%}
+      <h1 class="rl-sitemap__title">{{ section.settings.heading | escape }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.intro != blank -%}
+      <p class="rl-sitemap__intro">{{ section.settings.intro }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.show_collections -%}
+      <section class="rl-sitemap__block">
+        <h2 class="rl-sitemap__h2">Collections</h2>
+        <ul class="rl-sitemap__list rl-sitemap__list--cols">
+          {%- for collection in collections -%}
+            {%- if collection.products_count > 0 -%}
+              <li>
+                <a class="rl-sitemap__link" href="{{ collection.url }}">{{ collection.title | escape }}</a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </section>
+    {%- endif -%}
+
+    {%- if section.settings.show_pages -%}
+      <section class="rl-sitemap__block">
+        <h2 class="rl-sitemap__h2">Informations</h2>
+        <ul class="rl-sitemap__list rl-sitemap__list--cols">
+          {%- for page in pages -%}
+            {%- if page.handle != 'plan-du-site' -%}
+              <li><a class="rl-sitemap__link" href="{{ page.url }}">{{ page.title | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </section>
+    {%- endif -%}
+
+    <section class="rl-sitemap__block">
+      <h2 class="rl-sitemap__h2">Produits</h2>
+
+      <p class="rl-sitemap__hub">
+        <a class="rl-sitemap__link rl-sitemap__link--hub" href="{{ url_catalog }}" data-no-locale-lock>Catalogue complet</a>
+        <span class="rl-sitemap__hub-sep" aria-hidden="true">·</span>
+        <span class="rl-sitemap__hub-note">{{ collections.all.products_count | default: shop.products_count }} produits — {{ per_page }} par page</span>
+      </p>
+
+      {%- paginate collections.all.products by per_page -%}
+        {%- assign sitemap_page_base = page.url | default: request.path -%}
+        {%- if paginate.pages > 1 -%}
+          <nav class="rl-sitemap__page-jumps" aria-label="Accès direct aux pages produits">
+            <p class="rl-sitemap__page-jumps-label">
+              Pages produits ({{ paginate.pages }}) —
+              page {{ paginate.current_page }} / {{ paginate.pages }}
+            </p>
+            <ul class="rl-sitemap__page-jumps-list" role="list">
+              {%- for jump_page in (1..paginate.pages) -%}
+                <li>
+                  <a
+                    class="rl-sitemap__page-jump{% if jump_page == paginate.current_page %} is-current{% endif %}"
+                    href="{{ sitemap_page_base }}?page={{ jump_page }}"
+                    {% if jump_page == paginate.current_page %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{ jump_page }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+          <nav class="rl-sitemap__pagination rl-sitemap__pagination--top" aria-label="Pagination produits (haut)">
+            {{ paginate | default_pagination }}
+          </nav>
+        {%- endif -%}
+
+        <ul class="rl-sitemap__list rl-sitemap__list--cols">
+          {%- for product in collections.all.products -%}
+            <li>
+              <a class="rl-sitemap__link" href="{{ product.url }}" title="{{ product.title | escape }}">
+                {%- if product.vendor != blank -%}<span class="rl-sitemap__vendor">{{ product.vendor | escape }} —</span> {% endif -%}
+                {{ product.title | escape }}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="rl-sitemap__page-jumps rl-sitemap__page-jumps--bottom" aria-label="Accès direct aux pages produits (bas)">
+            <ul class="rl-sitemap__page-jumps-list" role="list">
+              {%- for jump_page in (1..paginate.pages) -%}
+                <li>
+                  <a
+                    class="rl-sitemap__page-jump{% if jump_page == paginate.current_page %} is-current{% endif %}"
+                    href="{{ sitemap_page_base }}?page={{ jump_page }}"
+                    {% if jump_page == paginate.current_page %}
+                      aria-current="page"
+                    {% endif %}
+                  >
+                    {{ jump_page }}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+          <nav class="rl-sitemap__pagination" aria-label="Pagination produits">
+            {{ paginate | default_pagination }}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    </section>
+  </div>
+</div>
+
+{% stylesheet %}
+  .rl-sitemap {
+    padding-top: var(--padding-top, 40px);
+    padding-bottom: var(--padding-bottom, 60px);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .rl-sitemap__inner {
+    max-width: min(1280px, 100%);
+    margin-inline: auto;
+    padding-inline: var(--page-x);
+  }
+
+  .rl-sitemap__title {
+    margin: 0 0 12px;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.15;
+  }
+
+  .rl-sitemap__intro {
+    margin: 0 0 24px;
+    max-width: 72ch;
+    color: rgb(0 0 0 / 70%);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .rl-sitemap__hub {
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .rl-sitemap__link--hub {
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  .rl-sitemap__hub-sep {
+    margin: 0 8px;
+    color: rgb(0 0 0 / 35%);
+  }
+
+  .rl-sitemap__hub-note {
+    color: rgb(0 0 0 / 55%);
+  }
+
+  .rl-sitemap__pagination--top {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+
+  .rl-sitemap__page-jumps {
+    margin: 0 0 16px;
+    padding: 16px;
+    border: 1px solid rgb(0 0 0 / 10%);
+    border-radius: 8px;
+    background: rgb(0 0 0 / 2%);
+  }
+
+  .rl-sitemap__page-jumps-label {
+    margin: 0 0 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: rgb(0 0 0 / 65%);
+  }
+
+  .rl-sitemap__page-jumps-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .rl-sitemap__page-jump {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    padding: 4px 8px;
+    border: 1px solid rgb(0 0 0 / 15%);
+    border-radius: 4px;
+    color: inherit;
+    font-size: 12px;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .rl-sitemap__page-jump:hover {
+    text-decoration: underline;
+  }
+
+  .rl-sitemap__page-jump.is-current {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border-color: var(--color-foreground);
+    font-weight: 600;
+  }
+
+  .rl-sitemap__page-jumps--bottom {
+    margin-top: 16px;
+    margin-bottom: 0;
+  }
+
+  .rl-sitemap__block {
+    margin-top: 32px;
+  }
+
+  .rl-sitemap__h2 {
+    margin: 0 0 16px;
+    font-size: clamp(1rem, 1.6vw, 1.125rem);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .rl-sitemap__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rl-sitemap__list--cols {
+    column-count: 1;
+    column-gap: 32px;
+  }
+
+  .rl-sitemap__list--cols li {
+    break-inside: avoid;
+    margin: 0 0 6px;
+  }
+
+  .rl-sitemap__link {
+    color: inherit;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .rl-sitemap__link:hover {
+    text-decoration: underline;
+  }
+
+  .rl-sitemap__vendor {
+    color: rgb(0 0 0 / 55%);
+    font-weight: 500;
+  }
+
+  .rl-sitemap__pagination {
+    margin-top: 24px;
+    font-size: 14px;
+  }
+
+  .rl-sitemap__pagination a,
+  .rl-sitemap__pagination span {
+    padding: 4px 10px;
+    margin-right: 4px;
+    border: 1px solid rgb(0 0 0 / 15%);
+    border-radius: 4px;
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .rl-sitemap__pagination span[aria-current="page"],
+  .rl-sitemap__pagination .page.current {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border-color: var(--color-foreground);
+  }
+
+  @media (width >= 640px) {
+    .rl-sitemap__list--cols {
+      column-count: 2;
+    }
+  }
+
+  @media (width >= 960px) {
+    .rl-sitemap__list--cols {
+      column-count: 3;
+    }
+  }
+
+  @media (width >= 1280px) {
+    .rl-sitemap__list--cols {
+      column-count: 4;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Plan du site — produits",
+  "tag": "section",
+  "class": "section-rl-sitemap",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "H1",
+      "default": "Plan du site"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro paragraph",
+      "default": "Retrouvez l'ensemble des sneakers, vêtements et accessoires authentiques disponibles sur Resell Lausanne, organisés par marque pour vous aider à naviguer dans toute la sélection."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collections",
+      "label": "Lister les collections",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pages",
+      "label": "Lister les pages d'information",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Produits par page",
+      "min": 50,
+      "max": 250,
+      "step": 25,
+      "default": 250
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Plan du site — produits"
+    }
+  ]
+}
+{% endschema %}

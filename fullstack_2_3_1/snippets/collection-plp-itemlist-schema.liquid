@@ -1,0 +1,77 @@
+{% comment %}
+  ItemList + Product + Offer for products visible on the current PLP page.
+  Fixes GSC "Either offers, review or aggregateRating should be specified" on
+  /collections/*?page=N where Google reads listing cards without valid Product schema.
+
+  @param collection {collection}
+  @param paginate {paginate}
+{% endcomment %}
+{% if collection != blank and paginate != blank and collection.products.size > 0 %}
+  {% liquid
+    assign schema_return_policy_id = shop.url | append: '/#merchant-return-policy'
+    assign schema_price_valid_until = 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d'
+    assign itemlist_url = request.origin | append: collection.url
+    if paginate.current_page > 1
+      assign itemlist_url = itemlist_url | append: '?page=' | append: paginate.current_page
+    endif
+  %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": {{ collection.title | json }},
+      "url": {{ itemlist_url | json }},
+      "numberOfItems": {{ collection.products.size }},
+      "itemListElement": [
+        {%- assign schema_item_index = 0 -%}
+        {%- for product in collection.products -%}
+          {%- unless product.available -%}
+            {%- continue -%}
+          {%- endunless -%}
+          {%- liquid
+            capture list_price_snapshot
+              render 'rs-product-price-snapshot', product: product
+            endcapture
+            assign list_price_parts = list_price_snapshot | strip | split: '|'
+            if list_price_parts[8] != '1'
+              continue
+            endif
+            assign schema_item_index = schema_item_index | plus: 1
+            assign list_position = paginate.current_offset | plus: schema_item_index
+            assign list_product_url = request.origin | append: product.url
+            assign list_image = product.featured_media.preview_image | image_url: width: 1200 | prepend: 'https:'
+            assign list_offer_price = list_price_parts[2] | plus: 0
+          -%}
+          {%- unless schema_item_index == 1 -%},{%- endunless -%}
+          {
+            "@type": "ListItem",
+            "position": {{ list_position }},
+            "item": {
+              "@type": "Product",
+              "name": {{ product.title | json }},
+              "url": {{ list_product_url | json }},
+              {%- if list_image != blank -%}
+              "image": {{ list_image | json }},
+              {%- endif -%}
+              "brand": {
+                "@type": "Brand",
+                "name": {{ product.vendor | json }}
+              },
+              "offers": {
+                "@type": "Offer",
+                "url": {{ list_product_url | json }},
+                "priceCurrency": {{ cart.currency.iso_code | default: 'CHF' | json }},
+                "price": "{{ list_offer_price | divided_by: 100.0 }}",
+                "priceValidUntil": {{ schema_price_valid_until | json }},
+                "availability": "https://schema.org/InStock",
+                "hasMerchantReturnPolicy": {
+                  "@id": {{ schema_return_policy_id | json }}
+                }
+              }
+            }
+          }
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{% endif %}

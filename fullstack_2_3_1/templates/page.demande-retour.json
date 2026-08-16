@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main-page": {
+      "type": "main-page",
+      "settings": {
+        "color_scheme": "",
+        "wrap_in_card": false,
+        "hide_header_and_footer": false,
+        "section_width": "normal",
+        "layout_type": "flex",
+        "layout_flex_direction_desktop": "column",
+        "layout_gap_desktop": 20,
+        "padding_top": 40,
+        "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    }
+  },
+  "order": ["main-page"]
+}

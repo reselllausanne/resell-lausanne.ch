@@ -12,6 +12,78 @@
   if selected_variant.featured_media != blank
     assign featured_media = selected_variant.featured_media
   endif
+  if featured_media != blank
+    assign pdp_preload_image_url = featured_media.preview_image | image_url: width: 1000
+  endif
+
+  assign is_search_context = false
+  assign disable_card_slider = false
+  if request.page_type == 'search'
+    assign is_search_context = true
+    assign card_image_width = 260
+    assign card_image_widths = '180, 260, 360'
+    assign card_slider_extra_media_limit = 0
+    assign disable_card_slider = true
+  elsif request.page_type == 'collection'
+    assign card_image_width = 420
+    assign card_image_widths = '280, 420, 560, 720'
+    assign card_slider_extra_media_limit = 0
+    assign disable_card_slider = true
+  else
+    assign card_image_width = 600
+    assign card_image_widths = '300, 450, 600, 750, 900'
+    assign card_slider_extra_media_limit = 99
+  endif
+  assign card_image_sizes = '(min-width: 750px) 25vw, 50vw'
+
+  # PLP: fixed ratio so every card same height (adapt follows each file → misaligned grid)
+  assign card_media_ratio_setting = block.settings.media_ratio
+  if request.page_type == 'collection'
+    assign card_media_ratio_setting = '4 / 3'
+  endif
+
+  assign defer_card_slider_init = false
+  if request.page_type == 'collection' or request.page_type == 'search'
+    assign defer_card_slider_init = true
+  endif
+
+  assign card_priority_rank = 0
+  if request.page_type == 'collection'
+    for priority_product in collection.products limit: 4
+      if priority_product.id == product.id
+        assign card_priority_rank = forloop.index
+        break
+      endif
+    endfor
+  elsif request.page_type == 'search'
+    assign priority_product_count = 0
+    for priority_result in search.results
+      if priority_result.object_type == 'product'
+        assign priority_product_count = priority_product_count | plus: 1
+        if priority_product_count <= 1 and priority_result.id == product.id
+          assign card_priority_rank = priority_product_count
+          break
+        endif
+        if priority_product_count >= 1
+          break
+        endif
+      endif
+    endfor
+  endif
+
+  assign card_image_loading = 'lazy'
+  assign card_image_fetchpriority = 'auto'
+  assign card_image_preload = false
+  assign card_image_decoding = 'async'
+  if card_priority_rank > 0
+    assign card_image_loading = 'eager'
+  endif
+  if card_priority_rank == 1
+    assign card_image_fetchpriority = 'high'
+    assign card_image_decoding = 'sync'
+  elsif request.page_type == 'collection' and card_priority_rank <= 4
+    assign card_image_fetchpriority = 'low'
+  endif
 %}
 
 <product-card-media-gallery
@@ -26,7 +98,7 @@
     data-visual-preview-mode
   {% endif %}
 >
-  {% if block.settings.show_slider and product.media.size > 1 %}
+  {% if block.settings.show_slider and product.media.size > 1 and disable_card_slider == false %}
     <slider-component
       data-per-page-mobile="1"
       data-per-page-desktop="1"
@@ -36,8 +108,12 @@
       data-show-arrows-mobile="true"
       data-show-pagination-mobile="false"
       data-rewind="false"
+      data-auto-height="false"
       style="--margin-top: 0px; --margin-bottom: 0px;"
       class="product-card-media-gallery"
+      {% if defer_card_slider_init %}
+        data-defer-init
+      {% endif %}
     >
       <div class="splide" role="group" data-ref="main-slider">
         <div class="splide__arrows">
@@ -59,17 +135,35 @@
                 {%- if block.settings.media_rounded %} product-card-media-gallery__media--rounded{% endif -%}
               "
             >
-              {% if block.settings.media_ratio == 'adapt' %}
+              {% if card_media_ratio_setting == 'adapt' %}
                 {% assign ratio = featured_media.aspect_ratio %}
               {% else %}
-                {% assign ratio = block.settings.media_ratio %}
+                {% assign ratio = card_media_ratio_setting %}
               {% endif %}
 
-              {% render 'product-media', media: featured_media, show_video: false, ratio: ratio %}
+              <a href="{{ product.url }}" class="product-card-media-gallery__link" tabindex="-1" aria-label="{{ product.title | escape }}"{% if pdp_preload_image_url != blank %} data-pdp-preload="{{ pdp_preload_image_url }}"{% endif %}>
+                {% render 'product-media',
+                  alt_fallback: product.title,
+                  media: featured_media,
+                  show_video: false,
+                  ratio: ratio,
+                loading: card_image_loading,
+                fetchpriority: card_image_fetchpriority,
+                preload: card_image_preload,
+                decoding: card_image_decoding,
+                  image_width: card_image_width,
+                  widths: card_image_widths,
+                  sizes: card_image_sizes
+                %}
+              </a>
             </li>
 
             {% comment %} Puis les autres médias (en excluant celui déjà affiché) {% endcomment %}
+            {% assign extra_media_count = 0 %}
             {% for media in product.media %}
+              {% if extra_media_count >= card_slider_extra_media_limit %}
+                {% break %}
+              {% endif %}
               {% if media.id != featured_media.id %}
                 <li
                   class="
@@ -78,14 +172,26 @@
                     {%- if block.settings.media_rounded %} product-card-media-gallery__media--rounded{% endif -%}
                   "
                 >
-                  {% if block.settings.media_ratio == 'adapt' %}
+                  {% if card_media_ratio_setting == 'adapt' %}
                     {% assign ratio = media.aspect_ratio %}
                   {% else %}
-                    {% assign ratio = block.settings.media_ratio %}
+                    {% assign ratio = card_media_ratio_setting %}
                   {% endif %}
 
-                  {% render 'product-media', media: media, show_video: false, ratio: ratio %}
+                  <a href="{{ product.url }}" class="product-card-media-gallery__link" tabindex="-1" aria-label="{{ product.title | escape }}"{% if pdp_preload_image_url != blank %} data-pdp-preload="{{ pdp_preload_image_url }}"{% endif %}>
+                    {% render 'product-media',
+                      alt_fallback: product.title,
+                      media: media,
+                      show_video: false,
+                      ratio: ratio,
+                      loading: 'lazy',
+                      image_width: card_image_width,
+                      widths: card_image_widths,
+                      sizes: card_image_sizes
+                    %}
+                  </a>
                 </li>
+                {% assign extra_media_count = extra_media_count | plus: 1 %}
               {% endif %}
             {% endfor %}
           </ul>
@@ -93,24 +199,41 @@
       </div>
     </slider-component>
   {% else %}
-    <div
+    <a
+      href="{{ product.url }}"
       class="
+        product-card-media-gallery__link
         product-card-media-gallery__media
         {%- if block.settings.media_rounded %} product-card-media-gallery__media--rounded{% endif -%}
       "
+      aria-label="{{ product.title | escape }}"
+      {% if pdp_preload_image_url != blank %}data-pdp-preload="{{ pdp_preload_image_url }}"{% endif %}
     >
-      {% if block.settings.media_ratio == 'adapt' %}
+      {% if card_media_ratio_setting == 'adapt' %}
         {% assign ratio = featured_media.aspect_ratio %}
       {% else %}
-        {% assign ratio = block.settings.media_ratio %}
+        {% assign ratio = card_media_ratio_setting %}
       {% endif %}
 
-      {% render 'product-media', media: featured_media, show_video: false, ratio: ratio %}
-    </div>
+      {% render 'product-media',
+        alt_fallback: product.title,
+        media: featured_media,
+        show_video: false,
+        ratio: ratio,
+        loading: card_image_loading,
+        fetchpriority: card_image_fetchpriority,
+        preload: card_image_preload,
+        decoding: card_image_decoding,
+        image_width: card_image_width,
+        widths: card_image_widths,
+        sizes: card_image_sizes
+      %}
+    </a>
   {% endif %}
 
   {% if block.settings.show_badges %}
-    {% render 'product-badges', product: product %}
+    {% render 'product-card-promotional-pictos', product: product %}
+    {% render 'product-badges', product: product, skip_sales_badge: true %}
   {% endif %}
 
   {% if settings.activate_wishlist %}
@@ -125,6 +248,41 @@
     position: relative;
   }
 
+  .product-card-media-gallery__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product-card-promotional-pictos {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    pointer-events: none;
+  }
+
+  .product-card-promotional-pictos__picto {
+    display: block;
+    width: 50px;
+    height: 26px;
+    max-width: 50px;
+    max-height: 26px;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .main-search__products-grid .product-card-promotional-pictos {
+    top: 10px;
+    right: 10px;
+  }
+
   .product-card-media-gallery .splide__slide {
     margin-right: var(--card-padding) !important;
   }
@@ -134,8 +292,26 @@
     border: none;
   }
 
+  .product-card-media-gallery[data-rl-deferred-slider='true'] .splide__arrow {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   .product-card-media-gallery__media {
-    height: 100%;
+    height: auto;
+  }
+
+  .product-card-media-gallery__media .product-media {
+    background-color: rgb(var(--color-background-rgb, 255 255 255));
+  }
+
+  .main-collection__products-grid .product-card-media-gallery__media .product-media img {
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .main-search__products-grid .product-card-media-gallery__media {
+    height: auto;
   }
 
   .product-card-media-gallery__media--rounded {
@@ -235,11 +411,15 @@
         { "value": "4 / 3", "label": "t:landscape" },
         { "value": "adapt", "label": "t:adapt" }
       ],
-      "default": "1 / 1"
+      "default": "adapt"
     },
     {
       "type": "header",
       "content": "t:badges"
+    },
+    {
+      "type": "paragraph",
+      "content": "SOLDES picto: custom.soldes_48h only. 48h picto: custom.show_48h_picto or tags 48h / express-48h / livraison-48h. Not express-delivery collection or StockX express."
     },
     {
       "type": "paragraph",

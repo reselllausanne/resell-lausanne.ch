@@ -1,0 +1,79 @@
+{%- comment -%}
+  PDP navigation links — consumer-first.
+  Shows the same taxonomy path as breadcrumbs (brand → model), not a link dump.
+  Cross-product crawl mesh stays in product-recommendations SSR fallback (crawler-only overflow).
+{%- endcomment -%}
+{%- liquid
+  assign primary_collection_handle = ''
+  if product.metafields.custom.primary_collection_handle != blank
+    assign primary_collection_handle = product.metafields.custom.primary_collection_handle.value | default: product.metafields.custom.primary_collection_handle | append: '' | strip
+  endif
+
+  if primary_collection_handle == blank
+    capture auto_collection_handle
+      render 'product-breadcrumb-auto-handle'
+    endcapture
+    assign auto_collection_handle = auto_collection_handle | strip
+    if auto_collection_handle != blank
+      assign primary_collection_handle = auto_collection_handle
+    endif
+  endif
+
+  assign taxonomy_labels_path = ''
+  assign taxonomy_handles_path = ''
+  if primary_collection_handle != blank
+    capture taxonomy_payload
+      render 'breadcrumb-taxonomy-map', primary_collection_handle: primary_collection_handle
+    endcapture
+    assign taxonomy_payload = taxonomy_payload | strip
+    if taxonomy_payload contains '###'
+      assign taxonomy_labels_path = taxonomy_payload | split: '###' | first | strip
+      assign taxonomy_handles_path = taxonomy_payload | split: '###' | last | strip
+    endif
+  endif
+
+  assign primary_collection = collections[primary_collection_handle]
+  assign link_count = 0
+  assign link_limit = 6
+-%}
+
+{%- if taxonomy_handles_path != blank or primary_collection != blank -%}
+  <nav class="rl-pdp-explore" aria-label="Explorer la sélection">
+    <p class="rl-pdp-explore__label">Explorer</p>
+    <ul class="rl-pdp-explore__list" role="list">
+      {%- if taxonomy_handles_path != blank -%}
+        {%- assign bc_labels = taxonomy_labels_path | split: '|' -%}
+        {%- assign bc_handles = taxonomy_handles_path | split: '|' -%}
+        {%- for bc_handle in bc_handles -%}
+          {%- if link_count >= link_limit -%}
+            {%- break -%}
+          {%- endif -%}
+          {%- assign bc_col = collections[bc_handle] -%}
+          {%- if bc_col != blank and bc_col.products_count > 0 -%}
+            {%- assign bc_label = bc_labels[forloop.index0] | default: bc_col.title -%}
+            <li class="rl-pdp-explore__item">
+              <a class="rl-pdp-explore__link" href="{{ bc_col.url }}">{{ bc_label | escape }}</a>
+            </li>
+            {%- assign link_count = link_count | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- elsif product.vendor != blank -%}
+        {%- assign vendor_handle = product.vendor | handleize -%}
+        {%- assign vendor_col = collections[vendor_handle] -%}
+        {%- if vendor_col != blank and vendor_col.products_count > 0 -%}
+          <li class="rl-pdp-explore__item">
+            <a class="rl-pdp-explore__link" href="{{ vendor_col.url }}">{{ product.vendor | escape }}</a>
+          </li>
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if primary_collection != blank and primary_collection.products_count > 0 -%}
+        <li class="rl-pdp-explore__item rl-pdp-explore__item--cta">
+          <a class="rl-pdp-explore__link rl-pdp-explore__link--cta" href="{{ primary_collection.url }}">
+            Voir toute la collection
+          </a>
+        </li>
+      {%- endif -%}
+    </ul>
+  </nav>
+{%- endif -%}

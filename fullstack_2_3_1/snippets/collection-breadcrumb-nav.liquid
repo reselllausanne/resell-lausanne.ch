@@ -1,0 +1,32 @@
+{% comment %}
+  Render collection PLP breadcrumb nav from resolved labels/handles.
+  Always starts with Accueil, then menu/taxonomy path (or collection title fallback).
+
+  @param breadcrumb_labels_path {string}
+  @param breadcrumb_handles_path {string}
+{% endcomment %}
+<nav class="commerce-breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+  <a class="link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+  {% if breadcrumb_labels_path != blank %}
+    {%- assign breadcrumb_labels = breadcrumb_labels_path | split: '|' -%}
+    {%- assign breadcrumb_handles = breadcrumb_handles_path | split: '|' -%}
+    {%- for breadcrumb_label in breadcrumb_labels -%}
+      {%- assign breadcrumb_handle = breadcrumb_handles[forloop.index0] | default: '' | strip -%}
+      {%- capture breadcrumb_url -%}
+        {%- render 'breadcrumb-taxonomy-collection-url', taxonomy_handle: breadcrumb_handle -%}
+      {%- endcapture -%}
+      {%- assign breadcrumb_url = breadcrumb_url | strip -%}
+      <span aria-hidden="true">/</span>
+      {%- if forloop.last -%}
+        <span>{{ breadcrumb_label }}</span>
+      {%- elsif breadcrumb_url != blank -%}
+        <a class="link" href="{{ breadcrumb_url }}">{{ breadcrumb_label }}</a>
+      {%- else -%}
+        <span>{{ breadcrumb_label }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+  {% else %}
+    <span aria-hidden="true">/</span>
+    <span>{{ collection.title }}</span>
+  {% endif %}
+</nav>

@@ -1,0 +1,56 @@
+{% comment %}
+  Deferred below-fold image (YellowLab / phantomas safe: data: placeholder until in view).
+
+  Note: assign `lazy_src` before `render` — filters on render named params are not applied
+  (e.g. `lazy_src: image | image_url` outputs the raw image filename, not a CDN URL).
+
+  @param lazy_src {string} - real image URL
+  @param lazy_srcset {string} - optional srcset
+  @param sizes {string} - optional sizes
+  @param alt {string}
+  @param width {number}
+  @param height {number}
+  @param class {string} - optional extra classes
+  @param eager {boolean} - skip deferral (LCP / above fold)
+{% endcomment %}
+{% liquid
+  assign rl_placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
+  assign img_class = 'rl-deferred-img'
+  if class != blank
+    assign img_class = img_class | append: ' ' | append: class
+  endif
+%}
+{% if eager %}
+  <img
+    class="{{ img_class }}"
+    loading="eager"
+    decoding="async"
+    src="{{ lazy_src }}"
+    {% if lazy_srcset != blank %}
+      srcset="{{ lazy_srcset }}"
+    {% endif %}
+    {% if sizes != blank %}
+      sizes="{{ sizes }}"
+    {% endif %}
+    alt="{{ alt | escape }}"
+    width="{{ width }}"
+    height="{{ height }}"
+  >
+{% else %}
+  <img
+    class="{{ img_class }}"
+    loading="lazy"
+    decoding="async"
+    src="{{ rl_placeholder }}"
+    data-lazy-src="{{ lazy_src }}"
+    {% if lazy_srcset != blank %}
+      data-lazy-srcset="{{ lazy_srcset }}"
+    {% endif %}
+    {% if sizes != blank %}
+      data-lazy-sizes="{{ sizes }}"
+    {% endif %}
+    alt="{{ alt | escape }}"
+    width="{{ width }}"
+    height="{{ height }}"
+  >
+{% endif %}

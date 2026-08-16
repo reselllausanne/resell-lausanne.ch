@@ -1,0 +1,99 @@
+{% doc %}
+  PDP product-specific Judge.me badge.
+
+  Push-safe behavior:
+  - Preferred: Judge.me metafield badge HTML.
+  - Fallback: generic rating-stars from synced rating metafields.
+{% enddoc %}
+
+{% liquid
+  assign jm_product = product | default: closest.product
+  assign jm_badge = blank
+  assign fallback_rating = blank
+  assign fallback_count = blank
+
+  if jm_product != blank
+    assign jm_badge = jm_product.metafields.judgeme.badge
+    assign fallback_rating = jm_product.metafields.reviews.rating.value.rating | default: jm_product.metafields.reviews.rating.value | default: jm_product.metafields.reviews.rating
+    assign fallback_count = jm_product.metafields.reviews.rating_count.value | default: jm_product.metafields.reviews.rating_count
+  endif
+%}
+
+{% if jm_product != blank %}
+  <div
+    class="
+      resell-product-judgeme-badge
+      {%- if block.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
+      {%- if block.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+      {%- if block.settings.additional_class != blank %} {{ block.settings.additional_class }}{% endif -%}
+    "
+    style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {% if jm_badge != blank %}
+      {{ jm_badge }}
+    {% elsif fallback_rating != blank and fallback_count != blank and fallback_count > 0 %}
+      {% render 'rating-stars', rating: fallback_rating, rating_count: fallback_count, show_note: false %}
+    {% endif %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Avis produit (Judge.me)",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "show_on_display",
+      "label": "t:show_on_display",
+      "default": "desktop_and_mobile",
+      "options": [
+        { "value": "desktop_and_mobile", "label": "t:desktop_and_mobile" },
+        { "value": "desktop_only", "label": "t:desktop_only" },
+        { "value": "mobile_only", "label": "t:mobile_only" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:margins"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "t:margin_top",
+      "step": 1,
+      "min": 0,
+      "max": 100,
+      "default": 8,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "t:margin_bottom",
+      "step": 1,
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:advanced_settings"
+    },
+    {
+      "type": "text",
+      "id": "additional_class",
+      "label": "t:additional_class",
+      "info": "t:additional_class_info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avis produit (Judge.me)",
+      "category": "t:reviews"
+    }
+  ]
+}
+{% endschema %}

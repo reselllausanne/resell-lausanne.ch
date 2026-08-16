@@ -1,4 +1,4 @@
-import { isClickedOutside } from '@theme/utilities';
+import { isClickedOutside, eventTargetElement } from '@theme/utilities';
 
 class DropdownGroupComponent extends HTMLElement {
   constructor() {
@@ -18,7 +18,8 @@ class DropdownGroupComponent extends HTMLElement {
   }
 
   #handleDocumentClick = (event) => {
-    const clickedInsideDropdown = event.target.closest('dropdown-component');
+    const clickTarget = eventTargetElement(event);
+    const clickedInsideDropdown = clickTarget ? clickTarget.closest('dropdown-component') : null;
     if (!clickedInsideDropdown) {
       this.closeAllDropdowns();
     }

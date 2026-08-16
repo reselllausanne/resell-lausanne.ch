@@ -1,0 +1,29 @@
+{% comment %}
+  Brand thumbnail for mobile drawer / PLP (shared logo source).
+
+  @param handle {string} collection handle
+  @param alt {string} alt text
+  @param loading {string} optional loading attribute
+{% endcomment %}
+{% liquid
+  assign brand_handle = handle | strip | downcase
+  assign img_alt = alt | default: brand_handle | escape
+  assign brand_loading = loading | default: 'lazy'
+%}
+{% capture brand_logo_src %}
+  {% render 'brand-menu-logo-url', handle: brand_handle %}
+{% endcapture %}
+{% assign brand_logo_src = brand_logo_src | strip %}
+{% if brand_logo_src != blank %}
+  <img
+    class="header__mobile-menu-link-image"
+    src="{{ brand_logo_src }}"
+    alt="{{ img_alt }}"
+    loading="{{ brand_loading }}"
+    decoding="async"
+    width="45"
+    height="45"
+  >
+{% else %}
+  <span class="header__mobile-menu-link-placeholder">{{ alt | slice: 0, 2 | upcase }}</span>
+{% endif %}

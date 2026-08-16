@@ -1,0 +1,86 @@
+{% comment %}
+  Trustpilot TrustBox — works on dev + live themes.
+  Loads bootstrap JS directly so it does not depend on Trustpilot app
+  injecting scripts only on the published theme.
+{% endcomment %}
+
+{% liquid
+  assign tp_businessunit_id = businessunit_id | default: '692f26f94b831b0b8ac62db6'
+  assign tp_template_id = template_id | default: '56278e9abfbbba0bdc568bc'
+  assign tp_locale = locale | default: 'fr-FR'
+  assign tp_theme = theme | default: 'light'
+  assign tp_height = height | default: '52px'
+  assign tp_width = width | default: '100%'
+  assign tp_profile_url = profile_url | default: 'https://www.trustpilot.com/review/resell-lausanne.ch'
+%}
+
+<!-- TrustBox widget - compact badge -->
+<div
+  class="trustpilot-widget rl-trustpilot-trustbox"
+  data-rl-trustpilot-widget
+  data-locale="{{ tp_locale }}"
+  data-template-id="{{ tp_template_id }}"
+  data-businessunit-id="{{ tp_businessunit_id }}"
+  data-style-height="{{ tp_height }}"
+  data-style-width="{{ tp_width }}"
+  data-theme="{{ tp_theme }}"
+>
+  <a href="{{ tp_profile_url }}" target="_blank" rel="noopener noreferrer">Trustpilot</a>
+</div>
+
+<script>
+  (function () {
+    var widget = document.querySelector('[data-rl-trustpilot-widget]');
+    if (!widget) return;
+
+    var mount = function () {
+      if (window.Trustpilot && typeof window.Trustpilot.loadFromElement === 'function') {
+        window.Trustpilot.loadFromElement(widget, true);
+        return true;
+      }
+      return false;
+    };
+
+    var pollMount = function () {
+      if (mount()) return;
+
+      var attempts = 0;
+      var timer = window.setInterval(function () {
+        attempts += 1;
+        if (mount() || attempts >= 40) {
+          window.clearInterval(timer);
+        }
+      }, 250);
+    };
+
+    var ensureBootstrap = function (callback) {
+      if (window.Trustpilot) {
+        callback();
+        return;
+      }
+
+      var existing = document.querySelector('script[data-rl-trustpilot-bootstrap]');
+      if (existing) {
+        if (existing.dataset.loaded === 'true') {
+          callback();
+          return;
+        }
+        existing.addEventListener('load', callback, { once: true });
+        return;
+      }
+
+      var script = document.createElement('script');
+      script.src = 'https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js';
+      script.async = true;
+      script.dataset.rlTrustpilotBootstrap = 'true';
+      script.addEventListener('load', function () {
+        script.dataset.loaded = 'true';
+        callback();
+      }, { once: true });
+      document.head.appendChild(script);
+    };
+
+    ensureBootstrap(pollMount);
+    document.addEventListener('trustpilotTrustboxSettingsLoaded', pollMount, { once: true });
+  })();
+</script>

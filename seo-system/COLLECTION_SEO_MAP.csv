@@ -1,0 +1,58 @@
+collection_handle,collection_url,current_title,collection_type,indexation_recommendation,target_keyword,secondary_keywords,search_intent,commercial_priority,content_needed,internal_links_needed,schema_needed,merge_redirect_candidate,priority
+toutes-nos-paires,/collections/toutes-nos-paires,Toutes nos paires,Core,index,sneakers Suisse,"baskets Suisse, acheter sneakers Suisse",commercial,critical,intro+FAQ,brand chips + sitemap,ItemList+Breadcrumb,no,P1
+all,/collections/all,Tous les produits,Core,noindex-follow,,,navigational,low,none,brand chips,none,no,ok-noindex
+nouveautes,/collections/nouveautes,Nouveautés,Core,index,nouveautes sneakers,"nouvelles sneakers, new arrivals sneakers Suisse",commercial,high,intro,brand chips,ItemList,no,P2
+nike,/collections/nike,Nike,Brand,index,Nike sneakers Suisse,"baskets Nike, Nike Suisse, acheter Nike",commercial,critical,intro+FAQ+model chips,models+Jordan+sitemap+footer,ItemList+Breadcrumb+FAQ,no,P1
+air-jordan,/collections/air-jordan,Air Jordan,Brand,index,Jordan sneakers Suisse,"Air Jordan Suisse, baskets Jordan, acheter Jordan",commercial,critical,intro+FAQ+model chips,models+Nike+sitemap+footer,ItemList+Breadcrumb+FAQ,no,P1
+adidas,/collections/adidas,Adidas,Brand,index,Adidas sneakers Suisse,"baskets Adidas, Adidas Suisse",commercial,critical,intro+FAQ+model chips,models+Yeezy+sitemap,ItemList+Breadcrumb+FAQ,no,P1
+new-balance,/collections/new-balance,New Balance,Brand,index,New Balance Suisse,"baskets New Balance, NB Suisse",commercial,high,intro+FAQ+model chips,models+sitemap,ItemList+Breadcrumb+FAQ,no,P1
+asics,/collections/asics,ASICS,Brand,index,ASICS Suisse,"baskets ASICS, ASICS Gel Suisse",commercial,high,intro+FAQ+model chips,models+Onitsuka+sitemap,ItemList+Breadcrumb+FAQ,no,P1
+yeezy,/collections/yeezy,Yeezy,Brand,index,Yeezy Suisse,"Adidas Yeezy, acheter Yeezy Suisse",commercial,high,intro+FAQ+model chips,models+Adidas,ItemList+Breadcrumb+FAQ,no,P2
+puma,/collections/puma,Puma,Brand,index,Puma sneakers Suisse,"baskets Puma, Puma Speedcat",commercial,med,intro+FAQ,Speedcat chip,ItemList+Breadcrumb+FAQ,no,P2
+ugg,/collections/ugg,UGG,Brand,index,UGG Suisse,"UGG Tazz, UGG Tasman Suisse",commercial,high,intro+FAQ+model chips,models+sitemap,ItemList+Breadcrumb+FAQ,no,P1
+onitsuka-tiger,/collections/onitsuka-tiger,Onitsuka Tiger,Brand,index,Onitsuka Tiger Suisse,"Mexico 66, Tokuten Suisse",commercial,med,has-snippet,ASICS cross-link,ItemList+Breadcrumb+FAQ,no,P2
+saucony,/collections/saucony,Saucony,Brand,index,Saucony Suisse,"Saucony ProGrid Suisse",commercial,low,intro,models,ItemList+Breadcrumb,no,P3
+salomon,/collections/salomon,Salomon,Brand,index,Salomon Suisse,"Salomon XT-6 Suisse",commercial,med,has-snippet,menu,ItemList+Breadcrumb+FAQ,no,P2
+on,/collections/on,On Running,Brand,index,On Running Suisse,"On Cloud Suisse",commercial,med,has-snippet,menu+running,ItemList+Breadcrumb,no,P2
+converse,/collections/converse,Converse,Brand,index,Converse Suisse,"Chuck Taylor Suisse",commercial,low,has-snippet,menu,ItemList+Breadcrumb+FAQ,no,P3
+air-jordan-1,/collections/air-jordan-1,Air Jordan 1,Model,index,Air Jordan 1,"AJ1, Jordan 1 Suisse, Jordan 1 Low/High",commercial,critical,intro+FAQ,Jordan parent+sub-models,ItemList+Breadcrumb+FAQ,no,P1
+air-jordan-4,/collections/air-jordan-4,Air Jordan 4,Model,index,Air Jordan 4,"AJ4, Jordan 4 Suisse, Bred, Travis Scott",commercial,critical,has-snippet,Jordan parent,ItemList+Breadcrumb+FAQ,no,P1
+air-jordan-1-low,/collections/air-jordan-1-low,Air Jordan 1 Low,Model,index,Jordan 1 Low,"AJ1 Low, Jordan 1 Low Suisse",commercial,high,intro,AJ1 parent,Breadcrumb,no,P1
+dunk-low,/collections/dunk-low,Nike Dunk Low,Model,index,Nike Dunk Low,"Dunk Low Panda Suisse, Dunk Low",commercial,critical,has-snippet,Nike Dunk parent+SB,ItemList+Breadcrumb+FAQ,no,P1
+dunk-sb,/collections/dunk-sb,Nike SB Dunk,Model,index,Nike SB Dunk,"SB Dunk Suisse, Travis Scott SB",commercial,high,has-snippet,Dunk parent,Breadcrumb+FAQ,no,P2
+nike-air-max-plus-tn,/collections/nike-air-max-plus-tn,Nike TN Air Max Plus,Model,index,Nike TN,"Air Max Plus, TN Suisse, tn rose",commercial,high,has-snippet,Air Max parent,Breadcrumb+FAQ,no,P1
+nike-air-max-97,/collections/nike-air-max-97,Nike Air Max 97,Model,index,Air Max 97,"AM97 Suisse, Silver Bullet",commercial,med,intro+chip,Air Max parent,Breadcrumb,no,P1
+vomero,/collections/vomero,Nike Zoom Vomero 5,Model,index,Nike Vomero 5,"Vomero 5 Suisse, Zoom Vomero",commercial,high,intro+FAQ,Nike parent+homepage,Breadcrumb+FAQ,no,P1
+adidas-samba,/collections/adidas-samba,Adidas Samba,Model,index,Adidas Samba,"Samba OG Suisse, Samba Suisse",commercial,critical,intro+FAQ,Adidas parent+Gazelle,ItemList+Breadcrumb+FAQ,no,P1
+adidas-gazelle,/collections/adidas-gazelle,Adidas Gazelle,Model,index,Adidas Gazelle,"Gazelle Indoor Suisse, Gazelle OG",commercial,high,intro+FAQ,Adidas parent+Samba,ItemList+Breadcrumb+FAQ,no,P1
+adidas-spezial,/collections/adidas-spezial,Adidas Spezial,Model,index,Adidas Spezial,"Handball Spezial Suisse",commercial,med,has-snippet,Adidas parent,Breadcrumb+FAQ,no,P2
+adidas-campus,/collections/adidas-campus,Adidas Campus,Model,index,Adidas Campus,"Campus 00s Suisse",commercial,med,intro,Adidas parent,Breadcrumb,no,P2
+9060,/collections/9060,New Balance 9060,Model,index,New Balance 9060,"NB 9060 Suisse",commercial,high,intro+FAQ,NB parent,Breadcrumb+FAQ,no,P1
+new-balance-2002r,/collections/new-balance-2002r,New Balance 2002R,Model,index,New Balance 2002R,"NB 2002R Suisse, 2002R",commercial,high,intro+FAQ,NB parent,Breadcrumb+FAQ,no,P1
+new-balance-1906r,/collections/new-balance-1906r,New Balance 1906R,Model,index,New Balance 1906R,"NB 1906R Suisse, 1906R",commercial,high,intro+FAQ,NB parent,Breadcrumb+FAQ,no,P1
+new-balance-550,/collections/new-balance-550,New Balance 550,Model,index,New Balance 550,"NB 550 Suisse",commercial,med,intro,NB parent,Breadcrumb,no,P2
+asics-gel-kayano-14,/collections/asics-gel-kayano-14,ASICS Gel-Kayano 14,Model,index,ASICS Gel-Kayano 14,"Kayano 14 Suisse, JJJJound Kayano",commercial,high,has-snippet,ASICS parent,Breadcrumb+FAQ,no,P1
+gel-nyc,/collections/gel-nyc,ASICS Gel-NYC,Model,index,ASICS Gel-NYC,"Gel NYC Suisse, Gel-NYC rose",commercial,high,has-snippet,ASICS parent,Breadcrumb+FAQ,no,P1
+puma-speedcat,/collections/puma-speedcat,Puma Speedcat,Model,index,Puma Speedcat,"Speedcat Suisse, Speedcat OG",commercial,high,intro+FAQ,Puma parent+homepage,Breadcrumb+FAQ,no,P1
+labubu,/collections/labubu,Labubu,Model,index,Labubu Suisse,"Pop Mart Labubu, Labubu acheter",commercial,high,has-snippet,Pop Mart parent+homepage,Breadcrumb+FAQ,no,P1
+fear-of-god-essentials,/collections/fear-of-god-essentials,Fear of God Essentials,Brand,canonical-alias,Fear of God Essentials,"Essentials hoodie Suisse",commercial,high,has-snippet,canonical to /essentials,Breadcrumb+FAQ,essentials,P1
+essentials,/collections/essentials,Fear of God Essentials,Brand,index,Essentials Suisse,"FOG Essentials hoodie, Essentials joggers",commercial,high,has-snippet,streetwear rail,ItemList+Breadcrumb+FAQ,canonical-target,P1
+supreme,/collections/supreme,Supreme,Brand,index,Supreme Suisse,"Box Logo Suisse, Supreme acheter",commercial,med,has-snippet,streetwear,Breadcrumb+FAQ,no,P2
+off-white,/collections/off-white,Off-White,Brand,index,Off-White Suisse,"Virgil Abloh, Off-White The Ten",commercial,med,has-snippet,streetwear+Nike collab,Breadcrumb+FAQ,no,P2
+chrome-hearts,/collections/chrome-hearts,Chrome Hearts,Brand,index,Chrome Hearts Suisse,"Chrome Hearts hoodie Suisse",commercial,med,has-snippet,streetwear,Breadcrumb+FAQ,no,P2
+bape,/collections/bape,BAPE,Brand,index,BAPE Suisse,"A Bathing Ape, Shark hoodie",commercial,med,has-snippet,streetwear,Breadcrumb+FAQ,no,P2
+air-jordan-x-travis-scott,/collections/air-jordan-x-travis-scott,Travis Scott x Nike,Model,index,Travis Scott Nike,"Cactus Jack Suisse, Travis Scott sneakers",commercial,high,has-snippet,Nike+Jordan,Breadcrumb+FAQ,canonical-target,P1
+crampons-de-foot,/collections/crampons-de-foot,Crampons de foot,Category,index,crampons de foot,"crampons Nike Adidas Suisse",commercial,med,has-snippet,none,Breadcrumb+FAQ,canonical-target,P2
+vetements,/collections/vetements,Streetwear,Category,index,streetwear Suisse,"vetements streetwear, chaussures streetwear",commercial,high,intro,brand streetwear chips,ItemList+Breadcrumb,no,P2
+sneakers-femme,/collections/sneakers-femme,Sneakers femme,Gender,index-if-created,sneakers femme,"baskets femme Suisse, sneakers femme Suisse",commercial,high,CREATE+intro+FAQ,brand chips+homepage,ItemList+Breadcrumb+FAQ,create,P2
+sneakers-homme,/collections/sneakers-homme,Sneakers homme,Gender,index-if-created,sneakers homme,"baskets homme Suisse",commercial,high,CREATE+intro,brand chips,ItemList+Breadcrumb,create,P2
+sneakers-enfant,/collections/sneakers-enfant,Sneakers enfant,Gender,index-if-created,sneakers enfant,"baskets enfant Suisse, sneakers kids",commercial,med,CREATE+intro,brand chips,ItemList+Breadcrumb,create,P3
+sneakers-pas-cher,/collections/sneakers-pas-cher,Sneakers pas cher,Price-intent,index-if-created,sneakers pas cher,"baskets pas cher Suisse, sneakers soldes",transactional,high,CREATE+intro (auto sort price asc),homepage+footer,ItemList+Breadcrumb,create,P2
+baskets-tendance,/collections/baskets-tendance,Baskets tendance,Trend,index-if-created,baskets tendance,"sneakers tendance 2026, sneakers populaires",commercial,med,CREATE+intro (curated),homepage rail,ItemList,create,P3
+soldes,/collections/soldes,Soldes / Outlet,Price-intent,index-if-created,sneakers soldes Suisse,"outlet sneakers, sneakers reduction",transactional,high,CREATE+intro,homepage+footer,ItemList,create,P2
+sneakers-lausanne,/collections/sneakers-lausanne,Sneakers Lausanne,Local,index-if-created,sneakers Lausanne,"magasin sneakers Lausanne, boutique sneakers Lausanne",local-commercial,med,CREATE (see LOCAL_SEO_PLAN),footer+about,ItemList+LocalBusiness link,create,P2
+retro-sneakers,/collections/retro-sneakers,Retro Sneakers,Trend,index,retro sneakers,"sneakers vintage Suisse",commercial,med,intro,brand chips,ItemList,no,P3
+travis-scott,/collections/travis-scott,Travis Scott,Alias,canonical-alias,,,commercial,low,none,canonical,none,redirect->air-jordan-x-travis-scott,P2
+vetement-travis,/collections/vetement-travis,Travis Scott (vetements),Alias,canonical-alias,,,commercial,low,none,canonical,none,redirect->air-jordan-x-travis-scott,P2
+crampons,/collections/crampons,Crampons,Alias,canonical-alias,,,commercial,low,none,canonical,none,redirect->crampons-de-foot,P2
+new-balance-204,/collections/new-balance-204,New Balance 204,Alias,canonical-alias,,,commercial,low,none,canonical,none,redirect->new-balance-204l,P2

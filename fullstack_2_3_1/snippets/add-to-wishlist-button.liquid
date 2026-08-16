@@ -10,6 +10,7 @@
   {% render 'add-to-wishlist-button', product: product, block: block %}
 {% enddoc %}
 
+{%- if settings.activate_wishlist -%}
 <add-to-wishlist-button
   class="button{% if border == false %} button--tertiary{% else %} button--secondary{% endif %}{% if small %} button--small{% endif %} button--icon-only add-to-wishlist-button"
   {% if product %}
@@ -30,6 +31,7 @@
     data: 'data-ref="add-to-wishlist-button-icon"'
   %}
 </add-to-wishlist-button>
+{%- endif -%}
 
 {% stylesheet %}
   .product-quantity-selector-block[data-visual-preview-mode] {

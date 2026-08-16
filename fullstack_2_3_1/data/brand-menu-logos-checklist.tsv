@@ -1,0 +1,17 @@
+handle	label	strip_tier	collection_url	theme_asset_fallback	metafield_namespace	metafield_key	uploaded_y
+air-jordan	Air Jordan	primary	/collections/air-jordan	assets/brand-logo-air-jordan.svg	custom	menu_brand_image	
+nike	Nike	primary	/collections/nike	assets/brand-logo-nike.svg	custom	menu_brand_image	
+asics	Asics	primary	/collections/asics	assets/brand-logo-asics.png	custom	menu_brand_image	
+yeezy	Yeezy	primary	/collections/yeezy	assets/brand-logo-yeezy.png	custom	menu_brand_image	
+adidas	Adidas	primary	/collections/adidas	assets/brand-logo-adidas.svg	custom	menu_brand_image	
+new-balance	New Balance	primary	/collections/new-balance	assets/brand-logo-new-balance.svg	custom	menu_brand_image	
+maison-mihara	Maison Mihara	primary	/collections/maison-mihara	assets/brand-logo-maison-mihara.png	custom	menu_brand_image	
+crocs	Crocs	primary	/collections/crocs	assets/brand-logo-crocs.png	custom	menu_brand_image	
+mizuno	Mizuno	primary	/collections/mizuno	assets/brand-logo-mizuno.png	custom	menu_brand_image	
+on	On Running	other	/collections/on	(none — upload required)	custom	menu_brand_image	
+puma	Puma	other	/collections/puma	assets/brand-logo-puma.svg	custom	menu_brand_image	
+salomon	Salomon	other	/collections/salomon	(none — upload required)	custom	menu_brand_image	
+converse	Converse	other	/collections/converse	(none — upload required)	custom	menu_brand_image	
+alexander-mcqueen	Alexander McQueen	other	/collections/alexander-mcqueen	(none — upload required)	custom	menu_brand_image	
+hoka	Hoka	other	/collections/hoka	(none — upload required)	custom	menu_brand_image	
+saucony	Saucony	other	/collections/saucony	(none — upload required)	custom	menu_brand_image	

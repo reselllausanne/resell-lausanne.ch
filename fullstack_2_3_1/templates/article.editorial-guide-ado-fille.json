@@ -1,0 +1,193 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article-editorial",
+      "blocks": {
+        "callout-main": {
+          "type": "callout",
+          "settings": {
+            "title": "Ne pas confondre “hype” et bon achat",
+            "text": "Une collab chère peut être cool, mais pour une paire portée 4 jours sur 5, priorité au confort, à la disponibilité de la taille et à un coloris qu'on n'aura pas peur de salir. L'avantage : ce sont des modèles pensés pour durer, encaisser la journée et se nettoyer facilement."
+          }
+        },
+        "section-main": {
+          "type": "content_section",
+          "settings": {
+            "heading": "Les signaux à regarder",
+            "body": "<p>Les sélections Back to School mettent en avant Spezial, Samba, GEL-1130, Saucony, ballerines-sneakers et mules Birkenstock. Les réseaux sociaux poussent le mesh argenté, les jupes et pantalons larges, les charms et les silhouettes basses. La bonne stratégie : choisir une famille — runner, terrace, ballerine ou mule — puis un coloris neutre pour tenir cinq jours d'école.</p><p>Les signaux les plus utiles : jupe/robe et cardigan (→ ballerine, Spezial, Samba), jean large streetwear (→ runner silver ou Saucony), look minimal confort (→ mule Birkenstock ou Samba). Avant d'acheter : tester la paire avec un jean large, un pantalon noir ou gris et une jupe ou un short.</p>"
+          }
+        },
+        "pick-1": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "01 · Le choix mode facile",
+            "title": "adidas Handball Spezial",
+            "description": "Profil fin, daim et semelle gomme. Plus texturée qu'une Samba et très simple avec denim, jupe longue ou pantalon large.",
+            "score_label": "Polyvalence",
+            "score": 94,
+            "product": "gid://shopify/Product/14896530981250",
+            "collection": "gid://shopify/Collection/487500546337"
+          }
+        },
+        "pick-2": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "02 · La runner qui monte",
+            "title": "Saucony",
+            "description": "ProGrid ou Shadow : confort quotidien et look silver très présent en cour d'école. Passe avec jean, jogging ou robe courte.",
+            "score_label": "Tendance",
+            "score": 96,
+            "product": "gid://shopify/Product/15118796718466",
+            "collection": "gid://shopify/Collection/676877533570"
+          }
+        },
+        "pick-3": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "03 · Le mesh fiable",
+            "title": "ASICS GEL-1130",
+            "description": "Le bon choix pour les longues journées. Mesh argenté, lignes rétro et amorti nettement supérieur aux sneakers plates.",
+            "score_label": "Confort",
+            "score": 96,
+            "product": "gid://shopify/Product/14963521651074",
+            "collection": "gid://shopify/Collection/666330694018"
+          }
+        },
+        "pick-4": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "04 · L'icône minimaliste",
+            "title": "adidas Samba OG",
+            "description": "Toujours pertinente en noir, blanc, bordeaux ou brun. Idéale si le style est déjà épuré et qu'une semelle fine ne gêne pas.",
+            "score_label": "Style",
+            "score": 92,
+            "product": "gid://shopify/Product/15198341104002",
+            "collection": "gid://shopify/Collection/481546338593"
+          }
+        },
+        "pick-5": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "05 · La mule confort",
+            "title": "Birkenstock Boston",
+            "description": "La tendance mule/sabot reste forte : confort maximal, enfilage facile, look plus mode que sportif. Parfaite en rotation avec une vraie sneaker.",
+            "score_label": "Confort",
+            "score": 90,
+            "product": "gid://shopify/Product/15142929990018",
+            "collection": "gid://shopify/Collection/687872147842"
+          }
+        },
+        "pick-6": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "06 · Le statement féminin",
+            "title": "Ballerine sneaker / Mary Jane",
+            "description": "Alternative plus crédible qu'une Jordan 4 pour un look ado fille : ballerines Adidas, Mary Jane ASICS ou silhouettes sport-chic. À choisir si le vestiaire est déjà féminin ou preppy.",
+            "score_label": "Impact",
+            "score": 95,
+            "product": "gid://shopify/Product/14896528294274",
+            "collection": "gid://shopify/Collection/487500513569"
+          }
+        },
+        "row-1": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Confort quotidien",
+            "col_2": "GEL-1130 / Saucony",
+            "col_3": "Spezial / Samba"
+          }
+        },
+        "row-2": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Look mode / féminin",
+            "col_2": "Ballerine sneaker",
+            "col_3": "Mule Birkenstock"
+          }
+        },
+        "row-3": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Style simple",
+            "col_2": "Samba / Spezial",
+            "col_3": "Runner silver"
+          }
+        },
+        "related-1": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-garcon",
+            "segment_label": "12–18 ans",
+            "title": "Guide ado garçon"
+          }
+        },
+        "related-2": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-fille",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant fille"
+          }
+        },
+        "related-3": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-garcon",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant garçon"
+          }
+        }
+      },
+      "block_order": [
+        "callout-main",
+        "section-main",
+        "pick-1",
+        "pick-2",
+        "pick-3",
+        "pick-4",
+        "pick-5",
+        "pick-6",
+        "row-1",
+        "row-2",
+        "row-3",
+        "related-1",
+        "related-2",
+        "related-3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "Guide ado fille · 12–18 ans · rentrée 2026",
+        "deck": "Spezial, GEL-1130 ou ballerine ?",
+        "intro": "À 15-16 ans, le choix se joue d'abord sur TikTok, Instagram et dans la cour : ce qui a des vues, ce que portent les copines, ce qui colle à l'image qu'on veut renvoyer. Spezial, GEL-1130, ballerines, mules Birkenstock et runners silver — pas un discours parent sur le chaussant.",
+        "chips": "ASICS / Saucony\nBallerine sneaker\nMule Birkenstock\nRéseaux sociaux",
+        "hero_overlay": 66,
+        "table_col_1": "Profil",
+        "table_col_2": "Premier choix",
+        "table_col_3": "Deuxième paire",
+        "how_to_heading": "Une paire, deux paires ou une rotation ?",
+        "how_to_body": "<p>Avec une seule paire, évitez le mesh : privilégiez daim, cuir ou une ballerine sneaker structurée. Avec deux paires, le duo le plus malin : une mesh confortable type ASICS GEL-1130 + une Spezial, Samba ou ballerine pour le style.</p><p>Mesure les deux pieds debout, en fin de journée. Garde environ 8 à 12 mm devant les orteils. Marche plusieurs minutes en magasin : le pied gonfle, surtout avec une runner.</p>",
+        "checklist_parent": false,
+        "checklist": "3 tenues compatibles (jean, pantalon, jupe)\n8–12 mm devant les orteils\nPas de glissement au talon\nColoris compatible avec la pluie\nBudget porté, pas juste budget achat",
+        "verdict": "<p>Une seule paire : Spezial ou Samba, sans mesh. Deux paires : GEL-1130 confort + ballerine ou Spezial pour le style. Le confort pur : Birkenstock en rotation, pas comme seule paire d'école.</p>",
+        "hub_article_handle": "chaussures-sneakers-rentree-2026",
+        "show_promo": true,
+        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
+        "promo_primary_label": "Acheter la carte cadeau",
+        "padding_bottom": 60
+      }
+    },
+    "related": {
+      "type": "resell-blog-related",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "max_articles": 3,
+        "padding_top": 48,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

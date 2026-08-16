@@ -15,37 +15,10 @@
   "
   {{ block.shopify_attributes }}
 >
-  <div class="footer-bottom-bar__content page-width">
+  <div class="footer-bottom-bar__content">
     {% content_for 'blocks' %}
   </div>
 </div>
-
-{% stylesheet %}
-  .footer-bottom-bar {
-    padding-top: var(--padding-top);
-    padding-bottom: var(--padding-bottom);
-    margin-top: var(--margin-top);
-  }
-
-  .footer-bottom-bar--top-border {
-    border-top: var(--separator-border-width) solid var(--color-border);
-  }
-
-  .footer-bottom-bar__content {
-    display: grid;
-    grid-template-columns: repeat(var(--grid-columns-mobile), 1fr);
-    grid-template-rows: auto;
-    gap: var(--gap-mobile);
-    width: 100%;
-  }
-
-  @media (width > 750px) {
-    .footer-bottom-bar__content {
-      gap: var(--gap);
-      grid-template-columns: repeat(var(--grid-columns), 1fr);
-    }
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

@@ -1,0 +1,48 @@
+{% comment %}
+  Shopify requires a quoted literal in {% render 'snippet' %}.
+  This router maps the assigned key to the correct PLP FAQ snippet.
+{% endcomment %}
+{% case key %}
+  {% when 'collection-plp-faq-chrome-hearts-content' %}
+    {% render 'collection-plp-faq-chrome-hearts-content' %}
+  {% when 'collection-plp-faq-denim-tears-content' %}
+    {% render 'collection-plp-faq-denim-tears-content' %}
+  {% when 'collection-plp-faq-onitsuka-tiger-content' %}
+    {% render 'collection-plp-faq-onitsuka-tiger-content' %}
+  {% when 'collection-plp-faq-adidas-spezial-content' %}
+    {% render 'collection-plp-faq-adidas-spezial-content' %}
+  {% when 'collection-plp-faq-nike-tn-content' %}
+    {% render 'collection-plp-faq-nike-tn-content' %}
+  {% when 'collection-plp-faq-dunk-content' %}
+    {% render 'collection-plp-faq-dunk-content' %}
+  {% when 'collection-plp-faq-supreme-content' %}
+    {% render 'collection-plp-faq-supreme-content' %}
+  {% when 'collection-plp-faq-off-white-content' %}
+    {% render 'collection-plp-faq-off-white-content' %}
+  {% when 'collection-plp-faq-bape-content' %}
+    {% render 'collection-plp-faq-bape-content' %}
+  {% when 'collection-plp-faq-nike-content' %}
+    {% render 'collection-plp-faq-nike-content' %}
+  {% when 'collection-plp-faq-jordan-content' %}
+    {% render 'collection-plp-faq-jordan-content' %}
+  {% when 'collection-plp-faq-adidas-content' %}
+    {% render 'collection-plp-faq-adidas-content' %}
+  {% when 'collection-plp-faq-new-balance-content' %}
+    {% render 'collection-plp-faq-new-balance-content' %}
+  {% when 'collection-plp-faq-asics-double-laces-content' %}
+    {% render 'collection-plp-faq-asics-double-laces-content' %}
+  {% when 'collection-plp-faq-new-balance-204-content' %}
+    {% render 'collection-plp-faq-new-balance-204-content' %}
+  {% when 'collection-plp-faq-asics-content' %}
+    {% render 'collection-plp-faq-asics-content' %}
+  {% when 'collection-plp-faq-salomon-content' %}
+    {% render 'collection-plp-faq-salomon-content' %}
+  {% when 'collection-plp-faq-on-running-content' %}
+    {% render 'collection-plp-faq-on-running-content' %}
+  {% when 'collection-plp-faq-yeezy-content' %}
+    {% render 'collection-plp-faq-yeezy-content' %}
+  {% when 'collection-plp-faq-puma-content' %}
+    {% render 'collection-plp-faq-puma-content' %}
+  {% when 'collection-plp-faq-converse-content' %}
+    {% render 'collection-plp-faq-converse-content' %}
+{% endcase %}

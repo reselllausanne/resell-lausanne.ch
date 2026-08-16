@@ -1,4 +1,4 @@
-import { isElementInViewport } from '@theme/utilities';
+import { shouldShowStickyAfterAnchor } from '@theme/utilities';
 
 class StickyAddToCart extends HTMLElement {
   constructor() {
@@ -6,6 +6,7 @@ class StickyAddToCart extends HTMLElement {
 
     this.form = null;
     this.footer = null;
+    this.onScroll = () => this.#displayStickyAddToCart();
   }
 
   connectedCallback() {
@@ -13,26 +14,29 @@ class StickyAddToCart extends HTMLElement {
     this.footer = document.querySelector('[data-ref="footer"]');
 
     this.#displayStickyAddToCart();
-
-    window.addEventListener('scroll', () => {
-      this.#displayStickyAddToCart();
-    });
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onScroll, { passive: true });
   }
 
   disconnectedCallback() {
-    window.removeEventListener('scroll', () => {
-      this.#displayStickyAddToCart();
-    });
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onScroll);
+  }
+
+  #getStickyAnchor() {
+    if (!this.form) return null;
+    return (
+      this.form.querySelector('.rs-size-modal__trigger') ||
+      this.form.querySelector('[data-ref="add-to-cart-button-container"]') ||
+      this.form.querySelector('[data-ref="add-to-cart-button"]')
+    );
   }
 
   #displayStickyAddToCart() {
-    if (isElementInViewport(this.form) || isElementInViewport(this.footer)) {
-      this.dataset.active = 'false';
-      this.classList.remove('color-scheme-1');
-    } else {
-      this.dataset.active = 'true';
-      this.classList.add('color-scheme-1');
-    }
+    const shouldShow = shouldShowStickyAfterAnchor(this.#getStickyAnchor(), this.footer, this);
+
+    this.dataset.active = shouldShow ? 'true' : 'false';
+    this.classList.toggle('color-scheme-1', shouldShow);
   }
 }
 

@@ -1,0 +1,64 @@
+{%- doc -%}
+  Promotional picto flags for capture in parent scope.
+
+  Output: "{soldes}|{delivery}" where each part is 1 or 0.
+
+  Soldes (SOLDES picto only — bit 0):
+  - product.metafields.custom.soldes_48h == true
+  - tag soldes-48h
+  - collection soldes-48h
+
+  48h delivery picto (bit 1) — ONLY when at least one IN-STOCK variant
+  carries custom.delivery_48h. Sold-out warehouse sizes hide the product-level
+  48h badge. Product tags / show_48h_picto alone are not enough.
+
+  Does NOT trigger on express-delivery collection, StockX express_price,
+  express_available, or generic delivery text metafields.
+
+  @param {product} product
+
+  @example
+  {% capture rs_picto_flags %}{% render 'rs-promotional-picto-signals', product: product %}{% endcapture %}
+  {% assign rs_picto_parts = rs_picto_flags | strip | split: '|' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign rs_soldes_48h_active = false
+  assign rs_48h_delivery_active = false
+
+  if product.metafields.custom.soldes_48h.value == true
+    assign rs_soldes_48h_active = true
+  endif
+
+  unless rs_soldes_48h_active
+    for tag in product.tags
+      assign rs_tag = tag | downcase
+      if rs_tag == 'soldes-48h'
+        assign rs_soldes_48h_active = true
+        break
+      endif
+    endfor
+  endunless
+
+  unless rs_soldes_48h_active
+    for collection in product.collections
+      assign rs_col_handle = collection.handle | downcase
+      if rs_col_handle == 'soldes-48h'
+        assign rs_soldes_48h_active = true
+        break
+      endif
+    endfor
+  endunless
+
+  comment
+    Product-level 48h picto follows live warehouse stock only.
+    If every delivery_48h size is sold out, hide the badge.
+  endcomment
+  for variant in product.variants
+    if variant.available and variant.metafields.custom.delivery_48h.value == true
+      assign rs_48h_delivery_active = true
+      break
+    endif
+  endfor
+-%}
+{%- if rs_soldes_48h_active -%}1{%- else -%}0{%- endif -%}|{%- if rs_48h_delivery_active -%}1{%- else -%}0{%- endif -%}

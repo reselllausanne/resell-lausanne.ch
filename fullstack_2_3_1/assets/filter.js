@@ -5,10 +5,12 @@ class FilterComponent extends HTMLElement {
     super();
 
     this.form = null;
+    this.staged = false;
   }
 
   connectedCallback() {
     this.form = this.querySelector('[data-ref="filters-form"]');
+    this.staged = this.dataset.staged === 'true';
 
     this.addEventListener('change', this.#onFiltersChanged);
   }
@@ -20,22 +22,54 @@ class FilterComponent extends HTMLElement {
   #onFiltersChanged = (event) => {
     event.preventDefault();
 
+    if (this.staged) {
+      this.dispatchEvent(new CustomEvent('filters:dirty', { bubbles: true }));
+      return;
+    }
+
     const filterParams = this.getFiltersParams();
-    const sortingParams = this.closest('filter-and-sort-component').getCurrentSortingParams();
+    const wrapper = this.closest('filter-and-sort-component');
+    const sortingParams = wrapper ? wrapper.getCurrentSortingParams() : '';
 
     document.dispatchEvent(new FiltersChangedEvent(filterParams, sortingParams));
   };
 
   getFiltersParams() {
     const formData = new FormData(this.form);
-    const newParameters = new URLSearchParams(formData);
-
-    if (newParameters.get('filter.v.price.gte') === '') newParameters.delete('filter.v.price.gte');
-    if (newParameters.get('filter.v.price.lte') === '') newParameters.delete('filter.v.price.lte');
+    // Rebuild via append so multi-checked facets keep every value.
+    const newParameters = new URLSearchParams();
+    for (const [key, value] of formData.entries()) {
+      if (value === '') continue;
+      newParameters.append(key, value);
+    }
 
     newParameters.delete('page');
 
     return newParameters.toString();
+  }
+
+  apply() {
+    if (!this.form) return;
+    const filterParams = this.getFiltersParams();
+    const wrapper =
+      this.closest('filter-and-sort-component') ||
+      document.querySelector('filter-and-sort-component');
+    const sortingParams = wrapper && typeof wrapper.getCurrentSortingParams === 'function'
+      ? wrapper.getCurrentSortingParams()
+      : '';
+
+    document.dispatchEvent(new FiltersChangedEvent(filterParams, sortingParams));
+  }
+
+  reset() {
+    if (!this.form) return;
+    this.form.reset();
+    this.form.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach((input) => {
+      input.checked = false;
+    });
+    this.form.querySelectorAll('input[type="text"], input[type="number"], input[type="search"]').forEach((input) => {
+      input.value = '';
+    });
   }
 
   renderFilters(newFiltersHtml) {

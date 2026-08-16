@@ -1,0 +1,76 @@
+{% doc %}
+  Single home hero carousel slide (media + optional CTA card).
+
+  @param {number} slide_idx - Slide index for data-slide / dots
+  @param {boolean} is_active - Visible slide on load
+  @param {boolean} is_lcp - Eager/high-priority media load
+  @param {image} [desktop_image] - Theme editor laptop image
+  @param {image} [mobile_image] - Theme editor phone image
+  @param {string} [desktop_filename] - Shopify Files laptop filename
+  @param {string} [mobile_filename] - Shopify Files phone filename
+  @param {string} default_desktop_filename - Section fallback laptop file
+  @param {string} default_mobile_filename - Section fallback phone file
+  @param {string} alt - Image alt text
+  @param {string} [title] - Card title
+  @param {string} [text] - Card subtitle
+  @param {string} [button_label] - Card CTA label
+  @param {string} [button_link] - Card / cover link
+  @param {boolean} [hide_cta_card] - Full-bleed link, no card
+  @param {string} [shopify_attributes] - Block editor attributes
+{% enddoc %}
+
+{% liquid
+  assign slide_link = button_link
+  assign hide_card = hide_cta_card | default: false
+%}
+
+<div
+  class="rl-home__hero-slide{% if is_active %} is-active{% endif %}{% if hide_card %} rl-home__hero-slide--cover-only{% endif %}"
+  data-slide="{{ slide_idx }}"
+  {% unless is_active %}aria-hidden="true"{% endunless %}
+  {{ shopify_attributes }}
+>
+  {% if hide_card and slide_link != blank %}
+    <a class="rl-home__hero-cover-link" href="{{ slide_link }}">
+  {% endif %}
+
+  <div class="rl-home__hero-media">
+    {% render 'rl-home-hero-media',
+      desktop_image: desktop_image,
+      mobile_image: mobile_image,
+      desktop_filename: desktop_filename,
+      mobile_filename: mobile_filename,
+      default_desktop_filename: default_desktop_filename,
+      default_mobile_filename: default_mobile_filename,
+      alt: alt,
+      is_first: is_lcp
+    %}
+  </div>
+
+  {% if hide_card and slide_link != blank %}
+    </a>
+  {% endif %}
+
+  {% unless hide_card %}
+    <div class="rl-home__hero-overlay">
+      <div class="rl-home__hero-card">
+        <p class="rl-home__hero-card-eyebrow">Swiss limited sneakers</p>
+        {% if title != blank %}
+          {% if is_lcp %}
+            <h2 class="rl-home__hero-card-title">{{ title }}</h2>
+          {% else %}
+            <p class="rl-home__hero-card-title">{{ title }}</p>
+          {% endif %}
+        {% endif %}
+        {% if text != blank %}
+          <p class="rl-home__hero-card-subtitle">{{ text }}</p>
+        {% endif %}
+        {% if button_label != blank %}
+          <a class="rl-home__hero-card-cta" href="{{ slide_link | default: '#' }}">
+            {{ button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endunless %}
+</div>

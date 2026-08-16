@@ -7,6 +7,8 @@
   @param {string} content - Contenu à afficher
   @param {boolean} [open_by_default] - Si l'accordéon est ouvert par défaut
   @param {string} [icon] - Icône à afficher devant le titre
+  @param {boolean} [show_preview] - Affiche un extrait du contenu quand fermé
+  @param {string} [preview_text] - Texte aperçu affiché sous le titre
 
   @example
   {% render 'accordion', content: content, heading: 'Accordéon' %}
@@ -64,6 +66,10 @@
         {% render 'icon', icon: 'remove' %}
       </div>
     </summary>
+
+    {% if show_preview and preview_text != blank %}
+      <div class="accordion__preview">{{ preview_text }}</div>
+    {% endif %}
 
     <div class="accordion__content">
       {{- content -}}
@@ -141,5 +147,19 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-sm);
+  }
+
+  .accordion__preview {
+    margin: 2px 42px 16px 0;
+    color: rgb(152 152 152);
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .accordion[open] .accordion__preview {
+    display: none;
   }
 {% endstylesheet %}

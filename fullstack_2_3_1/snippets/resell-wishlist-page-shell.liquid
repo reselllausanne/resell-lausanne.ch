@@ -1,0 +1,64 @@
+{% unless settings.activate_wishlist %}
+  {% comment %} Wishlist disabled — no Swish embed or assets {% endcomment %}
+{% else %}
+{{ 'wishlist-king-resell.css' | asset_url | stylesheet_tag }}
+{{ 'wishlist-king-app-custom.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign rl_wk_title = heading
+  if rl_wk_title == blank
+    if page.title != blank
+      assign rl_wk_title = page.title
+    else
+      assign rl_wk_title = 'wishlist.title' | t
+    endif
+  endif
+
+  assign rl_wk_show_eyebrow = show_eyebrow
+  if rl_wk_show_eyebrow == blank
+    assign rl_wk_show_eyebrow = true
+  endif
+
+  assign rl_wk_eyebrow = eyebrow
+  if rl_wk_eyebrow == blank
+    assign rl_wk_eyebrow = 'wishlist.page_eyebrow' | t
+  endif
+
+  assign rl_wk_subheading = subheading
+  if rl_wk_subheading == blank
+    assign rl_wk_subheading = 'wishlist.page_subheading' | t
+  endif
+%}
+
+<section
+  class="rl-wishlist-page color-{{ color_scheme | default: 'scheme-1' }}"
+  style="
+    --rl-wk-padding-top: {{ padding_top | default: 48 }}px;
+    --rl-wk-padding-bottom: {{ padding_bottom | default: 80 }}px;
+  "
+>
+  <div class="rl-wishlist-page__inner">
+    <header class="rl-wishlist-page__header">
+      {% if rl_wk_show_eyebrow and rl_wk_eyebrow != blank %}
+        <p class="rl-wishlist-page__eyebrow">{{ rl_wk_eyebrow }}</p>
+      {% endif %}
+      <h1 class="rl-wishlist-page__title">{{ rl_wk_title }}</h1>
+      {% if rl_wk_subheading != blank %}
+        <p class="rl-wishlist-page__subheading">{{ rl_wk_subheading }}</p>
+      {% endif %}
+    </header>
+
+    <div class="rl-wishlist-page__embed">
+      {% render 'wishlist-king',
+        cta_button: cta_button,
+        product_options: product_options,
+        show_vendor: show_vendor,
+        show_share_button: show_share_button,
+        show_buy_all_button: show_buy_all_button,
+        move_to_cart: move_to_cart,
+        empty_link: empty_link
+      %}
+    </div>
+  </div>
+</section>
+{% endunless %}

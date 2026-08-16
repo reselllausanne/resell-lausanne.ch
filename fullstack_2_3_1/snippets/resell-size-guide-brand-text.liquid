@@ -1,0 +1,11 @@
+{% comment %} Locale router for size guide copy. Params: brand, part (article|tips), locale_base, sg_fitting_tips, sg_size_tips {% endcomment %}
+{% liquid
+  assign lb = locale_base | default: 'fr'
+%}
+{% if lb == 'de' %}
+  {% render 'resell-size-guide-brand-text-de', brand: brand, part: part, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+{% elsif lb == 'en' %}
+  {% render 'resell-size-guide-brand-text-en', brand: brand, part: part, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+{% else %}
+  {% render 'resell-size-guide-brand-text-fr', brand: brand, part: part, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+{% endif %}

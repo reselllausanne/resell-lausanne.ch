@@ -24,22 +24,6 @@
   {% render 'accordion', content: content, heading: cart_note_label %}
 </cart-note>
 
-{% stylesheet %}
-  cart-note {
-    display: block;
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-
-    .icon--keyboard_arrow_down {
-      display: none;
-    }
-  }
-
-  cart-note[data-visual-preview-mode] {
-    width: 350px;
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:cart_note",

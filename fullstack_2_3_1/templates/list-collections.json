@@ -76,7 +76,7 @@
                 "show_on_display": "desktop_and_mobile",
                 "image": "{{ closest.collection.image }}",
                 "link": "",
-                "image_ratio": "square",
+                "image_ratio": "adapt",
                 "additional_class": ""
               }
             },

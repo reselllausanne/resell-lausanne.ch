@@ -1,0 +1,102 @@
+{%- doc -%}
+  Shows the only available sneaker size on PDP (single-size / direct add-to-cart flow).
+
+  @param {product} product
+  @param {number} [size_option_index] - 0-based option index for size
+  @param {boolean} [auto_detect] - compute single-size option index from product
+  @param {string} [element] - tag name (default p)
+  @param {string} [class] - root class (default rs-size-modal__single-size)
+{%- enddoc -%}
+
+{%- liquid
+  assign rs_size_option_index = size_option_index | default: -1
+
+  if auto_detect and product.has_only_default_variant == false
+    assign rs_numeric_option_index = -1
+    assign rs_numeric_option_matches = 0
+    assign rs_largest_option_values_count = 0
+    assign rs_size_option_values_count = 0
+
+    for option in product.options_with_values
+      assign option_values_count = option.values | size
+      if option_values_count > rs_largest_option_values_count
+        assign rs_largest_option_values_count = option_values_count
+      endif
+
+      assign option_has_numeric_value = false
+      for option_value in option.values
+        assign option_value_token = option_value | append: '' | strip
+        assign option_value_token_clean = option_value_token | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' | remove: ' ' | remove: '.' | remove: ',' | remove: '/' | remove: '-'
+        if option_value_token != blank and option_value_token_clean == blank
+          assign option_has_numeric_value = true
+          break
+        endif
+      endfor
+
+      if option_has_numeric_value
+        assign rs_numeric_option_matches = rs_numeric_option_matches | plus: 1
+        assign rs_numeric_option_index = forloop.index0
+      endif
+    endfor
+
+    assign rs_size_option_index = -1
+    if product.options_with_values.size == 1
+      assign rs_size_option_index = 0
+    elsif rs_numeric_option_matches == 1
+      assign rs_size_option_index = rs_numeric_option_index
+    elsif rs_largest_option_values_count > 1
+      for option in product.options_with_values
+        if option.values.size == rs_largest_option_values_count
+          assign rs_size_option_index = forloop.index0
+          break
+        endif
+      endfor
+    endif
+
+    if rs_size_option_index >= 0
+      for option in product.options_with_values
+        if forloop.index0 == rs_size_option_index
+          assign rs_size_option_values_count = option.values | size
+          break
+        endif
+      endfor
+    endif
+
+    if rs_size_option_values_count != 1
+      assign rs_size_option_index = -1
+    endif
+  endif
+
+  assign rs_size_value = ''
+  assign rs_variant = product.selected_or_first_available_variant
+
+  if rs_variant != blank and rs_size_option_index >= 0
+    case rs_size_option_index
+      when 0
+        assign rs_size_value = rs_variant.option1
+      when 1
+        assign rs_size_value = rs_variant.option2
+      when 2
+        assign rs_size_value = rs_variant.option3
+    endcase
+  endif
+
+  assign rs_size_value = rs_size_value | append: '' | strip
+  assign rs_size_label = 'products.pdp.size_modal.single_size_label' | t
+  assign rs_size_tag = element | default: 'p'
+  assign rs_size_class = class | default: 'rs-size-modal__single-size'
+
+  capture rs_is_sealed_flag
+    render 'rs-product-is-sealed-collectible', product: product
+  endcapture
+  if rs_is_sealed_flag != blank
+    assign rs_hide_single_size = true
+  endif
+-%}
+
+{%- if rs_size_value != blank and rs_hide_single_size == false -%}
+  <{{ rs_size_tag }} class="{{ rs_size_class | escape }}" data-rs-pdp-single-size>
+    <span class="rs-size-modal__single-size-label">{{ rs_size_label | escape }}</span>
+    <strong class="rs-size-modal__single-size-value">{{ rs_size_value | escape }} EU</strong>
+  </{{ rs_size_tag }}>
+{%- endif -%}

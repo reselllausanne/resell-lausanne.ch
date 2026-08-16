@@ -1030,6 +1030,8 @@
   "show_language": "Show language selector",
   "show_minutes": "Show minutes",
   "show_note": "Show note",
+  "show_dynamic_checkout": "Show dynamic checkout buttons",
+  "show_dynamic_checkout_info": "Renders Shopify's native accelerated checkout buttons (Shop Pay, Apple Pay, Google Pay, PayPal) below the Add to cart button.",
   "show_on_display": "Show on",
   "show_on_option_name": "Name of the option on which to display the popup",
   "show_on_option_name_default": "Size",

@@ -4,7 +4,8 @@
   @param {object} image - objet image
   @param {number} [height] - hauteur personnalisée de l'image
   @param {string} [class] - classes supplémentaires,
-  @param {string} [fetch_priority] - priorité de chargement de l'image
+  @param {string} [fetch_priority] - priorité de chargement de l'image (high = eager LCP)
+  @param {string} [loading] - loading attribute override (lazy | eager)
   @param {string} [sizes] - sizes de l'image,
   @param {string} [widths] - widths de l'image
 
@@ -13,11 +14,59 @@
 {%- enddoc -%}
 
 {% if image != blank %}
-  {% assign image_height = height | default: image.height %}
+  {% liquid
+    assign image_height = height | default: image.height
+    assign image_loading = loading
+    assign image_eager = false
+    if image_loading == blank
+      if fetch_priority == 'high'
+        assign image_loading = 'eager'
+        assign image_eager = true
+      else
+        assign image_loading = 'lazy'
+      endif
+    elsif image_loading == 'eager' or fetch_priority == 'high'
+      assign image_eager = true
+    endif
+  %}
 
-  {{
-    image
-    | image_url: height: image_height
-    | image_tag: class: class, fetch_priority: fetch_priority, sizes: sizes, widths: widths
-  }}
+  {% if image_eager %}
+    {{
+      image
+      | image_url: height: image_height
+      | image_tag:
+        class: class,
+        fetchpriority: fetch_priority,
+        loading: image_loading,
+        decoding: 'async',
+        sizes: sizes,
+        widths: widths
+    }}
+  {% else %}
+    {% liquid
+      assign lazy_src = image | image_url: height: image_height
+      assign lazy_srcset = blank
+      if widths != blank
+        assign width_list = widths | split: ','
+        for w in width_list
+          assign w_num = w | strip
+          assign w_url = image | image_url: width: w_num
+          if lazy_srcset == blank
+            assign lazy_srcset = w_url | append: ' ' | append: w_num | append: 'w'
+          else
+            assign lazy_srcset = lazy_srcset | append: ', ' | append: w_url | append: ' ' | append: w_num | append: 'w'
+          endif
+        endfor
+      endif
+    %}
+    {% render 'rl-deferred-img',
+      lazy_src: lazy_src,
+      lazy_srcset: lazy_srcset,
+      sizes: sizes,
+      alt: image.alt,
+      width: image.width,
+      height: image_height,
+      class: class
+    %}
+  {% endif %}
 {% endif %}

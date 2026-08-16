@@ -1,127 +1,389 @@
 {%- liquid
-  assign collection_intro = collection.metafields.custom.collection_intro.value | default: collection.description
-  assign collection_editorial = collection.metafields.custom.collection_editorial.value
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign is_fr_locale = false
+  if locale_base == 'fr'
+    assign is_fr_locale = true
+  endif
+  assign related_links_title = 'Liens connexes'
+  if locale_base == 'de'
+    assign related_links_title = 'Verwandte Links'
+  elsif locale_base == 'en'
+    assign related_links_title = 'Related links'
+  endif
+
   assign collection_faq_items = collection.metafields.custom.collection_faq_items.value
   assign collection_related_collections = collection.metafields.custom.related_collections.value
   assign collection_internal_links = collection.metafields.custom.collection_internal_links.value
+  if is_fr_locale == false
+    assign collection_internal_links = blank
+  endif
+  assign quick_links = nil
+  assign quick_links_has = false
+  if section.settings.quick_links_menu != blank
+    assign quick_links = linklists[section.settings.quick_links_menu]
+    if quick_links.links.size > 0
+      assign quick_links_has = true
+    endif
+  endif
+  assign col_handle = collection.handle | default: ''
+  assign products_per_page_effective = section.settings.products_per_page | default: 24
+  if products_per_page_effective > 28
+    assign products_per_page_effective = 28
+  endif
+
+  assign brand_strip_qs = ''
+  assign raw_query_string = request.query_string | default: '' | downcase
+  if raw_query_string contains 'brand_strip=other'
+    assign brand_strip_qs = 'other'
+  endif
+
+  assign use_autres_marques_grid = false
+  if brand_strip_qs == 'other'
+    if col_handle == 'toutes-nos-paires' or col_handle == 'all' or col_handle == 'nouveautes'
+      assign use_autres_marques_grid = true
+    endif
+  endif
+
+  assign autres_result_count = 0
+  if use_autres_marques_grid
+    capture autres_handles_csv
+      render 'menu-other-sneaker-brands', format: 'handles'
+    endcapture
+    assign autres_handles = autres_handles_csv | strip | split: ','
+    if autres_handles.size == 1 and autres_handles[0] == blank
+      assign autres_handles = '' | split: ','
+    endif
+    for ah in autres_handles
+      assign autres_col = collections[ah]
+      if autres_col != blank
+        assign autres_result_count = autres_result_count | plus: autres_col.products_count
+      endif
+    endfor
+  endif
+
+  assign collection_tax_labels_path = ''
+  assign collection_tax_handles_path = ''
+  capture collection_taxonomy_payload
+    render 'collection-breadcrumb-resolve'
+  endcapture
+  assign collection_taxonomy_payload = collection_taxonomy_payload | strip
+  if collection_taxonomy_payload contains '###'
+    assign collection_tax_labels_path = collection_taxonomy_payload | split: '###' | first | strip
+    assign collection_tax_handles_path = collection_taxonomy_payload | split: '###' | last | strip
+  endif
 -%}
 
 {% comment %}
-  TODO: Collection contract.
+  Collection page now mirrors the premium search-page layout:
+  - Full-bleed sticky filter toolbar (main-collection__toolbar-sheet)
+  - Flat filterable grid (filters-container + product-grid-wrap)
+  - SEO blocks (editorial / related / FAQ) rendered in a page-width inner below
+
   Required metafields/metaobjects:
-  - collection.custom.collection_intro (rich text)
   - collection.custom.collection_editorial (rich text)
-  - collection.custom.collection_faq_items (list.metaobject_reference with question/answer)
+  - collection.custom.collection_faq_items (list.metaobject_reference question/answer)
   - collection.custom.related_collections (list.collection_reference)
-  - collection.custom.collection_internal_links (list.metaobject_reference with title/url)
+  - collection.custom.collection_internal_links (list.metaobject_reference title/url)
+  - collection.custom.plp_featured_collection (collection_reference, optional override for featured rail)
 {% endcomment %}
 
 <div
-  class="main-collection color-{{ section.settings.color_scheme }}"
+  class="main-collection color-{{ section.settings.color_scheme }} main-collection--has-results"
   style="
     --margin-top: {{ section.settings.margin_top }}px;
     --margin-bottom: {{ section.settings.margin_bottom }}px;
   "
   data-ref="main-collection"
 >
-  <div
-    class="main-collection__inner page-width"
-    style="
-      --padding-top: {{ section.settings.padding_top }}px;
-      --padding-bottom: {{ section.settings.padding_bottom }}px;
-    "
-  >
-    <header class="main-collection__header" data-commerce-collection-header>
-      <nav class="commerce-breadcrumbs" aria-label="Breadcrumb">
-        <a class="link" href="{{ routes.root_url }}">Home</a>
-        <span aria-hidden="true">/</span>
-        <span>{{ collection.title }}</span>
-      </nav>
-      <h1 class="main-collection__title">{{ collection.title }}</h1>
-      {% if collection_intro != blank %}
-        <div class="main-collection__intro rte">
-          {{ collection_intro }}
-        </div>
-      {% endif %}
-    </header>
-
-    {% content_for 'block', type: 'filters-and-sort', id: 'filters' %}
-
-    <div class="main-collection__products" data-ref="main-collection-products">
-      {% paginate collection.products by section.settings.products_per_page %}
-        <p class="main-collection__result-count" data-commerce-result-count>
-          {{ paginate.items }} results
-        </p>
-
-        <div
-          class="main-collection__products-grid"
-          style="
-            --grid-columns: {{ section.settings.grid_columns }};
-            --grid-columns-mobile: {{ section.settings.grid_columns_mobile }};
-          "
-          data-ref="main-collection-grid"
-        >
-          {% if collection.products.size > 0 %}
-            {% for product in collection.products %}
-              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-            {% endfor %}
-          {% else %}
-            <p class="main-collection__empty">{{ 'collections.empty' | t }}</p>
-          {% endif %}
-        </div>
-
-        {%- if paginate.pages > 1 -%}
-          {% render 'pagination', paginate_object: paginate %}
-        {%- endif -%}
-      {% endpaginate %}
-    </div>
-
-    {% if collection_editorial != blank %}
-      <section class="main-collection__editorial rte">
-        {{ collection_editorial }}
-      </section>
-    {% endif %}
-
-    {% if collection_related_collections != blank or collection_internal_links != blank %}
-      <section class="main-collection__related-links">
-        <h2 class="main-collection__related-title">Related links</h2>
-        <ul class="main-collection__related-list">
-          {% for related_collection in collection_related_collections limit: 10 %}
-            {% if related_collection.url != blank %}
-              <li><a class="link" href="{{ related_collection.url }}">{{ related_collection.title }}</a></li>
-            {% endif %}
-          {% endfor %}
-          {% for related_link in collection_internal_links limit: 10 %}
-            {% liquid
-              assign related_url = related_link.url.value | default: related_link.url
-              assign related_title = related_link.title.value | default: related_link.title
-            %}
-            {% if related_url != blank and related_title != blank %}
-              <li><a class="link" href="{{ related_url }}">{{ related_title }}</a></li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </section>
-    {% endif %}
-
-    {% if collection_faq_items != blank %}
-      <section class="main-collection__faq" data-commerce-faq-visible>
-        <h2>Frequently asked questions</h2>
-        {% for faq_item in collection_faq_items limit: 10 %}
-          {% liquid
-            assign faq_question = faq_item.question.value | default: faq_item.question | default: faq_item.title.value | default: faq_item.title
-            assign faq_answer = faq_item.answer.value | default: faq_item.answer | default: faq_item.content.value | default: faq_item.content
+  {% if section.settings.show_plp_heading %}
+    <div
+      class="main-collection__inner main-collection__inner--header"
+      style="
+        --padding-top: {{ section.settings.padding_top }}px;
+        --padding-bottom: 0px;
+      "
+    >
+      <div class="main-collection__plp-grid">
+        <header class="main-collection__header main-collection__col-span-12" data-commerce-collection-header>
+          {% render 'collection-breadcrumb-nav',
+            breadcrumb_labels_path: collection_tax_labels_path,
+            breadcrumb_handles_path: collection_tax_handles_path
           %}
-          {% if faq_question != blank and faq_answer != blank %}
-            <details class="main-collection__faq-item">
-              <summary>{{ faq_question }}</summary>
-              <div class="rte">{{ faq_answer }}</div>
-            </details>
-          {% endif %}
-        {% endfor %}
-      </section>
+          <h1 class="main-collection__title">{{ collection.title }}</h1>
+        </header>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="main-collection__results-root" data-ref="main-collection-results-root">
+    {% if use_autres_marques_grid %}
+      <div class="main-collection__filterable-grid">
+        <div class="main-collection__filters-container">
+          <div class="main-collection__toolbar-sheet">
+            <div class="main-collection__filters-toggle-bar main-collection__filters-toggle-bar--with-actions">
+              <div class="main-collection__filters-toggle-start">
+                <span class="main-collection__result-count" role="status" data-commerce-result-count>
+                  {{ 'collections.results_count' | t: count: autres_result_count }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="main-collection__product-grid-wrap" data-ref="main-collection-products">
+          <div
+            class="main-collection__products-grid"
+            style="
+              --grid-columns: {{ section.settings.grid_columns }};
+              --grid-columns-mobile: {{ section.settings.grid_columns_mobile }};
+            "
+            data-ref="main-collection-grid"
+          >
+            {%- assign plp_visible_count = 0 -%}
+            {%- assign autres_slots_left = products_per_page_effective -%}
+            {% for ah in autres_handles %}
+              {% if autres_slots_left <= 0 %}
+                {% break %}
+              {% endif %}
+              {% assign autres_col = collections[ah] %}
+              {% if autres_col == blank or autres_col.products_count < 1 %}
+                {% continue %}
+              {% endif %}
+              {% for product in autres_col.products limit: autres_slots_left %}
+                {% unless product.available %}
+                  {% continue %}
+                {% endunless %}
+                {% assign plp_visible_count = plp_visible_count | plus: 1 %}
+                {% assign autres_slots_left = autres_slots_left | minus: 1 %}
+                {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+                {% if autres_slots_left <= 0 %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+            {%- if plp_visible_count == 0 -%}
+              <p class="main-collection__empty">{{ 'collections.empty' | t }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      {% paginate collection.products by products_per_page_effective %}
+        {% render 'collection-plp-itemlist-schema', collection: collection, paginate: paginate %}
+        <div class="main-collection__filterable-grid">
+          <div class="main-collection__filters-container">
+            <div class="main-collection__toolbar-sheet">
+              {% if quick_links_has %}
+                <div class="main-collection__toolbar-sheet-chips">
+                  <nav
+                    class="main-collection__quick-links"
+                    aria-label="{{ 'collections.quick_links_nav_label' | t }}"
+                  >
+                    <ul class="main-collection__quick-links-track">
+                      {% for link in quick_links.links %}
+                        <li>
+                          <a class="main-collection__quick-link" href="{{ link.url }}">{{ link.title }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </nav>
+                </div>
+              {% endif %}
+
+              <div class="main-collection__filters-toggle-bar main-collection__filters-toggle-bar--with-actions">
+                <div class="main-collection__filters-toggle-start">
+                  <span class="main-collection__result-count" role="status" data-commerce-result-count>
+                    {{ 'collections.results_count' | t: count: paginate.items }}
+                  </span>
+                </div>
+                <div class="main-collection__filters-toggle-actions">
+                  {% content_for 'block', type: 'filters-and-sort', id: 'filters' %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% render 'collection-plp-featured-rail', collection: collection, section: section %}
+
+          <div class="main-collection__product-grid-wrap" data-ref="main-collection-products">
+            <div
+              class="main-collection__products-grid"
+              style="
+                --grid-columns: {{ section.settings.grid_columns }};
+                --grid-columns-mobile: {{ section.settings.grid_columns_mobile }};
+              "
+              data-ref="main-collection-grid"
+            >
+              {% if collection.products.size > 0 %}
+                {%- assign plp_visible_count = 0 -%}
+                {% for product in collection.products %}
+                  {%- unless product.available -%}
+                    {%- continue -%}
+                  {%- endunless -%}
+                  {%- assign plp_visible_count = plp_visible_count | plus: 1 -%}
+                  {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+                {% endfor %}
+                {%- if plp_visible_count == 0 -%}
+                  <p class="main-collection__empty">{{ 'collections.empty' | t }}</p>
+                {%- endif -%}
+              {% else %}
+                <p class="main-collection__empty">{{ 'collections.empty' | t }}</p>
+              {% endif %}
+            </div>
+
+            {%- if paginate.pages > 1 -%}
+              {% render 'pagination', paginate_object: paginate %}
+            {%- endif -%}
+          </div>
+        </div>
+      {% endpaginate %}
     {% endif %}
   </div>
+
+  {%- liquid
+    assign brand_faq_snippet = ''
+    if collection_faq_items == blank
+      if col_handle == 'chrome-hearts' or col_handle contains 'chrome-hearts'
+        assign brand_faq_snippet = 'collection-plp-faq-chrome-hearts-content'
+      elsif col_handle == 'denim-tears' or col_handle contains 'denim-tears'
+        assign brand_faq_snippet = 'collection-plp-faq-denim-tears-content'
+      elsif col_handle == 'onitsuka-tiger' or col_handle == 'onitsuka' or col_handle == 'onitsuka-tokuten' or col_handle contains 'onitsuka'
+        assign brand_faq_snippet = 'collection-plp-faq-onitsuka-tiger-content'
+      elsif col_handle == 'adidas-spezial' or col_handle == 'handball-spezial' or col_handle == 'trimm-trab' or col_handle == 'spezial' or col_handle contains 'spezial'
+        assign brand_faq_snippet = 'collection-plp-faq-adidas-spezial-content'
+      elsif col_handle == 'nike-air-max-plus-tn' or col_handle == 'air-max-plus' or col_handle == 'tn' or col_handle == 'nike-tn' or col_handle contains 'air-max-plus' or col_handle contains 'nike-tn'
+        assign brand_faq_snippet = 'collection-plp-faq-nike-tn-content'
+      elsif col_handle == 'dunk' or col_handle == 'dunk-low' or col_handle == 'dunk-sb' or col_handle == 'nike-sb-dunk' or col_handle == 'nike-dunk' or col_handle contains 'dunk'
+        assign brand_faq_snippet = 'collection-plp-faq-dunk-content'
+      elsif col_handle == 'supreme' or col_handle contains 'supreme'
+        assign brand_faq_snippet = 'collection-plp-faq-supreme-content'
+      elsif col_handle == 'off-white' or col_handle == 'nike-x-off-white' or col_handle contains 'off-white'
+        assign brand_faq_snippet = 'collection-plp-faq-off-white-content'
+      elsif col_handle == 'bape' or col_handle == 'a-bathing-ape' or col_handle contains 'bape'
+        assign brand_faq_snippet = 'collection-plp-faq-bape-content'
+      elsif col_handle == 'nike' or col_handle contains 'nike'
+        assign brand_faq_snippet = 'collection-plp-faq-nike-content'
+      elsif col_handle == 'jordan' or col_handle == 'air-jordan' or col_handle contains 'jordan'
+        assign brand_faq_snippet = 'collection-plp-faq-jordan-content'
+      elsif col_handle == 'adidas' or col_handle contains 'adidas'
+        assign brand_faq_snippet = 'collection-plp-faq-adidas-content'
+      elsif col_handle == 'new-balance' or col_handle contains 'new-balance'
+        assign brand_faq_snippet = 'collection-plp-faq-new-balance-content'
+      elsif col_handle == 'asics-double-laces' or col_handle == 'double-laces' or col_handle contains 'double-lace'
+        assign brand_faq_snippet = 'collection-plp-faq-asics-double-laces-content'
+      elsif col_handle == 'new-balance-204' or col_handle == 'new-balance-204l' or col_handle == 'nb-204l'
+        assign brand_faq_snippet = 'collection-plp-faq-new-balance-204-content'
+      elsif col_handle == 'asics' or col_handle contains 'asics'
+        assign brand_faq_snippet = 'collection-plp-faq-asics-content'
+      elsif col_handle == 'salomon' or col_handle contains 'salomon'
+        assign brand_faq_snippet = 'collection-plp-faq-salomon-content'
+      elsif col_handle == 'on-running' or col_handle == 'on' or col_handle contains 'on-running'
+        assign brand_faq_snippet = 'collection-plp-faq-on-running-content'
+      elsif col_handle == 'yeezy' or col_handle contains 'yeezy'
+        assign brand_faq_snippet = 'collection-plp-faq-yeezy-content'
+      elsif col_handle == 'puma' or col_handle contains 'puma'
+        assign brand_faq_snippet = 'collection-plp-faq-puma-content'
+      elsif col_handle == 'converse' or col_handle contains 'converse'
+        assign brand_faq_snippet = 'collection-plp-faq-converse-content'
+      endif
+    endif
+    assign plp_has_theme_locale_content = false
+    if col_handle == 'onitsuka-tiger' or col_handle == 'onitsuka' or col_handle == 'onitsuka-tokuten' or col_handle contains 'onitsuka'
+      assign plp_has_theme_locale_content = true
+    endif
+    if is_fr_locale == false and plp_has_theme_locale_content == false
+      assign brand_faq_snippet = blank
+    endif
+    assign has_seo_blocks = false
+    assign show_brand_faq = false
+    if brand_faq_snippet != blank
+      if is_fr_locale or plp_has_theme_locale_content
+        assign show_brand_faq = true
+      endif
+    endif
+    if is_fr_locale and collection.metafields.custom.collection_editorial != blank
+      assign has_seo_blocks = true
+    endif
+    if collection_related_collections != blank
+      assign has_seo_blocks = true
+    endif
+    if collection_internal_links != blank
+      assign has_seo_blocks = true
+    endif
+    if collection_faq_items != blank
+      assign has_seo_blocks = true
+    endif
+    if show_brand_faq
+      assign has_seo_blocks = true
+    endif
+  -%}
+
+  {% if has_seo_blocks and current_page == 1 %}
+    <div
+      class="main-collection__inner main-collection__inner--seo"
+      style="
+        --padding-top: 0px;
+        --padding-bottom: {{ section.settings.padding_bottom }}px;
+      "
+    >
+      <div class="main-collection__plp-grid">
+        {% if collection.metafields.custom.collection_editorial != blank %}
+          <section class="main-collection__editorial rte main-collection__col-span-12">
+            {% render 'metaobject-rich-text', source: collection.metafields.custom.collection_editorial %}
+          </section>
+        {% endif %}
+
+        {% if collection_related_collections != blank or collection_internal_links != blank %}
+          <section class="main-collection__related-links main-collection__col-span-12">
+            <h2 class="main-collection__related-title">{{ related_links_title }}</h2>
+            <ul class="main-collection__related-list">
+              {% for related_collection in collection_related_collections limit: 10 %}
+                {% if related_collection.url != blank %}
+                  <li><a class="link" href="{{ related_collection.url }}">{{ related_collection.title }}</a></li>
+                {% endif %}
+              {% endfor %}
+              {% for related_link in collection_internal_links limit: 10 %}
+                {% liquid
+                  assign related_url = related_link.url.value | default: related_link.url
+                  assign related_title = related_link.title.value | default: related_link.title
+                %}
+                {% if related_url != blank and related_title != blank %}
+                  <li><a class="link" href="{{ related_url }}">{{ related_title }}</a></li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </section>
+        {% endif %}
+
+        {% if collection_faq_items != blank %}
+          <section class="main-collection__faq main-collection__col-span-12" data-commerce-faq-visible>
+            <h2>{{ 'rl_return_request.faq_title' | t }}</h2>
+            {% for faq_item in collection_faq_items limit: 10 %}
+              {% liquid
+                assign faq_question = faq_item.question.value | default: faq_item.question | default: faq_item.title.value | default: faq_item.title
+              %}
+              {% capture faq_answer_html %}
+                {% render 'metaobject-rich-text', source: faq_item.answer, fallback: faq_item.content %}
+              {% endcapture %}
+              {% assign faq_answer_html = faq_answer_html | strip %}
+              {% if faq_question != blank and faq_answer_html != blank %}
+                <details class="main-collection__faq-item">
+                  <summary>{{ faq_question }}</summary>
+                  <div class="rte">{{ faq_answer_html }}</div>
+                </details>
+              {% endif %}
+            {% endfor %}
+          </section>
+        {% elsif show_brand_faq %}
+          <section class="main-collection__faq main-collection__col-span-12" data-commerce-faq-visible>
+            <h2>{{ 'rl_return_request.faq_title' | t }}</h2>
+            {% render 'collection-plp-faq-router', key: brand_faq_snippet %}
+          </section>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
 </div>
 
 {% stylesheet %}
@@ -132,14 +394,167 @@
   .main-collection {
     margin-top: var(--margin-top);
     margin-bottom: var(--margin-bottom);
+    overflow-x: clip;
+  }
+
+  .main-collection--has-results {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .main-collection--chip-loading [data-ref='main-collection-products'] {
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+  }
+
+  .main-collection--chip-loading .main-collection__toolbar-sheet {
+    opacity: 0.7;
+    pointer-events: none;
   }
 
   .main-collection__inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--page-width);
+    margin-inline: auto;
     padding-top: var(--padding-top);
     padding-bottom: var(--padding-bottom);
+    padding-inline: var(--page-x);
+  }
+
+  .main-collection__plp-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--grid-gap);
+    row-gap: var(--gap-lg);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .main-collection__col-span-12 {
+    grid-column: span 12;
+    min-width: 0;
+  }
+
+  /* premium results root: flat column, full-bleed filter bar + page-padded grid */
+  .main-collection__results-root {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-lg);
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-collection__filterable-grid {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .main-collection__filters-container {
+    display: contents;
+  }
+
+  .main-collection__filterable-grid > .main-collection__toolbar-sheet {
+    order: 0;
+  }
+
+  .main-collection__filterable-grid > .main-collection__product-grid-wrap {
+    flex: 1 1 auto;
+    order: 2;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-inline: var(--page-x);
+    margin: 16px 0 0;
+  }
+
+  .main-collection__product-grid-wrap .main-collection__products-grid {
+    margin-top: 0;
+    margin-bottom: 72px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  @media (max-width: 767.98px) {
+    .main-collection__filterable-grid > .main-collection__product-grid-wrap {
+      padding-inline: var(--page-x, 24px);
+    }
+  }
+
+  .main-collection__toolbar-sheet-chips {
+    padding: 10px 0 12px;
+    border-bottom: 1px solid #ededed;
+  }
+
+  .main-collection__toolbar-sheet-chips .main-collection__quick-links {
+    width: 100%;
+    min-width: 0;
+  }
+
+  @media (max-width: 749px) {
+    .main-collection__toolbar-sheet-chips {
+      padding: 10px 0 12px;
+    }
+  }
+
+  .main-collection__quick-links {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .main-collection__quick-links-track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .main-collection__quick-links-track > li {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .main-collection__quick-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 18px;
+    border: 1px solid rgb(from var(--color-foreground) r g b / 22%);
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--color-foreground);
+    white-space: nowrap;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .main-collection__quick-link:hover {
+    border-color: rgb(from var(--color-foreground) r g b / 45%);
+    background-color: rgb(from var(--color-foreground) r g b / 4%);
   }
 
   .main-collection__header {
@@ -162,25 +577,48 @@
     margin: 0;
   }
 
-  .main-collection__intro > *:first-child {
-    margin-top: 0;
-  }
-
-  .main-collection__intro > *:last-child {
-    margin-bottom: 0;
-  }
-
-  .main-collection__result-count {
-    margin: 0 0 var(--gap-sm);
-    font-size: var(--font-body--size);
-    color: rgb(0 0 0 / 65%);
-  }
-
   .main-collection__products-grid {
     display: grid;
     grid-template-columns: repeat(var(--grid-columns-mobile), 1fr);
-    column-gap: var(--grid-gap-vertical);
-    row-gap: var(--grid-gap-horizontal);
+    column-gap: var(--grid-gap);
+    row-gap: 40px;
+    margin-top: 0;
+    margin-bottom: 72px;
+  }
+
+  .main-collection__products-grid .product-card-media-gallery-block,
+  .main-collection__products-grid product-card-media-gallery.product-card-media-gallery-block {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .main-collection__products-grid .product-card-media-gallery__media {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-collection__products-grid .product-card-media-gallery__media .product-media {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (width >= 768px) {
+    .main-collection__products-grid {
+      grid-template-columns: repeat(var(--grid-columns, 4), minmax(0, 1fr));
+      column-gap: var(--grid-gap);
+      row-gap: 44px;
+      margin-bottom: 106px;
+    }
   }
 
   .main-collection__editorial,
@@ -206,38 +644,6 @@
     margin-top: 8px;
   }
 
-  @media (width > 750px) {
-    .main-collection:has(.filter-and-sort--inline) .main-collection__inner {
-      display: flex;
-      flex-direction: column;
-      gap: var(--gap-lg);
-    }
-
-    .main-collection:has(.filter-and-sort--sidebar) .main-collection__inner {
-      display: grid;
-      grid-template-columns: 25% calc(75% - var(--gap-lg));
-      gap: var(--gap-lg);
-    }
-
-    .main-collection:has(.filter-and-sort--sidebar) .main-collection__header,
-    .main-collection:has(.filter-and-sort--sidebar) .main-collection__editorial,
-    .main-collection:has(.filter-and-sort--sidebar) .main-collection__related-links,
-    .main-collection:has(.filter-and-sort--sidebar) .main-collection__faq {
-      grid-column: 1 / -1;
-    }
-
-    .main-collection:has(.filter-and-sort--sidebar) .filter-and-sort {
-      grid-column: 1;
-    }
-
-    .main-collection:has(.filter-and-sort--sidebar) .main-collection__products {
-      grid-column: 2;
-    }
-
-    .main-collection__products-grid {
-      grid-template-columns: repeat(var(--grid-columns), 1fr);
-    }
-  }
 {% endstylesheet %}
 
 {% schema %}
@@ -263,6 +669,13 @@
       "content": "t:content"
     },
     {
+      "type": "checkbox",
+      "id": "show_plp_heading",
+      "label": "Show heading and breadcrumbs in this section",
+      "info": "Turn off when the collection title is provided by a section above (recommended for PLP layouts like a premium reference).",
+      "default": false
+    },
+    {
       "type": "range",
       "id": "products_per_page",
       "label": "t:products_per_page",
@@ -270,6 +683,66 @@
       "min": 10,
       "max": 40,
       "step": 2
+    },
+    {
+      "type": "link_list",
+      "id": "quick_links_menu",
+      "label": "PLP quick links",
+      "info": "Optional horizontal chips (e.g. brands). Shown inside the sticky toolbar when the menu has links."
+    },
+    {
+      "type": "header",
+      "content": "Featured delivery rail"
+    },
+    {
+      "type": "checkbox",
+      "id": "featured_rail_enabled",
+      "label": "Show featured delivery rail on parent collections",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "featured_rail_streetwear_handles",
+      "label": "Streetwear parent handles",
+      "default": "vetements,streetwear",
+      "info": "Comma-separated. Rail hidden on child collections like dunk-low."
+    },
+    {
+      "type": "collection",
+      "id": "featured_rail_streetwear_collection",
+      "label": "Streetwear featured collection (48h)"
+    },
+    {
+      "type": "text",
+      "id": "featured_rail_sneakers_handles",
+      "label": "Sneakers parent handles",
+      "default": "toutes-nos-paires,toutes-nos-sneakers"
+    },
+    {
+      "type": "collection",
+      "id": "featured_rail_sneakers_collection",
+      "label": "Sneakers featured collection (48h)"
+    },
+    {
+      "type": "range",
+      "id": "featured_rail_max_products",
+      "label": "Max products in featured rail",
+      "min": 4,
+      "max": 8,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "text",
+      "id": "featured_rail_heading",
+      "label": "Featured rail heading",
+      "default": "Livraison 48h"
+    },
+    {
+      "type": "text",
+      "id": "featured_rail_link_label",
+      "label": "Featured rail link label",
+      "default": "Voir tout"
     },
     {
       "type": "header",
@@ -306,7 +779,7 @@
       "type": "range",
       "id": "padding_top",
       "label": "t:padding_top",
-      "default": 50,
+      "default": 24,
       "min": 0,
       "max": 100,
       "step": 1

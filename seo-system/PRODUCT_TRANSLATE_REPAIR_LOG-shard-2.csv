@@ -1,0 +1,183 @@
+timestamp,product_id,handle,title,chars
+2026-07-18T14:25:33.820Z,gid://shopify/Product/14824425390466,"nike-air-max-plus-supreme-white","Nike Air Max Plus Supreme White",1058
+2026-07-18T14:25:33.822Z,gid://shopify/Product/14896528490882,"adidas-samba-lt-black-white-womens","adidas Samba LT Black White (Women's)",940
+2026-07-18T14:25:33.822Z,gid://shopify/Product/14896529277314,"adidas-samba-og-black-wonder-white-womens","adidas Samba OG Black Wonder White (Women's)",1022
+2026-07-18T14:25:33.822Z,gid://shopify/Product/14896529506690,"adidas-samba-og-dia-de-muertos-pack-black","adidas Samba OG Día de Muertos Pack Black",1038
+2026-07-18T14:25:33.822Z,gid://shopify/Product/14896529899906,"adidas-samba-og-cloud-white-core-black","adidas Samba OG Cloud White Core Black",1059
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896530260354,"adidas-samba-og-wonder-beige-tweed","adidas Samba OG Wonder Beige Tweed",1030
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896530456962,"adidas-sambae-leopard-off-white-womens","adidas Sambae Leopard Off White (Women's)",1143
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896530719106,"adidas-handball-spezial-clear-pink-arctic-night-womens","adidas Handball Spezial Clear Pink Arctic Night (Women's)",1019
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896531014018,"adidas-handball-spezial-light-blue","adidas Handball Spezial Light Blue",945
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896531308930,"adidas-handball-spezial-sandy-pink-womens","adidas Handball Spezial Sandy Pink (Women's)",1162
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896531636610,"adidas-gazelle-bold-pink-glow-w","adidas Gazelle Bold Pink Glow (Women's)",936
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896531865986,"adidas-gazelle-indoor-collegiate-green-lucid-pink-womens","adidas Gazelle Indoor Collegiate Green Lucid Pink (Women's)",1147
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896532128130,"adidas-gazelle-indoor-san-juan-bad-bunny-blue","adidas Gazelle Indoor Bad Bunny San Juan",1075
+2026-07-18T14:25:33.823Z,gid://shopify/Product/14896533832066,"onitsuka-tiger-mexico-66-vintage-birch-black","Onitsuka Tiger Mexico 66 Vintage Birch Black",1198
+2026-07-18T14:25:33.824Z,gid://shopify/Product/14896535077250,"asics-gel-kayano-14-cream-metallic-blue","ASICS Gel-Kayano 14 Cream Metallic Blue",1117
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896535503234,"asics-gel-1130-black-carbon","ASICS Gel-1130 Black Carbon",1144
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896535732610,"asics-gel-1130-dark-neptune","ASICS Gel-1130 Dark Neptune",1175
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896536093058,"asics-gel-1130-white-black","ASICS Gel-1130 White Black",1068
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896536453506,"asics-gel-1130-white-midnight-gs","ASICS Gel-1130 White Midnight (GS)",1190
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896536813954,"asics-gel-nyc-cement-grey-ash-rock","ASICS Gel-NYC Cement Grey Ash Rock",1091
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896537076098,"asics-gel-nyc-ivory-clay-grey","ASICS Gel-NYC Ivory Clay Grey",1226
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896554541442,"ugg-disquette-slipper-chestnut-w","UGG Disquette Slipper Chestnut (Women's)",958
+2026-07-18T14:25:33.826Z,gid://shopify/Product/14896555000194,"ugg-classic-ultra-mini-platform-chestnut-w","UGG Classic Ultra Mini Platform Boot Chestnut (Women's)",937
+2026-07-18T14:25:33.827Z,gid://shopify/Product/14896555524482,"ugg-lowmel-dune-kids","UGG Lowmel Dune (Kids)",1118
+2026-07-18T14:25:33.827Z,gid://shopify/Product/14896556540290,"ugg-tasman-slipper-driftwood-w","UGG Tasman Slipper Driftwood (Women's)",1013
+2026-07-18T14:25:33.827Z,gid://shopify/Product/14896557195650,"ugg-tazz-slipper-sand-womens","UGG Tazz Slipper Sand (Women's)",924
+2026-07-18T14:25:33.827Z,gid://shopify/Product/14896784310658,"nike-air-max-plus-panda","Nike Air Max Plus Panda",1240
+2026-07-18T14:25:33.827Z,gid://shopify/Product/14896784540034,"nike-air-max-plus-psg-paris-saint-germain","Nike Air Max Plus PSG",1183
+2026-07-18T14:25:33.827Z,gid://shopify/Product/14896784834946,"nike-air-max-plus-ashen-slate-womens","Nike Air Max Plus Ashen Slate (Women's)",1213
+2026-07-18T14:25:33.827Z,gid://shopify/Product/14896785064322,"nike-air-max-plus-black-university-red-metallic-silver","Nike Air Max Plus Black University Red Metallic Silver",1160
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896785293698,"nike-air-max-plus-drift-white-black-metallic-silver","Nike Air Max Plus Drift White Black Metallic Silver",1177
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896785883522,"nike-air-max-plus-marseille","Nike Air Max Plus Marseille",1178
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896786342274,"nike-zoom-vomero-5-platinum-tint","Nike Zoom Vomero 5 Platinum Tint",1213
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896786538882,"nike-zoom-vomero-5-black-sesame-w","Nike Zoom Vomero 5 Black Sesame (Women's)",1200
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896786735490,"nike-zoom-vomero-5-iron-ore-flat-pewter","Nike Zoom Vomero 5 Iron Ore Flat Pewter",1220
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896786964866,"nike-zoom-vomero-5-race-blue-womens","Nike Zoom Vomero 5 Racer Blue (Women's)",1137
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896787161474,"nike-zoom-vomero-5-valentines-day-womens","Nike Zoom Vomero 5 Valentine's Day (Women's)",1319
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896787390850,"new-balance-9060-triple-black","New Balance 9060 Triple Black",1117
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896787587458,"new-balance-9060-shadow-grey-castlerock","New Balance 9060 Shadow Grey Castlerock",1163
+2026-07-18T14:25:33.828Z,gid://shopify/Product/14896787784066,"new-balance-9060-reflection-raincloud-quarry-blue","New Balance 9060 Reflection Raincloud Quarry Blue",1158
+2026-07-18T14:27:55.264Z,gid://shopify/Product/14896787980674,"new-balance-9060-black-white","New Balance 9060 Black White",925
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896788177282,"new-balance-9060-vintage-rose","New Balance 9060 Vintage Rose",1014
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896788373890,"nike-p-6000-obsidian-summit-white","Nike P-6000 Obsidian Summit White",964
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896788570498,"nike-p-6000-black-cool-grey","Nike P-6000 Black Cool Grey",1100
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896788832642,"nike-p-6000-armory-navy-flat-silver","Nike P-6000 Armory Navy Flat Silver",1125
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896789029250,"nike-p-6000-metallic-silver-pure-platinum-w","Nike P-6000 Metallic Silver Pure Platinum (Women's)",1035
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896789291394,"nike-p-6000-university-gold","Nike P-6000 University Gold",1120
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896790765954,"nike-hot-step-2-drake-nocta-total-orange","Nike Hot Step 2 Drake NOCTA Total Orange",1196
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896790995330,"nike-sb-dunk-low-futura-laboratories-bleached-aqua","Nike SB Dunk Low Futura Laboratories Bleached Aqua",1142
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896791191938,"nike-sb-dunk-low-big-money-savings","Nike SB Dunk Low Big Money Savings",1027
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896791388546,"nike-sb-dunk-low-city-of-love-light-bone","Nike SB Dunk Low City of Love Light Bone",986
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14896791585154,"nike-sb-dunk-low-supreme-rammellzee","Nike SB Dunk Low Supreme Rammellzee",907
+2026-07-18T14:27:55.266Z,gid://shopify/Product/14898949980546,"adidas-handball-spezial-chalky-brown-clear-pink-womens","adidas Handball Spezial Chalky Brown Clear Pink (Women's)",1215
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14898950177154,"adidas-handball-spezial-scarlet-gum","adidas Handball Spezial Scarlet Gum",1225
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14898950570370,"adidas-handball-spezial-semi-blue-burst-almost-yellow","adidas Handball Spezial Semi Blue Burst Almost Yellow",1101
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14898951192962,"adidas-handball-spezial-grey-cream-white","adidas Handball Spezial Grey Cream White",1434
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14899081544066,"nike-air-max-plus-triple-black","Nike Air Max Plus Triple Black",919
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14899347161474,"adidas-samba-og-mineral-green-crystal-sand-womens","adidas Samba OG Mineral Green Crystal Sand (Women's)",1148
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14899347456386,"adidas-samba-xlg-carbon-grey","adidas Samba XLG Carbon Grey",1209
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14899347685762,"adidas-samba-pharrell-humanrace-aluminium","adidas Samba Pharrell Humanrace Aluminium",1329
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14899347980674,"adidas-samba-mn-white-black-gum","adidas Samba Millennium Black White Gum",865
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14899348210050,"adidas-samba-og-luxe-preloved-brown","adidas Samba OG Luxe Preloved Brown",1405
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14899348406658,"adidas-clarks-8th-street-samba-by-ronnie-fieg-chalk-white-green","adidas Clarks 8th Street Samba by Ronnie Fieg Chalk White Green",1186
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14900372111746,"nike-kd-17-aunt-pearl","Nike KD 17 NRG Aunt Pearl",1030
+2026-07-18T14:27:55.267Z,gid://shopify/Product/14900372341122,"nike-kobe-5-protro-x-ray","Nike Kobe 5 Protro X-Ray",1042
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900372767106,"nike-kobe-5-protro-year-of-the-mamba-university-red","Nike Kobe 5 Protro Year of the Mamba University Red",1065
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900372996482,"adidas-ae-1-charcoal","adidas AE 1 Ascent",1087
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900373324162,"nike-book-1-halloween","Nike Book 1 Halloween",1157
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900373553538,"nike-kd-4-nerf-2024","Nike KD 4 NERF (2024)",1085
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900373782914,"nike-gt-cut-3-panda","Nike Air Zoom GT Cut 3 Panda",1080
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900373979522,"nike-lebron-21-akoya","Nike LeBron 21 Akoya",1329
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900374274434,"puma-lamelo-ball-mb01-lo-green-gecko","Puma LaMelo Ball MB.01 Lo Green Gecko",930
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900374536578,"nike-kobe-4-protro-philly-2024","Nike Kobe 4 Protro Philly (2024)",1020
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900374962562,"nike-kobe-5-year-of-the-mamba-university-red-gs","Nike Kobe 5 Year of the Mamba University Red (GS)",1133
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900375257474,"nike-sabrina-1-exclamation-womens","Nike Sabrina 1 Exclamat!on (Speckled Outsole) (Women's)",956
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900375519618,"nike-sabrina-1-magnetic-womens","Nike Sabrina 1 Magnetic (Women's)",1052
+2026-07-18T14:27:55.268Z,gid://shopify/Product/14900375814530,"nike-kd-4-weatherman-2024","Nike KD 4 Weatherman (2024)",1025
+2026-07-18T14:27:55.269Z,gid://shopify/Product/14900376076674,"nike-air-zoom-gt-cut-3-white-picante-red","Nike Air Zoom GT Cut 3 White Picante Red",1338
+2026-07-18T14:27:55.269Z,gid://shopify/Product/14900376338818,"nike-kyrie-8-all-star","Nike Kyrie 8 All-Star",1268
+2026-07-18T14:27:55.269Z,gid://shopify/Product/14900376633730,"air-jordan-luka-2-all-star","Jordan Luka 2 All-Star",1211
+2026-07-18T14:29:50.708Z,gid://shopify/Product/14900689338754,"nike-air-max-dn-white-metallic-silver","Nike Air Max Dn White Metallic Silver",997
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14900886241666,"asics-gel-nyc-oatmeal-obsidian-grey","ASICS Gel-NYC Oatmeal Obsidian Grey",1032
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14900886536578,"asics-gel-nyc-2055-pale-oak-truffle-grey","ASICS Gel-NYC 2055 Pale Oak Truffle Grey",1053
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14901118894466,"air-jordan-4-retro-bred-reimagined-gs","Jordan 4 Retro Bred Reimagined (GS)",940
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14901119615362,"air-jordan-4-retro-orchid-womens","Jordan 4 Retro Orchid (Women's)",970
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14901120041346,"air-jordan-4-retro-white-thunder","Jordan 4 Retro White Thunder",929
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14901120434562,"air-jordan-4-retro-red-thunder","Jordan 4 Retro Red Thunder",837
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902036169090,"air-jordan-4-retro-vivid-sulfur-womens","Jordan 4 Retro Vivid Sulfur (Women's)",1009
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902246801794,"nike-air-max-1-prm-valentines-day-black","Nike Air Max 1 PRM Valentine’s Day Black",1077
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902247031170,"nike-air-max-1-white-black","Nike Air Max 1 White Black",1053
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902247227778,"nike-air-max-1-tan-lines-womens","Nike Air Max 1 Tan Lines (Women's)",1109
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902247489922,"nike-air-max-1-snakeskin-light-orewood-brown","Nike Air Max 1 Snakeskin Light Orewood Brown (Women's)",1066
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902247686530,"nike-air-max-1-essential-triple-black","Nike Air Max 1 Essential Triple Black",1043
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902247883138,"nike-air-max-1-essential-prm-neutral-olive-cacao-wow","Nike Air Max 1 Essential PRM Neutral Olive Cacao Wow",1057
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902248112514,"nike-air-max-1-86-og-cosmic-clay","Nike Air Max 1 '86 OG Cosmic Clay",1091
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14902248309122,"nike-air-max-1-prm-duck-anthracite","Nike Air Max 1 PRM Duck Honey Dew",1098
+2026-07-18T14:29:50.710Z,gid://shopify/Product/14903008362882,"adidas-handball-spezial-night-indigo-bright-blue","adidas Handball Spezial Night Indigo Bright Blue (Women's)",1039
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14903063380354,"onitsuka-tiger-mexico-66-black-white","Onitsuka Tiger Mexico 66 Black White",993
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14903069147522,"onitsuka-tiger-mexico-66-white-blue-red","Onitsuka Tiger Mexico 66 White Blue Red",1100
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14903313531266,"golden-goose-super-star-white-silver-gold-glitter-womens","Golden Goose Super-Star White Silver Gold Glitter (Women's)",924
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14903313990018,"air-jordan-1-retro-low-og-sp-travis-scott-medium-olive","Jordan 1 Retro Low OG SP Travis Scott Medium Olive",1157
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14904604819842,"nike-shox-tl-black-metallic-hematite-w","Nike Shox TL Black Max Orange (Women's)",1062
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905942212994,"nike-air-max-2017-triple-black","Nike Air Max 2017 Triple Black",826
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905942770050,"nike-air-max-90-nrg-bacon-2021","Nike Air Max 90 NRG Bacon (2021)",917
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905943294338,"nike-air-max-180-baltic-blue","Nike Air Max 180 Baltic Blue",993
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905943753090,"nike-air-max-270-black-white-w","Nike Air Max 270 Black White (Women's)",975
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905944211842,"nike-air-max-90-leather-triple-black-2020","Nike Air Max 90 Leather Triple Black",960
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905944473986,"nike-air-max-90-drift-light-smoke-grey","Nike Air Max 90 Drift LIght Smoke Grey",1139
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905944768898,"nike-air-max-90-iron-grey","Nike Air Max 90 Iron Grey",1005
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14905945162114,"nike-air-max-90-pure-platinum-photo-blue","Nike Air Max 90 Pure Platinum Photo Blue",1097
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14906149110146,"nike-air-max-plus-tiempo-black-white-womens","Nike Air Max Plus Tiempo Black White (Women's)",1225
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14906150519170,"nike-air-max-plus-wolf-grey-picante-red","Nike Air Max Plus Wolf Grey Picante Red",1212
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14906183221634,"nike-air-max-plus-white","Nike Air Max Plus White",983
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14906737131906,"nike-shox-r4-black-metallic-silver-2025","Nike Shox R4 Black Metallic Silver (2025)",1049
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14906737492354,"nike-shox-tl-black-dynamic-yellow-metallic-silver","Nike Shox TL Black Dynamic Yellow Metallic Silver",1175
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14906737918338,"nike-shox-ride-2-light-graphite","Nike Shox Ride 2 Light Graphite",999
+2026-07-18T14:29:50.711Z,gid://shopify/Product/14906738737538,"nike-shox-tl-vapor-green-racer-blue","Nike Shox TL Vapor Green Racer Blue",976
+2026-07-18T14:29:50.712Z,gid://shopify/Product/14906752565634,"nike-air-max-95-stash-2024","Nike Air Max 95 Stash (2024)",1033
+2026-07-18T14:29:50.712Z,gid://shopify/Product/14906760757634,"nike-air-max-plus-golf-black-leather","Nike Air Max Plus Golf Black Leather",1065
+2026-07-18T14:29:50.712Z,gid://shopify/Product/14906796376450,"361-degrees-big3-40-quick-reverse","361 Degrees BIG3 4.0 Quick Reverse",1199
+2026-07-18T14:31:41.236Z,gid://shopify/Product/14907639529858,"nike-air-max-95-grey-gradient","Nike Air Max 95 Grey Gradient",931
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14907639857538,"nike-air-max-95-vast-grey-red-stardust","Nike Air Max 95 Vast Grey Red Stardust",940
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14907640250754,"nike-air-max-95-de-lo-mio","Nike Air Max 95 De Lo Mio",1019
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14907641069954,"nike-air-max-95-ndstrkt-black-reflective","Nike Air Max 95 NDSTRKT Black Reflective",938
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14907641463170,"nike-air-max-95-black-anthracite","Nike Air Max 95 Black Anthracite",889
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14907641823618,"nike-air-max-95-se-cobblestone","Nike Air Max 95 SE Cobblestone",1045
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14907642151298,"nike-air-max-95-carhartt-wip-camo","Nike Air Max 95 Carhartt WIP Camo",874
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14908112765314,"air-jordan-5-retro-og-black-metallic-reimagined-gs","Jordan 5 Retro OG Black Metallic Reimagined (GS)",1171
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14908113191298,"nike-kobe-6-sail-all-star-gs","Nike Kobe 6 Sail All-Star (GS)",1066
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14908113912194,"adidas-yeezy-slide-slate-grey","adidas Yeezy Slide Slate Grey",893
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14908114731394,"nike-book-1-lx-black-label","Nike Book 1 LX Black Label",952
+2026-07-18T14:31:41.240Z,gid://shopify/Product/14908115288450,"adidas-yeezy-boost-350-v2-mx-dark-salt","adidas Yeezy Boost 350 V2 MX Dark Salt",718
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908115747202,"nike-dunk-low-white-black-2021-w","Nike Dunk Low Retro White Black Panda (Women's)",828
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908116435330,"puma-suede-xl-teenage-mutant-ninja-turtles","Puma Suede XL Teenage Mutant Ninja Turtles",967
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908117090690,"air-jordan-1-retro-high-og-sp-union-la-chicago-shadow","Jordan 1 Retro High OG SP Union LA Chicago Shadow",1149
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908117811586,"timberland-6-basic-wheat","Timberland 6"" Basic Boot Wheat",792
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908118630786,"nike-blazer-mid-77-vintage-white-black","Nike Blazer Mid 77 Vintage White Black",799
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908119286146,"nike-air-dt-max-96-colorado-away-white-black","Nike Air DT Max '96 Colorado Away White Black",970
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908119875970,"adidas-yeezy-boost-350-v2-white-core-black-red","adidas Yeezy Boost 350 V2 Zebra",674
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908120498562,"air-jordan-1-retro-low-og-rui-hachimura-oatmeal","Jordan 1 Retro Low OG Rui Hachimura Oatmeal",1040
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908121284994,"nike-killshot-2-ltr-prm-tiempo-pack-black","Nike Killshot 2 LTR PRM Tiempo Pack Black",1012
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908122136962,"air-jordan-5-retro-reverse-metallic","Jordan 5 Retro Reverse Metallic",1071
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908122792322,"new-balance-992-miusa-joe-freshgoods-aged-well","New Balance 992 MiUSA Joe Freshgoods Aged Well",917
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908123349378,"adidas-adizero-evo-sl-white-black","adidas Adizero Evo SL White Black",1102
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908123840898,"adidas-yeezy-boost-700-utility-black","adidas Yeezy Boost 700 Utility Black",676
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908124234114,"salomon-xt-whisper-sandy-liang-fairy-tale","Salomon XT-Whisper Sandy Liang Fairy Tale",1036
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908124955010,"adidas-taekwondo-mei-cow-print-womens","adidas Taekwondo Mei Cow Print (Women's)",944
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908125348226,"adidas-nmd-r1-primeblue-triple-black","adidas NMD R1 Primeblue Triple Black",828
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908125675906,"new-balance-2002r-light-grey-white","New Balance 2002R Steel Grey Orca",1012
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908126200194,"nike-air-force-1-low-g-dragon-peaceminusone-para-noise-30","Nike Air Force 1 Low G-Dragon Peaceminusone Para-Noise 3.0",1311
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908126593410,"air-jordan-11-retro-black-clear","Jordan 11 Retro Jubilee 25th Anniversary",1029
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908126986626,"nike-air-foamposite-one-royal-2024","Nike Air Foamposite One International Blue",960
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908127543682,"air-jordan-1-low-se-white-legend-blue","Jordan 1 Low SE White Legend Blue",1093
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908127936898,"nike-dunk-low-next-nature-summit-white-baroque-brown","Nike Dunk Low Next Nature Summit White Baroque Brown",1109
+2026-07-18T14:31:41.241Z,gid://shopify/Product/14908128526722,"nike-air-force-1-low-supreme-baroque-brown","Nike Air Force 1 Low Supreme Baroque Brown",862
+2026-07-18T14:31:41.242Z,gid://shopify/Product/14908128887170,"air-jordan-1-retro-low-og-atmosphere-grey","Jordan 1 Retro Low OG Atmosphere Grey",1045
+2026-07-18T14:31:41.242Z,gid://shopify/Product/14908129313154,"air-jordan-1-low-se-patent-elephant-black-womens","Jordan 1 Low SE Patent Elephant Black (Women's)",1181
+2026-07-18T14:31:41.242Z,gid://shopify/Product/14908129640834,"adidas-sl-72-og-maroon-preloved-brown-womens","adidas SL 72 OG Maroon Preloved Brown (Women's)",1105
+2026-07-18T14:31:41.242Z,gid://shopify/Product/14908129902978,"air-jordan-3-retro-wizards","Jordan 3 Retro Wizards",873
+2026-07-18T14:31:41.242Z,gid://shopify/Product/14908130296194,"nike-killshot-2-phantom-black","Nike Killshot 2 Phantom Black",982
+2026-07-18T14:32:36.902Z,gid://shopify/Product/14908131017090,"nike-dunk-low-se-phantom-khaki","Nike Dunk Low Retro SE Phantom Khaki",1066
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922566566274,"adidas-gazelle-bold-core-black-white-w","adidas Gazelle Bold Core Black White (Women's)",926
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922566795650,"adidas-gazelle-blue-bird-gum","adidas Gazelle Indoor Blue Bird Gum",1079
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922567123330,"adidas-gazelle-indoor-mineral-green-silver-dawn","adidas Gazelle Indoor Mineral Green Silver Dawn",1017
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922567385474,"adidas-gazelle-indoor-dark-blue-bliss-orange","adidas Gazelle Indoor Dark Blue Bliss Orange",1203
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922567876994,"adidas-gazelle-indoor-off-white-clear-sky","adidas Gazelle Indoor Off White Clear Sky",991
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922568204674,"adidas-gazelle-triple-black","adidas Gazelle Triple Black",904
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922568466818,"adidas-gazelle-indoor-better-scarlet-wonder-white-gum-womens","adidas Gazelle Indoor Better Scarlet Wonder White Gum (Women's)",957
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14922569417090,"adidas-gazelle-indoor-olive-strata-cloud-white-gum","adidas Gazelle Indoor Olive Strata Cloud White Gum",996
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14926791311746,"adidas-yeezy-700-v3-fade-salt","adidas Yeezy 700 V3 Fade Salt",1003
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14926791573890,"adidas-yeezy-700-v3-clay-brown","adidas Yeezy 700 V3 Clay Brown",945
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14926791868802,"adidas-yeezy-700-v3-kyanite","adidas Yeezy 700 V3 Kyanite",877
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14926792262018,"adidas-yeezy-boost-700-mnvn-laceless-phosphor","adidas Yeezy Boost 700 MNVN Laceless Phosphor",944
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14926792655234,"adidas-yeezy-boost-700-inertia","adidas Yeezy Boost 700 Inertia",692
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14929944674690,"nike-total-90-3-sp-metallic-silver-red","Nike Total 90 3 SP Metallic Silver Black",1131
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14929946280322,"crocs-classic-clog-a-bathing-ape-bape-abc-camo-pink","Crocs Classic Clog A Bathing Ape ABC Camo Pink",993
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14929947918722,"nike-dunk-low-retro-university-blue","Nike Dunk Low Retro University Blue",1251
+2026-07-18T14:32:36.903Z,gid://shopify/Product/14936274633090,"nike-sb-dunk-low-laser-blue","Nike SB Dunk Low Laser Blue",761
+2026-07-18T14:32:36.903Z,gid://shopify/Product/15110627590530,"nike-air-pegasus-2k5-bicoastal","Nike Air Peg 2K5 Bicoastal",851
+2026-07-18T14:32:36.903Z,gid://shopify/Product/15110673498498,"nike-dunk-low-off-white-lot-9","Nike Dunk Low Off-White Lot 9",1070
+2026-07-18T14:32:36.903Z,gid://shopify/Product/15114994188674,"stussy-x-nike-dri-fit-mesh-jersey-black","Stussy x Nike Dri-FIT Mesh Jersey Black",957
+2026-07-18T14:32:36.903Z,gid://shopify/Product/15368452669826,"adidas-ultra-boost-10-dna-triple-black","adidas Ultra Boost 1.0 DNA Triple Black",1030

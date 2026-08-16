@@ -2,6 +2,18 @@
   class="cart-footer-resume-blocks{% if block.settings.wrap_in_card %} card color-{{ block.settings.color_scheme }}{% endif %}"
   style="--margin-top: {{ block.settings.margin_top }}px; --margin-bottom: {{ block.settings.margin_bottom }}px;"
 >
+  {%- liquid
+    assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+    assign locale_base = locale_iso | split: '-' | first
+    assign cart_totals_title = 'cart.estimated_total' | t
+    assign cart_totals_sub = '(Excluding shipping)'
+    if locale_base == 'fr'
+      assign cart_totals_sub = '(Hors frais de livraison)'
+    elsif locale_base == 'de'
+      assign cart_totals_sub = '(Ohne Versandkosten)'
+    endif
+  -%}
+
   {% content_for 'blocks' %}
 
   {%- if cart.cart_level_discount_applications.size > 0 -%}
@@ -25,9 +37,12 @@
     </div>
   {%- endif -%}
 
-  <div class="cart__totals">
-    <p>{{ 'cart.estimated_total' | t }}</p>
-    <div class="cart__totals-value">
+  <div class="cart__totals rs-cart__totals">
+    <div class="rs-cart__totals-label">
+      <p class="rs-cart__totals-title">{{ cart_totals_title }}</p>
+      <span class="rs-cart__totals-sub">{{ cart_totals_sub }}</span>
+    </div>
+    <div class="cart__totals-value rs-cart__totals-value">
       {% assign real_cart_original_total_price = 0 %}
 
       {% for item in cart.items %}
@@ -48,16 +63,6 @@
     </div>
   </div>
 </div>
-
-{% stylesheet %}
-  .cart-footer-resume-blocks {
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-sm);
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

@@ -1,4 +1,6 @@
+{%- unless template.name == 'index' -%}
 <script src="{{ 'cart-discount.js' | asset_url }}" type="module"></script>
+{%- endunless -%}
 
 {% liquid
   assign discount_codes = cart.cart_level_discount_applications | where: 'type', 'discount_code' | map: 'title'
@@ -82,82 +84,11 @@
       {% assign accordion_heading = accordion_heading | append: ' (' | append: discount_codes.size | append: ')' %}
     {% endif %}
 
-    {% render 'accordion', content: discount_code_content, heading: accordion_heading %}
+    {% render 'accordion', content: discount_code_content, heading: accordion_heading, show_preview: true, preview_text: "Pour utiliser une carte cadeau, c'est à la prochaine étape." %}
   {% else %}
     {{ discount_code_content }}
   {% endif %}
 </div>
-
-{% stylesheet %}
-  .cart-discount-block {
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-
-    .icon--keyboard_arrow_down {
-      display: none;
-    }
-  }
-
-  .cart-discount-block[data-visual-preview-mode] {
-    width: 350px;
-  }
-
-  cart-discount {
-    display: block;
-  }
-
-  .cart-discount__container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-
-    .textfield {
-      width: 100%;
-    }
-
-    .textfield input {
-      min-width: 100%;
-      width: 100%;
-    }
-  }
-
-  .cart-discount_button {
-    min-width: 90px;
-  }
-
-  .cart-discount_badge-container {
-    margin-top: var(--margin-sm);
-  }
-
-  .cart-discount_badge {
-    justify-content: center;
-    gap: 5px;
-    padding-right: 5px !important;
-  }
-
-  .cart-discount_badge.loading {
-    cursor: default;
-    pointer-events: none;
-
-    .cart-discount__discount-text,
-    .cart-discount__remove-discount {
-      opacity: 0.5;
-    }
-  }
-
-  .cart-discount__remove-discount {
-    cursor: pointer;
-    height: 14px;
-  }
-
-  .cart-discount_badge .cart-discount__discount-text {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

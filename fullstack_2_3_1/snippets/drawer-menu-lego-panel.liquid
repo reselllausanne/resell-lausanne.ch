@@ -1,0 +1,100 @@
+{% doc %}
+  LEGO subfolder inside Collectibles drawer menu.
+
+  @param {boolean} uppercase - Uppercase labels when true
+  @param {number} font_weight - Label font weight
+  @param {boolean} [show_top_image] - Show submenu hero
+  @param {string} [label_collectibles] - Localized Collectibles panel label
+{% enddoc %}
+
+{% liquid
+  assign lego_back_label = label_collectibles | default: 'Collectibles'
+  assign rl_col_lego = collections['lego']
+  if rl_col_lego != blank
+    assign rl_url_lego = rl_col_lego.url
+  else
+    assign rl_url_lego = '/collections/lego'
+  endif
+%}
+
+<section
+  class="header__mobile-menu-panel"
+  data-panel-id="demo-collectibles-lego"
+  data-parent-panel="demo-collectibles"
+  data-panel-depth="2"
+  aria-hidden="true"
+  inert
+>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: 'LEGO' %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ lego_back_label }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">LEGO</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="{{ rl_url_lego }}" class="header__mobile-menu-link header__mobile-menu-link--child">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'lego', alt: 'LEGO', wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">LEGO</span>
+      </span>
+    </a>
+
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-city',
+      label: 'LEGO® City',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-icons',
+      label: 'LEGO® Icons',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-botanicals',
+      label: 'LEGO® Botanicals',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-marvel',
+      label: 'LEGO® Marvel',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-ninjago',
+      label: 'LEGO® NINJAGO®',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-friends',
+      label: 'LEGO® Friends',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-speed-champions',
+      label: 'LEGO® Speed Champions',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-disney',
+      label: 'LEGO® Disney',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-harry-potter',
+      label: 'LEGO® Harry Potter™',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-technic',
+      label: 'Lego® Technic™',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+    {% render 'drawer-menu-collection-link',
+      handle: 'lego-star-wars',
+      label: 'Lego® Stars Wars™',
+      link_class: 'header__mobile-menu-link header__mobile-menu-link--grandchild'
+    %}
+  </nav>
+</section>

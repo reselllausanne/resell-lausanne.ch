@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "reviews_hub": {
+      "type": "resell-reviews-hub",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Avis sur Resell Lausanne",
+        "description": "<p>Tous nos avis clients vérifiés : Judge.me, Trustpilot, Google et Instagram. Plus de 580 témoignages de clients satisfaits en Suisse et à l'international.</p>",
+        "avg_rating": "4.9",
+        "total_reviews_count": 589,
+        "trustpilot_url": "https://www.trustpilot.com/review/resell-lausanne.ch",
+        "trustpilot_businessunit_id": "692f26f94b831b0b8ac62db6",
+        "trustpilot_template_id": "56278e9abfbbba0bdc568bc",
+        "trustpilot_locale": "fr-FR",
+        "trustpilot_height": "52px",
+        "trustpilot_width": "100%",
+        "instagram_url": "",
+        "padding_top": 48,
+        "padding_bottom": 56
+      }
+    }
+  },
+  "order": [
+    "reviews_hub"
+  ]
+}

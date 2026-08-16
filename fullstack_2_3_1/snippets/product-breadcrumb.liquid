@@ -1,0 +1,466 @@
+{% liquid
+  assign breadcrumb_mode = mode | default: 'html'
+
+  comment
+    Never use product.collections.first for breadcrumb source.
+    Product can belong to many merchandising collections, so this produces unstable and wrong paths.
+  endcomment
+
+  assign taxonomy_labels_path = ''
+  assign taxonomy_handles_path = ''
+  assign primary_collection_handle = ''
+  if product.metafields.custom.primary_collection_handle != blank
+    assign primary_collection_handle = product.metafields.custom.primary_collection_handle.value | default: product.metafields.custom.primary_collection_handle | append: '' | strip
+  endif
+
+  if primary_collection_handle == blank
+    capture auto_collection_handle
+      render 'product-breadcrumb-auto-handle'
+    endcapture
+    assign auto_collection_handle = auto_collection_handle | strip
+    if auto_collection_handle != blank
+      assign primary_collection_handle = auto_collection_handle
+    endif
+  endif
+
+  if primary_collection_handle == blank
+    assign infer_vendor_handle = product.vendor | handleize
+    assign infer_title_lower = product.title | downcase
+    case infer_vendor_handle
+      when 'fear-of-god', 'essentials'
+        assign primary_collection_handle = 'fear-of-god-essentials'
+      when 'sp5der'
+        assign primary_collection_handle = 'sp5der'
+      when 'off-white'
+        assign primary_collection_handle = 'off-white'
+      when 'denim-tears'
+        assign primary_collection_handle = 'denim-tears'
+      when 'travis-scott'
+        assign primary_collection_handle = 'vetement-travis'
+      when 'lego'
+        assign primary_collection_handle = 'lego'
+    endcase
+    if primary_collection_handle == blank and infer_title_lower contains 'fear of god essentials'
+      assign primary_collection_handle = 'fear-of-god-essentials'
+    endif
+    if primary_collection_handle == blank and infer_vendor_handle == 'maison-mihara'
+      if infer_title_lower contains 'peterson'
+        assign primary_collection_handle = 'maison-mihara-peterson'
+      elsif infer_title_lower contains 'hank'
+        assign primary_collection_handle = 'maison-mihara-hank'
+      elsif infer_title_lower contains 'blakey'
+        assign primary_collection_handle = 'maison-mihara-blakey'
+      else
+        assign primary_collection_handle = 'maison-mihara'
+      endif
+    endif
+    if primary_collection_handle == blank and infer_vendor_handle == 'saucony'
+      if infer_title_lower contains 'progrid omni' or infer_title_lower contains 'omni 9'
+        assign primary_collection_handle = 'saucony-progrid-omni-9'
+      elsif infer_title_lower contains 'progrid triumph' or infer_title_lower contains 'triumph 4'
+        assign primary_collection_handle = 'saucony-progrid-triumph-4'
+      else
+        assign primary_collection_handle = 'saucony'
+      endif
+    endif
+    if primary_collection_handle == blank and infer_vendor_handle == 'lego'
+      assign infer_title_l = infer_title_lower
+      if infer_title_l contains 'star wars'
+        assign primary_collection_handle = 'lego-star-wars'
+      elsif infer_title_l contains 'technic'
+        assign primary_collection_handle = 'lego-technic'
+      elsif infer_title_l contains 'harry potter'
+        assign primary_collection_handle = 'lego-harry-potter'
+      elsif infer_title_l contains 'marvel'
+        assign primary_collection_handle = 'lego-marvel'
+      elsif infer_title_l contains 'ninjago'
+        assign primary_collection_handle = 'lego-ninjago'
+      elsif infer_title_l contains 'speed champions'
+        assign primary_collection_handle = 'lego-speed-champions'
+      elsif infer_title_l contains 'botanical'
+        assign primary_collection_handle = 'lego-botanicals'
+      elsif infer_title_l contains 'city'
+        assign primary_collection_handle = 'lego-city'
+      elsif infer_title_l contains 'disney'
+        assign primary_collection_handle = 'lego-disney'
+      elsif infer_title_l contains 'friends'
+        assign primary_collection_handle = 'lego-friends'
+      elsif infer_title_l contains 'icons'
+        assign primary_collection_handle = 'lego-icons'
+      else
+        assign primary_collection_handle = 'lego'
+      endif
+    endif
+    if primary_collection_handle == blank and infer_vendor_handle == 'puma'
+      if infer_title_lower contains 'speedcat'
+        assign primary_collection_handle = 'puma-speedcat'
+      else
+        assign primary_collection_handle = 'puma'
+      endif
+    endif
+    if primary_collection_handle == blank and infer_vendor_handle == 'pokemon'
+      assign primary_collection_handle = 'pokemon'
+    endif
+  endif
+
+  if primary_collection_handle != blank
+    capture taxonomy_payload
+      render 'breadcrumb-taxonomy-map', primary_collection_handle: primary_collection_handle
+    endcapture
+    assign taxonomy_payload = taxonomy_payload | strip
+    if taxonomy_payload contains '###'
+      assign taxonomy_labels_path = taxonomy_payload | split: '###' | first | strip
+      assign taxonomy_handles_path = taxonomy_payload | split: '###' | last | strip
+    endif
+  endif
+
+  assign product_url_abs = canonical_href | default: canonical_url
+  if product_url_abs == blank
+    assign product_url_abs = request.origin | append: product.url
+  endif
+%}
+
+{% if taxonomy_labels_path != blank %}
+  {%- liquid
+    assign taxonomy_labels = taxonomy_labels_path | split: '|'
+    assign taxonomy_handles = taxonomy_handles_path | split: '|'
+    assign product_separator = false
+  -%}
+
+  {% if breadcrumb_mode == 'schema' %}
+    {%- liquid
+      assign schema_breadcrumb_id = product_url_abs | append: '#breadcrumb'
+      comment
+        `product_position` was previously undefined, producing invalid JSON
+        (`"position": ,`) on every PDP using the taxonomy breadcrumb path.
+      endcomment
+      assign product_position = taxonomy_labels.size | plus: 1
+    -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "@id": {{ schema_breadcrumb_id | json }},
+        "itemListElement": [
+      {%- for taxonomy_label in taxonomy_labels -%}
+        {%- assign taxonomy_handle = taxonomy_handles[forloop.index0] | default: '' | strip -%}
+        {%- capture taxonomy_url -%}
+          {%- render 'breadcrumb-taxonomy-collection-url', taxonomy_handle: taxonomy_handle -%}
+        {%- endcapture -%}
+        {%- assign taxonomy_url = taxonomy_url | strip -%}
+        {%- if taxonomy_url != blank -%}
+          {%- assign taxonomy_url = request.origin | append: taxonomy_url -%}
+        {%- endif -%}
+            {
+              "@type": "ListItem",
+              "position": {{ forloop.index }},
+              "name": {{ taxonomy_label | json }}
+              {%- if taxonomy_url != blank -%},
+                "item": {{ taxonomy_url | json }}
+              {%- endif -%}
+            },
+          {%- endfor -%}
+          {
+            "@type": "ListItem",
+            "position": {{ product_position }},
+            "name": {{ product.title | json }},
+            "item": {{ product_url_abs | json }}
+          }
+        ]
+      }
+    </script>
+  {% else %}
+    <nav class="commerce-breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+      {%- for taxonomy_label in taxonomy_labels -%}
+        {%- assign taxonomy_handle = taxonomy_handles[forloop.index0] | default: '' | strip -%}
+        {%- capture taxonomy_url -%}
+          {%- render 'breadcrumb-taxonomy-collection-url', taxonomy_handle: taxonomy_handle -%}
+        {%- endcapture -%}
+        {%- assign taxonomy_url = taxonomy_url | strip -%}
+
+        {%- if product_separator -%}<span aria-hidden="true">/</span>{%- endif -%}
+        {%- if taxonomy_url != blank -%}
+          <a class="link" href="{{ taxonomy_url }}">{{ taxonomy_label }}</a>
+        {%- else -%}
+          <span>{{ taxonomy_label }}</span>
+        {%- endif -%}
+        {%- assign product_separator = true -%}
+      {%- endfor -%}
+    </nav>
+  {% endif %}
+{% else %}
+  {%- liquid
+    assign vertical_token = ''
+    if product.metafields.custom.vertical != blank
+      assign vertical_token = product.metafields.custom.vertical.value | default: product.metafields.custom.vertical | append: '' | strip | downcase
+    endif
+
+    if vertical_token == blank and product.product_type != blank
+      assign vertical_token = product.product_type | downcase | strip
+    endif
+
+    assign infer_vendor_handle = product.vendor | handleize
+    assign infer_title_lower = product.title | downcase
+    assign streetwear_vendors = 'fear-of-god,essentials,sp5der,off-white,denim-tears,travis-scott,bape,a-bathing-ape,supreme,stone-island,the-north-face,chrome-hearts,aime-leon-dore,gallery-dept,hellstar,jacquemus,ami-paris,gallery-department'
+    assign is_streetwear_vendor = false
+    if streetwear_vendors contains infer_vendor_handle and infer_vendor_handle != ''
+      assign sw_check = ',' | append: streetwear_vendors | append: ','
+      assign sw_needle = ',' | append: infer_vendor_handle | append: ','
+      if sw_check contains sw_needle
+        assign is_streetwear_vendor = true
+      endif
+    endif
+    assign infer_type_lower = product.product_type | downcase | strip
+    assign clothing_type_match = false
+    if infer_type_lower contains 't-shirt' or infer_type_lower contains 'tee' or infer_type_lower contains 'hoodie' or infer_type_lower contains 'sweat' or infer_type_lower contains 'jacket' or infer_type_lower contains 'veste' or infer_type_lower contains 'pant' or infer_type_lower contains 'short' or infer_type_lower contains 'jogger' or infer_type_lower contains 'jogging' or infer_type_lower contains 'cap' or infer_type_lower contains 'casquette' or infer_type_lower contains 'beanie' or infer_type_lower contains 'bonnet' or infer_type_lower contains 'shirt' or infer_type_lower contains 'crewneck'
+      assign clothing_type_match = true
+    endif
+    if is_streetwear_vendor or clothing_type_match or infer_title_lower contains 'fear of god essentials'
+      assign fallback_vertical_label = 'Streetwear'
+      assign fallback_vertical_handle = 'vetements'
+    elsif vertical_token contains 'streetwear' or vertical_token contains 'vetement' or vertical_token contains 'clothing' or vertical_token contains 'apparel' or infer_title_lower contains 'hoodie' or infer_title_lower contains 'sweatpant' or infer_title_lower contains 'crewneck'
+      assign fallback_vertical_label = 'Streetwear'
+      assign fallback_vertical_handle = 'vetements'
+    elsif vertical_token contains 'collect' or vertical_token contains 'objet' or vertical_token contains 'lego' or vertical_token contains 'pokemon' or vertical_token contains 'labubu' or vertical_token contains 'pop mart'
+      assign fallback_vertical_label = 'Collectibles'
+      assign fallback_vertical_handle = 'pop-mart'
+    elsif infer_vendor_handle == 'lego' or infer_vendor_handle == 'pokemon' or infer_title_lower contains 'lego' or infer_title_lower contains 'pokémon' or infer_title_lower contains 'pokemon'
+      assign fallback_vertical_label = 'Collectibles'
+      assign fallback_vertical_handle = 'pop-mart'
+    else
+      assign fallback_vertical_label = 'Sneakers'
+      assign fallback_vertical_handle = 'toutes-nos-paires'
+    endif
+
+    assign fallback_vertical_url = ''
+    assign fallback_vertical_collection = collections[fallback_vertical_handle]
+    if fallback_vertical_collection != blank and fallback_vertical_collection.url != blank
+      assign fallback_vertical_url = fallback_vertical_collection.url
+    endif
+
+    assign fallback_brand_label = product.vendor | append: '' | strip
+    if fallback_brand_label == blank and product.metafields.custom.brand != blank
+      assign fallback_brand_label = product.metafields.custom.brand.value | default: product.metafields.custom.brand | append: '' | strip
+    endif
+    assign fallback_brand_handle = ''
+    if product.metafields.custom.brand_collection_handle != blank
+      assign fallback_brand_handle = product.metafields.custom.brand_collection_handle.value | default: product.metafields.custom.brand_collection_handle | append: '' | strip | handleize
+    elsif fallback_brand_label != blank
+      assign fallback_brand_handle = fallback_brand_label | handleize
+    endif
+    if fallback_brand_handle == 'jordan'
+      assign fallback_brand_handle = 'air-jordan'
+    elsif fallback_brand_handle == 'fear-of-god'
+      assign fallback_brand_handle = 'fear-of-god-essentials'
+    elsif fallback_brand_handle == 'essentials'
+      assign fallback_brand_handle = 'fear-of-god-essentials'
+    elsif fallback_brand_handle == 'lego'
+      assign fallback_brand_handle = 'lego'
+    endif
+    if fallback_brand_handle == 'fear-of-god-essentials'
+      assign fallback_brand_label = 'Fear of God Essentials'
+    endif
+    assign fallback_brand_url = ''
+    if fallback_brand_handle != blank
+      assign fallback_brand_collection = collections[fallback_brand_handle]
+      if fallback_brand_collection != blank and fallback_brand_collection.url != blank
+        assign fallback_brand_url = fallback_brand_collection.url
+      endif
+    endif
+
+    assign fallback_model_label = ''
+    if product.metafields.custom.model != blank
+      assign fallback_model_label = product.metafields.custom.model.value | default: product.metafields.custom.model | append: '' | strip
+    endif
+    if fallback_model_label == blank and product.metafields.custom.silhouette != blank
+      assign fallback_model_label = product.metafields.custom.silhouette.value | default: product.metafields.custom.silhouette | append: '' | strip
+    endif
+    if fallback_model_label == blank and product.metafields.custom.category_model != blank
+      assign fallback_model_label = product.metafields.custom.category_model.value | default: product.metafields.custom.category_model | append: '' | strip
+    endif
+
+    assign fallback_title_token = product.title | downcase | replace: '-', ' ' | replace: '/', ' ' | replace: '(', ' ' | replace: ')', ' ' | replace: ',', ' ' | replace: '.', ' '
+    if fallback_brand_handle == 'air-jordan'
+      if fallback_title_token contains 'jordan 1 low' or fallback_title_token contains 'aj1 low' or fallback_title_token contains 'air jordan 1 low'
+        assign fallback_model_label = 'Air Jordan 1 Low'
+      elsif fallback_title_token contains 'jordan 1 mid' or fallback_title_token contains 'aj1 mid' or fallback_title_token contains 'air jordan 1 mid'
+        assign fallback_model_label = 'Air Jordan 1 Mid'
+      elsif fallback_title_token contains 'jordan 1 high' or fallback_title_token contains 'aj1 high' or fallback_title_token contains 'air jordan 1 high'
+        assign fallback_model_label = 'Air Jordan 1 High'
+      elsif fallback_title_token contains 'jordan 4' or fallback_title_token contains 'aj4' or fallback_title_token contains 'air jordan 4'
+        assign fallback_model_label = 'Air Jordan 4'
+      elsif fallback_title_token contains 'jordan 1' or fallback_title_token contains 'aj1' or fallback_title_token contains 'air jordan 1'
+        assign fallback_model_label = 'Air Jordan 1'
+      endif
+    elsif fallback_brand_handle == 'new-balance'
+      if fallback_title_token contains ' 1906'
+        assign fallback_model_label = '1906R'
+      elsif fallback_title_token contains ' 2002'
+        assign fallback_model_label = '2002R'
+      elsif fallback_title_token contains ' 9060 '
+        assign fallback_model_label = '9060'
+      elsif fallback_title_token contains ' 550 '
+        assign fallback_model_label = '550'
+      elsif fallback_title_token contains ' 530 '
+        assign fallback_model_label = '530'
+      elsif fallback_title_token contains ' 740'
+        assign fallback_model_label = '740'
+      elsif fallback_title_token contains ' 204'
+        assign fallback_model_label = '204L'
+      endif
+    endif
+
+    assign fallback_model_handle = ''
+    if product.metafields.custom.model_collection_handle != blank
+      assign fallback_model_handle = product.metafields.custom.model_collection_handle.value | default: product.metafields.custom.model_collection_handle | append: '' | strip | handleize
+    elsif fallback_model_label != blank
+      assign fallback_model_handle = fallback_model_label | handleize
+    endif
+    assign fallback_model_url = ''
+    if fallback_model_handle != blank
+      assign fallback_model_collection = collections[fallback_model_handle]
+      if fallback_model_collection != blank and fallback_model_collection.url != blank
+        assign fallback_model_url = fallback_model_collection.url
+      endif
+    endif
+    if fallback_model_url == blank and fallback_brand_handle != blank and fallback_model_label != blank
+      assign fallback_model_brand_combo_handle = fallback_brand_handle | append: '-' | append: fallback_model_label | handleize
+      assign fallback_model_brand_combo = collections[fallback_model_brand_combo_handle]
+      if fallback_model_brand_combo != blank and fallback_model_brand_combo.url != blank
+        assign fallback_model_url = fallback_model_brand_combo.url
+      endif
+    endif
+
+    if fallback_model_url == blank
+      assign fallback_model_label = ''
+    endif
+
+    assign product_title_token = product.title | append: '' | strip | downcase
+    assign model_token = fallback_model_label | append: '' | strip | downcase
+    assign brand_token = fallback_brand_label | append: '' | strip | downcase
+    if fallback_model_label != blank
+      if model_token == product_title_token or model_token == brand_token
+        assign fallback_model_label = ''
+        assign fallback_model_url = ''
+      endif
+    endif
+
+    assign show_fallback_brand = false
+    if fallback_brand_label != blank
+      assign show_fallback_brand = true
+    endif
+    assign show_fallback_model = false
+    if fallback_model_label != blank and fallback_model_url != blank
+      assign show_fallback_model = true
+    endif
+
+    assign fallback_vertical_url_abs = ''
+    if fallback_vertical_url != blank
+      assign fallback_vertical_url_abs = request.origin | append: fallback_vertical_url
+    endif
+    assign fallback_brand_url_abs = ''
+    if fallback_brand_url != blank
+      assign fallback_brand_url_abs = request.origin | append: fallback_brand_url
+    endif
+    assign fallback_model_url_abs = ''
+    if fallback_model_url != blank
+      assign fallback_model_url_abs = request.origin | append: fallback_model_url
+    endif
+
+    assign fallback_position = 1
+    assign fallback_brand_position = 0
+    assign fallback_model_position = 0
+    if show_fallback_brand
+      assign fallback_brand_position = fallback_position | plus: 1
+      assign fallback_position = fallback_brand_position
+    endif
+    if show_fallback_model
+      assign fallback_model_position = fallback_position | plus: 1
+      assign fallback_position = fallback_model_position
+    endif
+    assign fallback_product_position = fallback_position | plus: 1
+  -%}
+
+  {% if breadcrumb_mode == 'schema' %}
+    {%- liquid
+      assign schema_breadcrumb_id = product_url_abs | append: '#breadcrumb'
+    -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "@id": {{ schema_breadcrumb_id | json }},
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": {{ fallback_vertical_label | json }}
+            {%- if fallback_vertical_url_abs != blank -%},
+              "item": {{ fallback_vertical_url_abs | json }}
+            {%- endif -%}
+          }
+          {%- if show_fallback_brand -%}
+            ,
+            {
+              "@type": "ListItem",
+              "position": {{ fallback_brand_position }},
+              "name": {{ fallback_brand_label | json }}
+              {%- if fallback_brand_url_abs != blank -%},
+                "item": {{ fallback_brand_url_abs | json }}
+              {%- endif -%}
+            }
+          {%- endif -%}
+          {%- if show_fallback_model -%}
+            ,
+            {
+              "@type": "ListItem",
+              "position": {{ fallback_model_position }},
+              "name": {{ fallback_model_label | json }}
+              {%- if fallback_model_url_abs != blank -%},
+                "item": {{ fallback_model_url_abs | json }}
+              {%- endif -%}
+            }
+          {%- endif -%}
+          ,
+          {
+            "@type": "ListItem",
+            "position": {{ fallback_product_position }},
+            "name": {{ product.title | json }},
+            "item": {{ product_url_abs | json }}
+          }
+        ]
+      }
+    </script>
+  {% else %}
+    {%- comment -%}
+      Missing collections are intentionally rendered as plain text.
+      This keeps breadcrumb safe and shorter instead of guessing wrong links.
+    {%- endcomment -%}
+    <nav class="commerce-breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+      {% if fallback_vertical_url != blank %}
+        <a class="link" href="{{ fallback_vertical_url }}">{{ fallback_vertical_label }}</a>
+      {% else %}
+        <span>{{ fallback_vertical_label }}</span>
+      {% endif %}
+
+      {% if show_fallback_brand %}
+        <span aria-hidden="true">/</span>
+        {% if fallback_brand_url != blank %}
+          <a class="link" href="{{ fallback_brand_url }}">{{ fallback_brand_label }}</a>
+        {% else %}
+          <span>{{ fallback_brand_label }}</span>
+        {% endif %}
+      {% endif %}
+
+      {% if show_fallback_model %}
+        <span aria-hidden="true">/</span>
+        {% if fallback_model_url != blank %}
+          <a class="link" href="{{ fallback_model_url }}">{{ fallback_model_label }}</a>
+        {% else %}
+          <span>{{ fallback_model_label }}</span>
+        {% endif %}
+      {% endif %}
+
+    </nav>
+  {% endif %}
+{% endif %}

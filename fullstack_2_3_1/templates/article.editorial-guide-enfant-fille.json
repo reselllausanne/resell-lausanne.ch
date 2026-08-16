@@ -1,0 +1,193 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article-editorial",
+      "blocks": {
+        "callout-main": {
+          "type": "callout",
+          "settings": {
+            "title": "Le test que les parents oublient",
+            "text": "Demander à l’enfant d’enfiler et retirer la paire seule deux fois. Si cela prend trop longtemps ou si elle écrase systématiquement le contrefort du talon, la chaussure ne sera pas pratique au quotidien."
+          }
+        },
+        "section-main": {
+          "type": "content_section",
+          "settings": {
+            "heading": "Les tendances qui restent portables",
+            "body": "<p>En 2026, on retrouve les sneakers argentées, les touches pastel, les charms et les silhouettes rétro. Les modèles inspirés des paires adultes plaisent beaucoup en version GS, mais une chaussure enfant doit rester adaptée à son autonomie. Pour les plus jeunes, scratchs ou lacets élastiques peuvent faire la différence. Pour les plus grandes, une Samba, Campus ou runner légère apporte un look plus “grand” sans devoir choisir un coloris fragile.</p>"
+          }
+        },
+        "pick-1": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "01 · La paire facile",
+            "title": "Nike Air Force 1 GS",
+            "description": "Stable, facile à nettoyer et familière. Blanc-rose pour une touche douce, noir-blanc pour moins de stress au quotidien.",
+            "score_label": "Entretien",
+            "score": 94,
+            "product": "gid://shopify/Product/9464055267617",
+            "collection": "gid://shopify/Collection/647318503810"
+          }
+        },
+        "pick-2": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "02 · La légère",
+            "title": "Nike P-6000 GS",
+            "description": "Respirante, confortable et actuelle. Une version argentée ou pastel donne le signal tendance sans devenir difficile à assortir.",
+            "score_label": "Confort",
+            "score": 95,
+            "product": "gid://shopify/Product/15373895303554",
+            "collection": "gid://shopify/Collection/647273644418"
+          }
+        },
+        "pick-3": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "03 · La fine",
+            "title": "adidas Samba OG GS",
+            "description": "Très jolie avec jean, legging ou jupe. À choisir si l’enfant aime une sensation proche du sol et n’a pas besoin d’un amorti moelleux.",
+            "score_label": "Style",
+            "score": 95,
+            "product": "gid://shopify/Product/15198341104002",
+            "collection": "gid://shopify/Collection/481546338593"
+          }
+        },
+        "pick-4": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "04 · La skate",
+            "title": "adidas Campus 00s GS",
+            "description": "Plus rembourrée, en daim et très cohérente avec les looks amples. Attention aux coloris très clairs les jours de pluie.",
+            "score_label": "Maintien",
+            "score": 90,
+            "product": "gid://shopify/Product/14908116730242",
+            "collection": "gid://shopify/Collection/668026438018"
+          }
+        },
+        "pick-5": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "05 · La colorée",
+            "title": "Jordan 1 Mid GS",
+            "description": "Un bon compromis pour celle qui veut de la couleur et une silhouette iconique, avec plus de structure autour de la cheville.",
+            "score_label": "Personnalité",
+            "score": 94,
+            "product": "gid://shopify/Product/15307194106242",
+            "collection": "gid://shopify/Collection/687874179458"
+          }
+        },
+        "pick-6": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "La confortable",
+            "title": "New Balance 530 GS",
+            "description": "Souple, rétro et légère. Elle accompagne bien les longues journées, tout en ressemblant aux modèles portés par les ados.",
+            "score_label": "Confort",
+            "score": 96,
+            "product": "gid://shopify/Product/14908127478146",
+            "collection": "gid://shopify/Collection/668028043650"
+          }
+        },
+        "row-1": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Largeur",
+            "col_2": "Les orteils bougent librement.",
+            "col_3": "Le mesh bombe ou le petit orteil marque."
+          }
+        },
+        "row-2": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Talon",
+            "col_2": "Il reste en place en marchant.",
+            "col_3": "Il monte et descend à chaque pas."
+          }
+        },
+        "row-3": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Autonomie",
+            "col_2": "La paire s’enfile sans aide.",
+            "col_3": "Le talon est écrasé ou les lacets traînent."
+          }
+        },
+        "related-1": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-fille",
+            "segment_label": "12–18 ans",
+            "title": "Guide ado fille"
+          }
+        },
+        "related-2": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-garcon",
+            "segment_label": "12–18 ans",
+            "title": "Guide ado garçon"
+          }
+        },
+        "related-3": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-garcon",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant garçon"
+          }
+        }
+      },
+      "block_order": [
+        "callout-main",
+        "section-main",
+        "pick-1",
+        "pick-2",
+        "pick-3",
+        "pick-4",
+        "pick-5",
+        "pick-6",
+        "row-1",
+        "row-2",
+        "row-3",
+        "related-1",
+        "related-2",
+        "related-3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "Guide enfant fille · 6–12 ans · rentrée 2026",
+        "deck": "Pratique d'abord. Jolie aussi.",
+        "intro": "Pour une fille de 6 à 12 ans, on achète d'abord pour l'usage : est-ce qu'elle l'enfile seule, court et joue sans se plaindre, et garde les pieds stables toute la journée ? Le style compte dès qu'elle a un avis — mais une paire jolie qu'elle refuse de mettre ne sert à rien.",
+        "chips": "Facile à enfiler\nLavable\nSemelle stable\nVraie pointure",
+        "hero_overlay": 66,
+        "table_col_1": "Modèle",
+        "table_col_2": "Atout principal",
+        "table_col_3": "Attention",
+        "how_to_heading": "Pointure : laisser grandir sans laisser flotter",
+        "how_to_body": "<p>Mesurer les deux pieds debout. Garder environ 10 mm de marge est généralement raisonnable, mais une grande pointure « pour faire toute l'année » n'est pas une économie si le talon flotte dès le premier mois.</p>",
+        "checklist_parent": true,
+        "checklist": "Mesurer les deux pieds\nTester escaliers et petit sprint\nVérifier l’autonomie\nRegarder la matière, pas seulement la couleur\nÉcrire la date d’achat pour recontrôler",
+        "verdict": "<p>Pour jouer sans y penser : P-6000 ou NB 530. Pour nettoyer facilement : Air Force 1. Pour un look plus “grande” : Samba ou Campus 00s.</p>",
+        "hub_article_handle": "chaussures-sneakers-rentree-2026",
+        "show_promo": true,
+        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
+        "promo_primary_label": "Acheter la carte cadeau",
+        "padding_bottom": 60
+      }
+    },
+    "related": {
+      "type": "resell-blog-related",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "max_articles": 3,
+        "padding_top": 48,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related"
+  ]
+}

@@ -87,9 +87,11 @@
             assign widths = '832, 1200, 1600, 1920, 2560, 3840'
 
             assign fetch_priority = 'auto'
+            assign banner_loading = 'lazy'
 
             if section.index == 1
               assign fetch_priority = 'high'
+              assign banner_loading = 'eager'
             endif
           %}
 
@@ -111,6 +113,8 @@
               alt: image_alt,
               sizes: sizes,
               fetchpriority: fetch_priority,
+              loading: banner_loading,
+              decoding: 'async',
               class: mobile_hide_class
           }}
 
@@ -125,6 +129,8 @@
                 alt: block.settings.image_mobile.alt,
                 sizes: sizes,
                 fetchpriority: fetch_priority,
+                loading: banner_loading,
+                decoding: 'async',
                 class: 'desktop-hide'
             }}
           {% endif %}

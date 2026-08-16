@@ -1,21 +1,34 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "type": "footer",
-  "name": "t:general.footer",
+  "name": "Footer",
   "sections": {
     "footer": {
       "type": "footer",
       "settings": {
-        "menu": "",
-        "show_payment_icons": true
+        "show_newsletter": true,
+        "newsletter_heading": "La newsletter Resell Lausanne",
+        "newsletter_subtext": "Rejoignez la team et bénéficiez de 10 CHF offerts sur votre première commande dès 150.- d'achat.",
+        "newsletter_placeholder": "Votre adresse e-mail",
+        "newsletter_button_text": "S'inscrire",
+        "contact_heading": "Nous contacter",
+        "contact_link_text": "Portail de contact",
+        "contact_url": "/pages/contact",
+        "contact_text": "Notre équipe s'engage à vous répondre en 24 à 48h ouvrées.",
+        "about_heading": "À propos de Resell Lausanne",
+        "about_text": "Resell Lausanne a pour mission de donner la possibilité à tous les amateurs, les passionnés et les curieux de sneakers et streetwear d'acheter les produits limités qui leur plaisent en toute confiance.",
+        "about_links_heading": "En savoir plus",
+        "menu_about": "footer-about",
+        "services_heading": "Nos services",
+        "menu_services": "footer-services",
+        "collections_heading": "Nos collections",
+        "menu_collections": "footer-collections",
+        "show_social": true,
+        "social_heading": "Retrouvez nous sur",
+        "menu_legal": "footer-legal",
+        "show_payment": true,
+        "payment_heading": "Moyens de paiement",
+        "show_carriers": true,
+        "carriers_heading": "Transporteurs"
       }
     }
   },

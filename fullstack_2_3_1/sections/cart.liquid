@@ -1,566 +1,458 @@
 <script src="{{ 'cart.js' | asset_url }}" type="module"></script>
+<script src="{{ 'cart-upsell.js' | asset_url }}" type="module"></script>
 
-<cart-component class="cart color-{{ section.settings.color_scheme }}">
-  <div
-    class="cart__inner page-width"
-    style="
-      --padding-top: {{ section.settings.padding_top }}px;
-      --padding-bottom: {{ section.settings.padding_bottom }}px;
-    "
-  >
-    <div class="cart__header">
-      <h1 class="h3">
-        {{- 'cart.title' | t -}}
-        {%- if section.settings.show_cart_count %} ({{ cart.item_count }}){%- endif -%}
-      </h1>
+{%- liquid
+  assign upsell_product = section.settings.upsell_product
+  if upsell_product == blank
+    assign upsell_product = all_products['protection-du-colis']
+  endif
+  assign upsell_variant = upsell_product.selected_or_first_available_variant
+  assign upsell_in_cart = false
+  assign upsell_line_key = ''
 
-      {% content_for 'block', type: '_cart-header-blocks', id: 'cart_header_blocks' %}
-    </div>
+  if upsell_product != blank
+    for item in cart.items
+      if item.product_id == upsell_product.id
+        assign upsell_in_cart = true
+        assign upsell_line_key = item.key
+      endif
+    endfor
+  endif
 
-    <div class="cart__content">
-      <form class="cart__form" data-ref="cart-form" action="{{ routes.cart_url }}" method="post" id="cart_form">
-        {% if cart.empty? %}
-          <div class="cart__empty card">
-            <p class="h6">{{ 'cart.empty_title' | t }}</p>
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
 
-            <a href="{{ routes.root_url }}" class="button">
-              {{ 'cart.continue_shopping' | t }}
-            </a>
-          </div>
-        {% else %}
-          <div class="cart__items">
-            {% for item in cart.items %}
-              <cart-item
-                data-index="{{ item.index | plus: 1 }}"
-                class="cart__item card card--with-border{% if section.settings.show_remove_button == false %} cart__item--no-remove-button{% endif %}"
-                data-ref="cart-item"
-                data-product-handle="{{ item.product.handle }}"
-                style="--product-image-ratio: {{ section.settings.products_media_ratio }};"
-              >
-                {% if item.image %}
-                  <a href="{{ item.url }}">
-                    <img
-                      src="{{ item.image | image_url: width: 150 }}"
-                      alt="{{ item.product.title | default: item.product.title }}"
-                      loading="lazy"
-                      width="85"
-                      height="{{ 85 | divided_by: item.image.aspect_ratio | ceil }}"
-                    >
+  assign cart_step_aria_label = 'Checkout steps'
+  assign cart_step_cart = 'Cart'
+  assign cart_step_info = 'Information'
+  assign cart_step_shipping = 'Shipping'
+  assign cart_step_payment = 'Payment'
+  assign cart_empty_subtitle = 'Discover our authentic sneakers and streetwear.'
+  assign cart_continue_shopping = 'cart.continue_shopping' | t
+  assign cart_delivery_label = 'Shipping'
+  assign cart_delivery_standard_badge = 'Standard'
+  assign cart_delivery_express_badge = '2 to 5 business days'
+  assign cart_sale_badge = 'SALE'
+  assign cart_liquidation_badge = 'SALE'
+  assign cart_express_badge = 'Express'
+  assign cart_remove_aria_prefix = 'Remove'
+  assign cart_qty_label = 'Qty'
+  assign cart_qty_aria_prefix = 'Quantity for'
+  assign cart_checkout_label = 'cart.checkout' | t
+  assign cart_alma_label = 'Secure installment payment by Cembra Pay'
+  assign cart_payments_heading = 'Accepted payment methods'
+  assign cart_reassurance_free_shipping = 'Free shipping in Switzerland over 50 CHF'
+  assign cart_reassurance_support = 'Responsive customer support'
+  assign cart_reassurance_authentic = 'Certified authentic products'
+
+  if locale_base == 'fr'
+    assign cart_step_aria_label = 'Etapes de commande'
+    assign cart_step_cart = 'Panier'
+    assign cart_step_info = 'Informations'
+    assign cart_step_shipping = 'Livraison'
+    assign cart_step_payment = 'Paiement'
+    assign cart_empty_subtitle = 'Decouvrez nos sneakers et streetwear authentiques.'
+    assign cart_delivery_label = 'Livraison'
+    assign cart_delivery_standard_badge = 'Standard'
+    assign cart_delivery_express_badge = '2 a 5 jours ouvres'
+    assign cart_sale_badge = 'SOLDES'
+    assign cart_liquidation_badge = 'SOLDES'
+    assign cart_express_badge = 'Express'
+    assign cart_remove_aria_prefix = 'Supprimer'
+    assign cart_qty_label = 'Qte'
+    assign cart_qty_aria_prefix = 'Quantite pour'
+    assign cart_alma_label = 'Paiement en plusieurs fois securise par Cembra Pay'
+    assign cart_payments_heading = 'Modes de paiement acceptes'
+    assign cart_reassurance_free_shipping = 'Livraison gratuite en Suisse des 50 CHF'
+    assign cart_reassurance_support = 'Service client reactif'
+    assign cart_reassurance_authentic = 'Produits certifies authentiques'
+  elsif locale_base == 'de'
+    assign cart_step_aria_label = 'Checkout-Schritte'
+    assign cart_step_cart = 'Warenkorb'
+    assign cart_step_info = 'Informationen'
+    assign cart_step_shipping = 'Lieferung'
+    assign cart_step_payment = 'Zahlung'
+    assign cart_empty_subtitle = 'Entdecken Sie unsere authentischen Sneakers und Streetwear.'
+    assign cart_delivery_label = 'Lieferung'
+    assign cart_delivery_standard_badge = 'Standard'
+    assign cart_delivery_express_badge = '2 bis 5 Werktage'
+    assign cart_sale_badge = 'SALE'
+    assign cart_liquidation_badge = 'SALE'
+    assign cart_express_badge = 'Express'
+    assign cart_remove_aria_prefix = 'Entfernen'
+    assign cart_qty_label = 'Menge'
+    assign cart_qty_aria_prefix = 'Menge fur'
+    assign cart_alma_label = 'Sichere Ratenzahlung mit Cembra Pay'
+    assign cart_payments_heading = 'Akzeptierte Zahlungsmethoden'
+    assign cart_reassurance_free_shipping = 'Kostenloser Versand fur alle Bestellungen'
+    assign cart_reassurance_support = 'Schneller Kundenservice'
+    assign cart_reassurance_authentic = 'Zertifiziert authentische Produkte'
+  endif
+-%}
+
+<cart-component class="rs-cart color-{{ section.settings.color_scheme }}">
+  <div class="rs-cart__inner page-width">
+
+    {%- comment -%} Checkout breadcrumb stepper — Panier is active, rest decorative {%- endcomment -%}
+    <nav class="rs-cart__steps" aria-label="{{ cart_step_aria_label }}">
+      <ol class="rs-cart__steps-list">
+        <li class="rs-cart__step rs-cart__step--active" aria-current="page">{{ cart_step_cart }}</li>
+        <li class="rs-cart__step" aria-disabled="true">{{ cart_step_info }}</li>
+        <li class="rs-cart__step" aria-disabled="true">{{ cart_step_shipping }}</li>
+        <li class="rs-cart__step" aria-disabled="true">{{ cart_step_payment }}</li>
+      </ol>
+    </nav>
+
+    {% if cart == empty %}
+      <div class="rs-cart__empty">
+        <div class="rs-cart__empty-icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+        </div>
+        <h1 class="rs-cart__empty-title">{{ 'cart.empty_title' | t }}</h1>
+        <p class="rs-cart__empty-sub">{{ cart_empty_subtitle }}</p>
+        <a href="{{ routes.root_url }}" class="button button--primary">
+          {{ cart_continue_shopping }}
+        </a>
+      </div>
+
+    {% else %}
+      <div class="rs-cart__layout">
+
+        {%- comment -%} ── LEFT: items ── {%- endcomment -%}
+        <div class="rs-cart__items-col">
+          <form
+            class="rs-cart__form"
+            data-ref="cart-form"
+            action="{{ routes.cart_url }}"
+            method="post"
+            id="cart_form"
+          >
+            <div class="rs-cart__list">
+              {% for item in cart.items %}
+                {%- if upsell_product != blank and item.product_id == upsell_product.id -%}{% continue %}{%- endif -%}
+                {%- liquid
+                  assign compare_price = item.original_price
+                  if item.variant.compare_at_price > item.original_price
+                    assign compare_price = item.variant.compare_at_price
+                  endif
+                  assign has_sale = false
+                  if compare_price > item.final_price
+                    assign has_sale = true
+                  endif
+
+                  assign is_express_shipping = false
+                  assign delivery_choice_set = false
+                  assign in_fast_delivery_collection = false
+                  assign estimation_livraison = ''
+
+                  for prop in item.properties
+                    if prop.first == '_delivery'
+                      assign delivery_choice_set = true
+                      if prop.last == 'express'
+                        assign is_express_shipping = true
+                      else
+                        assign is_express_shipping = false
+                      endif
+                    elsif prop.first == "Mode d'expédition" or prop.first == 'Shipping option'
+                      unless delivery_choice_set
+                        assign shipping_mode_lower = prop.last | downcase
+                        if shipping_mode_lower contains 'express'
+                          assign is_express_shipping = true
+                        endif
+                      endunless
+                    elsif prop.first == '_estimation_livraison' or prop.first == 'Estimation livraison'
+                      assign estimation_livraison = prop.last | append: '' | strip
+                    endif
+                  endfor
+
+                  capture rs_soldes_48h_flag
+                    render 'rs-soldes-48h-signal', product: item.product
+                  endcapture
+                  capture rs_48h_delivery_flag
+                    render 'rs-48h-delivery-signal', product: item.product
+                  endcapture
+                  assign rs_soldes_48h_active = false
+                  assign rs_48h_delivery_active = false
+                  if rs_soldes_48h_flag != blank
+                    assign rs_soldes_48h_active = true
+                  endif
+                  if rs_48h_delivery_flag != blank
+                    assign rs_48h_delivery_active = true
+                  endif
+                  if rs_soldes_48h_active
+                    assign in_fast_delivery_collection = true
+                  endif
+
+                  assign variant_is_48h = false
+                  assign variant_48h_label = ''
+                  if item.variant.metafields.custom.delivery_48h.value == true
+                    assign variant_is_48h = true
+                    assign variant_48h_label = '48H'
+                  elsif item.variant.metafields.custom.express_delivery_promise.value != blank
+                    assign express_promise_down = item.variant.metafields.custom.express_delivery_promise.value | append: '' | downcase
+                    if express_promise_down contains '48'
+                      assign variant_is_48h = true
+                      assign variant_48h_label = item.variant.metafields.custom.express_delivery_promise.value | append: '' | strip
+                    endif
+                  endif
+
+                  assign express_media_badge = cart_express_badge
+                  assign express_media_is_48h = false
+                  assign delivery_badge = cart_delivery_standard_badge
+                  if is_express_shipping
+                    if variant_is_48h
+                      assign express_media_badge = variant_48h_label
+                      assign express_media_is_48h = true
+                      assign delivery_badge = variant_48h_label
+                    elsif estimation_livraison != blank
+                      assign delivery_badge = estimation_livraison
+                      assign estimation_livraison_lower = estimation_livraison | downcase
+                      if estimation_livraison_lower contains '48'
+                        assign express_media_badge = estimation_livraison
+                        assign express_media_is_48h = true
+                      endif
+                    else
+                      assign delivery_badge = cart_delivery_express_badge
+                    endif
+                  endif
+
+                  assign max_quantity = item.variant.inventory_quantity
+                  if item.variant.inventory_policy == 'continue'
+                    assign max_quantity = 0
+                  endif
+                -%}
+                <cart-item
+                  data-index="{{ item.index | plus: 1 }}"
+                  class="rs-cart__item"
+                  data-ref="cart-item"
+                  data-product-handle="{{ item.product.handle }}"
+                  data-product-url="{{ item.url }}"
+                >
+                  <a href="{{ item.url }}" class="rs-cart__item-media">
+                    {%- if is_express_shipping -%}
+                      <span class="rs-cart__item-badge rs-cart__item-badge--express{% if express_media_is_48h %} rs-cart__item-badge--48h{% endif %}">
+                        {%- unless express_media_is_48h -%}
+                          <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H13.5L13 2z"/></svg>
+                        {%- endunless -%}
+                        {{ express_media_badge }}
+                      </span>
+                    {%- endif -%}
+                    {% if item.image %}
+                      <img
+                        src="{{ item.image | image_url: width: 400 }}"
+                        alt="{{ item.product.title | escape }}"
+                        width="160"
+                        height="130"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      <img
+                        src="{{ 'placeholder-product.jpg' | asset_img_url: 'x400' }}"
+                        alt="{{ item.product.title | escape }}"
+                        width="160"
+                        height="130"
+                        loading="lazy"
+                      >
+                    {% endif %}
                   </a>
-                {% else %}
-                  <a href="{{ item.url }}">
-                    <img
-                      src="{{ 'placeholder-product.jpg' | asset_img_url: 'x150' }}"
-                      alt="placeholder product"
-                      width="85"
-                      height="85"
-                    >
-                  </a>
-                {% endif %}
 
-                <div class="cart__item-wrapper">
-                  <div class="cart__item-content">
-                    <a href="{{ item.url }}" class="cart__item-name">
-                      {{- item.product.title | escape -}}
-                    </a>
+                  <div class="rs-cart__item-body">
+                    <a href="{{ item.url }}" class="rs-cart__item-body-link" aria-label="{{ item.product.title | escape }}"></a>
+                    <div class="rs-cart__item-top">
+                      <a href="{{ item.url }}" class="rs-cart__item-title">
+                        {{- item.product.title | escape -}}
+                      </a>
+                      <button
+                        type="button"
+                        class="rs-cart__item-remove"
+                        data-ref="remove-item"
+                        data-variant-id="{{ item.variant.id }}"
+                        aria-label="{{ cart_remove_aria_prefix }} {{ item.product.title | escape }}"
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                    </div>
 
-                    {%- if item.product.has_only_default_variant == false -%}
-                      <div class="cart__item-options">
-                        {%- for option in item.options_with_values -%}
-                          {%- if section.settings.show_variant_options_labels == false -%}
-                            <span>
-                              {{- option.value -}}
-                              {%- unless forloop.last %}, {% endunless -%}
-                            </span>
-                          {%- else -%}
-                            <div class="cart__item-option">
-                              <span>{{ option.name }}:</span>
-                              <span>{{ option.value -}}</span>
-                            </div>
-                          {%- endif -%}
+                    <div class="rs-cart__item-meta">
+                      {%- unless item.product.has_only_default_variant -%}
+                        <p class="rs-cart__item-variant">
+                          {%- for opt in item.options_with_values -%}
+                            <span>{{ opt.name }} : {{ opt.value }}</span>{%- unless forloop.last %} &middot; {% endunless -%}
+                          {%- endfor -%}
+                        </p>
+                      {%- endunless -%}
+
+                      {%- if delivery_badge != blank -%}
+                        <p class="rs-cart__item-delivery">
+                          <span class="rs-cart__item-delivery-label">{{ cart_delivery_label }}</span>
+                          <span class="rs-cart__item-delivery-badge">{{ delivery_badge }}</span>
+                        </p>
+                      {%- endif -%}
+                    </div>
+
+                    <div class="rs-cart__item-footer">
+                      <div class="rs-cart__item-price">
+                        {%- if has_sale -%}
+                          <span class="rs-cart__item-price-compare">{{ compare_price | money_without_trailing_zeros }}</span>
+                        {%- endif -%}
+                        <span class="rs-cart__item-price-final{% if has_sale %} rs-cart__item-price-final--sale{% endif %}">
+                          {{- item.final_price | money_without_trailing_zeros -}}
+                        </span>
+                        {%- for discount in item.line_level_discount_allocations -%}
+                          <span class="rs-cart__item-discount-tag">{{ discount.discount_application.title }}</span>
                         {%- endfor -%}
                       </div>
-                    {%- endif -%}
 
-                    {%- for property in item.properties -%}
-                      {%- if forloop.first -%}
-                        <div class="cart__item-options">
-                          {%- for property in item.properties -%}
-                            {%- assign property_first_char = property.first | slice: 0 -%}
-                            {%- if property.last != blank and property_first_char != '_' -%}
-                              <div class="cart-drawer__item-option">
-                                <span>{{ property.first }} :</span>
-                                <span>
-                                  {%- if property.last contains '/uploads/' -%}
-                                    <a href="{{ property.last }}" target="_blank">
-                                      {{- property.last | split: '/' | last -}}
-                                    </a>
-                                  {%- else -%}
-                                    {{ property.last }}
-                                  {%- endif -%}
-                                </span>
-                              </div>
-                            {%- endif -%}
-                          {%- endfor -%}
-                        </div>
-                      {%- endif -%}
-                    {%- endfor -%}
-
-                    {%- if item.selling_plan_allocation.selling_plan != blank -%}
-                      <div class="cart__item-options">
-                        <p class="cart__item-option">
-                          {{ item.selling_plan_allocation.selling_plan.name }}
-                        </p>
-                      </div>
-                    {%- endif -%}
-
-                    <div class="cart__item-prices">
-                      <div class="cart__item-price">
-                        {% assign compare_price = item.original_price %}
-                        {% if item.variant.compare_at_price > item.original_price %}
-                          {% assign compare_price = item.variant.compare_at_price %}
-                        {% endif %}
-
-                        {%- if compare_price > item.final_price -%}
-                          {% render 'price', price: item.final_price, compare_price: compare_price, sales_badge: 'none' %}
-                        {%- else -%}
-                          {% render 'price', price: item.final_price, sales_badge: 'none' %}
-                        {%- endif -%}
-
-                        {% comment %}
-                          Ancienne version qui fait le total de la ligne au lieu du prix unitaire :
-
-                          {% assign compare_price = item.original_price %}
-                          {% if item.variant.compare_at_price > item.original_price %}
-                            {% assign compare_price = item.variant.compare_at_price | times: item.quantity %}
-                          {% endif %}
-
-                          {%- if compare_price > item.final_line_price -%}
-                            {% render 'price', price: item.final_line_price, compare_price: compare_price, sales_badge: 'none' %}
-                          {%- else -%}
-                            {% render 'price', price: item.final_line_price, sales_badge: 'none' %}
-                          {%- endif -%}
-                        {% endcomment %}
-
-                        <div class="cart__item-discounts">
-                          {%- for discount in item.line_level_discount_allocations -%}
-                            <span class="cart__item-discount badge badge--secondary badge--small">
-                              {% render 'icon', icon: 'shoppingmode' %}
-                              <span>{{ discount.discount_application.title }}</span>
-                            </span>
-                          {%- endfor -%}
+                      <div class="rs-cart__item-qty">
+                        <label class="rs-cart__qty-label" for="qty-{{ item.index }}">{{ cart_qty_label }}</label>
+                        <div class="rs-cart__qty-select-wrap">
+                          <select
+                            id="qty-{{ item.index }}"
+                            class="rs-cart__qty-select"
+                            name="updates[]"
+                            data-ref="quantity-selector-input"
+                            aria-label="{{ cart_qty_aria_prefix }} {{ item.product.title | escape }}"
+                          >
+                            {%- for i in (1..10) -%}
+                              <option value="{{ i }}"{% if item.quantity == i %} selected{% endif %}>{{ i }}</option>
+                            {%- endfor -%}
+                          </select>
+                          <svg class="rs-cart__qty-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9"/>
+                          </svg>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <div class="cart__item-actions">
-                    <div class="cart__item-actions-wrapper">
-                      {%- if section.settings.show_remove_button -%}
-                        {% assign data_variant_id = 'data-variant-id="' | append: item.variant.id | append: '"' %}
-                        {% assign data_ref = 'data-ref="remove-item"' %}
-                        {% assign data = data_variant_id | append: data_ref %}
-
-                        {% render 'button', button_shape: 'small', button_style: 'secondary', icon: 'delete', data: data %}
-                      {%- endif -%}
-
-                      {% assign data_ref = 'data-ref="quantity-selector-input"' %}
-                      {% assign data_buttons = 'data-ref="quantity-selector-button"' %}
-
-                      {% assign max_quantity = item.variant.inventory_quantity %}
-                      {% if item.variant.inventory_policy == 'continue' %}
-                        {% assign max_quantity = 0 %}
-                      {% endif %}
-
-                      {% render 'quantity-selector',
-                        small: true,
-                        name: 'updates[]',
-                        value: item.quantity,
-                        min: -1,
-                        max: max_quantity,
-                        data_input: data_ref,
-                        data_buttons: data_buttons
-                      %}
-                    </div>
-                  </div>
-                </div>
-              </cart-item>
-            {% endfor %}
-          </div>
-        {% endif %}
-
-        <div class="cart__footer card card--with-border">
-          {% content_for 'block', type: '_cart-footer-resume-blocks', id: 'cart_footer_resume_blocks' %}
-
-          <div class="cart__ctas">
-            <button
-              type="submit"
-              data-ref="checkout-button"
-              class="button button--full-width"
-              name="checkout"
-              form="cart_form"
-              {% if cart == empty %}
-                disabled
-              {% endif %}
-            >
-              <span>{{ 'cart.checkout' | t }}</span>
-              {% render 'loading-spinner' %}
-            </button>
-          </div>
-
-          {% content_for 'block', type: '_cart-footer-blocks', id: 'cart_footer_blocks' %}
+                </cart-item>
+              {% endfor %}
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+
+        {%- comment -%} ── RIGHT: sticky summary ── {%- endcomment -%}
+        <div class="rs-cart__summary-col">
+          <div class="rs-cart__summary">
+
+            {% content_for 'block', type: '_cart-header-blocks', id: 'cart_header_blocks' %}
+
+            {%- if upsell_product != blank and upsell_variant != blank -%}
+              <div
+                class="rs-cart__upsell"
+                data-rs-cart-upsell
+                data-variant-id="{{ upsell_variant.id }}"
+                data-line-key="{{ upsell_line_key }}"
+                data-in-cart="{{ upsell_in_cart }}"
+              >
+                <label class="rs-cart__upsell-row" for="cart-upsell">
+                  <span class="rs-cart__upsell-icon" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2.5L4.5 6v5.5c0 4.7 3.2 9.1 7.5 10 4.3-.9 7.5-5.3 7.5-10V6L12 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                      <path d="M9 12.2l2 2 4.2-4.4" stroke="#2f9e8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+
+                  <span class="rs-cart__upsell-info">
+                    <span class="rs-cart__upsell-head">
+                      <span class="rs-cart__upsell-title">{{ upsell_product.title }}</span>
+                      <span class="rs-cart__upsell-price">{{ upsell_variant.price | money_without_trailing_zeros }}</span>
+                    </span>
+                    {%- if section.settings.upsell_subtitle != blank -%}
+                      <span class="rs-cart__upsell-sub">{{ section.settings.upsell_subtitle }}</span>
+                    {%- endif -%}
+                  </span>
+
+                  <span class="rs-cart__upsell-toggle">
+                    <input
+                      type="checkbox"
+                      id="cart-upsell"
+                      class="rs-cart__upsell-toggle-input"
+                      {% if upsell_in_cart %}checked{% endif %}
+                      {% unless upsell_variant.available %}disabled{% endunless %}
+                    >
+                    <span class="rs-cart__upsell-toggle-track" aria-hidden="true"></span>
+                  </span>
+                </label>
+              </div>
+            {%- endif -%}
+
+            {% content_for 'block', type: '_cart-footer-resume-blocks', id: 'cart_footer_resume_blocks' %}
+
+            <div class="rs-cart__checkout">
+              <button
+                type="submit"
+                form="cart_form"
+                name="checkout"
+                data-ref="checkout-button"
+                class="button button--primary button--full-width rs-cart__checkout-btn"
+              >
+                {{ cart_checkout_label }}
+              </button>
+
+              {% if additional_checkout_buttons %}
+                <div class="rs-cart__accelerated-checkout">
+                  {{ content_for_additional_checkout_buttons }}
+                </div>
+              {% endif %}
+
+              <p class="rs-cart__alma-mention rs-cart__checkout-alma">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                {{ cart_alma_label }}
+              </p>
+              {% render 'resell-powerpay-cgv-link' %}
+            </div>
+
+            <div class="rs-cart__reinsurance">
+              <p class="rs-cart__reinsurance-heading">{{ cart_payments_heading }}</p>
+              <div class="rs-cart__reinsurance-payments">
+                {%- for type in shop.enabled_payment_types -%}
+                  {{ type | payment_type_svg_tag }}
+                {%- endfor -%}
+              </div>
+              <ul class="rs-cart__reinsurance-list">
+                <li class="rs-cart__reinsurance-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  {{ cart_reassurance_free_shipping }}
+                </li>
+                <li class="rs-cart__reinsurance-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                  {{ cart_reassurance_support }}
+                </li>
+                <li class="rs-cart__reinsurance-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5L4.5 6v5.5c0 4.7 3.2 9.1 7.5 10 4.3-.9 7.5-5.3 7.5-10V6L12 2.5z"/><path d="M9 12.2l2 2 4.2-4.4" stroke-width="1.8"/></svg>
+                  {{ cart_reassurance_authentic }}
+                </li>
+              </ul>
+            </div>
+
+            {% content_for 'block', type: '_cart-footer-blocks', id: 'cart_footer_blocks' %}
+
+          </div>
+        </div>
+
+      </div>
+    {% endif %}
+
   </div>
 </cart-component>
 
-{% stylesheet %}
-  .cart {
-    display: block;
-  }
-
-  .cart__inner {
-    padding-top: var(--padding-top);
-    padding-bottom: var(--padding-bottom);
-  }
-
-  :root {
-    --cart-item-image-width: 85px;
-  }
-
-  .cart__empty {
-    border: var(--container-border-width) solid var(--color-border);
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: var(--gap-sm);
-  }
-
-  .cart {
-    padding-bottom: 3rem;
-  }
-
-  .cart__header {
-    padding: var(--gap-md) 0;
-  }
-
-  .cart__form {
-    display: grid;
-    grid-template-columns: 100%;
-    gap: var(--gap-md);
-  }
-
-  .cart__form--loading {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-
-  @media (width > 750px) {
-    .cart__header {
-      padding: var(--gap-lg) 0;
-    }
-
-    .cart__form {
-      grid-template-columns: 60% calc(40% - var(--gap-lg));
-      gap: var(--gap-lg);
-    }
-  }
-
-  .cart__items {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .cart__footer {
-    height: fit-content;
-  }
-
-  .cart__footer > *:not(:last-child) {
-    margin-bottom: var(--padding-sm);
-  }
-
-  .cart__footer .accordion__content,
-  .cart__footer .accordion__header {
-    padding: var(--padding-xxs) 0;
-  }
-
-  /* Totals */
-
-  .cart__totals,
-  .cart__reductions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .cart__totals > * {
-    color: rgb(var(--color-foreground));
-    margin: 0;
-    line-height: 1;
-  }
-
-  .cart__reductions p,
-  .cart__totals p {
-    font-weight: 500;
-    margin: 0;
-    line-height: normal;
-  }
-
-  .cart__reductions p,
-  .cart__totals p,
-  .cart__reductions-value,
-  .cart__totals-value {
-    font-size: var(--font-body--size-emphasized);
-  }
-
-  /* CTAs */
-
-  .cart__ctas {
-    text-align: center;
-    display: flex;
-    gap: 10px;
-    margin-bottom: 0;
-  }
-
-  .cart__ctas button {
-    width: 100%;
-  }
-
-  /* Item */
-
-  .cart__item {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    display: flex;
-    gap: var(--gap-sm);
-    align-items: flex-start;
-    max-width: 100%;
-  }
-
-  .cart__item > a {
-    display: flex;
-    align-items: center;
-  }
-
-  .cart__item img {
-    width: var(--cart-item-image-width);
-    object-fit: cover;
-    aspect-ratio: var(--product-image-ratio);
-    background-color: white;
-    max-width: fit-content;
-    border-radius: calc(var(--card-border-radius) - var(--padding-sm));
-  }
-
-  .cart__item.card {
-    padding: var(--padding-sm);
-
-    img {
-      border-radius: calc(var(--card-border-radius) - var(--padding-sm));
-    }
-  }
-
-  .cart__item-options {
-    line-height: normal;
-    font-size: var(--font-body--size-small);
-    word-break: break-word;
-    color: rgba(var(--color-foreground), 0.8);
-  }
-
-  .cart__item-options .cart__item-option:not(:last-child) {
-    margin-bottom: var(--padding-xs);
-  }
-
-  .cart__item-option {
-    margin: 0;
-  }
-
-  .cart__item-content {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    margin-top: 5px;
-  }
-
-  .cart__item-wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    min-height: var(--cart-item-image-width);
-    gap: var(--gap-sm);
-  }
-
-  .cart__item-name {
-    text-decoration: none;
-    display: block;
-    width: calc(100% + 60px);
-    font-size: var(--font-body--size);
-    color: rgb(var(--color-foreground));
-    font-weight: 500;
-    line-height: normal;
-    margin-bottom: 0;
-    transition: var(--animation-link-hover);
-
-    &:hover {
-      opacity: var(--opacity-link-hover);
-    }
-  }
-
-  .cart__item-prices {
-    position: relative;
-    width: 100%;
-  }
-
-  .cart__item-prices.loading {
-    width: max-content;
-  }
-
-  .cart__item-price {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-    flex-wrap: wrap;
-    font-size: var(--font-body--size-small);
-    color: rgb(var(--color-foreground));
-  }
-
-  .cart__item-price > * {
-    display: block;
-    margin: 0;
-    padding: 0;
-    line-height: normal;
-  }
-
-  .cart__item-discounted-prices {
-    display: flex;
-    align-self: center;
-    gap: 6px;
-    line-height: normal;
-  }
-
-  .cart__item-compare-price {
-    opacity: 0.7;
-  }
-
-  .cart__item--no-remove-button .cart__item-actions-wrapper {
-    justify-content: flex-end;
-  }
-
-  .cart__item--no-remove-button .cart__item-name {
-    width: calc(100% + var(--cart-item-image-width));
-  }
-
-  @media screen and (max-width: 350px) {
-    .cart__item--no-remove-button .cart__item-name {
-      width: calc(100% + 75px);
-    }
-  }
-
-  @media screen and (max-width: 350px) {
-    .cart__item img {
-      width: var(--cart-item-image-width);
-      max-height: calc(var(--cart-item-image-width) * 1.2);
-    }
-
-    .cart__item-content {
-      gap: 5px;
-    }
-
-    .cart__item-wrapper {
-      min-height: calc(var(--cart-item-image-width) * 1.2);
-    }
-    .cart__item-name {
-      width: calc(100% + 50px);
-    }
-
-    .cart__item-prices {
-      width: 100%;
-    }
-  }
-
-  /* Quantity & Remove Button */
-
-  .cart__item-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .cart__item-actions-wrapper {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    flex-direction: column;
-    height: 100%;
-    gap: 5px;
-  }
-
-  .cart__item-actions-wrapper .button,
-  .cart__item-actions-wrapper .quantity-selector {
-    border: var(--inputs-border-width) solid var(--color-border);
-  }
-
-  @media screen and (max-width: 749px) {
-    .cart__item-actions-wrapper {
-      flex-wrap: wrap;
-    }
-  }
-
-  /* Discounts */
-
-  .cart__discounts {
-    margin-bottom: 0;
-  }
-
-  .cart__discount {
-    margin-bottom: var(--padding-sm);
-  }
-
-  .cart__item-discounts,
-  .cart__discounts {
-    font-size: 12px;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-
-  .cart__item-discount,
-  .cart__discount {
-    min-width: max-content;
-    gap: var(--gap-xs);
-  }
-
-  .icon-discount {
-    color: rgb(var(--color-foreground));
-    width: 12px;
-    height: 12px;
-    margin-right: 7px;
-  }
-
-  @media screen and (max-width: 750px) {
-    .cart__item-discount span {
-      max-width: 70px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .cart__discounts {
-      overflow: scroll;
-      flex-wrap: nowrap;
-    }
-
-    .cart__discounts::-webkit-scrollbar {
-      height: 3px;
-    }
-  }
-{% endstylesheet %}
+{%- if request.page_type == 'cart' and cart != empty -%}
+<div class="rs-cart__mobile-sticky rs-cart__mobile-sticky--hidden" id="rs-cart-mobile-sticky" aria-hidden="true">
+  <button
+    type="submit"
+    form="cart_form"
+    name="checkout"
+    data-ref="checkout-button"
+    class="button button--primary button--full-width rs-cart__mobile-sticky-btn"
+  >
+    {{ cart_checkout_label }}
+  </button>
+</div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -578,59 +470,18 @@
     },
     {
       "type": "header",
-      "content": "t:content"
+      "content": "Upsell emballage"
     },
     {
-      "type": "select",
-      "id": "products_media_ratio",
-      "label": "t:products_media_ratio",
-      "options": [
-        { "value": "1 / 1", "label": "t:square" },
-        { "value": "4 / 5", "label": "t:portrait" },
-        { "value": "4 / 3", "label": "t:landscape" },
-        { "value": "adapt", "label": "t:adapt" }
-      ],
-      "default": "1 / 1"
+      "type": "product",
+      "id": "upsell_product",
+      "label": "Produit upsell (défaut : Protection du colis)"
     },
     {
-      "type": "checkbox",
-      "id": "show_variant_options_labels",
-      "label": "t:show_variant_options_labels",
-      "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_remove_button",
-      "label": "t:show_remove_button",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_cart_count",
-      "label": "t:show_cart_count",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "t:paddings"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "label": "t:padding_top",
-      "default": 50,
-      "min": 0,
-      "max": 100,
-      "step": 1
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "label": "t:padding_bottom",
-      "default": 50,
-      "min": 0,
-      "max": 100,
-      "step": 1
+      "type": "text",
+      "id": "upsell_subtitle",
+      "label": "Sous-titre upsell",
+      "default": "Livraison premium avec assurance incluse"
     },
     {
       "type": "header",

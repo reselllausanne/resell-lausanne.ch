@@ -1,0 +1,24 @@
+broken_url,status_code,source_url,anchor_text,likely_intent,recommended_action,redirect_target,priority,reason,validation
+# NOTE: No Ahrefs crawl yet. Rows below are CODE-DERIVED internal link targets to VERIFY (linked from homepage/collection header). Replace status_code VERIFY with real Ahrefs code after ingestion.,,,,,,,,,
+/collections/saucony,VERIFY,/ (index.json home_brand_slider_sneakers),Saucony,collection,confirm collection exists+has stock,,P1,Linked from homepage brand rail,Open URL / Admin Collections
+/collections/onitsuka-tiger,VERIFY,/ (index.json),Onitsuka Tiger,collection,confirm exists,,P1,Homepage brand rail,Open URL
+/collections/jacquemus,VERIFY,/ (index.json home_brand_slider_streetwear),Jacquemus,collection,confirm exists,,P1,Homepage streetwear rail,Open URL
+/collections/sp5der,VERIFY,/ (index.json),Sp5der,collection,confirm exists,,P1,Homepage streetwear rail,Open URL
+/collections/ami-paris,VERIFY,/ (index.json),AMI Paris,collection,confirm exists,,P1,Homepage streetwear rail,Open URL
+/collections/chrome-hearts,VERIFY,/ (index.json),Chrome Hearts,collection,confirm exists,,P1,Homepage streetwear rail,Open URL
+/collections/bape,VERIFY,/ (index.json),BAPE,collection,confirm exists,,P1,Homepage streetwear rail,Open URL
+/collections/supreme,VERIFY,/ (index.json),Supreme,collection,confirm exists,,P1,Homepage streetwear rail,Open URL
+/collections/air-jordan-4,VERIFY,/ (index.json home_image_tag_slider),Air Jordan 4,collection,confirm exists,,P1,Homepage strip,Open URL
+/collections/air-jordan-1-low,VERIFY,/ (index.json),Air Jordan 1,collection,confirm exists,,P1,Homepage strip,Open URL
+/collections/asics-gel-kayano-14,VERIFY,/ (index.json),Gel-Kayano 14,collection,confirm exists,,P1,Homepage strip,Open URL
+/collections/gel-nyc,VERIFY,/ (index.json),Gel-NYC,collection,confirm exists,,P1,Homepage strip,Open URL
+/collections/dunk-low,VERIFY,/ (index.json),Nike Dunk Low,collection,confirm exists,,P1,Homepage strip,Open URL
+/collections/nike-mind,VERIFY,/ (index.json),Nike Mind,collection,confirm exists,,P2,Homepage strip,Open URL
+/collections/adidas-samba,VERIFY,/ (index.json),Adidas Samba,collection,confirm exists,,P1,Homepage strip,Open URL
+/collections/air-force-1,VERIFY,/ (index.json),Nike Air Force 1,collection,confirm exists,,P1,Homepage strip,Open URL
+/collections/maison-mihara,VERIFY,/collections/* (collection header preset chip),Maison Mihara,collection,confirm exists,,P2,Collection header brand chip preset,Open URL
+/collections/crocs,VERIFY,/collections/* (collection header preset chip),Crocs,collection,confirm exists,,P2,Collection header brand chip preset,Open URL
+/collections/mizuno,VERIFY,/collections/* (collection header preset chip),Mizuno,collection,confirm exists,,P2,Collection header brand chip preset,Open URL
+/collections/adidas-handball-spezial,VERIFY,PLP chip registry (adidas),Adidas Handball Spezial,collection,confirm exists or remove chip,,P2,Referenced in plp-subcollection-chip-registry,Open URL
+/collections/ugg-lowmell,VERIFY,PLP chip registry (ugg),UGG Lowmel,collection,confirm exists or fix handle,,P3,Registry handle may be typo (lowmell),Open URL
+/collections/ugg-mini-boot,VERIFY,PLP chip registry (ugg),UGG Ultra Mini,collection,confirm exists,,P3,Registry handle,Open URL

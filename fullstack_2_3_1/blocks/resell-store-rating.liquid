@@ -1,0 +1,317 @@
+{% doc %}
+  Store trust line under size selector — Judge.me live data + conversion copy.
+
+  @example
+  {% content_for 'block', type: 'resell-store-rating', id: 'store_rating' %}
+{% enddoc %}
+
+{% liquid
+  assign reviews_url = ''
+
+  if block.settings.source != 'judgeme' and block.settings.link != blank
+    assign reviews_url = block.settings.link
+  else
+    capture reviews_url
+      render 'rl-resolved-page-url', handle: 'avis-sur-resell-lausanne'
+    endcapture
+    assign reviews_url = reviews_url | strip
+    if reviews_url == blank and block.settings.reviews_page != blank
+      assign reviews_url = block.settings.reviews_page
+    endif
+  endif
+%}
+
+<a
+  href="{{ reviews_url }}"
+  class="
+    resell-store-trust
+    {%- if block.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
+    {%- if block.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+    {%- if block.settings.source == 'judgeme' %} resell-store-trust--judgeme{% endif -%}
+    {%- if block.settings.additional_class != blank %} {{ block.settings.additional_class }}{% endif -%}
+  "
+  style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;"
+  data-rs-store-trust
+  {{ block.shopify_attributes }}
+>
+  <span class="resell-store-trust__label">{{ 'store_trust.rated_by' | t }}</span>
+
+  {% if block.settings.source == 'judgeme' %}
+    {% render 'resell-judgeme-store-trust',
+      fallback_rating: block.settings.rating,
+      fallback_count: block.settings.review_count
+    %}
+  {% else %}
+    <span class="resell-store-trust__rating">
+      {% render 'rating-stars', rating: block.settings.rating, show_note: false, size: 'compact' %}
+    </span>
+
+    <span class="resell-store-trust__label">{{ 'store_trust.over' | t }}</span>
+
+    <span class="resell-store-trust__count">
+      {{ block.settings.review_count }}
+    </span>
+  {% endif %}
+
+  <span class="resell-store-trust__label">{{ 'store_trust.reviews' | t }}</span>
+</a>
+
+{% stylesheet %}
+  .resell-store-trust {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 6px;
+    width: fit-content;
+    max-width: 100%;
+    text-decoration: none;
+    color: rgb(var(--color-foreground-rgb) / 0.72);
+    font-size: 12px;
+    line-height: 16px;
+    transition: color 0.2s ease;
+  }
+
+  .product-section--pdp .product-section__product-info .resell-store-trust {
+    font-size: 15px;
+    line-height: 19px;
+    gap: 2px 5px;
+  }
+
+  .resell-store-trust:hover {
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .resell-store-trust__label {
+    white-space: nowrap;
+  }
+
+  .resell-store-trust__rating,
+  .resell-store-trust__count {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .resell-store-trust__rating *,
+  .resell-store-trust__count * {
+    pointer-events: none;
+  }
+
+  .resell-store-trust__rating .rating {
+    gap: 2px;
+  }
+
+  .resell-store-trust__rating .rating {
+    gap: 0;
+  }
+
+  .resell-store-trust__rating .rating__stars {
+    display: inline-flex;
+    align-items: center;
+    height: 14px;
+  }
+
+  .resell-store-trust__rating .rating-star {
+    color: var(--color-stars-icons) !important;
+    font-variation-settings: 'FILL' 0, 'wght' var(--icon-weight, 300), 'GRAD' 0, 'opsz' 24 !important;
+  }
+
+  .resell-store-trust__rating .rating-star--filled,
+  .resell-store-trust__rating .rating-star--half {
+    font-variation-settings: 'FILL' 1, 'wght' var(--icon-weight, 300), 'GRAD' 0, 'opsz' 24 !important;
+  }
+
+  .resell-store-trust__rating .rating-star--unfilled {
+    opacity: 0.3;
+  }
+
+  .product-section--pdp .product-section__product-info .resell-store-trust__rating .rating-star {
+    font-size: 15px !important;
+    margin: 0 -2px;
+  }
+
+  .product-section--pdp .product-section__product-info .resell-store-trust__rating .rating__stars {
+    height: 15px;
+  }
+
+  .resell-store-trust--judgeme .jdgm-widget,
+  .resell-store-trust--judgeme .jdgm-all-reviews-rating,
+  .resell-store-trust--judgeme .jdgm-all-reviews-count {
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
+
+  .resell-store-trust--judgeme .jdgm-star {
+    font-size: 13px !important;
+  }
+
+  .resell-store-trust--judgeme .jdgm-all-reviews-rating__summary,
+  .resell-store-trust--judgeme .jdgm-verified-by-judgeme {
+    display: none !important;
+  }
+
+  .resell-store-trust--judgeme .jdgm-all-reviews-rating:not(:empty) + .resell-store-trust__fallback,
+  .resell-store-trust--judgeme .jdgm-all-reviews-count:not(:empty) + .resell-store-trust__fallback {
+    display: none !important;
+  }
+
+  .resell-store-trust--judgeme .jdgm-all-reviews-rating:empty,
+  .resell-store-trust--judgeme .jdgm-all-reviews-count:empty {
+    display: none;
+  }
+{% endstylesheet %}
+
+<script>
+  (() => {
+    const moveTrustLine = () => {
+      const trustNodes = document.querySelectorAll('.product-section--pdp .product-section__product-info .resell-store-trust[data-rs-store-trust]');
+      trustNodes.forEach((trustNode) => {
+        const productInfo = trustNode.closest('.product-section__product-info');
+        if (!productInfo) return;
+
+        const priceNode =
+          productInfo.querySelector('.product-price-container') ||
+          productInfo.querySelector('.price-container') ||
+          productInfo.querySelector('[data-ref="price-container"]');
+        if (!priceNode) return;
+
+        const sizeTriggerWrap = productInfo.querySelector('.rs-size-modal__trigger-wrap');
+
+        trustNode.classList.add('resell-store-trust--inline-pdp');
+
+        if (sizeTriggerWrap) {
+          if (trustNode !== sizeTriggerWrap.previousElementSibling) {
+            sizeTriggerWrap.parentNode.insertBefore(trustNode, sizeTriggerWrap);
+          }
+          return;
+        }
+
+        if (priceNode.nextElementSibling !== trustNode) {
+          priceNode.insertAdjacentElement('afterend', trustNode);
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', moveTrustLine, { once: true });
+    } else {
+      moveTrustLine();
+    }
+
+    document.addEventListener('shopify:section:load', moveTrustLine);
+    document.addEventListener('shopify:section:reorder', moveTrustLine);
+    window.addEventListener('resize', moveTrustLine);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Avis boutique (PDP)",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "show_on_display",
+      "label": "t:show_on_display",
+      "default": "desktop_and_mobile",
+      "options": [
+        { "value": "desktop_and_mobile", "label": "t:desktop_and_mobile" },
+        { "value": "desktop_only", "label": "t:desktop_only" },
+        { "value": "mobile_only", "label": "t:mobile_only" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Source"
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Source des avis",
+      "default": "manual",
+      "options": [
+        {
+          "value": "judgeme",
+          "label": "Judge.me (temps réel)"
+        },
+        {
+          "value": "manual",
+          "label": "Manuel (secours)"
+        }
+      ],
+      "info": "Native Shopify theme — pas les widgets « platform-independent ». Activer l’app embed sur CE thème (Customize → App embeds), puis Judge.me → Settings → Integrations → Install widgets sur le même thème dev (#188552610178)."
+    },
+    {
+      "type": "text",
+      "id": "reviews_page",
+      "label": "Page avis Judge.me",
+      "default": "/pages/avis-sur-resell-lausanne",
+      "info": "Secours si la page « avis-sur-resell-lausanne » est absente. En production, l’URL locale (FR/DE/EN) est résolue automatiquement."
+    },
+    {
+      "type": "range",
+      "id": "rating",
+      "label": "t:rating",
+      "default": 4.8,
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "info": "Affiché si Judge.me n’a pas encore injecté les données."
+    },
+    {
+      "type": "number",
+      "id": "review_count",
+      "label": "t:review_count",
+      "default": 380,
+      "info": "Affiché si Judge.me n’a pas encore injecté les données."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:link",
+      "info": "Remplace l’URL texte ci-dessus si renseigné.",
+      "visible_if": "{{ block.settings.source == 'manual' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:margins"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "t:margin_top",
+      "step": 1,
+      "min": 0,
+      "max": 100,
+      "default": 10,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "t:margin_bottom",
+      "step": 1,
+      "min": 0,
+      "max": 100,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:advanced_settings"
+    },
+    {
+      "type": "text",
+      "id": "additional_class",
+      "label": "t:additional_class",
+      "info": "t:additional_class_info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avis boutique (PDP)",
+      "category": "t:reviews"
+    }
+  ]
+}
+{% endschema %}

@@ -15,7 +15,7 @@
   {% render 'checkbox', label: 'Case à cocher', checked: true, name: 'checkbox-1' %}
 {% enddoc %}
 
-<label class="checkbox">
+<label class="checkbox"{% if id %} for="{{ id }}"{% endif %}>
   <input
     type="checkbox"
     {% if checked %}

@@ -19,22 +19,9 @@
       {% content_for 'blocks' %}
 
       {% content_for 'block', type: '_product-add-to-cart-button', id: 'product-add-to-cart-button' %}
-      {% content_for 'block', type: '_accelerated-checkout', id: 'accelerated-checkout' %}
     {% endform %}
   </product-form>
 {% endif %}
-
-{% stylesheet %}
-  shopify-visual-preview-block-list product-form[data-visual-preview-mode] {
-    width: 400px;
-  }
-
-  .product-form__form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-sm);
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
@@ -49,9 +36,6 @@
     },
     {
       "type": "_product-add-to-cart-button"
-    },
-    {
-      "type": "_accelerated-checkout"
     },
     {
       "type": "product-inventory"
@@ -94,11 +78,6 @@
           "type": "_product-add-to-cart-button",
           "static": true,
           "id": "product-add-to-cart-button"
-        },
-        {
-          "type": "_accelerated-checkout",
-          "static": true,
-          "id": "accelerated-checkout"
         }
       ]
     }

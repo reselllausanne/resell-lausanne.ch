@@ -1,0 +1,24 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les New Balance sur Resell Lausanne sont-elles authentiques ?</summary>
+  <div class="rte">
+    <p>Oui. Chaque paire New Balance est contrôlée par nos experts et accompagnée d'un certificat d'authenticité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel est le délai de livraison pour une commande New Balance ?</summary>
+  <div class="rte">
+    <p>La livraison prend généralement entre 5 et 10 jours ouvrés en standard en Suisse et en Europe, ou 2 à 5 jours ouvrés en express sur produits éligibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Puis-je retourner une paire New Balance ?</summary>
+  <div class="rte">
+    <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
+  </div>
+</details>

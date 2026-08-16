@@ -1,0 +1,144 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article-editorial",
+      "blocks": {
+        "callout-main": {
+          "type": "callout",
+          "settings": {
+            "title": "Le test des 3 looks",
+            "text": "Avant de choisir : imaginer la paire avec 1) un jean large, 2) un pantalon noir ou gris, 3) une jupe ou un short. Si elle fonctionne avec les trois, elle mérite sa place dans la rotation."
+          }
+        },
+        "section-trends": {
+          "type": "content_section",
+          "settings": {
+            "heading": "Ce qui change vraiment en 2026",
+            "body": "<p>La Samba n'a pas disparu, mais elle n'est plus l'unique réponse. Les silhouettes basses inspirées du football continuent, avec davantage de daim, de brun, de bordeaux et de semelles gomme. En parallèle, les runners argentées en mesh restent fortes.</p>"
+          }
+        },
+        "pick-1": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "01 · Le choix mode facile",
+            "title": "adidas Handball Spezial",
+            "description": "Profil fin, daim et semelle gomme. Plus texturée qu'une Samba et très simple avec denim, jupe longue ou pantalon large.",
+            "score_label": "Polyvalence",
+            "score": 94
+          }
+        },
+        "pick-2": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "02 · Confort + tendance",
+            "title": "ASICS GEL-1130 / GEL-NYC",
+            "description": "Le bon choix pour les longues journées. Mesh argenté, lignes rétro et amorti supérieur aux sneakers plates.",
+            "score_label": "Confort",
+            "score": 96
+          }
+        },
+        "pick-3": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "03 · L'alternative Nike",
+            "title": "Nike P-6000",
+            "description": "Une runner Y2K facile à porter, moins massive qu'elle n'en a l'air. Argent, blanc ou beige : les versions les plus simples durent le mieux.",
+            "score_label": "Quotidien",
+            "score": 91
+          }
+        },
+        "pick-4": {
+          "type": "product_pick",
+          "settings": {
+            "rank_label": "04 · La valeur sûre",
+            "title": "New Balance 530 / 9060",
+            "description": "530 pour une ligne légère et rétro ; 9060 pour plus de volume et de personnalité.",
+            "score_label": "Confort",
+            "score": 93
+          }
+        },
+        "row-1": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Low profile",
+            "col_2": "Semelle fine, style minimal",
+            "col_3": "Tenues déjà sobres dans l'armoire"
+          }
+        },
+        "row-2": {
+          "type": "table_row",
+          "settings": {
+            "col_1": "Runner Y2K",
+            "col_2": "Mesh, amorti, look technique",
+            "col_3": "Longues journées + jean large"
+          }
+        },
+        "related-1": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "sneakers-rentree-2026-ado-garcon",
+            "segment_label": "12–18 ans",
+            "title": "Guide ado garçon"
+          }
+        },
+        "related-2": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-fille",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant fille"
+          }
+        },
+        "related-3": {
+          "type": "related_guide",
+          "settings": {
+            "article_handle": "chaussures-rentree-2026-garcon",
+            "segment_label": "6–12 ans",
+            "title": "Guide enfant garçon"
+          }
+        }
+      },
+      "block_order": [
+        "callout-main",
+        "section-trends",
+        "pick-1",
+        "pick-2",
+        "pick-3",
+        "pick-4",
+        "row-1",
+        "row-2",
+        "related-1",
+        "related-2",
+        "related-3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "eyebrow": "Guide ado fille · rentrée 2026",
+        "deck": "Fine, rétro ou argentée ?",
+        "intro": "La meilleure sneaker de rentrée n'est pas forcément la paire la plus virale. C'est celle qui fonctionne avec au moins trois tenues déjà dans l'armoire, reste confortable après une journée de cours et ressemble encore à la personne qui la porte.",
+        "chips": "Low profile\nSilver runner\nBurgundy\nBag charms",
+        "hero_overlay": 66,
+        "table_col_1": "Silhouette",
+        "table_col_2": "À savoir",
+        "table_col_3": "Idéale si…",
+        "how_to_heading": "Comment choisir la bonne taille",
+        "how_to_body": "<p>Mesure les deux pieds debout, en fin de journée. Garde environ 8 à 12 mm devant les orteils. Marche plusieurs minutes en magasin : le pied gonfle, surtout avec une runner ou une basket.</p>",
+        "checklist": "3 tenues compatibles\n8–12 mm devant les orteils\nPas de glissement au talon\nColoris compatible avec la pluie\nBudget porté, pas juste budget achat",
+        "verdict": "<p>Une seule paire pour tout faire : GEL-1130 ou P-6000 neutre. Pour le style : Handball Spezial bordeaux ou brune. Pour marquer le premier jour : Jordan 4.</p>",
+        "hub_article_handle": "chaussures-sneakers-rentree-2026",
+        "show_promo": true,
+        "padding_bottom": 60
+      }
+    },
+    "related": {
+      "type": "resell-blog-related",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "max_articles": 3,
+        "padding_top": 48,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": ["main", "related"]
+}

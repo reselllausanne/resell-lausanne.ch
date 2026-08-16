@@ -1,0 +1,67 @@
+{% comment %}
+  Cross-links to sibling guides + hub.
+
+  @param section {section}
+  @param article {article}
+  @param blog {blog}
+{% endcomment %}
+{% liquid
+  assign hub_handle = section.settings.hub_article_handle | default: 'chaussures-sneakers-rentree-2026'
+  assign hub_article = blank
+  assign related_count = 0
+
+  for item in blog.articles
+    if item.handle == hub_handle
+      assign hub_article = item
+    endif
+  endfor
+
+  if section.settings.related_heading != blank
+    assign related_title = section.settings.related_heading
+  else
+    assign related_title = 'editorial.related_guides' | t
+  endif
+%}
+
+{% capture related_links %}
+  {% for block in section.blocks %}
+    {% if block.type == 'related_guide' and related_count < 3 %}
+      {% assign guide = blank %}
+      {% if block.settings.article_handle != blank %}
+        {% for item in blog.articles %}
+          {% if item.handle == block.settings.article_handle and item.id != article.id %}
+            {% assign guide = item %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      {% if guide != blank %}
+        {% assign related_count = related_count | plus: 1 %}
+        <a class="editorial-related__link" href="{{ guide.url }}" {{ block.shopify_attributes }}>
+          {% if block.settings.segment_label != blank %}
+            <span class="editorial-related__label">{{ block.settings.segment_label | escape }}</span>
+          {% endif %}
+          <span class="editorial-related__name">{{ block.settings.title | default: guide.title | escape }}</span>
+        </a>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% if related_count > 0 or hub_article != blank %}
+  <nav class="editorial-related" aria-label="{{ related_title | escape }}">
+    <div class="editorial-related__head">
+      <h2 class="editorial-related__title">{{ related_title | escape }}</h2>
+      {% if hub_article != blank and hub_article.id != article.id %}
+        <a class="editorial-related__hub-link" href="{{ hub_article.url }}">
+          {{- 'editorial.hub_back_to_hub' | t -}}
+        </a>
+      {% endif %}
+    </div>
+    {% if related_count > 0 %}
+      <div class="editorial-related__grid">
+        {{ related_links }}
+      </div>
+    {% endif %}
+  </nav>
+{% endif %}

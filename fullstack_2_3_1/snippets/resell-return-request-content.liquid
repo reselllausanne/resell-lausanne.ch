@@ -1,0 +1,135 @@
+{% liquid
+  assign url_faq_returns = routes.root_url | append: '/pages/faq?category=echanges-et-retours#faq-echanges-et-retours'
+  assign url_contact = routes.root_url | append: '/pages/contact'
+  assign url_shipping = routes.root_url | append: '/pages/livraison'
+  assign returns_portal_url = 'https://solution.resell-lausanne.ch/returns'
+  if pages['faq'] != blank
+    assign url_faq_returns = pages['faq'].url | append: '?category=echanges-et-retours#faq-echanges-et-retours'
+  endif
+  if pages['contact'] != blank
+    assign url_contact = pages['contact'].url
+  endif
+  if pages['livraison'] != blank
+    assign url_shipping = pages['livraison'].url
+  endif
+%}
+{{ 'return-request.css' | asset_url | stylesheet_tag }}
+
+<div class="rl-return-request" aria-labelledby="ReturnRequestHeading">
+  <div class="rl-return-request__inner">
+
+    <header class="rl-return-request__hero">
+      <h1 id="ReturnRequestHeading" class="rl-return-request__title">
+        {{ 'rl_return_request.title' | t }}
+      </h1>
+      <p class="rl-return-request__subtitle">
+        {{ 'rl_return_request.subtitle' | t }}
+      </p>
+    </header>
+
+    <section class="rl-return-request__warning" role="note" aria-label="{{ 'rl_return_request.warning_title' | t }}">
+      <h2 class="rl-return-request__h2">{{ 'rl_return_request.warning_title' | t }}</h2>
+      <p>{{ 'rl_return_request.warning_body' | t }}</p>
+      <p class="rl-return-request__notice-link">
+        <a href="{{ url_faq_returns }}">{{ 'rl_return_request.notice_link' | t }}</a>
+      </p>
+    </section>
+
+    <section
+      class="rl-return-request__portal"
+      aria-labelledby="ReturnRequestPortalHeading"
+    >
+      <h2 class="rl-return-request__h2" id="ReturnRequestPortalHeading">
+        {{ 'rl_return_request.portal_title' | t }}
+      </h2>
+      <p class="rl-return-request__portal-intro">
+        {{ 'rl_return_request.portal_intro' | t }}
+      </p>
+
+      <div class="rl-return-request__frame-wrap">
+        <iframe
+          class="rl-return-request__frame"
+          src="{{ returns_portal_url }}?embed=1"
+          title="{{ 'rl_return_request.portal_iframe_title' | t | escape }}"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allow="clipboard-write"
+        ></iframe>
+      </div>
+
+      <p class="rl-return-request__portal-fallback">
+        <a
+          class="rl-return-request__button rl-return-request__button--secondary"
+          href="{{ returns_portal_url }}"
+          target="_blank"
+          rel="noopener"
+        >
+          {{ 'rl_return_request.portal_open_tab' | t }}
+        </a>
+      </p>
+    </section>
+
+    <section class="rl-return-request__cta" aria-label="{{ 'rl_return_request.cta_orders' | t }}">
+      <a
+        class="rl-return-request__button rl-return-request__button--secondary"
+        href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+      >
+        {{ 'rl_return_request.cta_orders' | t }}
+      </a>
+      <a
+        class="rl-return-request__button rl-return-request__button--secondary"
+        href="{{ url_contact }}"
+      >
+        {{ 'rl_return_request.cta_support' | t }}
+      </a>
+    </section>
+
+    <section class="rl-return-request__faq" aria-label="{{ 'rl_return_request.faq_title' | t }}">
+      <h2 class="rl-return-request__h2">{{ 'rl_return_request.faq_title' | t }}</h2>
+
+      <details class="rl-return-request__faq-item">
+        <summary>{{ 'rl_return_request.faq_q1' | t }}</summary>
+        <div class="rl-return-request__faq-body">
+          <p>{{ 'rl_return_request.faq_a1' | t }}</p>
+        </div>
+      </details>
+
+      <details class="rl-return-request__faq-item">
+        <summary>{{ 'rl_return_request.faq_q2' | t }}</summary>
+        <div class="rl-return-request__faq-body">
+          <p>{{ 'rl_return_request.faq_a2' | t }}</p>
+        </div>
+      </details>
+
+      <details class="rl-return-request__faq-item">
+        <summary>{{ 'rl_return_request.faq_q3' | t }}</summary>
+        <div class="rl-return-request__faq-body">
+          <p>{{ 'rl_return_request.faq_a3' | t }}</p>
+        </div>
+      </details>
+
+      <details class="rl-return-request__faq-item">
+        <summary>{{ 'rl_return_request.faq_q4' | t }}</summary>
+        <div class="rl-return-request__faq-body">
+          <p>{{ 'rl_return_request.faq_a4' | t }}</p>
+        </div>
+      </details>
+
+      <details class="rl-return-request__faq-item">
+        <summary>{{ 'rl_return_request.faq_q5' | t }}</summary>
+        <div class="rl-return-request__faq-body">
+          <p>{{ 'rl_return_request.faq_a5' | t }}</p>
+        </div>
+      </details>
+    </section>
+
+    <nav class="rl-return-request__links" aria-label="{{ 'rl_return_request.link_returns' | t }}">
+      <a href="{{ url_faq_returns }}">{{ 'rl_return_request.link_returns' | t }}</a>
+      <span aria-hidden="true">&middot;</span>
+      <a href="{{ url_shipping }}">{{ 'rl_return_request.link_shipping' | t }}</a>
+      <span aria-hidden="true">&middot;</span>
+      <a href="{{ url_contact }}">{{ 'rl_return_request.link_contact' | t }}</a>
+    </nav>
+
+  </div>
+</div>

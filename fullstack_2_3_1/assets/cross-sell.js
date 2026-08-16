@@ -19,7 +19,7 @@ class CrossSellComponent extends HTMLElement {
     this.form = this.querySelector('[data-ref="add-to-cart-form"]');
     this.formInputs = this.querySelectorAll('[data-ref="product-input"]');
     this.submitButton = this.querySelector('[data-ref="add-to-cart-button"]');
-    this.isInCart = this.closest('cart-drawer') || this.closest('cart-component') ? true : false;
+    this.isInCart = this.closest('cart-component') ? true : false;
     this.isInASlider = this.closest('slider-component') ? true : false;
     this.productHandle = this.dataset.productHandle;
 
@@ -56,10 +56,6 @@ class CrossSellComponent extends HTMLElement {
     });
 
     const sections = [];
-    if (document.querySelector('cart-drawer')) {
-      const section_cart_drawer_id = document.querySelector('cart-drawer').dataset.sectionId;
-      sections.push(section_cart_drawer_id);
-    }
 
     try {
       const response = await fetch(Theme.routes.cart_add_url, {
@@ -101,7 +97,8 @@ class CrossSellComponent extends HTMLElement {
     if (window.location.pathname.includes('/cart')) {
       window.location.reload();
     } else {
-      const currentItemCount = document.querySelector('cart-icon')?.getCurrentItemCount();
+      const countEl = document.querySelector('[data-ref="cart-count"]');
+      const currentItemCount = countEl ? parseInt(countEl.textContent, 10) : null;
 
       let newItemCount;
       if (currentItemCount != null) {
@@ -161,7 +158,6 @@ class CrossSellComponent extends HTMLElement {
   // Si le cross-sell est dans un panier, et que le produit est dans le panier, on masque le cross-sell
   #synchronizeWithCartContent() {
     let cartItems = null;
-    if (this.closest('cart-drawer')) cartItems = this.closest('cart-drawer').querySelectorAll('[data-ref="cart-item"]');
     if (this.closest('cart-component')) cartItems = this.closest('cart-component').querySelectorAll('[data-ref="cart-item"]');
 
     if (!cartItems) return;

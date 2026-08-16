@@ -1,0 +1,348 @@
+  /* ── Container ── */
+  .rl-home {
+    --rl-ticker-height: 41px;
+    padding-top: var(--rl-padding-top);
+    padding-bottom: var(--rl-padding-bottom);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  /* ── Hero wrapper ── */
+  .rl-home__hero {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: linear-gradient(180deg, #e6f0f5 0%, #c9dee8 100%);
+    /* svh = small viewport height; native CSS, no JS thrash */
+    height: calc(100svh - 40px);
+    min-height: 520px;
+  }
+
+  @media (max-width: 749px) {
+    /* Small, safe WTN-like geometry: fixed visual frame on homepage mobile. */
+    body.template-index .section-home-hero-premium .rl-home__hero {
+      height: clamp(540px, 70svh, 592px);
+      min-height: 540px;
+      max-height: 592px;
+    }
+  }
+
+  @media (width > 750px) {
+    .section-home-hero-premium .rl-home__hero {
+      height: auto;
+      aspect-ratio: 1916 / 821;
+      min-height: 360px;
+      max-height: 720px;
+    }
+
+    .section-home-hero-premium .rl-home__hero-image {
+      object-fit: cover;
+      object-position: center center;
+    }
+  }
+
+  /* ── Section-scoped overrides (prevent home-landing-premium bleed) ── */
+  .section-home-hero-premium .rl-home__hero { margin-bottom: 0 !important; }
+  .section-home-hero-premium .rl-home__hero-media {
+    position: absolute !important;
+    inset: 0 !important;
+    aspect-ratio: auto !important;
+    min-height: 0 !important;
+    background: transparent !important;
+  }
+  @media (width > 750px) {
+    .section-home-hero-premium .rl-home__hero { margin-bottom: 0 !important; }
+  }
+
+  /* ── Slides ── */
+  .rl-home__hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .rl-home__hero-slide.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .rl-home__hero-cover-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .rl-home__hero-slide--cover-only .rl-home__hero-media {
+    z-index: 0;
+  }
+
+  /* ── Media ── */
+  .rl-home__hero-media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .rl-home__hero-media picture {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .rl-home__hero-media img,
+  .rl-home__hero-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* ── Overlay (desktop = vertical-centered, right-aligned, WTN-style) ──
+     NOTE: .section-home-hero-premium ancestor scoping required to beat
+     .rl-home__hero-overlay rules leaked from home-landing-premium.liquid. */
+  .section-home-hero-premium .rl-home__hero-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 clamp(32px, 8vw, 120px);
+    z-index: 2;
+    pointer-events: none;
+    color: #111;
+  }
+
+  /* ── White card (desktop dimensions match WTN 326×174 region) ── */
+  .section-home-hero-premium .rl-home__hero-card {
+    pointer-events: auto;
+    background: #ffffff;
+    color: #111;
+    padding: 22px 24px 20px;
+    width: clamp(280px, 26vw, 340px);
+    display: grid;
+    gap: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+  }
+
+  .rl-home__hero-card-eyebrow {
+    margin: 0;
+    font-size: clamp(10px, 1.1vw, 13px);
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  .rl-home__hero-card-title {
+    margin: 0;
+    font-size: clamp(16px, 1.6vw, 22px);
+    line-height: 1.18;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: #111;
+  }
+
+  .rl-home__hero-card-subtitle {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #666;
+    font-weight: 400;
+  }
+
+  .rl-home__hero-card-cta {
+    margin-top: 4px;
+    align-self: start;
+    background: #080808;
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    padding: 10px 20px;
+    border-radius: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    transition: background 0.15s;
+  }
+
+  .rl-home__hero-card-cta:hover { background: #2a2a2a; }
+
+  /* ── Mobile (≤749px) ──
+     All rules scoped to .section-home-hero-premium so they beat the
+     CSS leaked from home-landing-premium.liquid (same .rl-home__hero-* names).
+     Overlay = sized box pinned ABOVE floating menu, card fills overlay. */
+  @media (max-width: 749px) {
+    .section-home-hero-premium .rl-home__hero-overlay {
+      position: absolute;
+      top: auto;
+      left: 16px;
+      right: 16px;
+      bottom: calc(var(--rl-mobile-floating-nav-clearance, 95px) + 16px);
+      display: block;
+      padding: 0;
+      inset: auto 16px calc(var(--rl-mobile-floating-nav-clearance, 95px) + 16px) 16px;
+    }
+
+    .section-home-hero-premium .rl-home__hero-card {
+      width: 100%;
+      max-width: 100%;
+      padding: 16px 18px;
+      gap: 8px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    }
+
+    .section-home-hero-premium .rl-home__hero-card-eyebrow {
+      display: none;
+    }
+
+    .section-home-hero-premium .rl-home__hero-card-title {
+      font-size: 17px;
+      line-height: 1.18;
+    }
+
+    .section-home-hero-premium .rl-home__hero-card-subtitle {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .section-home-hero-premium .rl-home__hero-card-cta {
+      align-self: stretch;
+      font-size: 13px;
+      min-height: 44px;
+      padding: 12px 18px;
+      margin-top: 4px;
+    }
+  }
+
+  /* ── Side arrows ── */
+  .rl-home__hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    border: 1px solid #d6d6d6;
+    background: rgba(255, 255, 255, 0.85);
+    color: #111;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.15s;
+  }
+
+  .rl-home__hero-arrow:hover { background: #fff; }
+  .rl-home__hero-arrow--prev { left: 16px; }
+  .rl-home__hero-arrow--next { right: 16px; }
+  .rl-home__hero-arrow:focus:not(:focus-visible) { outline: none; box-shadow: none; }
+
+  @media (max-width: 749px) {
+    .rl-home__hero-arrow { display: none; }
+  }
+
+  /* ── Dots ── */
+  .rl-home__hero-dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 3;
+  }
+
+  .rl-home__hero-dot {
+    width: 32px;
+    height: 3px;
+    background: rgba(17, 17, 17, 0.25);
+    border-radius: 2px;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .rl-home__hero-dot.is-active { background: #111; }
+
+  @media (max-width: 749px) {
+    /* Dots sit just above the floating nav */
+    .rl-home__hero-dots { bottom: calc(var(--rl-mobile-floating-nav-clearance, 95px) - 14px); }
+  }
+
+  /* ── Ticker ── */
+  .rl-home__ticker {
+    flex-shrink: 0;
+    height: var(--rl-ticker-height);
+    box-sizing: border-box;
+    overflow: hidden;
+    border-top: 1px solid #ececec;
+    border-bottom: 1px solid #ececec;
+    background: #fff;
+  }
+
+  .rl-home__ticker-track {
+    width: max-content;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    height: 100%;
+    animation: rl-ticker var(--ticker-duration) linear infinite;
+    will-change: transform;
+    gap: 0;
+  }
+
+  .rl-home__ticker-segment {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    flex: 0 0 auto;
+    min-width: max-content;
+    padding-right: 2.5rem;
+  }
+
+  .rl-home__ticker-item {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 400;
+    color: #333;
+  }
+
+  .section-home-hero-premium .rl-home__ticker-item::before,
+  .section-home-hero-premium .rl-home__ticker-item::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  @keyframes rl-ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-33.333333%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rl-home__ticker-track { animation: none; }
+  }

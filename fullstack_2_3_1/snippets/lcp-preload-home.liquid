@@ -1,0 +1,14 @@
+{%- comment -%}
+  Homepage LCP preload — first tags in theme.liquid <head>.
+  URLs come from rl-hero-files-media.liquid (same srcsets as rendered <picture>).
+
+  Shopify Files (Admin → Content → Files):
+  - resell-lausanne-back-to-school-mobile-v2.png (900×1200, mobile LCP)
+  - resell-lausanne-back-to-school-desktop-v2.webp (2000×800, desktop LCP)
+{%- endcomment -%}
+
+{% render 'rl-hero-files-media',
+  mode: 'preload',
+  mobile_file: 'resell-lausanne-back-to-school-mobile-v2.png',
+  desktop_file: 'resell-lausanne-back-to-school-desktop-v2.webp'
+%}

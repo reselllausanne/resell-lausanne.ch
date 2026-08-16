@@ -39,42 +39,6 @@
   </quantity-breaks>
 {% endif %}
 
-{% stylesheet %}
-  .quantity-breaks {
-    display: block;
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-  }
-
-  shopify-visual-preview-block-list .quantity-breaks[data-visual-preview-mode] {
-    width: 450px;
-  }
-
-  .product-form__form .toggle-cross-sell:not(:first-of-type) {
-    display: none;
-  }
-
-  .quantity-breaks-container {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .quantity-breaks-container.quantity-breaks-container--row {
-    flex-direction: column;
-  }
-
-  .product-section__product-info:has(.quantity-breaks) .product-quantity-selector-block,
-  .quantity-breaks--hidden {
-    display: none;
-  }
-
-  .product-section__product-info:has(.quantity-breaks--with-variant-picker) variant-picker,
-  .product-section__product-info:has(.quantity-breaks--with-variant-picker) .subscription {
-    display: none;
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:quantity_breaks",

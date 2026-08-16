@@ -7,29 +7,14 @@
 
   assign minimum_delivery_days = block.settings.minimum_delivery_days
   assign maximum_delivery_days = block.settings.maximum_delivery_days
-  if selected_variant.metafields.custom.standard_delivery_min.value != blank
-    assign minimum_delivery_days = selected_variant.metafields.custom.standard_delivery_min.value
-  endif
-  if selected_variant.metafields.custom.standard_delivery_max.value != blank
-    assign maximum_delivery_days = selected_variant.metafields.custom.standard_delivery_max.value
-  endif
 
   assign delivery_estimation_text = block.settings.delivery_estimation_text
-  if selected_variant.metafields.custom.delivery_estimation_text.value != blank
-    assign delivery_estimation_text = selected_variant.metafields.custom.delivery_estimation_text.value
-  endif
-
   assign translation_between_dates = block.settings.translation_between_dates
-  if selected_variant.metafields.custom.delivery_between_text.value != blank
-    assign translation_between_dates = selected_variant.metafields.custom.delivery_between_text.value
-  endif
 -%}
 
 {% comment %}
   TODO: Variant delivery block contract.
   Required optional metafields:
-  - variant.custom.standard_delivery_min
-  - variant.custom.standard_delivery_max
   - variant.custom.delivery_estimation_text
   - variant.custom.delivery_between_text
 {% endcomment %}
@@ -77,40 +62,6 @@
     <span data-ref="max-date"></span>
   </p>
 </delivery-estimation>
-
-{% stylesheet %}
-  .delivery-estimation {
-    display: block;
-    font-size: var(--font-body--size);
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-  }
-
-  shopify-visual-preview-block-list .delivery-estimation[data-visual-preview-mode] {
-    width: 300px;
-  }
-
-  .delivery-estimation__content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    align-items: center;
-    justify-content: var(--alignment-mobile);
-
-    .icon {
-      font-size: 18px !important;
-      width: 18px !important;
-      height: 18px !important;
-      margin-right: var(--margin-xs);
-    }
-  }
-
-  @media (width > 750px) {
-    .delivery-estimation__content {
-      justify-content: var(--alignment);
-    }
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

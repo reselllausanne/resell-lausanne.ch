@@ -43,7 +43,9 @@
         height: block.settings.image.height,
         class: image_class,
         sizes: sizes,
-        alt: image_alt
+        alt: image_alt,
+        loading: 'lazy',
+        decoding: 'async'
     }} 
   {%- elsif block.settings.show_placeholder -%}
     {% if closest.article != blank %}

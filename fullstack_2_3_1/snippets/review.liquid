@@ -15,7 +15,7 @@
 
 {% capture review_image %}
   {% if block.settings.image != blank %}
-    {{ block.settings.image | image_url: width: 500 | image_tag: class: 'review__image' }}
+    {{ block.settings.image | image_url: width: 500 | image_tag: class: 'review__image', loading: 'lazy', decoding: 'async' }}
   {% else %}
     <img
         src="{{ 'placeholder-image.jpg' | asset_img_url: 'x500' }}"

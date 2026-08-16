@@ -1,10 +1,8 @@
-<script src="{{ 'sort.js' | asset_url }}" type="module"></script>
-
-<sort-component>
+<sort-component data-default-sort="{{ collection.default_sort_by | escape }}">
   {% assign sort_by = collection.sort_by | default: collection.default_sort_by %}
 
   <div class="select-wrapper select-wrapper--full-width">
-    <select class="select" name="sort-by" id="sort-by" data-ref="sorting-select">
+    <select class="select" name="sort-by" id="sort-by" data-ref="sorting-select" aria-label="{{ 'collections.sorting.sort_by' | t }}">
       {% for option in collection.sort_options %}
         <option
           value="{{ option.value }}"

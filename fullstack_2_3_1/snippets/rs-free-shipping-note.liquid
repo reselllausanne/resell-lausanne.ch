@@ -1,0 +1,17 @@
+{%- liquid
+  assign note_class = class | default: 'rs-free-shipping-note'
+  assign note_text = text
+  if note_text == blank
+    assign note_text = 'products.pdp.size_modal.free_shipping_ch' | t
+  endif
+-%}
+
+<p class="{{ note_class | escape }}">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M3 7.5h11v8H3z"/>
+    <path d="M14 10h4.5L21 13v2.5H14z"/>
+    <circle cx="7.5" cy="17.5" r="1.5"/>
+    <circle cx="17.5" cy="17.5" r="1.5"/>
+  </svg>
+  <span>{{ note_text | escape }}</span>
+</p>

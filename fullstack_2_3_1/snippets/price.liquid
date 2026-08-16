@@ -15,6 +15,7 @@
   assign price_unformatted = selected_variant.price
   assign compare_at_price_unformatted = selected_variant.compare_at_price
   assign show_sales_badge_text = show_sales_badge_text | default: false
+  assign show_from_prefix = false
 
   if from_product == blank and price != blank
     assign price_unformatted = price
@@ -43,12 +44,12 @@
     assign savings = compare_at_price_unformatted | minus: price_unformatted | money_without_trailing_zeros
   endif
 
-  if sales_badge == 'percentage'
+  if sales_badge == 'percentage' and compare_at_price_unformatted > price_unformatted and compare_at_price_unformatted > 0
     assign savings = compare_at_price_unformatted | minus: price_unformatted | times: 100.0 | divided_by: compare_at_price_unformatted | round | append: '%'
   endif
 
   assign show_compare_price = false
-  if compare_at_price_unformatted > price_unformatted
+  if compare_at_price_unformatted > price_unformatted and compare_at_price_unformatted > 0
     assign show_compare_price = true
   endif
 
@@ -57,6 +58,60 @@
       assign formatted_unit_price = selected_variant.unit_price | money
     else
       assign formatted_unit_price = selected_variant.unit_price | money_without_trailing_zeros
+    endif
+  endif
+
+  if from_product != blank
+    capture price_snapshot
+      render 'rs-product-price-snapshot', product: from_product
+    endcapture
+    assign price_parts = price_snapshot | strip | split: '|'
+    assign price_current_present = price_parts[7]
+    assign price_min_present = price_parts[8]
+    assign valid_price_count = price_parts[4] | plus: 0
+
+    if price_current_present == '1'
+      assign snapshot_current_price = price_parts[0] | plus: 0
+      assign snapshot_current_compare = price_parts[1] | plus: 0
+    endif
+    if price_min_present == '1'
+      assign snapshot_min_price = price_parts[2] | plus: 0
+      assign snapshot_min_compare = price_parts[3] | plus: 0
+    endif
+
+    if valid_price_count > 1 and price_min_present == '1'
+      assign show_from_prefix = true
+      assign price_unformatted = snapshot_min_price
+      assign compare_at_price_unformatted = snapshot_min_compare
+    elsif price_current_present == '1'
+      assign price_unformatted = snapshot_current_price
+      assign compare_at_price_unformatted = snapshot_current_compare
+    elsif price_min_present == '1'
+      assign price_unformatted = snapshot_min_price
+      assign compare_at_price_unformatted = snapshot_min_compare
+    endif
+
+    if settings.show_trailing_zeros
+      assign price = price_unformatted | money
+      assign compare_at_price = compare_at_price_unformatted | money
+    else
+      assign price = price_unformatted | money_without_trailing_zeros
+      assign compare_at_price = compare_at_price_unformatted | money_without_trailing_zeros
+    endif
+
+    assign show_compare_price = false
+    if compare_at_price_unformatted > price_unformatted and compare_at_price_unformatted > 0
+      assign show_compare_price = true
+    endif
+
+    if settings.show_trailing_zeros
+      assign savings = compare_at_price_unformatted | minus: price_unformatted | money
+    else
+      assign savings = compare_at_price_unformatted | minus: price_unformatted | money_without_trailing_zeros
+    endif
+
+    if sales_badge == 'percentage' and compare_at_price_unformatted > price_unformatted and compare_at_price_unformatted > 0
+      assign savings = compare_at_price_unformatted | minus: price_unformatted | times: 100.0 | divided_by: compare_at_price_unformatted | round | append: '%'
     endif
   endif
 -%}
@@ -72,7 +127,19 @@
         </span>
       {% endif %}
 
-      <span class="price" data-ref="price" data-value="{{ price_unformatted }}">{{ price | default: '&nbsp;' }}</span>
+      {% if show_from_prefix %}
+        <span class="price-from">{{ 'search.starting_from' | t }}</span>
+      {% endif %}
+      <span
+        class="price"
+        data-ref="price"
+        data-value="{{ price_unformatted }}"
+        {% if show_from_prefix %}
+          data-is-from-prefix="true"
+        {% endif %}
+      >
+        {{- price | default: '&nbsp;' -}}
+      </span>
 
       {% if show_sale_price_first == true %}
         <span class="compare-at-price" data-ref="compare-at-price" data-value="{{ compare_at_price_unformatted }}">
@@ -112,6 +179,11 @@
 </div>
 
 {% stylesheet %}
+  .price-container .price-from {
+    font-size: 0.9em;
+    opacity: 0.78;
+  }
+
   .badge:has(.badge__savings:empty) {
     display: none;
   }

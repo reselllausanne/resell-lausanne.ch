@@ -1,0 +1,459 @@
+{% liquid
+  assign use_default = section.settings.use_resell_default_copy
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign is_fr_locale = false
+  if locale_base == 'fr'
+    assign is_fr_locale = true
+  endif
+  assign _handle = collection.handle | downcase
+  assign brand_seo_snippet = ''
+  assign seo_heading = section.settings.heading
+  assign seo_subheading = section.settings.subheading
+  assign seo_body = section.settings.body
+  assign disable_seo_section = false
+  if _handle == 'les-meilleures-collaborations'
+    assign disable_seo_section = true
+  endif
+
+  if disable_seo_section == false and seo_heading == blank and seo_body == blank
+    if _handle == 'onitsuka-tiger' or _handle == 'onitsuka' or _handle == 'onitsuka-tokuten' or _handle contains 'onitsuka'
+      assign brand_seo_snippet = 'collection-plp-seo-onitsuka-tiger-content'
+      if locale_base == 'de'
+        assign seo_heading = 'Onitsuka Tiger — Mexico 66, Tokuten & japanisches ASICS-Erbe'
+        assign seo_subheading = 'Onitsuka Tiger Mexico 66, Tokuten, Serrano, Mexico 66 SD — geprüft und in der Schweiz geliefert.'
+      elsif locale_base == 'en'
+        assign seo_heading = 'Onitsuka Tiger — Mexico 66, Tokuten & ASICS Japanese heritage'
+        assign seo_subheading = 'Onitsuka Tiger Mexico 66, Tokuten, Serrano, Mexico 66 SD — authenticated and delivered in Switzerland.'
+      else
+        assign seo_heading = "Onitsuka Tiger — Mexico 66, Tokuten et l'héritage japonais ASICS"
+        assign seo_subheading = 'Onitsuka Tiger Mexico 66, Tokuten, Serrano, Mexico 66 SD — authentifiés et livrés en Suisse.'
+      endif
+    elsif locale_base == 'en' or locale_base == 'de'
+      if _handle == 'air-jordan-x-travis-scott' or _handle == 'travis-scott' or _handle == 'vetement-travis' or _handle contains 'travis-scott' or _handle contains 'travis'
+        if locale_base == 'de'
+          assign seo_heading = 'Travis Scott × Nike — Authentische Sneakers in der Schweiz'
+          assign seo_subheading = 'Jordan 1 Low Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack, Nike SB Dunk Low Travis Scott — geprüft und geliefert.'
+        else
+          assign seo_heading = 'Travis Scott × Nike — Authentic sneakers in Switzerland'
+          assign seo_subheading = 'Jordan 1 Low Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack, Nike SB Dunk Low Travis Scott — verified and delivered.'
+        endif
+      elsif _handle == 'essentials' or _handle == 'fear-of-god-essentials'
+        if locale_base == 'de'
+          assign seo_heading = 'Fear of God Essentials — Minimalistischer Streetwear in der Schweiz'
+          assign seo_subheading = 'Das zugängliche Fear-of-God-Sublabel von Jerry Lorenzo — authentische Hoodies, Tees und Jogginghosen.'
+        else
+          assign seo_heading = 'Fear of God Essentials — Minimalist streetwear in Switzerland'
+          assign seo_subheading = 'Jerry Lorenzo accessible Fear of God sub-label — authentic hoodies, tees and joggers.'
+        endif
+      elsif _handle == 'nike-air-max-plus-tn' or _handle == 'air-max-plus' or _handle == 'tn' or _handle == 'nike-tn' or _handle contains 'air-max-plus' or _handle contains 'nike-tn'
+        if locale_base == 'de'
+          assign seo_heading = 'Nike Air Max Plus TN — Kult-Silhouette in der Schweiz'
+          assign seo_subheading = 'Hyper Blue, Voltage Purple, Volt, Triple Black, Corteiz, Patta, Skepta — geprüft und geliefert.'
+        else
+          assign seo_heading = 'Nike Air Max Plus TN — Cult silhouette in Switzerland'
+          assign seo_subheading = 'Hyper Blue, Voltage Purple, Volt, Triple Black, Corteiz, Patta, Skepta — verified and delivered.'
+        endif
+      elsif _handle == 'nike-air-max-95' or _handle == 'air-max-95' or _handle contains 'air-max-95'
+        if locale_base == 'de'
+          assign seo_heading = 'Nike Air Max 95 — Retro Air Max in der Schweiz'
+          assign seo_subheading = 'Neon OG, Big Bubble, Triple Black, Corteiz — authentisch für Herren und Damen.'
+        else
+          assign seo_heading = 'Nike Air Max 95 — Retro Air Max in Switzerland'
+          assign seo_subheading = 'Neon OG, Big Bubble, Triple Black, Corteiz — authentic men and women.'
+        endif
+      elsif _handle == 'air-jordan-4' or _handle == 'jordan-4' or _handle contains 'air-jordan-4' or _handle contains 'jordan-4'
+        if locale_base == 'de'
+          assign seo_heading = 'Air Jordan 4 — Authentische Sneakers in der Schweiz'
+          assign seo_subheading = 'Bred, White Cement, Military Black, Travis Scott, Off-White, Union LA — geprüft und geliefert.'
+        else
+          assign seo_heading = 'Air Jordan 4 — Authentic sneakers in Switzerland'
+          assign seo_subheading = 'Bred, White Cement, Military Black, Travis Scott, Off-White, Union LA — verified and delivered.'
+        endif
+      elsif _handle == 'asics-gel-kayano-14' or _handle == 'gel-kayano-14' or _handle == 'kayano-14' or _handle contains 'kayano'
+        if locale_base == 'de'
+          assign seo_heading = 'ASICS Gel-Kayano 14 — Y2K Running-Lifestyle in der Schweiz'
+          assign seo_subheading = 'White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY — geprüft und geliefert.'
+        else
+          assign seo_heading = 'ASICS Gel-Kayano 14 — Y2K running lifestyle in Switzerland'
+          assign seo_subheading = 'White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY — verified and delivered.'
+        endif
+      endif
+    endif
+  endif
+
+  if disable_seo_section == false and seo_heading == blank and seo_body == blank and is_fr_locale
+    if _handle == 'air-jordan-x-travis-scott' or _handle == 'travis-scott' or _handle == 'vetement-travis' or _handle contains 'travis-scott' or _handle contains 'travis'
+      assign seo_heading = "Travis Scott × Nike — Sneakers authentiques en Suisse"
+      assign seo_subheading = "Jordan 1 Low Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack, Nike SB Dunk Low Travis Scott — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-travis-scott-content'
+    elsif _handle == 'essentials' or _handle == 'fear-of-god-essentials'
+      assign seo_heading = "Essentials Fear of God, le streetwear minimaliste signe Jerry Lorenzo"
+      assign seo_subheading = "Le sous-label abordable de Fear of God"
+      assign brand_seo_snippet = 'collection-plp-seo-essentials-content'
+    elsif _handle == 'crampons-de-foot' or _handle == 'football' or _handle == 'crampons' or _handle contains 'crampons'
+      assign seo_heading = "Crampons de foot — Nike, Adidas et éditions limitées"
+      assign seo_subheading = "Nike Mercurial, Tiempo, Phantom, Adidas Predator, F50 et Copa — authentiques, FG/SG/AG/TF, livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-crampons-foot-content'
+    elsif _handle == 'chrome-hearts' or _handle contains 'chrome-hearts'
+      assign seo_heading = "Chrome Hearts — Hoodies, t-shirts, bijoux argent et lunettes authentiques en Suisse"
+      assign seo_subheading = "Chrome Hearts CH, croix gothique, bijoux argent 925, lunettes optiques — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-chrome-hearts-content'
+    elsif _handle == 'denim-tears' or _handle contains 'denim-tears'
+      assign seo_heading = "Denim Tears — Tremaine Emory, Cotton Wreath et collaborations Levi's, Stüssy, Dior"
+      assign seo_subheading = "Jeans Cotton Wreath, hoodies, t-shirts Denim Tears — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-denim-tears-content'
+    elsif _handle == 'adidas-spezial' or _handle == 'handball-spezial' or _handle == 'trimm-trab' or _handle == 'spezial' or _handle contains 'spezial'
+      assign seo_heading = "Adidas Spezial — Handball Spezial, Trimm Trab et l'archive premium Gary Aspden"
+      assign seo_subheading = "Handball Spezial, Trimm Trab, Wensley, Munchen, Adimatic, Albrecht — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-adidas-spezial-content'
+    elsif _handle == 'nike-air-max-plus-tn' or _handle == 'air-max-plus' or _handle == 'tn' or _handle == 'nike-tn' or _handle contains 'air-max-plus' or _handle contains 'nike-tn'
+      assign seo_heading = "Nike TN Air Max Plus — La silhouette culte européenne"
+      assign seo_subheading = "TN Hyper Blue, Voltage Purple, Volt, Triple Black, Corteiz, Patta, Skepta, Atlanta, Marseille — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-nike-tn-content'
+    elsif _handle == 'nike-air-max-95' or _handle == 'air-max-95' or _handle contains 'air-max-95'
+      assign seo_heading = "Nike Air Max 95 Suisse | Retro Air Max & Tailles"
+      assign seo_subheading = "Neon OG, Big Bubble, Triple Black, Corteiz, homme et femme — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-nike-air-max-95-content'
+    elsif _handle == 'dunk' or _handle == 'dunk-low' or _handle == 'dunk-sb' or _handle == 'nike-sb-dunk' or _handle == 'nike-dunk' or _handle contains 'dunk'
+      assign seo_heading = "Nike Dunk et SB Dunk — La silhouette streetwear absolue"
+      assign seo_subheading = "Dunk Low Panda, SB Dunk Low Travis Scott, Chunky Dunky, Lobster, Pigeon, Off-White, Supreme — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-dunk-content'
+    elsif _handle == 'supreme' or _handle contains 'supreme'
+      assign seo_heading = "Supreme — Box Logo, collaborations Nike, The North Face et Stone Island"
+      assign seo_subheading = "Supreme Box Logo hoodie, t-shirts, accessoires et collaborations Nike, The North Face, Stone Island, Levi's — authentifiés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-supreme-content'
+    elsif _handle == 'off-white' or _handle == 'nike-x-off-white' or _handle contains 'off-white'
+      assign seo_heading = "Off-White — Virgil Abloh, The Ten Nike et streetwear premium"
+      assign seo_subheading = "Off-White × Nike The Ten, hoodies Arrows, t-shirts Caravaggio, Out of Office, Industrial Belt — authentifiés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-off-white-content'
+    elsif _handle == 'bape' or _handle == 'a-bathing-ape' or _handle contains 'bape'
+      assign seo_heading = "BAPE A Bathing Ape — Shark hoodie, ABC Camo, BAPE STA"
+      assign seo_subheading = "Shark hoodie, ABC Camo, BAPE STA, Tiger hoodie, collaborations Nike, Adidas, Louis Vuitton — authentifiés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-bape-content'
+    elsif _handle == 'labubu' or _handle == 'pop-mart' or _handle == 'the-monsters' or _handle contains 'labubu' or _handle contains 'pop-mart'
+      assign seo_heading = "Labubu × Pop Mart — Peluches, vinyl et secrets The Monsters"
+      assign seo_subheading = "Labubu plush, Macaron, Big Into Energy, Have a Seat, vinyl secrets — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-labubu-content'
+    elsif _handle == 'air-jordan-4' or _handle == 'jordan-4' or _handle contains 'air-jordan-4' or _handle contains 'jordan-4'
+      assign seo_heading = "Air Jordan 4 — Bred, White Cement, Travis Scott et collaborations"
+      assign seo_subheading = "Air Jordan 4 Bred, White Cement, Military Black, Travis Scott Cactus Jack, Off-White, Union LA, A Ma Maniére, PSG — authentifiées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-air-jordan-4-content'
+    elsif _handle == 'air-jordan-1-low' or _handle == 'jordan-1-low' or _handle == 'aj1-low' or _handle contains 'jordan-1-low'
+      assign seo_heading = "Air Jordan 1 Low — La silhouette iconique en version basse"
+      assign seo_subheading = "Jordan 1 Low Panda, UNC, Wolf Grey, Travis Scott Reverse Mocha, éditions femme et GS — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-air-jordan-1-low-content'
+    elsif _handle == 'nike-x-sacai' or _handle == 'nike-sacai' or _handle == 'sacai' or _handle contains 'sacai'
+      assign seo_heading = "Nike x Sacai — La sneaker hybride de Chitose Abe"
+      assign seo_subheading = "LDWaffle, VaporWaffle, Blazer, Cortez et collaborations CLOT, Fragment, JPG — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-nike-sacai-content'
+    elsif _handle == 'nike-x-nocta' or _handle == 'nike-nocta' or _handle == 'nocta'
+      assign seo_heading = "Nike x NOCTA — La ligne Drake entre performance et streetwear"
+      assign seo_subheading = "Hot Step Air Terra, Glide, Air Force 1 NOCTA et apparel technique Drake — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-nocta-content'
+    elsif _handle == 'foam-rnr' or _handle == 'yeezy-foam-rnnr' or _handle == 'yeezy-foam-runner' or _handle contains 'foam-rnr' or _handle contains 'foam-runner'
+      assign seo_heading = "Yeezy Foam Runner — Le monobloc futuriste et éco-conscient"
+      assign seo_subheading = "Foam Runner Onyx, MX, Sand, Ochre, Stone Sage, Carbon — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-foam-rnr-content'
+    elsif _handle == 'jacquemus' or _handle contains 'jacquemus'
+      assign seo_heading = "Jacquemus — Le luxe français de Simon Porte Jacquemus"
+      assign seo_subheading = "Nike x Jacquemus Air Humara & J Force 1, sacs Le Bambino, Le Chiquito et prêt-à-porter — authentifiés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-jacquemus-content'
+    elsif _handle == 'asics-double-laces' or _handle == 'double-laces' or _handle contains 'double-lace'
+      assign seo_heading = "ASICS Gel-NYC Double Laces — Rose, cloud grey & pink authentiques"
+      assign seo_subheading = "ASICS Gel-NYC double lacets Cream Rose Water, Sweet Pink, Cloud Grey — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-asics-double-laces-content'
+    elsif _handle == 'new-balance-204' or _handle == 'new-balance-204l' or _handle == 'nb-204l'
+      assign seo_heading = "New Balance 204L — Sneakers lifestyle authentiques en Suisse"
+      assign seo_subheading = "New Balance 204L Mushroom Arid Stone, Silver Metallic, Kith — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-new-balance-204-content'
+    elsif _handle == 'asics-gel-kayano-14' or _handle == 'gel-kayano-14' or _handle == 'kayano-14' or _handle contains 'kayano'
+      assign seo_heading = "ASICS Gel-Kayano 14 — La running stability devenue lifestyle Y2K"
+      assign seo_subheading = "Gel-Kayano 14 White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY — authentifiées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-asics-gel-kayano-14-content'
+    elsif _handle == 'gel-nyc' or _handle == 'asics-gel-nyc' or _handle contains 'gel-nyc'
+      assign seo_heading = "ASICS Gel-NYC — L'hybride lifestyle Gel-Nimbus 9, MC Plus V, Cumulus 16"
+      assign seo_subheading = "ASICS Gel-NYC Graphite Grey Black, Cream Rose Water, Sweet Pink, Pure Silver — authentifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-asics-gel-nyc-content'
+    elsif _handle == 'nike' or _handle contains 'nike'
+      assign seo_heading = "Nike, marque référence de la sneaker"
+      assign seo_subheading = "Nike Dunk, Air Force 1, Air Max, Mind 001 et collaborations — authentifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-nike-content'
+    elsif _handle == 'jordan' or _handle == 'air-jordan' or _handle contains 'jordan'
+      assign seo_heading = "Air Jordan — L'icône du basketball et du sneaker"
+      assign seo_subheading = "Air Jordan 1, 3, 4, 11 et collaborations Travis Scott, Off-White — authentifiés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-jordan-content'
+    elsif _handle == 'adidas' or _handle contains 'adidas'
+      assign seo_heading = "Adidas — Samba, Campus, Yeezy et les classiques aux trois bandes"
+      assign seo_subheading = "Samba, Campus, Gazelle, Forum et Yeezy authentiques livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-adidas-content'
+    elsif _handle == 'new-balance' or _handle contains 'new-balance'
+      assign seo_heading = "New Balance — L'excellence du Made in USA"
+      assign seo_subheading = "New Balance 990, 550, 2002R et 9060 — qualité premium, authenticité garantie, livraison en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-new-balance-content'
+    elsif _handle == 'asics' or _handle contains 'asics'
+      assign seo_heading = "ASICS — Gel-Kayano, Gel-NYC et l'héritage japonais du sneaker"
+      assign seo_subheading = "ASICS Gel-Kayano 14, Gel-NYC, GT-2160 et Onitsuka Tiger — authentifiés, livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-asics-content'
+    elsif _handle == 'salomon' or _handle contains 'salomon'
+      assign seo_heading = "Salomon — Du trail alpin au streetwear mondial"
+      assign seo_subheading = "Salomon XT-6, Speedcross et modèles outdoor premium — authentifiés et livrés depuis Lausanne."
+      assign brand_seo_snippet = 'collection-plp-seo-salomon-content'
+    elsif _handle == 'on-running' or _handle == 'on' or _handle contains 'on-running'
+      assign seo_heading = "On Running — La performance suisse à l'échelle mondiale"
+      assign seo_subheading = "Cloudsurfer, Cloudmonster et toute la gamme On Running — une marque suisse, une boutique lausannoise."
+      assign brand_seo_snippet = 'collection-plp-seo-on-running-content'
+    elsif _handle == 'yeezy' or _handle contains 'yeezy'
+      assign seo_heading = "Yeezy — Sélection authentique sur Resell Lausanne"
+      assign seo_subheading = "Yeezy 350, 500, Slide et Foam RNNR vérifiés et livrés en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-yeezy-content'
+    elsif _handle == 'puma' or _handle contains 'puma'
+      assign seo_heading = "Puma — Sneakers authentiques en Suisse"
+      assign seo_subheading = "Speedcat, Suede et silhouettes Puma vérifiées avant expédition."
+      assign brand_seo_snippet = 'collection-plp-seo-puma-content'
+    elsif _handle == 'golden-goose' or _handle contains 'golden-goose'
+      assign seo_heading = "Golden Goose — La sneaker de luxe italienne au fini vintage"
+      assign seo_subheading = "Super-Star, Ball Star, Mid Star et Purestar Golden Goose authentiques — homme, femme, vérifiées et livrées en Suisse."
+      assign brand_seo_snippet = 'collection-plp-seo-golden-goose-content'
+    elsif _handle == 'converse' or _handle contains 'converse'
+      assign seo_heading = "Converse — Chuck Taylor et classiques authentiques"
+      assign seo_subheading = "Converse authentiques, livraison en Suisse et en Europe."
+      assign brand_seo_snippet = 'collection-plp-seo-converse-content'
+    endif
+  endif
+
+  assign catalog_generic_seo_handles = 'toutes-nos-paires,all,nouveautes' | split: ','
+  assign allow_generic_seo = false
+  for hub_handle in catalog_generic_seo_handles
+    if _handle == hub_handle
+      assign allow_generic_seo = true
+      break
+    endif
+  endfor
+
+  if disable_seo_section == false and brand_seo_snippet == blank and use_default and seo_heading == blank and seo_body == blank and allow_generic_seo
+    if is_fr_locale
+      assign seo_heading = "Les sneakers : une sélection premium au cœur de la culture streetwear"
+      assign seo_subheading = "Sneakers authentiques, silhouettes iconiques et expérience pensée pour le marché suisse."
+    else
+      assign seo_heading = collection.title
+      assign seo_subheading = ''
+      assign seo_body = collection.description
+    endif
+  endif
+
+  comment
+    Dynamic fallback: every FR collection without a hand-written brand story still
+    gets a substantial, collection-specific on-page block (no more empty PLPs).
+  endcomment
+  assign use_dynamic_seo = false
+  if disable_seo_section == false and brand_seo_snippet == blank and use_default and seo_heading == blank and seo_subheading == blank and seo_body == blank and is_fr_locale and allow_generic_seo == false and collection.products_count > 0
+    assign use_dynamic_seo = true
+    assign seo_heading = collection.title | append: ' — authentiques en Suisse'
+    assign seo_subheading = 'Notre sélection ' | append: collection.title | append: ', vérifiée pièce par pièce et livrée en Suisse et en Europe avec certificat d’authenticité.'
+  endif
+%}
+{% if brand_seo_snippet != blank %}
+  {% capture seo_body %}{% render 'collection-plp-seo-body-router', key: brand_seo_snippet %}{% endcapture %}
+{% elsif use_default and seo_body == blank and is_fr_locale and allow_generic_seo %}
+  {% capture seo_body %}{% render 'collection-plp-seo-resell-lausanne-content' %}{% endcapture %}
+{% elsif use_dynamic_seo %}
+  {%- capture seo_body -%}
+    <p>Découvrez notre sélection {{ collection.title | escape }} chez Resell Lausanne, votre spécialiste suisse des sneakers et du streetwear authentiques{% if collection.products_count > 20 %} — plus de {{ collection.products_count }} références disponibles{% endif %}. Chaque pièce est contrôlée par notre équipe avant expédition, pour vous garantir des produits 100 % authentiques.</p>
+    <h3>{{ collection.title | escape }} : authenticité garantie</h3>
+    <p>Chaque {{ collection.title | escape }} passe par notre processus d’authentification multi-points avant d’être mise en vente. Vous recevez un certificat d’authenticité avec votre commande — zéro contrefaçon, chaque détail vérifié (matériaux, coutures, étiquettes, boîte).</p>
+    <h3>Livraison en Suisse &amp; paiement flexible</h3>
+    <p>Commandez vos {{ collection.title | escape }} en toute confiance depuis Lausanne : livraison rapide et suivie en Suisse et en Europe, paiement sécurisé (carte, TWINT, PostFinance, Apple&nbsp;Pay) et paiement en plusieurs fois ou sur facture. Une question sur une taille ou un modèle ? Notre équipe vous répond sous 24&nbsp;à&nbsp;48&nbsp;h.</p>
+    <h3>Pourquoi acheter {{ collection.title | escape }} chez Resell Lausanne</h3>
+    <p>Boutique suisse indépendante spécialisée dans la revente de sneakers et de streetwear, Resell Lausanne sélectionne les modèles les plus recherchés du marché. Chaque pièce {{ collection.title | escape }} est authentifiée, photographiée et expédiée avec soin, pour une expérience d’achat premium de bout en bout.</p>
+  {%- endcapture -%}
+{% endif %}
+{% liquid
+  assign render_section = false
+  if current_page != 1
+    assign seo_heading = blank
+    assign seo_subheading = blank
+    assign seo_body = blank
+  endif
+  if seo_heading != blank or seo_subheading != blank or seo_body != blank
+    assign render_section = true
+  endif
+%}
+
+{% if render_section %}
+  {% if seo_body != blank %}
+    <script type="module">
+      (function () {
+        var loaded = false;
+        var src = {{ 'see-more.js' | asset_url | json }};
+        function loadSeeMore() {
+          if (loaded) return;
+          loaded = true;
+          import(src);
+        }
+        document.addEventListener('pointerdown', loadSeeMore, { once: true, passive: true });
+        window.addEventListener('scroll', loadSeeMore, { once: true, passive: true });
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadSeeMore, { timeout: 8000 });
+        } else {
+          setTimeout(loadSeeMore, 4000);
+        }
+      })();
+    </script>
+  {% endif %}
+
+  <div
+    class="collection-plp-seo-readmore color-{{ section.settings.color_scheme }}"
+    style="
+      --padding-top: {{ section.settings.padding_top }}px;
+      --padding-bottom: {{ section.settings.padding_bottom }}px;
+      --margin-top: {{ section.settings.margin_top }}px;
+      --margin-bottom: {{ section.settings.margin_bottom }}px;
+    "
+  >
+    <div class="collection-plp-seo-readmore__inner page-width collection-plp-seo-readmore__inner--premium">
+      {% if seo_heading != blank %}
+        <h2 class="collection-plp-seo-readmore__title">{{ seo_heading | escape }}</h2>
+      {% endif %}
+
+      {% if seo_subheading != blank %}
+        {% if seo_heading != blank %}
+          <h3 class="collection-plp-seo-readmore__subtitle">{{ seo_subheading | escape }}</h3>
+        {% else %}
+          <h2 class="collection-plp-seo-readmore__subtitle">{{ seo_subheading | escape }}</h2>
+        {% endif %}
+      {% endif %}
+
+      {% if seo_body != blank %}
+        <see-more-component
+          class="collection-plp-seo-readmore__see-more"
+          data-read-more-length="{{ section.settings.collapsed_height }}"
+          style="--plp-seo-collapsed-h: {{ section.settings.collapsed_height }}px;"
+        >
+          <div class="collection-plp-seo-readmore__body rte see-more__content" data-ref="see-more-content">
+            {{ seo_body }}
+          </div>
+          <button
+            class="collection-plp-seo-readmore__toggle see-more__toggle"
+            type="button"
+            data-ref="see-more-toggle"
+            aria-expanded="false"
+            aria-controls="collection-plp-seo-body"
+          >
+            <span
+              class="see-more__toggle-text collection-plp-seo-readmore__toggle-text"
+              data-more-text="{{ 'blocks.read_more' | t }}"
+              data-less-text="{{ 'blocks.read_less' | t }}"
+              data-ref="see-more-toggle-text"
+            >
+              {{- 'blocks.read_more' | t -}}
+            </span>
+          </button>
+        </see-more-component>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Collection bottom story",
+  "tag": "section",
+  "class": "section-collection-plp-seo-readmore",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "premium block: centered title, uppercase subtitle, body + Voir plus. Enable “Resell Lausanne default story” to show the long SEO copy from the theme (or turn off and use the fields below)."
+    },
+    {
+      "type": "checkbox",
+      "id": "use_resell_default_copy",
+      "label": "Use Resell Lausanne default story (long SEO text)",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main heading",
+      "default": "Collection story title (used when default story is off)"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Subtitle (used when default story is off)"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p></p>"
+    },
+    {
+      "type": "range",
+      "id": "collapsed_height",
+      "label": "Collapsed height (px)",
+      "min": 120,
+      "max": 640,
+      "step": 10,
+      "default": 360,
+      "info": "Visible body height before “Voir plus” (full HTML stays in page for SEO)."
+    },
+    {
+      "type": "header",
+      "content": "t:paddings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:padding_top",
+      "default": 48,
+      "min": 0,
+      "max": 120,
+      "step": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:padding_bottom",
+      "default": 56,
+      "min": 0,
+      "max": 120,
+      "step": 4
+    },
+    {
+      "type": "header",
+      "content": "t:margins"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "t:margin_top",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 4
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "t:margin_bottom",
+      "default": 0,
+      "min": 0,
+      "max": 100,
+      "step": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection bottom story"
+    }
+  ]
+}
+{% endschema %}

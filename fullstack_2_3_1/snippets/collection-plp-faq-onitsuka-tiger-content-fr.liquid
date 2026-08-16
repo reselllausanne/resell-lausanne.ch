@@ -1,0 +1,42 @@
+{%- liquid
+  capture faq_returns_url
+    render 'rl-localized-path', path: '/pages/faq?category=echanges-et-retours'
+  endcapture
+  assign faq_returns_url = faq_returns_url | strip
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les Onitsuka Tiger vendues sur Resell Lausanne sont-elles authentiques ?</summary>
+  <div class="rte">
+    <p>Oui. Chaque paire Onitsuka Tiger (Mexico 66, Tokuten, Serrano, California 78, Mexico 66 SD) est vérifiée par notre équipe et livrée avec certificat d'authenticité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelle taille choisir pour une Onitsuka Tiger Mexico 66 ?</summary>
+  <div class="rte">
+    <p>La Mexico 66 taille normalement à légèrement grand. Si vous chaussez en demi-pointure, prenez la demi-pointure inférieure. Sinon, prenez votre taille EU habituelle.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Différence entre Mexico 66 et Mexico 66 SD ?</summary>
+  <div class="rte">
+    <p>La Mexico 66 utilise un cuir synthétique standard. La Mexico 66 SD (Super Deluxe) utilise des matériaux premium : cuir nubuck, suède japonais, doublure cuir et finitions plus soignées.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelles collaborations Onitsuka Tiger avez-vous en stock ?</summary>
+  <div class="rte">
+    <p>Nous sourçons régulièrement les collaborations Onitsuka Tiger × Naked Copenhagen, Mihara Yasuhiro, Andrea Pompilio, Sanrio (Hello Kitty) et Cecilie Bahnsen.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel est le délai de livraison pour une commande Onitsuka Tiger ?</summary>
+  <div class="rte">
+    <p>Livraison standard 5 à 10 jours ouvrables en Suisse et en Europe, ou 2 à 5 jours ouvrables en express sur produits éligibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Puis-je retourner une paire Onitsuka Tiger ?</summary>
+  <div class="rte">
+    <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
+  </div>
+</details>

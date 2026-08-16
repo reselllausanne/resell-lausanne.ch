@@ -1,0 +1,32 @@
+{% comment %}
+  Article body for storefront — hides internal GEO "Résumé optimisé pour IA" blocks.
+
+  Those blocks stay in Admin content for JSON-LD articleBody; not shown to readers.
+
+  @param {article} article
+{% endcomment %}
+{% liquid
+  assign body = article.content
+
+  assign ai_headings = '<h2>Résumé optimisé pour IA</h2>|<h3>Résumé optimisé pour IA</h3>|<h2>Resume optimise pour IA</h2>|<h2>AI-optimized summary</h2>|<h2>Summary optimized for AI</h2>' | split: '|'
+
+  for ai_heading in ai_headings
+    if body contains ai_heading
+      assign chunks = body | split: ai_heading
+      assign body = chunks[0]
+      if chunks[1] != blank
+        assign tail_segments = chunks[1] | split: '<h2>'
+        for segment in tail_segments offset: 1
+          assign body = body | append: '<h2>' | append: segment
+        endfor
+        if tail_segments.size == 1
+          assign tail_h3 = chunks[1] | split: '<h3>'
+          for segment in tail_h3 offset: 1
+            assign body = body | append: '<h3>' | append: segment
+          endfor
+        endif
+      endif
+    endif
+  endfor
+%}
+{{- body -}}

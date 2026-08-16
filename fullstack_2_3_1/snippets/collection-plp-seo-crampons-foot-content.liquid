@@ -1,0 +1,65 @@
+{% liquid
+  assign url_catalog = collections.all.url | default: '/collections/all'
+  capture url_guide
+    render 'rl-resolved-page-url', handle: 'guide-des-tailles'
+  endcapture
+  assign url_guide = url_guide | strip
+  capture url_livraison
+    render 'rl-resolved-page-url', handle: 'livraison'
+  endcapture
+  assign url_livraison = url_livraison | strip
+  capture url_faq
+    render 'rl-resolved-page-url', handle: 'faq'
+  endcapture
+  assign url_faq = url_faq | strip
+%}
+<p>
+  Trouver les bons crampons de foot en Suisse n'est pas toujours simple : il faut la bonne paire, pour le bon terrain, dans la bonne taille, sans payer trop cher. Chez Resell Lausanne, nous proposons une sélection ciblée de crampons authentiques — Nike Mercurial, Tiempo, Phantom, Adidas Predator, F50, Copa — ainsi que des éditions limitées et collaborations rarement disponibles en boutique classique.
+</p>
+<p>
+  Notre approche est différente des grandes enseignes : nous ne stockons pas tout, nous stockons ce qui compte. Modèles signature (Mbappé, Bellingham), éditions Cryoshot, séries en collab Nike x artistes, et silhouettes recherchées par les passionnés. Chaque paire est authentifiée et expédiée rapidement dans toute la Suisse.
+</p>
+
+<h3>Nike Mercurial, Tiempo, Phantom — La gamme football Nike</h3>
+<p>
+  La gamme Nike couvre tous les profils : Mercurial pour la vitesse, Tiempo pour le toucher cuir, Phantom pour la précision et le contrôle. Nous proposons les modèles de saison comme les éditions limitées (Cryoshot, signature joueurs, collaborations artistes).
+</p>
+
+<h3>Adidas Predator, F50, Copa — Les classiques aux trois bandes</h3>
+<p>
+  Adidas reste une référence du football mondial avec la Predator (puissance et frappe), la F50 (légèreté et vitesse) et la Copa (toucher cuir traditionnel). Nos crampons Adidas sont authentiques et adaptés à chaque type de terrain.
+</p>
+
+<h3>Comment choisir ses crampons selon le terrain</h3>
+<p>
+  Le choix de la semelle est essentiel : FG (Firm Ground) pour gazon sec, SG (Soft Ground) pour sol gras, AG (Artificial Ground) pour synthétique long, TF (Turf) pour turf court ou stabilisé. Choisir la bonne semelle évite les blessures et améliore les performances.
+</p>
+
+<h3>Acheter ses crampons de foot en Suisse — Authentique, livré rapidement</h3>
+<p>
+  Toutes les commandes bénéficient d'une livraison rapide dans toute la Suisse (Romandie et Alémanique), de plusieurs solutions de paiement (Twint, carte, paiement en plusieurs fois) et d'un service client réactif. Les retours sont gérés simplement, et nous proposons un suivi humain de chaque commande.
+</p>
+<p>
+  Besoin d'aide avant achat ? Consultez notre
+  <a href="{{ url_guide }}">guide des tailles</a>,
+  les détails <a href="{{ url_livraison }}">livraison</a>,
+  la <a href="{{ url_faq }}">FAQ</a>
+  et notre <a href="{{ url_catalog }}">catalogue complet</a>.
+</p>
+
+<h3>Questions fréquentes — Crampons de foot</h3>
+<p><strong>Quels crampons choisir selon le terrain (FG, SG, AG, TF) ?</strong><br>
+  FG = sol sec, SG = sol gras et humide (crampons vissés), AG = synthétique long, TF = turf court ou stabilisé. Choisissez selon la majorité de vos matchs.
+</p>
+<p><strong>Quelle pointure prendre pour des crampons ?</strong><br>
+  Les crampons taillent souvent serré. Prenez votre pointure EU habituelle, voire +0.5 si vous portez des chaussettes épaisses ou si vous avez le pied large.
+</p>
+<p><strong>Différence entre Nike Mercurial, Tiempo, Phantom et Predator ?</strong><br>
+  Mercurial = vitesse, Tiempo = toucher cuir, Phantom = précision et contrôle, Predator = puissance et frappe. Le choix dépend de votre poste et de votre style de jeu.
+</p>
+<p><strong>Crampons moulés ou vissés ?</strong><br>
+  Moulés = polyvalents pour gazon sec et synthétique. Vissés = sol gras et profond, pour une meilleure accroche. Beaucoup de joueurs amateurs en Suisse n'ont besoin que de moulés (FG ou AG).
+</p>
+<p><strong>Avez-vous des crampons en édition limitée ou en collaboration ?</strong><br>
+  Oui, nous sourçons régulièrement des éditions limitées Nike (Cryoshot, signature joueurs, collabs artistes) et des éditions spéciales Adidas. Suivez la collection pour être tenu informé.
+</p>

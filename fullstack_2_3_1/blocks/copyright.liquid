@@ -12,35 +12,6 @@
   </span>
 </div>
 
-{% stylesheet %}
-  .footer-copyright {
-    display: flex;
-    align-items: center;
-    justify-content: var(--alignment-mobile);
-  }
-
-  @media (width > 750px) {
-    .footer-copyright {
-      justify-content: var(--alignment);
-    }
-  }
-
-  .footer-copyright__text,
-  .footer-copyright__text > a {
-    color: var(--color-foreground);
-    text-decoration: none;
-    font-size: var(--font-body--size-small);
-  }
-
-  .footer-copyright__text > a {
-    transition: var(--animation-link-hover);
-
-    &:hover {
-      opacity: var(--opacity-link-hover);
-    }
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:footer_copyright",

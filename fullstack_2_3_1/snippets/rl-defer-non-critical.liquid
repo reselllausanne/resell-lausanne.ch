@@ -1,0 +1,332 @@
+{%- comment -%}
+  Hold non-critical third-party assets off the LCP path.
+  Wishlist King: fully blocked (activate_wishlist off — app perf cost, no UI).
+  Non-acquisition third-party scripts: deferred post-load. Shopify Web Pixels + GTM never touched.
+
+  @param template_name {string} - template.name
+  @param template_suffix {string} - template.suffix
+{%- endcomment -%}
+{%- liquid
+  assign rl_wk_mode = 'none'
+-%}
+<script>
+  (function () {
+    if (window.__rlDeferInit) return;
+    window.__rlDeferInit = true;
+
+    var wkQueue = { css: [], js: [] };
+    var pixelQueue = { js: [] };
+    var wkLoaded = false;
+    var pixelInjecting = false;
+    var wkMode = {{ rl_wk_mode | json }};
+
+    function isWk(url) {
+      return /swish-wishlist-king|appmate\.io|jsdelivr\.net\/npm\/@appmate\/wishlist-king/i.test(url || '');
+    }
+
+    function isShopifyTracking(url) {
+      if (!url) return false;
+      return /\/cdn\/wpm\/|trekkie\.|shop_events_listener|shopifycloud\/storefront\/assets\/shop_events_listener/i.test(url || '');
+    }
+
+    function isPixel(url) {
+      if (!url || isShopifyTracking(url)) return false;
+      return /invitejs\.trustpilot|widget\.trustpilot|ecommplugins.*trustpilot|cdn\.judge\.me|static\.klaviyo\.com/i.test(url);
+    }
+
+    function wkScriptAllowed(url) {
+      if (!url || !isWk(url)) return false;
+      if (/block-wishlist-page\.js/i.test(url)) return wkMode === 'page';
+      if (/block-wishlist-button-product\.js/i.test(url)) return wkMode === 'product' || wkMode === 'page';
+      if (/block-wishlist-button-collection\.js/i.test(url)) {
+        return wkMode === 'collection' || wkMode === 'search' || wkMode === 'product' || wkMode === 'page';
+      }
+      if (/block-app-settings\.js|block-code-access\.js/i.test(url)) {
+        return wkMode !== 'none';
+      }
+      return wkMode !== 'none';
+    }
+
+    function wkCssAllowed(url) {
+      if (!url || !isWk(url)) return false;
+      if (/component-wishlist-page-bundle/i.test(url)) return wkMode === 'page';
+      if (/component-wishlist-button-product/i.test(url)) {
+        return wkMode === 'product' || wkMode === 'page';
+      }
+      if (/component-wishlist-button-collection/i.test(url)) {
+        return wkMode === 'collection' || wkMode === 'search' || wkMode === 'product' || wkMode === 'page';
+      }
+      if (/app-base\.css/i.test(url)) return wkMode !== 'none';
+      if (/appmate\.io/i.test(url)) return wkMode !== 'none';
+      return wkMode !== 'none';
+    }
+
+    function neutralizeScript(el) {
+      if (!el) return;
+      el.type = 'text/plain';
+      el.dataset.rlWkBlocked = '1';
+    }
+
+    function queueCss(url, el) {
+      if (!wkCssAllowed(url)) {
+        if (el) el.remove();
+        return;
+      }
+      if (wkQueue.css.indexOf(url) !== -1) return;
+      wkQueue.css.push(url);
+      if (el) {
+        el.dataset.rlWkQueued = '1';
+        el.remove();
+      }
+    }
+
+    function queueWkJs(url, el) {
+      if (!wkScriptAllowed(url)) {
+        neutralizeScript(el);
+        return;
+      }
+      if (wkQueue.js.indexOf(url) !== -1) return;
+      wkQueue.js.push(url);
+      if (el) {
+        el.type = 'text/plain';
+        el.dataset.rlWkQueued = '1';
+      }
+    }
+
+    function queuePixelJs(url, el) {
+      if (!url || pixelQueue.js.indexOf(url) !== -1) return;
+      pixelQueue.js.push(url);
+      if (el) {
+        el.type = 'text/plain';
+        el.dataset.rlPixelQueued = '1';
+      }
+      schedulePixels();
+    }
+
+    function isPerfKit(url) {
+      return /shopifycloud\/perf-kit|perf-kit[-.]?\d/i.test(url || '');
+    }
+
+    function interceptScript(url, el) {
+      if (pixelInjecting) return false;
+      if (isPerfKit(url)) {
+        if (el) {
+          el.type = 'text/plain';
+          el.dataset.rlPerfKitBlocked = '1';
+        }
+        return true;
+      }
+      if (isWk(url)) {
+        queueWkJs(url, el);
+        return true;
+      }
+      if (isPixel(url)) {
+        queuePixelJs(url, el);
+        return true;
+      }
+      return false;
+    }
+
+    function hookSetter(Ctor, prop, onValue) {
+      var desc = Object.getOwnPropertyDescriptor(Ctor.prototype, prop);
+      if (!desc || !desc.set) return;
+      var nativeSet = desc.set;
+      Object.defineProperty(Ctor.prototype, prop, {
+        configurable: true,
+        get: desc.get,
+        set: function (value) {
+          if (onValue(value, this)) return;
+          nativeSet.call(this, value);
+        },
+      });
+    }
+
+    var nativeSetAttribute = Element.prototype.setAttribute;
+    Element.prototype.setAttribute = function (name, value) {
+      var tag = this.tagName;
+      if (tag === 'SCRIPT' && name === 'src' && interceptScript(value, this)) return;
+      if (tag === 'LINK' && name === 'href' && isWk(value)) {
+        queueCss(value, this);
+        return;
+      }
+      return nativeSetAttribute.call(this, name, value);
+    };
+
+    hookSetter(HTMLScriptElement, 'src', function (value, el) {
+      return interceptScript(value, el);
+    });
+
+    hookSetter(HTMLLinkElement, 'href', function (value, el) {
+      if (!isWk(value)) return false;
+      var rel = (el.getAttribute('rel') || '').toLowerCase();
+      if (rel.indexOf('stylesheet') === -1 && rel.indexOf('preload') === -1) return false;
+      queueCss(value, el);
+      return true;
+    });
+
+    function injectCss(href) {
+      if (!wkCssAllowed(href)) return;
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    }
+
+    function injectJs(src) {
+      if (!wkScriptAllowed(src)) return Promise.resolve();
+      return new Promise(function (resolve) {
+        var script = document.createElement('script');
+        script.type = 'module';
+        script.src = src;
+        script.async = true;
+        script.onload = resolve;
+        script.onerror = resolve;
+        document.body.appendChild(script);
+      });
+    }
+
+    function injectPixelJs(src) {
+      if (!src || isShopifyTracking(src)) return;
+      var script = document.createElement('script');
+      script.async = true;
+      pixelInjecting = true;
+      try {
+        script.src = src;
+      } finally {
+        pixelInjecting = false;
+      }
+      document.head.appendChild(script);
+    }
+
+    function sortWkScripts(scripts) {
+      var order = [
+        /block-code-access\.js/i,
+        /block-app-settings\.js/i,
+        /block-wishlist-button-collection\.js/i,
+        /block-wishlist-button-product\.js/i,
+        /block-wishlist-page\.js/i,
+      ];
+      return scripts.slice().sort(function (a, b) {
+        var ai = order.findIndex(function (re) {
+          return re.test(a);
+        });
+        var bi = order.findIndex(function (re) {
+          return re.test(b);
+        });
+        return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+      });
+    }
+
+    function flushWk() {
+      if (wkLoaded || wkMode === 'none') return Promise.resolve();
+      wkLoaded = true;
+
+      var css = wkQueue.css.filter(wkCssAllowed);
+      var scripts = sortWkScripts(wkQueue.js.filter(wkScriptAllowed));
+      wkQueue.css.length = 0;
+      wkQueue.js.length = 0;
+
+      css.forEach(injectCss);
+
+      document
+        .querySelectorAll('link[data-rl-wk-queued], script[data-rl-wk-queued], script[data-rl-wk-blocked]')
+        .forEach(function (node) {
+          node.remove();
+        });
+
+      return scripts.reduce(function (chain, src) {
+        return chain.then(function () {
+          return injectJs(src);
+        });
+      }, Promise.resolve());
+    }
+
+    function flushPixels() {
+      var scripts = pixelQueue.js.slice();
+      pixelQueue.js.length = 0;
+
+      document.querySelectorAll('script[data-rl-pixel-queued]').forEach(function (node) {
+        node.remove();
+      });
+
+      scripts.forEach(injectPixelJs);
+      pixelsScheduled = false;
+    }
+
+    function onWkIntent(event) {
+      if (wkMode === 'none') return;
+      var target = event.target;
+      if (!(target instanceof Element)) return;
+      if (
+        target.closest(
+          '[data-rl-action="wishlist"], [data-add-to-wishlist], .swish-add-to-wishlist, wishlist-page, wishlist-header-icon, [href*="liste-de-souhaits"], .wk-button, .swish-wishlist-button, wishlist-button-collection, wishlist-button-product'
+        )
+      ) {
+        flushWk();
+      }
+    }
+
+    document.addEventListener('pointerdown', onWkIntent, true);
+    document.addEventListener('keydown', onWkIntent, true);
+
+    function scheduleWkIdle() {
+      if (wkMode === 'none') return;
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(function () {
+          flushWk();
+        }, { timeout: 12000 });
+      } else {
+        setTimeout(flushWk, 8000);
+      }
+    }
+
+    function scheduleWkEager() {
+      if (wkMode !== 'page') {
+        scheduleWkIdle();
+        return;
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener(
+          'DOMContentLoaded',
+          function () {
+            setTimeout(flushWk, 150);
+          },
+          { once: true }
+        );
+      } else {
+        setTimeout(flushWk, 150);
+      }
+    }
+
+    var pixelsScheduled = false;
+
+    function schedulePixels() {
+      if (pixelsScheduled) return;
+      pixelsScheduled = true;
+
+      function run() {
+        flushPixels();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', run, { once: true });
+      } else {
+        setTimeout(run, 0);
+      }
+    }
+
+    if (wkMode === 'page') {
+      scheduleWkEager();
+    } else if (wkMode !== 'none') {
+      if (document.readyState === 'complete') {
+        scheduleWkIdle();
+      } else {
+        window.addEventListener('load', scheduleWkIdle, { once: true });
+      }
+    }
+
+    window.__rlWkFlush = flushWk;
+    window.__rlWkMode = wkMode;
+    window.__rlPixelFlush = flushPixels;
+  })();
+</script>

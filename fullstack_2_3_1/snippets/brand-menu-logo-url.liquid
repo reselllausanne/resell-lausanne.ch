@@ -1,0 +1,124 @@
+{% comment %}
+  Brand logo URL for menu / PLP chips.
+  1) collection metafield custom.menu_brand_image (merchant upload — preferred)
+  2) Theme assets brand-logo-{handle}.* (MIT Simple Icons + menu marks)
+  3) Empty → text initials in menu-brand-image / text-only chip
+
+  @param handle {string} collection handle
+{% endcomment %}
+{% liquid
+  assign brand_handle = handle | strip | downcase
+  assign logo_url = ''
+
+  if brand_handle contains 'basketball-'
+    assign brand_handle = brand_handle | remove: 'basketball-'
+  endif
+
+  if brand_handle contains '-performance-basketball-bags'
+    assign brand_handle = brand_handle | remove: '-performance-basketball-bags'
+  endif
+
+  assign brand_col = collections[brand_handle]
+  if brand_col != blank and brand_col.metafields.custom.menu_brand_image != blank
+    assign menu_brand_image = brand_col.metafields.custom.menu_brand_image.value | default: brand_col.metafields.custom.menu_brand_image
+    if menu_brand_image != blank
+      assign logo_url = menu_brand_image | image_url: width: 180
+    endif
+  endif
+
+  if logo_url == blank
+    case brand_handle
+      when 'nike'
+        assign logo_url = 'brand-logo-nike.svg' | asset_url
+      when 'adidas'
+        assign logo_url = 'brand-logo-adidas.svg' | asset_url
+      when 'new-balance'
+        assign logo_url = 'brand-logo-new-balance.svg' | asset_url
+      when 'puma'
+        assign logo_url = 'brand-logo-puma.svg' | asset_url
+      when 'air-jordan'
+        assign logo_url = 'brand-logo-air-jordan.svg' | asset_url
+      when 'asics'
+        assign logo_url = 'brand-logo-asics.png' | asset_url
+      when 'yeezy'
+        assign logo_url = 'brand-logo-yeezy.png' | asset_url
+      when 'maison-mihara'
+        assign logo_url = 'brand-logo-maison-mihara.png' | asset_url
+      when 'crocs'
+        assign logo_url = 'brand-logo-crocs.png' | asset_url
+      when 'mizuno'
+        assign logo_url = 'brand-logo-mizuno.png' | asset_url
+      when 'on'
+        assign logo_url = 'brand-logo-on.svg' | asset_url
+      when 'salomon'
+        assign logo_url = 'brand-logo-salomon.svg' | asset_url
+      when 'converse'
+        assign logo_url = 'brand-logo-converse.svg' | asset_url
+      when 'alexander-mcqueen'
+        assign logo_url = 'brand-logo-alexander-mcqueen.svg' | asset_url
+      when 'hoka'
+        assign logo_url = 'brand-logo-hoka.svg' | asset_url
+      when 'saucony'
+        assign logo_url = 'brand-logo-saucony.svg' | asset_url
+      when 'under-armour'
+        assign logo_url = 'brand-logo-under-armour.svg' | asset_url
+      when 'reebok'
+        assign logo_url = 'brand-logo-reebok.svg' | asset_url
+      when 'anta'
+        assign logo_url = 'brand-logo-anta.svg' | asset_url
+      when 'li-ning'
+        assign logo_url = 'brand-logo-li-ning.svg' | asset_url
+      when '361-degrees'
+        assign logo_url = 'brand-logo-361-degrees.svg' | asset_url
+      when 'rigorer'
+        assign logo_url = 'brand-logo-rigorer.svg' | asset_url
+      when 'ugg'
+        assign logo_url = 'brand-logo-ugg.svg' | asset_url
+      when 'clarks'
+        assign logo_url = 'brand-logo-clarks.svg' | asset_url
+      when 'birkenstock'
+        assign logo_url = 'brand-logo-birkenstock.svg' | asset_url
+      when 'dr-martens'
+        assign logo_url = 'brand-logo-dr-martens.svg' | asset_url
+      when 'timberland'
+        assign logo_url = 'brand-logo-timberland.svg' | asset_url
+      when 'the-north-face'
+        assign logo_url = 'brand-logo-the-north-face.svg' | asset_url
+      when 'stone-island'
+        assign logo_url = 'brand-logo-stone-island.svg' | asset_url
+      when 'supreme'
+        assign logo_url = 'brand-logo-supreme.svg' | asset_url
+      when 'bape'
+        assign logo_url = 'brand-logo-bape.svg' | asset_url
+      when 'carhartt'
+        assign logo_url = 'brand-logo-carhartt.svg' | asset_url
+      when 'off-white'
+        assign logo_url = 'brand-logo-off-white.svg' | asset_url
+      when 'jacquemus'
+        assign logo_url = 'brand-logo-jacquemus.svg' | asset_url
+      when 'fear-of-god-essentials'
+        assign logo_url = 'brand-logo-fear-of-god-essentials.svg' | asset_url
+      when 'sp5der'
+        assign logo_url = 'brand-logo-sp5der.svg' | asset_url
+      when 'denim-tears'
+        assign logo_url = 'brand-logo-denim-tears.svg' | asset_url
+      when 'vetements'
+        assign logo_url = 'brand-logo-vetements.svg' | asset_url
+      when 'vetement-travis'
+        assign logo_url = 'brand-logo-vetement-travis.svg' | asset_url
+      when 'gallery-dept'
+        assign logo_url = 'brand-logo-gallery-dept.svg' | asset_url
+      when 'hellstar'
+        assign logo_url = 'brand-logo-hellstar.svg' | asset_url
+      when 'ami-paris'
+        assign logo_url = 'brand-logo-ami-paris.svg' | asset_url
+      when 'aime-leon-dore'
+        assign logo_url = 'brand-logo-aime-leon-dore.svg' | asset_url
+      when 'chrome-hearts'
+        assign logo_url = 'brand-logo-chrome-hearts.svg' | asset_url
+      when 'casablanca'
+        assign logo_url = 'brand-logo-casablanca.svg' | asset_url
+    endcase
+  endif
+%}
+{{- logo_url -}}

@@ -1,0 +1,50 @@
+{% doc %}
+  Renders a single thumbnail for drawer menu rows when the link resolves to an image.
+
+  Collection links: prefers dedicated menu/brand images (metafields), then theme brand logos, then collection featured image, then first product image.
+
+  @param {link} link - Navigation link object
+  @param {string} [alt] - Alt text (defaults to link.title)
+{% enddoc %}
+{% liquid
+  assign thumb = blank
+  assign alt_text = alt | default: link.title
+  assign collection_handle = ''
+
+  if link.type == 'collection_link' and link.object != blank
+    assign c = link.object
+    assign collection_handle = c.handle
+    if c.metafields.custom.menu_brand_image != blank and c.metafields.custom.menu_brand_image.value != blank
+      assign thumb = c.metafields.custom.menu_brand_image.value
+    elsif c.metafields.custom.brand_logo != blank and c.metafields.custom.brand_logo.value != blank
+      assign thumb = c.metafields.custom.brand_logo.value
+    elsif c.featured_image != blank
+      assign thumb = c.featured_image
+    else
+      assign col_for_products = collections[collection_handle]
+      if col_for_products != blank and col_for_products.products.size > 0 and col_for_products.products.first.featured_image != blank
+        assign thumb = col_for_products.products.first.featured_image
+      endif
+    endif
+  elsif link.type == 'product_link' and link.object != blank and link.object.featured_image != blank
+    assign thumb = link.object.featured_image
+  elsif link.type == 'article_link' and link.object != blank and link.object.image != blank
+    assign thumb = link.object.image
+  endif
+
+  assign use_brand_asset = false
+  if collection_handle != blank
+    capture brand_logo_src
+      render 'brand-menu-logo-url', handle: collection_handle
+    endcapture
+    assign brand_logo_src = brand_logo_src | strip
+    if brand_logo_src != blank and brand_logo_src contains '/assets/'
+      assign use_brand_asset = true
+    endif
+  endif
+%}
+{% if use_brand_asset %}
+  {% render 'menu-brand-image', handle: collection_handle, alt: alt_text %}
+{% elsif thumb != blank %}
+  {% render 'drawer-menu-thumb-img', image: thumb, alt: alt_text %}
+{% endif %}

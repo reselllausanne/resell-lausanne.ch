@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
 
 {% comment %}
   TODO: Shop-level facet whitelist contract.
@@ -12,14 +13,364 @@
 {% endcomment %}
 
 {%- liquid
-  assign og_title = page_title | default: shop.name
+  assign seo_page_title = page_title
+  assign seo_page_description = page_description
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+
+  if request.page_type == 'index'
+    assign seo_page_description = seo_page_description | default: 'Resell Lausanne — spécialiste suisse des sneakers et streetwear authentiques. Plus de 20 000 références, livraison en Suisse et en Europe, authenticité garantie.'
+  endif
+
+  if request.page_type == 'blog'
+    assign seo_page_title = 'Resell Journal — Guides sneakers & streetwear en Suisse'
+    assign seo_page_description = 'Guides d\'achat, comparatifs, authenticité et conseils tailles pour sneakers et streetwear en Suisse. Rédigé par l\'équipe Resell Lausanne.'
+    if locale_base == 'de'
+      assign seo_page_title = 'Resell Journal — Sneaker- & Streetwear-Guides Schweiz'
+      assign seo_page_description = 'Kaufberatung, Vergleiche, Authentizität und Größentipps für Sneakers und Streetwear in der Schweiz. Von Resell Lausanne.'
+    elsif locale_base == 'en'
+      assign seo_page_title = 'Resell Journal — Sneaker & streetwear guides Switzerland'
+      assign seo_page_description = 'Buying guides, comparisons, authenticity and sizing advice for sneakers and streetwear in Switzerland. By the Resell Lausanne team.'
+    endif
+  endif
+
+  if request.page_type == 'article'
+    assign _bts_handle = article.handle | downcase
+    case _bts_handle
+      when 'chaussures-sneakers-rentree-2026'
+        if locale_base == 'de'
+          assign seo_page_title = 'Sneakers für die Schulanfang 2026 — Guide Resell Lausanne'
+          assign seo_page_description = 'Welche Sneakers für den Schulanfang 2026? Resell Lausanne Guides für Teenager und Kinder — Trends, Komfort, Grössen und praktische Tipps für die Schweiz.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Back to School sneakers 2026 — Resell Lausanne guide'
+          assign seo_page_description = 'Which sneakers for back to school 2026? Resell Lausanne guides for teens and kids — trends, comfort, sizing and practical tips for Switzerland.'
+        else
+          assign seo_page_title = 'Quelles sneakers choisir pour la rentrée 2026 ?'
+          assign seo_page_description = 'Quelles sneakers choisir pour la rentrée 2026 ? Les guides Resell Lausanne pour ados et enfants : tendances, confort, pointures et conseils pratiques en Suisse.'
+        endif
+      when 'sneakers-rentree-2026-ado-fille'
+        if locale_base == 'de'
+          assign seo_page_title = 'Sneakers Schulanfang 2026 Teen Mädchen — Resell Lausanne'
+          assign seo_page_description = 'Die besten Sneakers für Teenager-Mädchen 2026: Spezial, Samba, ASICS, P-6000, New Balance, Jordan 4. Komfort, Stil und Grössentipps für die Schweiz.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Back to school sneakers 2026 teen girls — Resell Lausanne'
+          assign seo_page_description = 'Best sneakers for teen girls in 2026: Spezial, Samba, ASICS, P-6000, New Balance, Jordan 4. Comfort, style and sizing tips for Switzerland.'
+        else
+          assign seo_page_title = 'Sneakers rentrée 2026 ado fille — Guide Resell Lausanne'
+          assign seo_page_description = 'Les meilleures sneakers pour une ado fille en 2026 : Spezial, Samba, ASICS, P-6000, New Balance, Jordan 4. Confort, style et conseils pointures en Suisse.'
+        endif
+      when 'sneakers-rentree-2026-ado-garcon'
+        if locale_base == 'de'
+          assign seo_page_title = 'Sneakers Schulanfang 2026 Teen Junge — Resell Lausanne'
+          assign seo_page_description = 'Sneakers für Teenager-Jungen 2026: GEL-NYC, P-6000, Air Force 1, Jordan 4, 9060, Campus 00s. Alltag, Komfort und Grössenratgeber Schweiz.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Back to school sneakers 2026 teen boys — Resell Lausanne'
+          assign seo_page_description = 'Sneakers for teen boys in 2026: GEL-NYC, P-6000, Air Force 1, Jordan 4, 9060, Campus 00s. Everyday wear, comfort and sizing for Switzerland.'
+        else
+          assign seo_page_title = 'Sneakers rentrée 2026 ado garçon — Guide Resell Lausanne'
+          assign seo_page_description = 'Sneakers pour ado garçon en 2026 : GEL-NYC, P-6000, Air Force 1, Jordan 4, 9060, Campus 00s. Quotidien, confort et pointures en Suisse.'
+        endif
+      when 'chaussures-rentree-2026-fille'
+        if locale_base == 'de'
+          assign seo_page_title = 'Schulschuhe Sneakers 2026 Mädchen — Resell Lausanne'
+          assign seo_page_description = 'Praktische Sneakers für Mädchen 2026: Air Force 1 GS, P-6000, Samba, Campus, Jordan 1 Mid, NB 530. Komfort, Autonomie und Grössen für die Schweiz.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Back to school sneakers 2026 girls — Resell Lausanne'
+          assign seo_page_description = 'Practical sneakers for girls in 2026: Air Force 1 GS, P-6000, Samba, Campus, Jordan 1 Mid, NB 530. Comfort, independence and sizing in Switzerland.'
+        else
+          assign seo_page_title = 'Chaussures rentrée 2026 fille — Guide Resell Lausanne'
+          assign seo_page_description = 'Sneakers pratiques pour une fille en 2026 : Air Force 1 GS, P-6000, Samba, Campus, Jordan 1 Mid, NB 530. Confort, autonomie et pointures en Suisse.'
+        endif
+      when 'chaussures-rentree-2026-garcon'
+        if locale_base == 'de'
+          assign seo_page_title = 'Schulschuhe Sneakers 2026 Junge — Resell Lausanne'
+          assign seo_page_description = 'Sneakers für Jungen 2026: Air Force 1 GS, P-6000, Jordan 4 GS, Jordan 1 Low, Campus, GEL-NYC GS. Halt, Alltag und Grössenratgeber Schweiz.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Back to school sneakers 2026 boys — Resell Lausanne'
+          assign seo_page_description = 'Sneakers for boys in 2026: Air Force 1 GS, P-6000, Jordan 4 GS, Jordan 1 Low, Campus, GEL-NYC GS. Support, daily wear and sizing in Switzerland.'
+        else
+          assign seo_page_title = 'Chaussures rentrée 2026 garçon — Guide Resell Lausanne'
+          assign seo_page_description = 'Sneakers pour garçon en 2026 : Air Force 1 GS, P-6000, Jordan 4 GS, Jordan 1 Low, Campus, GEL-NYC GS. Maintien, quotidien et pointures en Suisse.'
+        endif
+    endcase
+  endif
+
+  if request.page_type == 'page'
+    case page.handle
+      when 'notre-concept'
+        assign seo_page_title = 'Notre concept | Resell Lausanne'
+        assign seo_page_description = 'Découvrez le concept de Resell Lausanne, boutique suisse spécialisée dans les sneakers, streetwear et collectibles authentiques.'
+        if locale_base == 'de'
+          assign seo_page_title = 'Unser Konzept | Resell Lausanne'
+          assign seo_page_description = 'Entdecken Sie das Konzept von Resell Lausanne — Schweizer Shop für authentische Sneakers, Streetwear und Collectibles.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Our concept | Resell Lausanne'
+          assign seo_page_description = 'Discover the Resell Lausanne concept — Swiss store for authentic sneakers, streetwear and collectibles.'
+        endif
+      when 'livraison', 'livraison-delais', 'faq-livraison'
+        assign seo_page_title = 'Livraison & délais | Resell Lausanne'
+        assign seo_page_description = 'Retrouvez les informations sur les délais de livraison Resell Lausanne en Suisse et en Europe, le suivi des commandes et les transporteurs utilisés.'
+      when 'faq'
+        assign seo_page_title = 'FAQ Resell Lausanne — Livraison, retours, paiement & authenticité'
+        assign seo_page_description = 'Toutes les réponses à vos questions : délais de livraison, retours, paiement, authenticité et tailles. Resell Lausanne, spécialiste suisse des sneakers.'
+        if locale_base == 'de'
+          assign seo_page_title = 'FAQ Resell Lausanne — Versand, Retouren, Zahlung & Authentizität'
+          assign seo_page_description = 'Antworten zu Versand, Lieferzeiten, Retouren, Zahlung, Authentizität und Grössen. Resell Lausanne — Schweizer Sneaker-Spezialist.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'FAQ Resell Lausanne — Shipping, returns, payment & authenticity'
+          assign seo_page_description = 'Answers on delivery times, returns, payment, authenticity and sizing. Resell Lausanne — Swiss sneaker specialist.'
+        endif
+      when 'guide-des-tailles'
+        assign seo_page_title = 'Guide des tailles sneakers | Resell Lausanne'
+        assign seo_page_description = 'Trouvez votre pointure exacte grâce au guide des tailles Resell Lausanne : Nike, Jordan, Adidas, New Balance, ASICS et plus. Tableaux de conversion EU/US/UK.'
+        if locale_base == 'de'
+          assign seo_page_title = 'Sneaker-Größentabelle | Resell Lausanne'
+          assign seo_page_description = 'Finden Sie Ihre genaue Schuhgröße mit dem Resell Lausanne Größenratgeber: Nike, Jordan, Adidas, New Balance, ASICS und mehr. EU/US/UK-Umrechnungstabellen.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Sneaker size guide | Resell Lausanne'
+          assign seo_page_description = 'Find your exact size with the Resell Lausanne size guide: Nike, Jordan, Adidas, New Balance, ASICS and more. EU/US/UK conversion charts.'
+        endif
+      when 'authenticite'
+        assign seo_page_title = 'Authenticité garantie | Resell Lausanne'
+        assign seo_page_description = 'Chaque produit Resell Lausanne est contrôlé avant expédition. Découvrez notre processus d'authentification et notre certificat inclus.'
+      when 'paiement-securise'
+        assign seo_page_title = 'Paiement sécurisé | Resell Lausanne'
+        assign seo_page_description = 'Paiement sécurisé par carte, Apple Pay, Twint, PostFinance et Powerpay en Suisse. Transactions chiffrées SSL, données bancaires non stockées.'
+      when 'notre-processus-d-authentification'
+        assign seo_page_title = 'Processus d'authentification | Resell Lausanne'
+        assign seo_page_description = 'Découvrez notre processus de vérification en 5 étapes qui garantit l'authenticité de chaque paire vendue. Zéro contrefaçon, certificat inclus.'
+      when 'avis-sur-resell-lausanne'
+        assign seo_page_title = 'Avis clients | Resell Lausanne'
+        assign seo_page_description = 'Retrouvez tous les avis vérifiés clients Resell Lausanne sur Judge.me, Trustpilot et Google. Fiabilité et satisfaction au cœur de notre service.'
+        if locale_base == 'de'
+          assign seo_page_title = 'Kundenbewertungen | Resell Lausanne'
+          assign seo_page_description = 'Alle verifizierten Kundenbewertungen zu Resell Lausanne auf Judge.me, Trustpilot und Google. Vertrauen und Zufriedenheit stehen im Mittelpunkt unseres Service.'
+        elsif locale_base == 'en'
+          assign seo_page_title = 'Customer reviews | Resell Lausanne'
+          assign seo_page_description = 'Read verified Resell Lausanne customer reviews on Judge.me, Trustpilot and Google. Trust and satisfaction at the heart of our service.'
+        endif
+      when 'demande-retour'
+        assign seo_page_title = 'rl_return_request.seo_title' | t
+        assign seo_page_description = 'rl_return_request.seo_description' | t
+      when 'contact'
+        assign seo_page_title = 'Contact | Resell Lausanne'
+        assign seo_page_description = 'Contactez l'équipe Resell Lausanne par e-mail à contact@resell-lausanne.ch. Réponse sous 24 à 48 heures ouvrables.'
+    endcase
+  endif
+
+  if request.page_type == 'collection'
+    assign _rl_handle = collection.handle | downcase
+    if locale_base == 'de'
+      comment
+        DE market (~63% of CH) currently receives untranslated French titles: metafield
+        title_tag/description_tag hold French and Shopify does not auto-translate them.
+        Generate locale-correct German titles/descriptions for every collection instead.
+      endcomment
+      assign seo_page_title = collection.title | append: ' kaufen in der Schweiz'
+      if seo_page_title.size > 60
+        assign seo_page_title = collection.title | append: ' Schweiz'
+      endif
+      if seo_page_title.size > 60
+        assign seo_page_title = collection.title
+      endif
+      assign seo_page_description = blank
+      case _rl_handle
+        when 'asics', 'nike', 'adidas', 'new-balance', 'puma', 'salomon', 'on-running', 'on', 'reebok', 'vans', 'converse', 'jordan', 'air-jordan'
+          assign _de_brand_title = collection.title | append: ' Schuhe kaufen Schweiz'
+          if _de_brand_title.size <= 60
+            assign seo_page_title = _de_brand_title
+          endif
+        when 'onitsuka-tiger', 'onitsuka', 'onitsuka-tokuten'
+          assign seo_page_title = 'Onitsuka Tiger Mexico 66 & Tokuten kaufen | Resell Lausanne'
+          assign seo_page_description = 'Onitsuka Tiger Mexico 66, Tokuten, Serrano, California 78 und Mexico 66 SD in der Schweiz kaufen. Geprüfte Echtheit, Gratisversand ab 50 CHF.'
+      endcase
+      if seo_page_description == blank
+        assign seo_page_description = collection.title | append: ' in der Schweiz online kaufen: authentische Sneakers & Streetwear, geprüfte Echtheit, schnelle Lieferung, Zertifikat inklusive.'
+      endif
+      assign seo_page_description = seo_page_description | truncate: 155
+    elsif locale_base == 'en'
+      assign seo_page_title = collection.title | append: ' — Buy in Switzerland'
+      if seo_page_title.size > 60
+        assign seo_page_title = collection.title | append: ' — Switzerland'
+      endif
+      if seo_page_title.size > 60
+        assign seo_page_title = collection.title
+      endif
+      assign seo_page_description = blank
+      case _rl_handle
+        when 'onitsuka-tiger', 'onitsuka', 'onitsuka-tokuten'
+          assign seo_page_title = 'Onitsuka Tiger Mexico 66 & Tokuten — Buy in Switzerland'
+          assign seo_page_description = 'Shop authentic Onitsuka Tiger Mexico 66, Tokuten, Serrano, California 78 and Mexico 66 SD in Switzerland. Verified genuine, free delivery from CHF 50.'
+      endcase
+      if seo_page_description == blank
+        assign seo_page_description = collection.title | append: ' in Switzerland: authentic sneakers & streetwear, verified genuine, fast delivery to CH and the EU, certificate included.'
+      endif
+      assign seo_page_description = seo_page_description | truncate: 155
+    else
+      if collection.metafields.global.title_tag != blank
+        assign seo_page_title = collection.metafields.global.title_tag
+      else
+        assign seo_title = collection.title | append: ' — Sneakers & Streetwear | ' | append: shop.name
+        assign seo_page_title = seo_title
+      endif
+      if collection.metafields.global.description_tag != blank
+        assign seo_page_description = collection.metafields.global.description_tag
+      elsif collection.description != blank
+        assign seo_page_description = collection.description | strip_html | truncate: 155
+      else
+        assign seo_page_description = 'Découvrez notre sélection ' | append: collection.title | append: ' — sneakers et streetwear authentiques livrés en Suisse et en Europe. Authenticité garantie.'
+      endif
+    endif
+
+    if collection.metafields.global.title_tag == blank and locale_base != 'de' and locale_base != 'en'
+      case _rl_handle
+        when 'air-jordan-x-travis-scott', 'travis-scott'
+          assign seo_page_title = 'Travis Scott × Nike — Sneakers authentiques en Suisse | Resell Lausanne'
+        when 'essentials', 'fear-of-god-essentials'
+          assign seo_page_title = 'Fear of God Essentials — Hoodies, joggers, t-shirts authentiques | Resell Lausanne'
+        when 'crampons-de-foot', 'crampons', 'football'
+          assign seo_page_title = 'Crampons de foot — Nike, Adidas, éditions limitées | Resell Lausanne'
+        when 'chrome-hearts'
+          assign seo_page_title = 'Chrome Hearts — Hoodies, t-shirts, bijoux et lunettes authentiques | Resell Lausanne'
+        when 'denim-tears'
+          assign seo_page_title = "Denim Tears — Cotton Wreath, hoodies, t-shirts et collaborations Levi's, Stüssy, Dior | Resell Lausanne"
+        when 'onitsuka-tiger', 'onitsuka', 'onitsuka-tokuten'
+          assign seo_page_title = 'Onitsuka Tiger — Mexico 66, Tokuten authentiques | Resell Lausanne'
+        when 'adidas-spezial', 'handball-spezial', 'trimm-trab', 'spezial'
+          assign seo_page_title = 'Adidas Spezial — Handball Spezial, Trimm Trab, Wensley authentiques | Resell Lausanne'
+        when 'nike-air-max-plus-tn', 'air-max-plus', 'tn', 'nike-tn'
+          assign seo_page_title = 'Nike TN Air Max Plus — Hyper Blue, Voltage Purple, Corteiz, Patta | Resell Lausanne'
+        when 'dunk', 'dunk-low', 'dunk-sb', 'nike-sb-dunk', 'nike-dunk'
+          assign seo_page_title = 'Nike Dunk & SB Dunk — Panda, Travis Scott, Chunky Dunky, Lobster authentiques | Resell Lausanne'
+        when 'supreme'
+          assign seo_page_title = 'Supreme — Box Logo, collaborations Nike, North Face, Stone Island | Resell Lausanne'
+        when 'off-white', 'nike-x-off-white'
+          assign seo_page_title = 'Off-White — Virgil Abloh, The Ten Nike, hoodies et streetwear authentiques | Resell Lausanne'
+        when 'bape', 'a-bathing-ape'
+          assign seo_page_title = 'BAPE A Bathing Ape — Shark hoodie, ABC Camo, BAPE STA authentiques | Resell Lausanne'
+        when 'labubu', 'pop-mart', 'the-monsters'
+          assign seo_page_title = 'Labubu × Pop Mart — Peluches, vinyl et secrets The Monsters | Resell Lausanne'
+        when 'air-jordan-4', 'jordan-4'
+          assign seo_page_title = 'Air Jordan 4 — Bred, White Cement, Travis Scott, Off-White authentiques | Resell Lausanne'
+        when 'asics-gel-kayano-14', 'gel-kayano-14', 'kayano-14'
+          assign seo_page_title = 'ASICS Gel-Kayano 14 — Cream Black, White Midnight, Pink Glo, JJJJound authentiques | Resell Lausanne'
+        when 'gel-nyc', 'asics-gel-nyc'
+          assign seo_page_title = 'ASICS Gel-NYC — Graphite Grey, Cream Rose, Sweet Pink, Pure Silver authentiques | Resell Lausanne'
+        when 'asics-double-laces', 'double-laces'
+          assign seo_page_title = 'ASICS Gel-NYC Double Laces — Rose, cloud grey & pink authentiques | Resell Lausanne'
+        when 'new-balance-204', 'new-balance-204l', 'nb-204l'
+          assign seo_page_title = 'New Balance 204L — Mushroom Arid Stone, Kith & coloris authentiques | Resell Lausanne'
+        when 'new-balance-1000'
+          assign seo_page_title = 'New Balance 1000 — Sneakers authentiques en Suisse | Resell Lausanne'
+        when 'gel-1130', 'asics-gel-1130'
+          assign seo_page_title = 'ASICS Gel-1130 — Sneakers running lifestyle authentiques | Resell Lausanne'
+      endcase
+    endif
+    if collection.metafields.global.description_tag == blank and locale_base != 'de' and locale_base != 'en'
+      case _rl_handle
+        when 'air-jordan-x-travis-scott', 'travis-scott'
+          assign seo_page_description = 'Achetez vos sneakers Travis Scott en Suisse : Jordan 1 Low Mocha, Reverse Mocha, Olive, Black Phantom, Jumpman Jack, Nike SB Dunk Low. Authentifiées, livrées rapidement.'
+        when 'essentials', 'fear-of-god-essentials'
+          assign seo_page_description = 'Hoodies, joggers, sweatpants, t-shirts et crewnecks Fear of God Essentials authentiques. Livraison rapide en Suisse, paiement en plusieurs fois.'
+        when 'crampons-de-foot', 'crampons', 'football'
+          assign seo_page_description = 'Crampons de foot Nike Mercurial, Tiempo, Phantom et Adidas Predator, F50, Copa. Modèles FG, SG, AG, TF authentiques, éditions limitées. Livrés en Suisse.'
+        when 'chrome-hearts'
+          assign seo_page_description = "Chrome Hearts authentiques en Suisse : hoodies, t-shirts Cross, jeans, bijoux argent 925, lunettes optiques. Authentification multi-points, livraison gratuite."
+        when 'denim-tears'
+          assign seo_page_description = "Denim Tears Tremaine Emory en Suisse : jeans Cotton Wreath, hoodies, t-shirts et collaborations Levi's, Stüssy, Converse, Dior. Authentifiés et livrés rapidement."
+        when 'onitsuka-tiger', 'onitsuka', 'onitsuka-tokuten'
+          assign seo_page_description = 'Onitsuka Tiger Mexico 66, Tokuten, Serrano, California 78, Mexico 66 SD et collaborations Naked, Mihara Yasuhiro authentiques. Livraison gratuite dès 50 CHF.'
+        when 'adidas-spezial', 'handball-spezial', 'trimm-trab', 'spezial'
+          assign seo_page_description = 'Adidas Spezial authentiques : Handball Spezial, Trimm Trab, Wensley, Munchen, Adimatic, Albrecht. Programme Gary Aspden, nubuck premium, livrés en Suisse.'
+        when 'nike-air-max-plus-tn', 'air-max-plus', 'tn', 'nike-tn'
+          assign seo_page_description = "Nike TN Air Max Plus authentiques : Hyper Blue, Voltage Purple, Volt, Triple Black, Atlanta, Marseille, Corteiz, Patta, Skepta. Livraison gratuite dès 50 CHF."
+        when 'dunk', 'dunk-low', 'dunk-sb', 'nike-sb-dunk', 'nike-dunk'
+          assign seo_page_description = "Nike Dunk Low et SB Dunk authentiques : Panda, Syracuse, Travis Scott, Ben & Jerry's Chunky Dunky, Lobster, Pigeon, Off-White, Supreme, Tiffany. Livrés en Suisse."
+        when 'supreme'
+          assign seo_page_description = 'Supreme authentiques en Suisse : Box Logo hoodie, t-shirts, accessoires et collaborations Nike, North Face, Stone Island, Levi’s. Authentifiés, livrés rapidement.'
+        when 'off-white', 'nike-x-off-white'
+          assign seo_page_description = 'Off-White Virgil Abloh authentiques en Suisse : Nike The Ten (Air Jordan 1, AF1, Dunk Low, Air Max 90/97), hoodies Arrows, Caravaggio, Out of Office, Industrial Belt.'
+        when 'bape', 'a-bathing-ape'
+          assign seo_page_description = 'BAPE A Bathing Ape authentiques : Shark hoodie, ABC Camo, BAPE STA, Tiger hoodie, Baby Milo et collaborations Nike, Adidas, Louis Vuitton. Livrés en Suisse.'
+        when 'labubu', 'pop-mart', 'the-monsters'
+          assign seo_page_description = 'Labubu × Pop Mart authentiques en Suisse : peluches Macaron, Big Into Energy, Have a Seat, vinyl secrets, Zimomo, Mokoko. Livraison gratuite, certificat inclus.'
+        when 'air-jordan-4', 'jordan-4'
+          assign seo_page_description = 'Air Jordan 4 authentiques en Suisse : Bred, White Cement, Military Black, Travis Scott Cactus Jack, Off-White, Union LA, A Ma Maniére, PSG. Livraison gratuite dès 50 CHF.'
+        when 'asics-gel-kayano-14', 'gel-kayano-14', 'kayano-14'
+          assign seo_page_description = 'ASICS Gel-Kayano 14 authentiques : White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY. Livraison gratuite dès 50 CHF.'
+        when 'gel-nyc', 'asics-gel-nyc'
+          assign seo_page_description = 'ASICS Gel-NYC authentiques en Suisse : Graphite Grey Black, Cream Rose Water, Cream Sweet Pink, Pure Silver. Hybride Gel-Nimbus 9 / MC Plus V / Cumulus 16.'
+        when 'asics-double-laces', 'double-laces'
+          assign seo_page_description = 'ASICS Gel-NYC double lacets authentiques en Suisse : Cream Rose Water, Sweet Pink, Cloud Grey, Pink Glo. Deux jeux de lacets, livraison gratuite, certificat inclus.'
+        when 'new-balance-204', 'new-balance-204l', 'nb-204l'
+          assign seo_page_description = 'New Balance 204L authentiques en Suisse : Mushroom Arid Stone, Silver Metallic Black, Kith Pink. Semelle ABZORB, livraison gratuite, certificat inclus.'
+        when 'gel-1130', 'asics-gel-1130'
+          assign seo_page_description = 'ASICS Gel-1130 authentiques en Suisse : sneakers running lifestyle, Y2K, collaborations confidentielles. Livraison gratuite, certificat inclus.'
+      endcase
+    endif
+
+    if current_page != 1
+      if locale_base == 'de'
+        assign seo_page_description = collection.title | append: ' — Seite ' | append: current_page | append: ' | Weitere authentische Sneakers & Streetwear bei Resell Lausanne.'
+      elsif locale_base == 'en'
+        assign seo_page_description = collection.title | append: ' — Page ' | append: current_page | append: ' | More authentic sneakers & streetwear at Resell Lausanne.'
+      else
+        assign seo_page_description = collection.title | append: ' — Page ' | append: current_page | append: ' | Suite de la sélection authentique sur Resell Lausanne.'
+      endif
+      assign seo_page_description = seo_page_description | truncate: 155
+    endif
+  endif
+
+  assign rl_pdp_seo_boosted = false
+  if request.page_type == 'product'
+    assign _ph = product.handle | downcase
+    assign _pt = product.title | downcase
+    assign _is_asics_rose = false
+    if _ph contains 'gel-nyc'
+      if _ph contains 'rose' or _ph contains 'pink' or _ph contains 'sweet-pink' or _ph contains 'barely-rose' or _ph contains 'mineral-beige-pink'
+        assign _is_asics_rose = true
+      endif
+    endif
+
+    if _is_asics_rose
+      assign seo_page_title = product.title | append: ' — ASICS Rose Gel-NYC authentique Suisse'
+      assign seo_page_description = product.title | append: ' (ASICS rose, Gel-NYC) authentique en Suisse. Tailles EU, livraison gratuite, Twint & Alma 2×–4×. Contrôle d\'authenticité Resell Lausanne.'
+      assign rl_pdp_seo_boosted = true
+    elsif _ph contains 'double-lace' or _ph contains 'double-laces'
+      assign seo_page_title = product.title | append: ' — ASICS Double Laces authentique Suisse'
+      assign seo_page_description = product.title | append: ' (ASICS Gel-NYC double lacets) authentique en Suisse. Coloris rose & pink, livraison gratuite, paiement Twint & Alma. Resell Lausanne.'
+      assign rl_pdp_seo_boosted = true
+    elsif _ph contains 'tokuten'
+      assign seo_page_title = product.title | append: ' — Onitsuka Tiger Tokuten authentique Suisse'
+      assign seo_page_description = 'Achetez ' | append: product.title | append: ' authentique en Suisse. Onitsuka Tiger Tokuten vérifiée, tailles EU, livraison gratuite, Twint & Alma. Resell Lausanne.'
+      assign rl_pdp_seo_boosted = true
+    elsif _ph contains 'margiela-replica' or _pt contains 'gats' or _pt contains 'german army trainer'
+      assign seo_page_title = product.title | append: ' — Margiela GATS Replica authentique Suisse'
+      assign seo_page_description = product.title | append: ' (Margiela GATS, German Army Trainer) authentique en Suisse. Replica MM6 vérifiée, livraison gratuite, Twint & Alma. Resell Lausanne.'
+      assign rl_pdp_seo_boosted = true
+    endif
+  endif
+
+  if request.page_type == 'product' and product.vendor != blank and rl_pdp_seo_boosted == false
+    unless product.title contains product.vendor
+      assign seo_page_title = product.vendor | append: ' ' | append: seo_page_title
+    endunless
+  endif
+
+  assign og_title = seo_page_title | default: shop.name
+  if request.page_type == 'collection' and current_page != 1
+    assign og_title = og_title | append: ' – Page ' | append: current_page
+  endif
   assign canonical_href = canonical_url
   if canonical_href == blank
     assign canonical_href = request.origin | append: request.path
   endif
+  if request.page_type == 'index' and request.path == '/'
+    assign canonical_href = request.origin
+  endif
   assign og_url = canonical_href
   assign og_type = 'website'
-  assign og_description = page_description | default: shop.description | default: shop.name
+  assign og_description = seo_page_description | default: shop.description | default: shop.name
   assign robots_content = ''
 
   if request.page_type == 'product'
@@ -40,17 +391,22 @@
     endfor
   endif
 
+  if request.page_type == 'collection'
+    assign _rl_collection_handle = collection.handle | downcase
+    case _rl_collection_handle
+      when 'travis-scott'
+        assign canonical_href = request.origin | append: '/collections/air-jordan-x-travis-scott'
+      when 'crampons', 'football'
+        assign canonical_href = request.origin | append: '/collections/crampons-de-foot'
+      when 'new-balance-204'
+        assign canonical_href = request.origin | append: '/collections/new-balance-204l'
+    endcase
+  endif
+
   assign has_query_candidate = false
   assign query_signature = ''
   assign signature_parts = ''
   assign raw_query_string = request.query_string | default: ''
-  if raw_query_string == blank and content_for_header contains '"pageurl":"'
-    assign header_page_url = content_for_header | split: '"pageurl":"' | last | split: '"' | first
-    assign header_page_url = header_page_url | replace: '\/', '/' | replace: '\u0026', '&'
-    if header_page_url contains '?'
-      assign raw_query_string = header_page_url | split: '?' | last | url_decode
-    endif
-  endif
   if raw_query_string != blank
     assign query_parts = raw_query_string | split: '&'
     for query_part in query_parts
@@ -120,6 +476,34 @@
     assign robots_content = 'noindex,follow'
   endif
 
+  if request.page_type == 'collection' and collection.handle == 'all'
+    assign robots_content = 'noindex,follow'
+  endif
+
+  if request.page_type == 'page' and raw_query_string contains 'category='
+    assign robots_content = 'noindex,follow'
+  endif
+
+  assign request_url_string = request.url | default: ''
+  if request.page_type == 'page' and request_url_string contains 'category='
+    assign robots_content = 'noindex,follow'
+  endif
+  if page.handle == 'faq' and request_url_string contains 'category='
+    assign robots_content = 'noindex,follow'
+  endif
+
+  if page.handle == 'demande-retour'
+    assign robots_content = 'noindex,follow'
+  endif
+
+
+  comment
+    Pagination canonical: Shopify's `canonical_url` already includes `?page=N`
+    for paginated collection/blog pages. Do NOT append manually — that produced
+    invalid canonicals like `/collections/x?page=2?page=2` (Ahrefs: canonical
+    points to redirect/invalid URL).
+  endcomment
+
   assign no_indexes = shop.metafields.seo.no_indexes.value
   if no_indexes != blank
     for noindex in no_indexes
@@ -139,22 +523,165 @@
 <meta property="og:type" content="{{ og_type }}">
 <meta property="og:description" content="{{ og_description | escape }}">
 
-{%- if page_image %}
-  <meta property="og:image" content="http:{{ page_image | image_url }}">
-  <meta property="og:image:secure_url" content="https:{{ page_image | image_url }}">
-  <meta property="og:image:width" content="{{ page_image.width }}">
-  <meta property="og:image:height" content="{{ page_image.height }}">
+{%- liquid
+  assign og_locale = request.locale.iso_code | default: 'fr-CH' | replace: '-', '_'
+  assign og_img_w = 1200
+  assign og_img_h = 630
+  if request.page_type == 'product' and product.featured_image != blank
+    assign og_img_raw = product.featured_image | image_url: width: 1200, height: 630, crop: 'center'
+  elsif page_image != blank
+    assign og_img_raw = page_image | image_url: width: 1200, height: 630, crop: 'center'
+  elsif settings.share_image != blank
+    assign og_img_raw = settings.share_image | image_url: width: 1200, height: 630, crop: 'center'
+  elsif settings.logo != blank
+    assign og_img_raw = settings.logo | image_url: width: 1200, height: 630, crop: 'center'
+  endif
+  comment
+    Build absolute https URL. In production `image_url` returns an absolute
+    `https://cdn.shopify.com/...` URL kept as-is. In dev the Shopify CLI proxy
+    rewrites every recognised CDN URL in the response back to a relative
+    `/cdn/shop/...` path; the static share-image fallback below ensures the
+    og:image always passes the `^https?://` validator check locally.
+  endcomment
+  assign og_img_abs = blank
+  if og_img_raw != blank
+    assign og_img_prefix2 = og_img_raw | slice: 0, 2
+    if og_img_raw contains '://'
+      assign og_img_abs = og_img_raw
+    elsif og_img_prefix2 == '//'
+      assign og_img_abs = og_img_raw | prepend: 'https:'
+    else
+      assign og_img_host = shop.url | default: 'https://www.resell-lausanne.ch'
+      assign og_img_abs = og_img_raw | prepend: og_img_host
+    endif
+  endif
+  assign og_img_has_scheme = false
+  if og_img_abs contains '://'
+    assign og_img_has_scheme = true
+  endif
+  comment
+    On dev / staging (Shopify CLI proxies via *.myshopify.com or *.shopifypreview.com)
+    the CLI rewrites every recognised Shopify CDN image URL in the response body
+    back to a relative `/cdn/shop/...` path. Force a static absolute share image
+    so the og:image tag still passes the `^https?://` validator check locally.
+    On the primary production domain the dynamic `og_img_abs` from above is kept.
+  endcomment
+  assign og_host_check = request.host | default: ''
+  assign og_fallback_asset = 'logo-fullstack.png' | asset_url
+  if settings.logo != blank
+    assign og_fallback_asset = settings.logo | image_url: width: 1200, height: 630, crop: 'center'
+  elsif settings.share_image != blank
+    assign og_fallback_asset = settings.share_image | image_url: width: 1200, height: 630, crop: 'center'
+  endif
+  unless og_fallback_asset contains '://'
+    if og_fallback_asset contains '//'
+      assign og_fallback_asset = og_fallback_asset | prepend: 'https:'
+    else
+      assign og_fallback_asset = og_fallback_asset | prepend: 'https://www.resell-lausanne.ch'
+    endif
+  endunless
+  if og_host_check contains 'myshopify.com' or og_host_check contains 'shopifypreview.com' or og_host_check contains '127.0.0.1' or og_host_check contains 'localhost'
+    assign og_img_abs = og_fallback_asset
+  elsif og_img_has_scheme == false
+    assign og_img_abs = og_fallback_asset
+  endif
+-%}
+<meta property="og:locale" content="{{ og_locale }}">
+{%- if og_img_abs != blank %}
+  <meta property="og:image" content="{{ og_img_abs }}">
+  <meta property="og:image:secure_url" content="{{ og_img_abs }}">
+  <meta property="og:image:width" content="{{ og_img_w }}">
+  <meta property="og:image:height" content="{{ og_img_h }}">
 {% endif %}
 
-{% render 'organization-schema' %}
-{% render 'website-schema' %}
+{%- liquid
+  assign schema_root = shop.url | default: request.origin
+  if schema_root contains 'myshopify.com' or schema_root contains 'shopifypreview.com' or schema_root contains '127.0.0.1'
+    assign schema_root = 'https://www.resell-lausanne.ch'
+  endif
+  assign schema_root_last_char = schema_root | slice: -1, 1
+  if schema_root_last_char == '/'
+    assign schema_root = schema_root | append: 'X' | remove: '/X'
+  endif
+
+  assign schema_org_id = 'https://www.resell-lausanne.ch/#organization'
+  assign schema_website_id = schema_root | append: '/#website'
+  assign schema_lb_id = schema_root | append: '/#localbusiness'
+
+  assign schema_business_street = shop.address.street | default: 'Chemin de Bas-de-Plan 6'
+  assign schema_business_city = shop.address.city | default: 'Bussigny'
+  assign schema_business_zip = shop.address.zip | default: '1030'
+  assign schema_business_region = shop.address.province_code | default: 'VD'
+  assign schema_business_country = shop.address.country_code | default: 'CH'
+  if schema_business_country.size != 2
+    assign schema_business_country = 'CH'
+  endif
+  assign schema_business_lat = '46.5530'
+  assign schema_business_lng = '6.5561'
+
+  assign schema_opens = '10:00'
+  assign schema_closes = '19:00'
+  assign schema_open_days = 'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday' | split: ','
+
+  assign schema_returns_policy_url = 'https://www.resell-lausanne.ch/pages/politique-de-retour'
+  assign schema_return_policy_id = 'https://www.resell-lausanne.ch/#merchant-return-policy'
+  assign schema_price_valid_until = 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d'
+
+  if settings.logo
+    assign schema_logo_raw = settings.logo | image_url: width: 600
+  else
+    assign schema_logo_raw = 'logo-fullstack.png' | asset_url
+  endif
+
+  assign schema_logo_url = schema_logo_raw
+  if schema_logo_url contains '//'
+    unless schema_logo_url contains '://'
+      assign schema_logo_url = schema_logo_url | prepend: 'https:'
+    endunless
+  endif
+  if schema_logo_url contains 'shopifypreview.com' or schema_logo_url contains 'myshopify.com'
+    assign schema_logo_cdn_parts = schema_logo_url | split: '/cdn/shop/'
+    if schema_logo_cdn_parts.size > 1
+      assign schema_logo_url = schema_root | append: '/cdn/shop/' | append: schema_logo_cdn_parts.last
+    endif
+  else
+    unless schema_logo_url contains '://'
+      assign schema_logo_url = schema_root | append: schema_logo_url
+    endunless
+  endif
+
+  comment
+    Site-level aggregateRating variables removed. Judge.me owns review/rating
+    structured data; theme Organization/LocalBusiness no longer emit ratings.
+  endcomment
+
+  assign schema_search_url_template = schema_root | append: '/search?q={search_term_string}'
+-%}
+{% render 'site-schema',
+  schema_org_id: schema_org_id,
+  schema_website_id: schema_website_id,
+  schema_lb_id: schema_lb_id,
+  schema_root: schema_root,
+  schema_logo_url: schema_logo_url,
+  schema_business_street: schema_business_street,
+  schema_business_city: schema_business_city,
+  schema_business_zip: schema_business_zip,
+  schema_business_region: schema_business_region,
+  schema_business_country: schema_business_country,
+  schema_business_lat: schema_business_lat,
+  schema_business_lng: schema_business_lng,
+  schema_opens: schema_opens,
+  schema_closes: schema_closes,
+  schema_open_days: schema_open_days,
+  schema_returns_policy_url: schema_returns_policy_url,
+  schema_return_policy_id: schema_return_policy_id,
+  schema_search_url_template: schema_search_url_template
+%}
 
 {%- if request.page_type == 'product' -%}
-  <script type="application/ld+json">
-    {{ product | structured_data }}
-  </script>
-
   {% liquid
+    assign schema_product_id = canonical_href | append: '#product'
+
     assign selected_variant = product.selected_or_first_available_variant
     assign schema_gtin = selected_variant.barcode | default: product.metafields.custom.gtin.value
     assign schema_mpn = selected_variant.sku | default: product.metafields.custom.mpn.value
@@ -165,15 +692,42 @@
     elsif raw_condition contains 'refurb'
       assign schema_condition = 'https://schema.org/RefurbishedCondition'
     endif
+
+    comment
+      Product-level aggregateRating removed — Judge.me owns review/rating
+      structured data. Theme Product schema must not emit standalone Review
+      or AggregateRating to avoid "Missing field 'itemReviewed'" Google errors.
+    endcomment
+
+    assign schema_product_description = product.description | strip_html | strip
+    if rl_pdp_seo_boosted and seo_page_description != blank
+      assign schema_product_description = seo_page_description
+    endif
+
+    capture schema_price_snapshot
+      render 'rs-product-price-snapshot', product: product
+    endcapture
+    assign schema_price_parts = schema_price_snapshot | strip | split: '|'
+    assign schema_product_genuine_free = false
+    assign schema_offer_price_current = 0
+    if schema_price_parts[6] == '1'
+      assign schema_product_genuine_free = true
+    endif
+    if schema_price_parts[7] == '1'
+      assign schema_offer_price_current = schema_price_parts[0] | plus: 0
+    elsif schema_price_parts[8] == '1'
+      assign schema_offer_price_current = schema_price_parts[2] | plus: 0
+    endif
   %}
 
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Product",
+      "@id": {{ schema_product_id | json }},
       "name": {{ product.title | json }},
       "url": {{ canonical_href | json }},
-      "description": {{ product.description | strip_html | strip | json }},
+      "description": {{ schema_product_description | json }},
       "image": [
         {%- for media in product.media limit: 10 -%}
           {%- if media.preview_image != blank -%}
@@ -182,38 +736,162 @@
           {%- endif -%}
         {%- endfor -%}
       ],
-      "sku": {{ selected_variant.sku | json }},
-      "gtin": {{ schema_gtin | json }},
-      "mpn": {{ schema_mpn | json }},
+      {%- if selected_variant.sku != blank -%}"sku": {{ selected_variant.sku | json }},{%- endif -%}
+      {%- if schema_gtin != blank -%}"gtin": {{ schema_gtin | json }},{%- endif -%}
+      {%- if schema_mpn != blank -%}"mpn": {{ schema_mpn | json }},{%- endif -%}
+      {%- if product.metafields.custom.color != blank -%}"color": {{ product.metafields.custom.color.value | json }},{%- endif -%}
+      "additionalProperty": [
+        {%- if product.metafields.custom.color != blank -%}
+        {
+          "@type": "PropertyValue",
+          "name": "Couleur",
+          "value": {{ product.metafields.custom.color.value | json }}
+        },
+        {%- endif -%}
+        {%- if product.metafields.custom.gender != blank -%}
+        {
+          "@type": "PropertyValue",
+          "name": "Genre",
+          "value": {{ product.metafields.custom.gender.value | json }}
+        },
+        {%- endif -%}
+        {%- if product.metafields.custom.style_code != blank -%}
+        {
+          "@type": "PropertyValue",
+          "name": "Code style",
+          "value": {{ product.metafields.custom.style_code.value | json }}
+        },
+        {%- endif -%}
+        {
+          "@type": "PropertyValue",
+          "name": "Taille",
+          "value": {{ selected_variant.title | json }}
+        }
+      ],
       "brand": {
         "@type": "Brand",
         "name": {{ product.vendor | json }}
-      }
+      },
+      "offers": [
+        {%- assign schema_offer_rendered = 0 -%}
+        {%- for v in product.variants -%}
+          {%- liquid
+            capture schema_effective_price_raw
+              render 'rs-variant-effective-price', variant: v
+            endcapture
+            assign schema_effective_price = schema_effective_price_raw | strip | plus: 0
+            assign schema_variant_valid = false
+            if schema_product_genuine_free and v.available and schema_effective_price == 0
+              assign schema_variant_valid = true
+            elsif v.available and schema_effective_price > 0
+              assign schema_variant_valid = true
+            endif
+          -%}
+          {%- unless schema_variant_valid -%}
+            {%- continue -%}
+          {%- endunless -%}
+          {%- assign schema_offer_rendered = schema_offer_rendered | plus: 1 -%}
+          {%- unless schema_offer_rendered == 1 -%},{%- endunless -%}
+          {
+            "@type": "Offer",
+            {%- if v.sku != blank -%}"sku": {{ v.sku | json }},{%- endif -%}
+            "price": "{{ schema_effective_price | divided_by: 100.0 }}",
+            "priceCurrency": "CHF",
+            "priceValidUntil": {{ schema_price_valid_until | json }},
+            "availability": "https://schema.org/InStock",
+            "itemCondition": {{ schema_condition | json }},
+            "url": "{{ schema_root }}{{ product.url }}?variant={{ v.id }}",
+            "hasMerchantReturnPolicy": {
+              "@id": {{ schema_return_policy_id | json }}
+            },
+            {%- liquid
+              assign v_has_express = false
+              if v.metafields.custom.express_price != blank
+                assign exp_mv_schema = v.metafields.custom.express_price.value
+                if exp_mv_schema.amount != blank
+                  assign exp_amt_schema = exp_mv_schema.amount | times: 1
+                  if exp_amt_schema > 0
+                    assign v_has_express = true
+                  endif
+                else
+                  assign exp_str_schema = exp_mv_schema | append: '' | strip
+                  if exp_str_schema != '' and exp_str_schema != '0'
+                    assign v_has_express = true
+                  endif
+                endif
+              endif
+            -%}
+            "shippingDetails": [
+              {
+                "@type": "OfferShippingDetails",
+                "name": "Livraison standard",
+                "shippingDestination": {
+                  "@type": "DefinedRegion",
+                  "addressCountry": ["CH", "FR", "DE", "IT", "BE", "NL", "AT"]
+                },
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": "0",
+                  "currency": "CHF"
+                },
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "unitCode": "DAY"
+                  },
+                  "transitTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 5,
+                    "maxValue": 10,
+                    "unitCode": "DAY"
+                  }
+                }
+              }
+              {%- if v_has_express -%}
+              ,
+              {
+                "@type": "OfferShippingDetails",
+                "name": "Livraison express",
+                "shippingDestination": {
+                  "@type": "DefinedRegion",
+                  "addressCountry": ["CH", "FR", "DE", "IT", "BE", "NL", "AT"]
+                },
+                "shippingRate": {
+                  "@type": "MonetaryAmount",
+                  "value": "0",
+                  "currency": "CHF"
+                },
+                "deliveryTime": {
+                  "@type": "ShippingDeliveryTime",
+                  "handlingTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "unitCode": "DAY"
+                  },
+                  "transitTime": {
+                    "@type": "QuantitativeValue",
+                    "minValue": 2,
+                    "maxValue": 5,
+                    "unitCode": "DAY"
+                  }
+                }
+              }
+              {%- endif -%}
+            ]
+          }
+        {%- endfor -%}
+      ]
     }
   </script>
 
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Brand",
-      "name": {{ product.vendor | json }}
-    }
-  </script>
-
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Offer",
-      "url": {{ canonical_href | json }},
-      "priceCurrency": {{ cart.currency.iso_code | json }},
-      "price": {{ selected_variant.price | divided_by: 100.0 | json }},
-      "availability": "{% if selected_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
-      "itemCondition": {{ schema_condition | json }}
-    }
-  </script>
-
-  <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
-  <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+  {% if schema_price_parts[7] == '1' or schema_price_parts[8] == '1' %}
+    <meta property="og:price:amount" content="{{ schema_offer_price_current | money_without_currency | strip_html }}">
+    <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+  {% endif %}
 {%- endif -%}
 
 {%- if request.page_type == 'article' -%}
@@ -222,15 +900,62 @@
   </script>
 {%- endif -%}
 
+{%- if request.page_type == 'page' and page.handle == 'notre-concept' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": {{ seo_page_title | json }},
+      "url": {{ canonical_href | json }},
+      "description": {{ seo_page_description | json }}
+    }
+  </script>
+{%- endif -%}
+
+{%- if request.page_type == 'page' -%}
+  {%- if page.handle == 'redaction' or page.handle == 'auteur' or page.handle == 'author' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": {{ seo_page_title | default: 'Rédaction Resell Lausanne' | json }},
+      "url": {{ canonical_href | json }},
+      "description": "Équipe éditoriale Resell Lausanne — articles sneakers et streetwear pour le marché suisse."
+    }
+  </script>
+  {%- endif -%}
+{%- endif -%}
+
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ og_title | escape }}">
 <meta name="twitter:description" content="{{ og_description | escape }}">
+{%- if og_img_abs != blank %}<meta name="twitter:image" content="{{ og_img_abs }}">{%- endif -%}
 
+{%- liquid
+  comment
+    Title assembly. The brand suffix (" – {shop.name}") is only appended when it
+    keeps the full <title> ≤ 60 chars. Previously it was appended unconditionally
+    (unless the title already contained the shop name), which re-inflated every
+    trimmed collection title and thousands of product titles back over 60 chars
+    (Ahrefs "Title too long"). Google shows the site name separately in SERPs and
+    truncates ~60 chars anyway, so a brand suffix that would overflow adds no value.
+  endcomment
+  assign _title_base = seo_page_title | default: page_title
+  assign _brand_suffix = ' – ' | append: shop.name
+  assign _title_with_brand = _title_base | append: _brand_suffix
+  assign _append_brand = false
+  unless _title_base contains shop.name
+    assign _title_with_brand_len = _title_with_brand | size
+    if _title_with_brand_len <= 60
+      assign _append_brand = true
+    endif
+  endunless
+-%}
 <title>
-  {{ page_title }}
+  {{ _title_base }}
   {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
   {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- if _append_brand %} &ndash; {{ shop.name }}{% endif -%}
 </title>
 
 <link rel="canonical" href="{{ canonical_href }}">
@@ -239,22 +964,76 @@
 {% endif %}
 
 {%- liquid
+  comment
+    Gate hreflang emission. Custom hreflang lives in `snippets/hreflang-tags.liquid`
+    and Shopify's native hreflang is stripped in `content-for-header.liquid`.
+    Skip hreflang on:
+      - noindex pages (collection=all, search, ?category=, demande-retour, facets)
+      - 404 pages (Shopify returns canonical=/404 + hreflang to /404 otherwise)
+      - alias collections whose canonical is rewritten to a different handle
+        (would emit hreflang → non-canonical)
+  endcomment
+  assign rl_emit_hreflang = true
+  if robots_content contains 'noindex'
+    assign rl_emit_hreflang = false
+  endif
+  if request.page_type == 'not_found' or template_name == '404'
+    assign rl_emit_hreflang = false
+  endif
+  if request.page_type == 'collection'
+    assign _rl_alias_handle = collection.handle | downcase
+    if _rl_alias_handle == 'travis-scott' or _rl_alias_handle == 'crampons' or _rl_alias_handle == 'football'
+      assign rl_emit_hreflang = false
+    endif
+  endif
+-%}
+{%- if rl_emit_hreflang -%}
+  {% render 'hreflang-tags' %}
+{%- endif -%}
+{%- if page.handle == 'faq' -%}
+<script>
+  (function () {
+    try {
+      if (window.location && window.location.search && /(?:[?&])category=/.test(window.location.search)) {
+        var existing = document.querySelector('meta[name="robots"]');
+        if (existing) {
+          existing.setAttribute('content', 'noindex,follow');
+        } else {
+          var m = document.createElement('meta');
+          m.setAttribute('name', 'robots');
+          m.setAttribute('content', 'noindex,follow');
+          document.head.appendChild(m);
+        }
+      }
+    } catch (e) {}
+  })();
+</script>
+{%- endif -%}
+
+{%- liquid
   assign breadcrumb_name_2 = ''
   assign breadcrumb_url_2 = ''
   assign breadcrumb_name_3 = ''
   assign breadcrumb_url_3 = ''
+  assign collection_schema_labels = ''
+  assign collection_schema_handles = ''
+  assign render_product_breadcrumb_schema = false
 
   if request.page_type == 'product'
-    assign breadcrumb_collection = product.collections.first
-    if breadcrumb_collection != blank
-      assign breadcrumb_name_2 = breadcrumb_collection.title
-      assign breadcrumb_url_2 = request.origin | append: breadcrumb_collection.url
-    endif
-    assign breadcrumb_name_3 = product.title
-    assign breadcrumb_url_3 = canonical_href
+    assign render_product_breadcrumb_schema = true
   elsif request.page_type == 'collection'
-    assign breadcrumb_name_2 = collection.title
-    assign breadcrumb_url_2 = canonical_href
+    capture collection_schema_payload
+      render 'collection-breadcrumb-resolve'
+    endcapture
+    assign collection_schema_payload = collection_schema_payload | strip
+    if collection_schema_payload contains '###'
+      assign collection_schema_labels = collection_schema_payload | split: '###' | first | strip
+      assign collection_schema_handles = collection_schema_payload | split: '###' | last | strip
+    endif
+    if collection_schema_labels == blank
+      assign breadcrumb_name_2 = collection.title
+      assign breadcrumb_url_2 = canonical_href
+    endif
   elsif request.page_type == 'article'
     assign breadcrumb_name_2 = blog.title
     assign breadcrumb_url_2 = request.origin | append: blog.url
@@ -266,17 +1045,60 @@
   endif
 -%}
 
-{%- if breadcrumb_name_2 != blank -%}
+{%- if request.page_type == 'collection' and collection_schema_labels != blank -%}
+  {%- liquid
+    assign schema_breadcrumb_id = canonical_href | append: '#breadcrumb'
+    assign schema_labels = collection_schema_labels | split: '|'
+    assign schema_handles = collection_schema_handles | split: '|'
+  -%}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
+      "@id": {{ schema_breadcrumb_id | json }},
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "name": {{ 'breadcrumbs.home' | t | json }},
-          "item": {{ request.origin | append: routes.root_url | json }}
+          "item": {{ schema_root | json }}
+        }
+        {%- for schema_label in schema_labels -%}
+          {%- assign schema_handle = schema_handles[forloop.index0] | default: '' | strip -%}
+          {%- capture schema_item_url -%}
+            {%- render 'breadcrumb-taxonomy-collection-url', taxonomy_handle: schema_handle -%}
+          {%- endcapture -%}
+          {%- assign schema_item_url = schema_item_url | strip -%}
+          {%- if forloop.last or schema_item_url == blank -%}
+            {%- assign schema_item_abs = canonical_href -%}
+          {%- else -%}
+            {%- assign schema_item_abs = request.origin | append: schema_item_url -%}
+          {%- endif -%}
+          ,{
+            "@type": "ListItem",
+            "position": {{ forloop.index | plus: 1 }},
+            "name": {{ schema_label | json }},
+            "item": {{ schema_item_abs | json }}
+          }
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- elsif breadcrumb_name_2 != blank -%}
+  {%- liquid
+    assign schema_breadcrumb_id = canonical_href | append: '#breadcrumb'
+  -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "@id": {{ schema_breadcrumb_id | json }},
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": {{ 'breadcrumbs.home' | t | json }},
+          "item": {{ schema_root | json }}
         },
         {
           "@type": "ListItem",
@@ -298,31 +1120,38 @@
   </script>
 {%- endif -%}
 
+{%- if render_product_breadcrumb_schema -%}
+  {% render 'product-breadcrumb', product: product, mode: 'schema', canonical_href: canonical_href %}
+{%- endif -%}
+
 {%- liquid
   assign faq_items_source = blank
   if request.page_type == 'product'
     assign faq_items_source = product.metafields.custom.product_faq_items.value
-  elsif request.page_type == 'collection'
+  elsif request.page_type == 'collection' and locale_base == 'fr'
     assign faq_items_source = collection.metafields.custom.collection_faq_items.value
   endif
 -%}
 
-{%- if faq_items_source != blank -%}
+{%- if faq_items_source != blank and current_page == 1 -%}
   {%- capture faq_main_entities -%}
     {%- assign faq_count = 0 -%}
     {%- for faq_item in faq_items_source limit: 20 -%}
       {%- liquid
         assign faq_question = faq_item.question.value | default: faq_item.question | default: faq_item.title.value | default: faq_item.title
-        assign faq_answer = faq_item.answer.value | default: faq_item.answer | default: faq_item.content.value | default: faq_item.content
       -%}
-      {%- if faq_question != blank and faq_answer != blank -%}
+      {%- capture faq_answer_text -%}
+        {%- render 'metaobject-rich-text', source: faq_item.answer, fallback: faq_item.content, plain_text: true -%}
+      {%- endcapture -%}
+      {%- assign faq_answer_text = faq_answer_text | strip -%}
+      {%- if faq_question != blank and faq_answer_text != blank -%}
         {%- if faq_count > 0 -%},{%- endif -%}
         {
           "@type": "Question",
           "name": {{ faq_question | strip_html | strip | json }},
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": {{ faq_answer | strip_html | strip | json }}
+            "text": {{ faq_answer_text | strip_html | strip | json }}
           }
         }
         {%- assign faq_count = faq_count | plus: 1 -%}
@@ -340,6 +1169,258 @@
   {%- endif -%}
 {%- endif -%}
 
-{% if page_description %}
-  <meta name="description" content="{{ page_description | escape }}">
+{%- if request.page_type == 'collection' and faq_items_source == blank and current_page == 1 -%}
+  {%- assign _rl_col_handle = collection.handle | downcase -%}
+  {%- if _rl_col_handle == 'onitsuka-tiger' or _rl_col_handle == 'onitsuka' or _rl_col_handle == 'onitsuka-tokuten' -%}
+    {%- if locale_base == 'de' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Sind die Onitsuka Tiger bei Resell Lausanne echt?","acceptedAnswer":{"@type":"Answer","text":"Ja. Jedes Onitsuka Tiger Modell wird von unserem Team geprüft und mit Echtheitszertifikat geliefert."}},
+    {"@type":"Question","name":"Welche Grösse soll ich bei Onitsuka Tiger Mexico 66 wählen?","acceptedAnswer":{"@type":"Answer","text":"Die Mexico 66 fällt normal bis leicht gross aus. Bei halben Grössen eine halbe Grösse kleiner wählen."}},
+    {"@type":"Question","name":"Was ist der Unterschied zwischen Mexico 66 und Mexico 66 SD?","acceptedAnswer":{"@type":"Answer","text":"Mexico 66 nutzt Standard-Synthetikleder. Mexico 66 SD setzt auf Premium-Materialien wie Nubukleder und japanisches Wildleder."}},
+    {"@type":"Question","name":"Welche Onitsuka Tiger Kollaborationen führt ihr?","acceptedAnswer":{"@type":"Answer","text":"Wir sourcen regelmässig Kollaborationen mit Naked Copenhagen, Mihara Yasuhiro, Andrea Pompilio, Sanrio und Cecilie Bahnsen."}},
+    {"@type":"Question","name":"Wie lange dauert die Lieferung bei Onitsuka Tiger?","acceptedAnswer":{"@type":"Answer","text":"Standard 5 bis 10 Werktage in der Schweiz und Europa, oder 2 bis 5 Werktage per Express bei berechtigten Produkten."}},
+    {"@type":"Question","name":"Kann ich Onitsuka Tiger zurückgeben?","acceptedAnswer":{"@type":"Answer","text":"Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer FAQ Umtausch & Retouren."}}
+  ]
+}
+</script>
+    {%- elsif locale_base == 'en' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Are the Onitsuka Tiger sneakers sold on Resell Lausanne authentic?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every Onitsuka Tiger pair is checked by our team and shipped with a certificate of authenticity."}},
+    {"@type":"Question","name":"What size should I choose for Onitsuka Tiger Mexico 66?","acceptedAnswer":{"@type":"Answer","text":"Mexico 66 fits true to size or slightly large. If you are between sizes, go half a size down."}},
+    {"@type":"Question","name":"What is the difference between Mexico 66 and Mexico 66 SD?","acceptedAnswer":{"@type":"Answer","text":"Mexico 66 uses standard synthetic leather. Mexico 66 SD uses premium nubuck leather, Japanese suede and leather lining."}},
+    {"@type":"Question","name":"Which Onitsuka Tiger collaborations do you stock?","acceptedAnswer":{"@type":"Answer","text":"We regularly source collaborations with Naked Copenhagen, Mihara Yasuhiro, Andrea Pompilio, Sanrio and Cecilie Bahnsen."}},
+    {"@type":"Question","name":"How long does delivery take for an Onitsuka Tiger order?","acceptedAnswer":{"@type":"Answer","text":"Standard delivery takes 5 to 10 business days in Switzerland and Europe, or 2 to 5 business days with express shipping on eligible products."}},
+    {"@type":"Question","name":"Can I return a pair of Onitsuka Tiger sneakers?","acceptedAnswer":{"@type":"Answer","text":"Returns within 14 days as exchange or store credit (10% fee). See our Exchanges & returns FAQ for full terms."}}
+  ]
+}
+</script>
+    {%- else -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Les Onitsuka Tiger vendues sur Resell Lausanne sont-elles authentiques ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Chaque paire Onitsuka Tiger est vérifiée par notre équipe et livrée avec certificat d'authenticité."}},
+    {"@type":"Question","name":"Quelle taille choisir pour une Onitsuka Tiger Mexico 66 ?","acceptedAnswer":{"@type":"Answer","text":"La Mexico 66 taille normalement à légèrement grand. Si vous chaussez en demi-pointure, prenez la demi-pointure inférieure."}},
+    {"@type":"Question","name":"Différence entre Mexico 66 et Mexico 66 SD ?","acceptedAnswer":{"@type":"Answer","text":"La Mexico 66 utilise un cuir synthétique standard. La Mexico 66 SD utilise des matériaux premium : nubuck, suède japonais et doublure cuir."}},
+    {"@type":"Question","name":"Quelles collaborations Onitsuka Tiger avez-vous en stock ?","acceptedAnswer":{"@type":"Answer","text":"Nous sourçons régulièrement les collaborations Naked Copenhagen, Mihara Yasuhiro, Andrea Pompilio, Sanrio et Cecilie Bahnsen."}},
+    {"@type":"Question","name":"Quel est le délai de livraison pour une commande Onitsuka Tiger ?","acceptedAnswer":{"@type":"Answer","text":"Livraison standard 5 à 10 jours ouvrables en Suisse et en Europe, ou 2 à 5 jours ouvrables en express sur produits éligibles."}},
+    {"@type":"Question","name":"Puis-je retourner une paire Onitsuka Tiger ?","acceptedAnswer":{"@type":"Answer","text":"Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre FAQ Échanges et retours."}}
+  ]
+}
+</script>
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- if request.page_type == 'collection' and faq_items_source == blank and current_page == 1 and locale_base == 'fr' -%}
+  {%- assign _rl_col_handle = collection.handle | downcase -%}
+  {%- case _rl_col_handle -%}
+    {%- when 'air-jordan-x-travis-scott', 'travis-scott', 'vetement-travis' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Comment garantissez-vous l'authenticité des Travis Scott ?","acceptedAnswer":{"@type":"Answer","text":"Chaque paire passe par un contrôle multi-points (boîte, étiquette, points de couture, semelle, swoosh inversé, paillettes pour la Dunk SB). Nous refusons toute paire qui ne réussit pas le contrôle."}},
+    {"@type":"Question","name":"Quels modèles Travis Scott avez-vous en stock ?","acceptedAnswer":{"@type":"Answer","text":"Air Jordan 1 Low (Mocha, Reverse Mocha, Olive, Black Phantom, Velvet Brown, Shy Pink, Canary), Jordan 1 High Fragment, Jordan 4 Cactus Jack, Jumpman Jack, Nike SB Dunk Low Travis Scott, Air Force 1 Cactus Jack. Stock mis à jour fréquemment."}},
+    {"@type":"Question","name":"Livrez-vous partout en Suisse ?","acceptedAnswer":{"@type":"Answer","text":"Oui, livraison dans toute la Suisse avec suivi. Livraison gratuite en Suisse dès 50 CHF, forfait de 10 CHF en Europe."}},
+    {"@type":"Question","name":"Puis-je payer en plusieurs fois ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois) sur les commandes éligibles."}},
+    {"@type":"Question","name":"Quelle taille choisir pour une Travis Scott ?","acceptedAnswer":{"@type":"Answer","text":"La plupart des modèles taillent normalement (Jordan 1 Low, AF1). La Nike SB Dunk Low taille plutôt grand : envisagez une demi-pointure en dessous selon votre forme de pied."}}
+  ]
+}
+</script>
+    {%- when 'essentials', 'fear-of-god-essentials' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Comment reconnaître un vrai Fear of God Essentials ?","acceptedAnswer":{"@type":"Answer","text":"Tissu épais et régulier, étiquettes nettes, logo flocké aligné, coutures propres, encolure et finitions soignées. Nous vérifions ces points avant mise en ligne pour garantir l'authenticité."}},
+    {"@type":"Question","name":"Quelle taille choisir pour un hoodie Essentials ?","acceptedAnswer":{"@type":"Answer","text":"La coupe est oversize. Pour un fit standard, prenez votre taille habituelle. Pour un fit plus relax, prenez une taille au-dessus. Les sweatpants suivent la même logique."}},
+    {"@type":"Question","name":"Quelles sont les couleurs Essentials les plus demandées ?","acceptedAnswer":{"@type":"Answer","text":"Light Oatmeal, Dark Oatmeal, Stretch Limo, Beige et Noir restent les couleurs piliers, recherchées chaque saison."}},
+    {"@type":"Question","name":"Quelle est la différence entre Essentials et Fear of God Main Line ?","acceptedAnswer":{"@type":"Answer","text":"Essentials est la ligne accessible, casual et logo-centrée. Main Line est la ligne premium et confidentielle de Jerry Lorenzo, avec des coupes et matières plus complexes."}},
+    {"@type":"Question","name":"Livraison Essentials en Suisse — quels délais ?","acceptedAnswer":{"@type":"Answer","text":"Livraison rapide dans toute la Suisse avec suivi. Plusieurs transporteurs selon la zone (La Poste Suisse, DHL, FedEx)."}}
+  ]
+}
+</script>
+    {%- when 'crampons-de-foot', 'crampons', 'football' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"Quels crampons choisir selon le terrain (FG, SG, AG, TF) ?","acceptedAnswer":{"@type":"Answer","text":"FG = sol sec, SG = sol gras et humide (crampons vissés), AG = synthétique long, TF = turf court ou stabilisé. Choisissez selon la majorité de vos matchs."}},
+    {"@type":"Question","name":"Quelle pointure prendre pour des crampons ?","acceptedAnswer":{"@type":"Answer","text":"Les crampons taillent souvent serré. Prenez votre pointure EU habituelle, voire +0.5 si vous portez des chaussettes épaisses ou si vous avez le pied large."}},
+    {"@type":"Question","name":"Différence entre Nike Mercurial, Tiempo, Phantom et Predator ?","acceptedAnswer":{"@type":"Answer","text":"Mercurial = vitesse, Tiempo = toucher cuir, Phantom = précision et contrôle, Predator = puissance et frappe. Le choix dépend de votre poste et de votre style de jeu."}},
+    {"@type":"Question","name":"Crampons moulés ou vissés ?","acceptedAnswer":{"@type":"Answer","text":"Moulés = polyvalents pour gazon sec et synthétique. Vissés = sol gras et profond, pour une meilleure accroche. Beaucoup de joueurs amateurs en Suisse n'ont besoin que de moulés (FG ou AG)."}},
+    {"@type":"Question","name":"Avez-vous des crampons en édition limitée ou en collaboration ?","acceptedAnswer":{"@type":"Answer","text":"Oui, nous sourçons régulièrement des éditions limitées Nike (Cryoshot, signature joueurs, collabs artistes) et des éditions spéciales Adidas."}}
+  ]
+}
+</script>
+  {%- endcase -%}
+{%- endif -%}
+
+{%- if request.page_type == 'page' -%}
+{%- liquid
+  assign faq_page_schema_emitted = false
+  assign faq_page_is_livraison = false
+  if request.path contains '/pages/livraison'
+    assign faq_page_is_livraison = true
+  endif
+  assign faq_page_is_faq = false
+  if page.handle == 'faq' or request.path contains '/pages/faq'
+    assign faq_page_is_faq = true
+  endif
+  assign faq_page_slug_order = 'livraison|authenticite|echanges-et-retours|options-de-paiement|prix-et-reductions|guide-des-tailles|a-propos-de-nous' | split: '|'
+  if faq_page_is_livraison
+    assign faq_page_slug_order = 'livraison' | split: '|'
+  endif
+-%}
+{%- if faq_page_is_livraison or faq_page_is_faq -%}
+  {%- assign faq_page_meta_categories = shop.metaobjects.page_faq_category.values -%}
+  {%- if faq_page_meta_categories != blank and faq_page_meta_categories.size > 0 -%}
+    {%- capture faq_page_main_entities -%}
+      {%- assign faq_page_entity_count = 0 -%}
+      {%- for faq_page_slug in faq_page_slug_order -%}
+        {%- liquid
+          assign faq_page_category = blank
+          for faq_page_category_candidate in faq_page_meta_categories
+            assign faq_page_candidate_slug = faq_page_category_candidate.slug.value | default: faq_page_category_candidate.slug
+            if faq_page_candidate_slug == faq_page_slug
+              assign faq_page_category = faq_page_category_candidate
+              break
+            endif
+          endfor
+        -%}
+        {%- if faq_page_category != blank -%}
+          {%- assign faq_page_items = faq_page_category.items.value -%}
+          {%- if faq_page_items != blank -%}
+            {%- for faq_page_item in faq_page_items -%}
+              {%- assign faq_page_question = faq_page_item.question.value | default: faq_page_item.question -%}
+              {%- capture faq_page_answer_text -%}
+                {%- render 'metaobject-rich-text', source: faq_page_item.answer, plain_text: true -%}
+              {%- endcapture -%}
+              {%- assign faq_page_answer_text = faq_page_answer_text | strip -%}
+              {%- if faq_page_question != blank and faq_page_answer_text != blank -%}
+                {%- if faq_page_entity_count > 0 -%},{%- endif -%}
+                {
+                  "@type": "Question",
+                  "name": {{ faq_page_question | strip_html | strip | json }},
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": {{ faq_page_answer_text | strip_html | strip | json }}
+                  }
+                }
+                {%- assign faq_page_entity_count = faq_page_entity_count | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if faq_page_entity_count > 0 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "name": {{ seo_page_title | json }},
+  "url": {{ canonical_href | json }},
+  "mainEntity": [{{ faq_page_main_entities }}]
+}
+</script>
+      {%- assign faq_page_schema_emitted = true -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if faq_page_schema_emitted == false and faq_page_is_livraison -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "name": {{ seo_page_title | json }},
+  "url": {{ canonical_href | json }},
+  "mainEntity": [
+    {"@type":"Question","name":"Comment se déroule la livraison ?","acceptedAnswer":{"@type":"Answer","text":"Resell Lausanne livre en Suisse et en Europe avec La Poste Suisse, DHL ou FedEx selon la destination. La majorité des commandes sont livrées en 5 à 10 jours ouvrables. Certains produits éligibles à la livraison express peuvent être livrés en 2 à 5 jours ouvrables."}},
+    {"@type":"Question","name":"Pourquoi certains produits prennent-ils plus de temps à être livrés ?","acceptedAnswer":{"@type":"Answer","text":"Certains articles sont sourcés auprès de notre réseau de revendeurs et partenaires en Suisse, en Europe ou à l'international, puis acheminés, contrôlés et préparés avant expédition."}},
+    {"@type":"Question","name":"Que se passe-t-il après ma commande ?","acceptedAnswer":{"@type":"Answer","text":"Vous recevez un e-mail de confirmation. Le produit est sourcé si besoin, contrôlé, conditionné puis expédié. Vous recevez un numéro de suivi à l'expédition finale."}},
+    {"@type":"Question","name":"Quels sont les délais de livraison ?","acceptedAnswer":{"@type":"Answer","text":"Délais estimés de 5 à 10 jours ouvrables pour la livraison standard en Suisse et en Europe. Certains produits sélectionnés bénéficient d'une livraison express en 2 à 5 jours ouvrables. Variables selon disponibilité, partenaires et transporteur."}},
+    {"@type":"Question","name":"J'ai commandé plusieurs articles mais je n'en ai reçu qu'un seul. Est-ce normal ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Chaque produit est approvisionné individuellement auprès de notre réseau de partenaires. Si votre commande contient plusieurs articles, ceux-ci peuvent être expédiés séparément et arriver à des dates différentes. Il est normal de recevoir une partie de votre commande avant le reste."}},
+    {"@type":"Question","name":"Les délais incluent-ils les week-ends ?","acceptedAnswer":{"@type":"Answer","text":"Non. Tous les délais affichés sur notre site sont exprimés en jours ouvrables. Les week-ends et les jours fériés ne sont pas pris en compte dans le calcul des délais de livraison. Par exemple, 10 jours ouvrables correspondent généralement à environ deux semaines calendaires."}},
+    {"@type":"Question","name":"Qu’est-ce que la livraison express ?","acceptedAnswer":{"@type":"Answer","text":"La livraison express est disponible uniquement sur certains produits sélectionnés. Ces articles sont déjà disponibles dans notre réseau logistique ou bénéficient d'un approvisionnement prioritaire, ce qui permet une expédition plus rapide que les délais habituels."}},
+    {"@type":"Question","name":"Pourquoi certains produits sont-ils livrés plus rapidement que d’autres ?","acceptedAnswer":{"@type":"Answer","text":"Chaque produit possède sa propre disponibilité et son propre circuit d'approvisionnement. Certaines références sont immédiatement accessibles auprès de nos partenaires, tandis que d'autres nécessitent davantage de temps pour être localisées, vérifiées et acheminées. Il est donc normal que les délais varient d'un produit à l'autre."}},
+    {"@type":"Question","name":"Livraison en Suisse","acceptedAnswer":{"@type":"Answer","text":"Livraison gratuite en Suisse dès 50 CHF, expédiée avec La Poste Suisse ou équivalent. Lien de suivi par e-mail dès remise au transporteur."}},
+    {"@type":"Question","name":"Livraison en Europe","acceptedAnswer":{"@type":"Answer","text":"Forfait de livraison de 10 CHF en Europe via DHL, FedEx, La Poste Suisse ou partenaire. Des frais de TVA, douane ou importation peuvent s'appliquer hors Suisse."}},
+    {"@type":"Question","name":"Combien coûte la livraison ?","acceptedAnswer":{"@type":"Answer","text":"Livraison gratuite en Suisse dès 50 CHF, forfait de 10 CHF en Europe. Des frais locaux (TVA, douane, importation) peuvent s'appliquer à certaines commandes internationales."}},
+    {"@type":"Question","name":"Comment suivre mon colis ?","acceptedAnswer":{"@type":"Answer","text":"Vous recevez un e-mail avec lien de suivi à l'expédition. Avant cela la commande peut encore être en traitement ou en acheminement depuis nos fournisseurs."}},
+    {"@type":"Question","name":"Pourquoi je n'ai pas encore reçu mon numéro de suivi ?","acceptedAnswer":{"@type":"Answer","text":"Le numéro de suivi final est envoyé uniquement après préparation et remise au transporteur. Si la commande est en sourcing ou contrôle, c'est normal."}},
+    {"@type":"Question","name":"Mon délai semble dépassé, que faire ?","acceptedAnswer":{"@type":"Answer","text":"Contactez-nous à contact@resell-lausanne.ch. Notre équipe vérifie l'état de votre commande et vous répond dès que possible."}}
+  ]
+}
+</script>
+{%- elsif faq_page_schema_emitted == false and faq_page_is_faq -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "name": {{ seo_page_title | json }},
+  "url": {{ canonical_href | json }},
+  "mainEntity": [
+    {"@type":"Question","name":"Comment se déroule la livraison ?","acceptedAnswer":{"@type":"Answer","text":"Resell Lausanne livre en Suisse et en Europe avec La Poste Suisse, DHL ou FedEx selon la destination. La majorité des commandes sont livrées en 5 à 10 jours ouvrables. Certains produits éligibles à la livraison express peuvent être livrés en 2 à 5 jours ouvrables."}},
+    {"@type":"Question","name":"Pourquoi certains produits prennent-ils plus de temps à être livrés ?","acceptedAnswer":{"@type":"Answer","text":"Certains articles sont sourcés auprès de notre réseau de revendeurs et partenaires en Suisse, en Europe ou à l'international, puis acheminés, contrôlés et préparés avant expédition."}},
+    {"@type":"Question","name":"Que se passe-t-il après ma commande ?","acceptedAnswer":{"@type":"Answer","text":"Vous recevez un e-mail de confirmation. Le produit est sourcé si besoin, contrôlé, conditionné puis expédié. Vous recevez un numéro de suivi à l'expédition finale."}},
+    {"@type":"Question","name":"Quels sont les délais de livraison ?","acceptedAnswer":{"@type":"Answer","text":"Délais estimés de 5 à 10 jours ouvrables pour la livraison standard en Suisse et en Europe. Certains produits sélectionnés bénéficient d'une livraison express en 2 à 5 jours ouvrables. Variables selon disponibilité, partenaires et transporteur."}},
+    {"@type":"Question","name":"J'ai commandé plusieurs articles mais je n'en ai reçu qu'un seul. Est-ce normal ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Chaque produit est approvisionné individuellement auprès de notre réseau de partenaires. Si votre commande contient plusieurs articles, ceux-ci peuvent être expédiés séparément et arriver à des dates différentes. Il est normal de recevoir une partie de votre commande avant le reste."}},
+    {"@type":"Question","name":"Les délais incluent-ils les week-ends ?","acceptedAnswer":{"@type":"Answer","text":"Non. Tous les délais affichés sur notre site sont exprimés en jours ouvrables. Les week-ends et les jours fériés ne sont pas pris en compte dans le calcul des délais de livraison. Par exemple, 10 jours ouvrables correspondent généralement à environ deux semaines calendaires."}},
+    {"@type":"Question","name":"Qu’est-ce que la livraison express ?","acceptedAnswer":{"@type":"Answer","text":"La livraison express est disponible uniquement sur certains produits sélectionnés. Ces articles sont déjà disponibles dans notre réseau logistique ou bénéficient d'un approvisionnement prioritaire, ce qui permet une expédition plus rapide que les délais habituels."}},
+    {"@type":"Question","name":"Pourquoi certains produits sont-ils livrés plus rapidement que d’autres ?","acceptedAnswer":{"@type":"Answer","text":"Chaque produit possède sa propre disponibilité et son propre circuit d'approvisionnement. Certaines références sont immédiatement accessibles auprès de nos partenaires, tandis que d'autres nécessitent davantage de temps pour être localisées, vérifiées et acheminées. Il est donc normal que les délais varient d'un produit à l'autre."}},
+    {"@type":"Question","name":"Livraison en Suisse","acceptedAnswer":{"@type":"Answer","text":"Livraison gratuite en Suisse dès 50 CHF, expédiée avec La Poste Suisse ou équivalent. Lien de suivi par e-mail dès remise au transporteur."}},
+    {"@type":"Question","name":"Livraison en Europe","acceptedAnswer":{"@type":"Answer","text":"Forfait de livraison de 10 CHF en Europe via DHL, FedEx, La Poste Suisse ou partenaire. Des frais de TVA, douane ou importation peuvent s'appliquer hors Suisse."}},
+    {"@type":"Question","name":"Combien coûte la livraison ?","acceptedAnswer":{"@type":"Answer","text":"Livraison gratuite en Suisse dès 50 CHF, forfait de 10 CHF en Europe. Des frais locaux (TVA, douane, importation) peuvent s'appliquer à certaines commandes internationales."}},
+    {"@type":"Question","name":"Comment suivre mon colis ?","acceptedAnswer":{"@type":"Answer","text":"Vous recevez un e-mail avec lien de suivi à l'expédition. Avant cela la commande peut encore être en traitement ou en acheminement depuis nos fournisseurs."}},
+    {"@type":"Question","name":"Pourquoi je n'ai pas encore reçu mon numéro de suivi ?","acceptedAnswer":{"@type":"Answer","text":"Le numéro de suivi final est envoyé uniquement après préparation et remise au transporteur. Si la commande est en sourcing ou contrôle, c'est normal."}},
+    {"@type":"Question","name":"Mon délai semble dépassé, que faire ?","acceptedAnswer":{"@type":"Answer","text":"Les délais sont indicatifs. En cas de dépassement significatif, accordez d'abord à Resell Lausanne un délai supplémentaire raisonnable par écrit avant de demander l'annulation. Contact : contact@resell-lausanne.ch."}},
+    {"@type":"Question","name":"Comment Resell Lausanne garantit-il l'authenticité des produits ?","acceptedAnswer":{"@type":"Answer","text":"Chaque produit est contrôlé par notre équipe d'experts avant expédition (boîte, étiquettes, matières, coutures, semelle). Nous travaillons exclusivement avec des revendeurs professionnels certifiés."}},
+    {"@type":"Question","name":"Est-ce que je reçois un certificat d'authenticité ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Chaque commande est accompagnée d'un certificat d'authenticité Resell Lausanne attestant que le produit a été contrôlé et validé."}},
+    {"@type":"Question","name":"Que se passe-t-il si un produit s'avère non authentique ?","acceptedAnswer":{"@type":"Answer","text":"Si un produit ne passait pas notre contrôle final, il ne vous serait pas expédié. Vous seriez contacté et intégralement remboursé."}},
+    {"@type":"Question","name":"D'où proviennent vos produits ?","acceptedAnswer":{"@type":"Answer","text":"De revendeurs professionnels, boutiques spécialisées et partenaires sélectionnés en Suisse, en Europe et à l'international. Jamais auprès de particuliers sans vérification."}},
+    {"@type":"Question","name":"Puis-je retourner un article ?","acceptedAnswer":{"@type":"Answer","text":"Retours volontaires : sneakers uniquement, sous 14 jours, autorisation écrite préalable obligatoire. Frais de 10 % (échange ou crédit boutique). Vêtements exclus sauf défaut ou erreur. Pas de retour volontaire au-delà de CHF 650.–. Soldes, Soldes 48h, liquidation, archive et prix promotionnels : exclus."}},
+    {"@type":"Question","name":"Qui prend en charge les frais de retour ?","acceptedAnswer":{"@type":"Answer","text":"Frais de renvoi et étiquette à la charge du client. Échange ou crédit boutique : 10 % de frais. Sauf erreur de notre part ou défaut avéré."}},
+    {"@type":"Question","name":"Comment fonctionne le remboursement ?","acceptedAnswer":{"@type":"Answer","text":"Pas de remboursement bancaire pour retour volontaire. Échange ou crédit boutique avec 10 % de frais, émis sous 3 à 5 jours ouvrables après contrôle. Remboursement sur moyen de paiement d'origine réservé aux erreurs ou défauts avérés. Aucun retour volontaire, échange ou crédit sur les achats Soldes, Soldes 48h ou prix promotionnels."}},
+    {"@type":"Question","name":"Puis-je échanger ma taille ?","acceptedAnswer":{"@type":"Answer","text":"Échanges possibles sous réserve de disponibilité. Contactez-nous avant le retour pour vérifier la disponibilité de la taille souhaitée."}},
+    {"@type":"Question","name":"Pourquoi ne proposez-vous pas de remboursement sur le moyen de paiement d'origine ?","acceptedAnswer":{"@type":"Answer","text":"La majorité des produits sont achetés spécifiquement pour chaque commande auprès de notre réseau de fournisseurs et ne peuvent pas être retournés à nos partenaires. Les frais d'achat, transport, contrôle d'authenticité et logistique restent à notre charge sur chaque retour. Les retours pour convenance personnelle (taille, changement d'avis) sont donc traités en échange ou crédit boutique, ce qui nous permet de maintenir des prix compétitifs. Nous travaillons sur un réseau secondaire pour assouplir cette politique à terme."}},
+    {"@type":"Question","name":"Quels moyens de paiement acceptez-vous ?","acceptedAnswer":{"@type":"Answer","text":"En Suisse : Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay. En Europe : Visa, MasterCard, Amex, Apple Pay, Alma (2, 3 ou 4 fois)."}},
+    {"@type":"Question","name":"Le paiement en plusieurs fois est-il disponible ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Powerpay en Suisse. Alma en Europe pour 2, 3 ou 4 fois sans frais sur commandes éligibles."}},
+    {"@type":"Question","name":"Le paiement est-il sécurisé ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Transactions sécurisées SSL et traitées par prestataires certifiés. Resell Lausanne ne stocke aucune donnée bancaire."}},
+    {"@type":"Question","name":"Comment sont fixés vos prix ?","acceptedAnswer":{"@type":"Answer","text":"Nos prix reflètent la valeur de marché des produits, incluant approvisionnement, contrôle d'authenticité et frais opérationnels. Affichés en CHF."}},
+    {"@type":"Question","name":"Pourquoi les prix varient-ils selon les pointures ?","acceptedAnswer":{"@type":"Answer","text":"Chaque pointure a son propre marché et sa propre disponibilité. Certaines tailles sont plus recherchées ou produites en quantités plus limitées. Comme nous nous approvisionnons en temps réel auprès de différents partenaires, le prix dépend du coût auquel la pointure est disponible au moment de la commande. Deux pointures d'un même modèle peuvent donc être proposées à des prix différents, parfois avec des écarts importants pour les tailles rares ou très demandées."}},
+    {"@type":"Question","name":"Avez-vous des codes promo ?","acceptedAnswer":{"@type":"Answer","text":"Oui. CHF 10 offerts sur la première commande avec le code FIRST10. Autres offres via la newsletter."}},
+    {"@type":"Question","name":"Les prix incluent-ils la TVA ?","acceptedAnswer":{"@type":"Answer","text":"Oui, tous les prix affichés incluent la TVA suisse applicable. Hors Suisse, des taxes locales peuvent s'appliquer."}},
+    {"@type":"Question","name":"Comment choisir ma taille de sneaker ?","acceptedAnswer":{"@type":"Answer","text":"Tailles affichées en pointure EU. Chaque fiche produit précise le sizing habituel. En cas de doute, prenez une demi-pointure au-dessus."}},
+    {"@type":"Question","name":"Comment convertir les tailles US, UK et EU ?","acceptedAnswer":{"@type":"Answer","text":"EU 40 = US 7 = UK 6. EU 42 = US 8.5 = UK 7.5. EU 44 = US 10 = UK 9. EU 45 = US 11 = UK 10. Variables selon les marques."}},
+    {"@type":"Question","name":"Qui est Resell Lausanne ?","acceptedAnswer":{"@type":"Answer","text":"Boutique en ligne suisse spécialisée dans la vente de sneakers authentiques, streetwear premium et collectibles. Basée à Lausanne."}},
+    {"@type":"Question","name":"Comment vous contacter ?","acceptedAnswer":{"@type":"Answer","text":"Écrivez-nous à contact@resell-lausanne.ch. Nous répondons sous 24 à 48 heures ouvrables."}},
+    {"@type":"Question","name":"Proposez-vous un service en magasin ?","acceptedAnswer":{"@type":"Answer","text":"Resell Lausanne opère principalement en ligne. Pour un rendez-vous ou un retrait sur place à Lausanne, contactez-nous par e-mail."}}
+  ]
+}
+</script>
+{%- endif -%}
+{%- endif -%}
+
+{%- liquid
+  assign meta_desc_source = seo_page_description | default: page_description
+  if meta_desc_source != blank
+    assign meta_desc_clean = meta_desc_source | strip_html | strip | truncate: 160, '…'
+  endif
+-%}
+{% if meta_desc_clean != blank %}
+  <meta name="description" content="{{ meta_desc_clean | escape }}">
 {% endif %}

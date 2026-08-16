@@ -1,0 +1,146 @@
+{%- comment -%}
+  Critical mobile nav CSS. Kept inline to avoid a separate render-blocking request.
+{%- endcomment -%}
+<style>
+  :root {
+    --rl-mobile-floating-nav-clearance: calc(95px + env(safe-area-inset-bottom));
+  }
+
+  @media screen and (max-width: 767.98px) {
+    .rl-mobile-floating-nav {
+      position: fixed;
+      left: 24px;
+      right: 24px;
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      height: 50px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border-radius: 80px;
+      box-shadow: 0 10px 40px rgba(41, 47, 123, 0.302);
+      z-index: 200;
+      box-sizing: border-box;
+    }
+
+    .rl-mobile-floating-nav__item {
+      min-width: 44px;
+      min-height: 44px;
+      padding: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      background: transparent;
+      color: #666;
+      text-decoration: none;
+      cursor: pointer;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .rl-mobile-floating-nav__icon {
+      width: 20px;
+      height: 20px;
+      display: block;
+    }
+
+    .rl-mobile-floating-nav__item--search {
+      width: 54px;
+      height: 54px;
+      padding: 0;
+      border-radius: 50%;
+      background: #4956ed;
+      color: #fff;
+      transform: translate3d(0, -9px, 0);
+      box-shadow: 0 10px 40px hsla(212, 9%, 56%, 0.3);
+    }
+
+    .rl-mobile-floating-nav__cart-wrap {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rl-mobile-floating-nav__badge {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      width: 14px;
+      height: 14px;
+      background-color: #111;
+      color: #fff;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      line-height: 1;
+      font-weight: 600;
+    }
+
+    .rl-mobile-floating-nav__badge[data-rl-cart-count='0'] {
+      display: none;
+    }
+
+    .rl-mobile-floating-nav.rl-mobile-floating-nav--hidden-near-footer,
+    body.overflow-hidden .rl-mobile-floating-nav,
+    body:has(.header__mobile-menu-overlay.is-open) .rl-mobile-floating-nav,
+    body:has(.header__mobile-menu-overlay.is-closing) .rl-mobile-floating-nav,
+    body:has(.wishlist-drawer__overlay.is-open) .rl-mobile-floating-nav,
+    body:has(dialog.dialog-modal[open]) .rl-mobile-floating-nav {
+      display: none;
+    }
+
+    body.template-search .rl-mobile-floating-nav__item--search,
+    body.template-search .rl-mobile-floating-nav__item--search[data-rl-search-mode='close'],
+    .rl-mobile-floating-nav__item--search[data-rl-search-mode='close'] {
+      background: #fff;
+      color: #111;
+      border: 1px solid #e6e6e6;
+    }
+
+    body.template-search .rl-mobile-floating-nav__item--search .rl-mobile-floating-nav__icon--search,
+    .rl-mobile-floating-nav__item--search[data-rl-search-mode='close'] .rl-mobile-floating-nav__icon--search {
+      display: none;
+    }
+
+    body.template-search .rl-mobile-floating-nav__item--search .rl-mobile-floating-nav__icon--close,
+    .rl-mobile-floating-nav__item--search[data-rl-search-mode='close'] .rl-mobile-floating-nav__icon--close {
+      display: block;
+    }
+
+    .rl-mobile-floating-nav__item--search[data-rl-search-mode='open'] .rl-mobile-floating-nav__icon--close {
+      display: none;
+    }
+
+    .rl-mobile-floating-nav__item--wishlist-spacer {
+      visibility: hidden;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .header__layout-mobile .header__layout--rl-mobile-search,
+    .header__layout-mobile .header__search-form,
+    .header__layout-mobile .header__menu,
+    .header__layout-mobile .header__actions {
+      display: none !important;
+    }
+
+    .header__layout-mobile .header__layout--logo-center,
+    .header__layout-mobile .header__layout--rl-mobile-top {
+      grid-template-columns: 1fr !important;
+      justify-items: center;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .rl-mobile-floating-nav {
+      display: none;
+    }
+  }
+</style>

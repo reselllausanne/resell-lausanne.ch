@@ -1,0 +1,1557 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+
+  assign sg_title = 'Guide des tailles'
+  assign sg_title_separator = ' — '
+  assign sg_brands_label = 'Marques'
+  assign sg_tab_men = 'Homme'
+  assign sg_tab_women = 'Femme'
+  assign sg_tab_kids_baby = 'Enfant & Bébé'
+  assign sg_tab_kids = 'Enfant'
+  assign sg_fitting_tips = 'Conseils de chausse'
+  assign sg_size_tips = 'Conseils de taille'
+  assign sg_tab_tops = 'Tops & Hoodies'
+  assign sg_tab_bottoms = 'Pantalons & Shorts'
+  assign sg_th_size = 'Taille'
+  assign sg_th_chest = 'Poitrine (cm)'
+  assign sg_th_shoulder = 'Épaule (cm)'
+  assign sg_th_length = 'Longueur (cm)'
+  assign sg_th_waist = 'Tour de taille (cm)'
+  assign sg_th_hips = 'Tour de hanches (cm)'
+  assign sg_th_inseam = 'Entrejambe (cm)'
+  assign sg_th_standard = 'Équivalent standard'
+  assign sg_standard_suffix = 'standard'
+  assign sg_intro_h2 = 'Comment trouver sa pointure de sneaker ?'
+  assign sg_intro_p1 = 'Les tailles de chaussures varient selon les marques et les modèles. Un 42 chez Nike ne correspond pas forcément à un 42 chez Adidas ou Converse. La façon la plus fiable de trouver votre pointure est de mesurer la longueur de votre pied en centimètres, puis de consulter le tableau de conversion de la marque concernée.'
+  assign sg_intro_p2 = 'Sélectionnez une marque dans le menu pour accéder à son guide complet.'
+  assign sg_step1_title = 'Étape 1 — Matériel'
+  assign sg_step1_body = 'Posez une feuille de papier blanc sur le sol, contre un mur. Tenez-vous debout, le talon bien contre le mur.'
+  assign sg_step2_title = 'Étape 2 — Tracé'
+  assign sg_step2_body = "Marquez l'extrémité de votre orteil le plus long. Mesurez la distance entre le mur et la marque en centimètres."
+  assign sg_step3_title = 'Étape 3 — Conversion'
+  assign sg_step3_body = 'Reportez cette mesure dans le tableau de la marque. En cas de doute entre deux tailles, prenez la plus grande.'
+  assign sg_badge_nike = 'Demi-pointures'
+  assign sg_badge_air_jordan = 'Système Nike'
+  assign sg_badge_adida = 'Tiers de pointures'
+  assign sg_badge_new_balance = 'Demi-pointures · Largeurs D/2E'
+  assign sg_badge_asics = 'Taille petit'
+  assign sg_badge_yeezy = 'Système Adidas · Varie selon modèle'
+  assign sg_badge_ugg = 'Pointures entières US'
+  assign sg_badge_converse = 'Taille grand'
+  assign sg_badge_salomon = 'Tiers de pointures'
+  assign sg_badge_puma = 'Demi-pointures · Comparable Nike'
+  assign sg_badge_veja = 'Pointures entières · Taille grand'
+  assign sg_badge_saucony = 'Demi-pointures · Taille normalement'
+  assign sg_badge_essentials = 'Vêtements · Taille très grand'
+
+  if locale_base == 'de'
+    assign sg_title = 'Größentabelle'
+    assign sg_title_separator = ' – '
+    assign sg_brands_label = 'Marken'
+    assign sg_tab_men = 'Herren'
+    assign sg_tab_women = 'Damen'
+    assign sg_tab_kids_baby = 'Kinder & Baby'
+    assign sg_tab_kids = 'Kinder'
+    assign sg_fitting_tips = 'Passform-Tipps'
+    assign sg_size_tips = 'Größen-Tipps'
+    assign sg_tab_tops = 'Tops & Hoodies'
+    assign sg_tab_bottoms = 'Hosen & Shorts'
+    assign sg_th_size = 'Größe'
+    assign sg_th_chest = 'Brust (cm)'
+    assign sg_th_shoulder = 'Schulter (cm)'
+    assign sg_th_length = 'Länge (cm)'
+    assign sg_th_waist = 'Taillenumfang (cm)'
+    assign sg_th_hips = 'Hüftumfang (cm)'
+    assign sg_th_inseam = 'Innenbeinlänge (cm)'
+    assign sg_th_standard = 'Standard-Äquivalent'
+    assign sg_standard_suffix = 'Standard'
+    assign sg_intro_h2 = 'Wie finde ich meine Sneaker-Größe?'
+    assign sg_intro_p1 = 'Schuhgrößen variieren je nach Marke und Modell. EU 42 bei Nike entspricht nicht unbedingt EU 42 bei Adidas oder Converse. Am zuverlässigsten: Fußlänge in Zentimetern messen, dann die Umrechnungstabelle der Marke nutzen.'
+    assign sg_intro_p2 = 'Wählen Sie eine Marke im Menü für den vollständigen Guide.'
+    assign sg_step1_title = 'Schritt 1 — Material'
+    assign sg_step1_body = 'Legen Sie ein weißes Blatt Papier bodenbündig an eine Wand. Stellen Sie sich hin, Ferse an der Wand.'
+    assign sg_step2_title = 'Schritt 2 — Markieren'
+    assign sg_step2_body = 'Markieren Sie die Spitze des längsten Zehs. Messen Sie den Abstand von der Wand bis zur Markierung in Zentimetern.'
+    assign sg_step3_title = 'Schritt 3 — Umrechnen'
+    assign sg_step3_body = 'Tragen Sie die Messung in die Markentabelle ein. Bei Unsicherheit zwischen zwei Größen: die größere wählen.'
+    assign sg_badge_nike = 'Halbe Größen'
+    assign sg_badge_air_jordan = 'Nike-System'
+    assign sg_badge_adida = 'Drittelgrößen'
+    assign sg_badge_new_balance = 'Halbe Größen · Weiten D/2E'
+    assign sg_badge_asics = 'Fällt klein aus'
+    assign sg_badge_yeezy = 'Adidas-System · Modellabhängig'
+    assign sg_badge_ugg = 'US-Vollgrößen'
+    assign sg_badge_converse = 'Fällt groß aus'
+    assign sg_badge_salomon = 'Drittelgrößen'
+    assign sg_badge_puma = 'Halbe Größen · Vergleichbar mit Nike'
+    assign sg_badge_veja = 'Vollgrößen · Fällt groß aus'
+    assign sg_badge_saucony = 'Halbe Größen · Normal'
+    assign sg_badge_essentials = 'Bekleidung · Sehr groß'
+  elsif locale_base == 'en'
+    assign sg_title = 'Size guide'
+    assign sg_title_separator = ' — '
+    assign sg_brands_label = 'Brands'
+    assign sg_tab_men = 'Men'
+    assign sg_tab_women = 'Women'
+    assign sg_tab_kids_baby = 'Kids & Baby'
+    assign sg_tab_kids = 'Kids'
+    assign sg_fitting_tips = 'Sizing tips'
+    assign sg_size_tips = 'Size tips'
+    assign sg_tab_tops = 'Tops & Hoodies'
+    assign sg_tab_bottoms = 'Pants & Shorts'
+    assign sg_th_size = 'Size'
+    assign sg_th_chest = 'Chest (cm)'
+    assign sg_th_shoulder = 'Shoulder (cm)'
+    assign sg_th_length = 'Length (cm)'
+    assign sg_th_waist = 'Waist (cm)'
+    assign sg_th_hips = 'Hips (cm)'
+    assign sg_th_inseam = 'Inseam (cm)'
+    assign sg_th_standard = 'Standard equivalent'
+    assign sg_standard_suffix = 'standard'
+    assign sg_intro_h2 = 'How do I find my sneaker size?'
+    assign sg_intro_p1 = 'Shoe sizes vary by brand and model. EU 42 at Nike is not necessarily EU 42 at Adidas or Converse. The most reliable method is to measure your foot length in centimetres, then check the brand conversion chart.'
+    assign sg_intro_p2 = 'Select a brand from the menu to open its full guide.'
+    assign sg_step1_title = 'Step 1 — Setup'
+    assign sg_step1_body = 'Place a sheet of white paper on the floor against a wall. Stand with your heel touching the wall.'
+    assign sg_step2_title = 'Step 2 — Measure'
+    assign sg_step2_body = 'Mark the tip of your longest toe. Measure the distance from the wall to the mark in centimetres.'
+    assign sg_step3_title = 'Step 3 — Convert'
+    assign sg_step3_body = 'Match that measurement to the brand chart. If you are between two sizes, choose the larger one.'
+    assign sg_badge_nike = 'Half sizes'
+    assign sg_badge_air_jordan = 'Nike sizing'
+    assign sg_badge_adida = 'Third sizes'
+    assign sg_badge_new_balance = 'Half sizes · D/2E widths'
+    assign sg_badge_asics = 'Runs small'
+    assign sg_badge_yeezy = 'Adidas sizing · Varies by model'
+    assign sg_badge_ugg = 'Full US sizes'
+    assign sg_badge_converse = 'Runs large'
+    assign sg_badge_salomon = 'Third sizes'
+    assign sg_badge_puma = 'Half sizes · Nike-like'
+    assign sg_badge_veja = 'Full sizes · Runs large'
+    assign sg_badge_saucony = 'Half sizes · True to size'
+    assign sg_badge_essentials = 'Apparel · Runs very large'
+  endif
+
+  if pages['guide-des-tailles'] != blank
+    assign size_guide_base_url = pages['guide-des-tailles'].url
+  else
+    assign size_guide_base_url = routes.root_url | append: '/pages/guide-des-tailles'
+  endif
+%}
+<script src="{{ 'resell-size-guide-page.js' | asset_url }}" defer></script>
+
+<style>
+  /* ── Root ── */
+  .rl-sg {
+    padding-top: 48px;
+    padding-bottom: 96px;
+    font-family: inherit;
+  }
+
+  /* ── Header ── */
+  .rl-sg__header {
+    margin-bottom: 40px;
+  }
+  .rl-sg__header h1 {
+    margin-top: 16px;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: rgb(8,8,8);
+  }
+
+  /* ── Two-column layout ── */
+  .rl-sg__layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    column-gap: 56px;
+    align-items: start;
+  }
+  @media (max-width: 767px) {
+    .rl-sg__layout { grid-template-columns: 1fr; }
+    .rl-sg__sidebar { margin-bottom: 32px; }
+  }
+
+  /* ── Sidebar ── */
+  .rl-sg__sidebar {
+    position: sticky;
+    top: 100px;
+  }
+  .rl-sg__sidebar-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgb(140,140,140);
+    margin-bottom: 16px;
+  }
+  .rl-sg__sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .rl-sg__sidebar li {
+    border-top: 1px solid rgb(245,245,245);
+  }
+  .rl-sg__sidebar li:last-child {
+    border-bottom: 1px solid rgb(245,245,245);
+  }
+  .rl-sg__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgb(120,120,120);
+    text-align: left;
+    font-family: inherit;
+    transition: color 0.15s;
+  }
+  .rl-sg__nav-btn:hover,
+  .rl-sg__nav-btn.is-active {
+    color: rgb(8,8,8);
+  }
+  .rl-sg__nav-btn svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .rl-sg__nav-btn:hover svg,
+  .rl-sg__nav-btn.is-active svg {
+    opacity: 1;
+  }
+
+  /* ── Content area ── */
+  .rl-sg__content { min-width: 0; }
+
+  /* ── Intro ── */
+  .rl-sg__intro {
+    padding: 28px;
+    background: rgb(250,250,250);
+    border-radius: 12px;
+    margin-bottom: 48px;
+  }
+  .rl-sg__intro h2 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: rgb(8,8,8);
+  }
+  .rl-sg__intro p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgb(80,80,80);
+    margin-bottom: 10px;
+  }
+  .rl-sg__intro p:last-child { margin-bottom: 0; }
+  .rl-sg__measure-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+  }
+  @media (max-width: 600px) {
+    .rl-sg__measure-steps { grid-template-columns: 1fr; }
+  }
+  .rl-sg__measure-step {
+    background: #fff;
+    border: 1px solid rgb(235,235,235);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgb(80,80,80);
+  }
+  .rl-sg__measure-step strong {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: rgb(8,8,8);
+    margin-bottom: 6px;
+  }
+
+  /* ── Brand section ── */
+  .rl-sg__brand {
+    margin-bottom: 64px;
+  }
+  .rl-sg__brand.is-hidden { display: none !important; }
+
+  .rl-sg__brand-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgb(8,8,8);
+  }
+  .rl-sg__brand-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: rgb(8,8,8);
+    margin: 0;
+  }
+  .rl-sg__brand-badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: rgb(150,150,150);
+  }
+
+  /* ── Article text ── */
+  .rl-sg__article {
+    margin-bottom: 28px;
+  }
+  .rl-sg__article h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(8,8,8);
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+  .rl-sg__article h3:first-child { margin-top: 0; }
+  .rl-sg__article p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgb(70,70,70);
+    margin-bottom: 10px;
+  }
+
+  /* ── Gender tabs ── */
+  .rl-sg__tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgb(230,230,230);
+    margin-bottom: 20px;
+  }
+  .rl-sg__tab-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(120,120,120);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: .04em;
+    transition: color 0.15s, border-color 0.15s;
+    margin-bottom: -1px;
+  }
+  .rl-sg__tab-btn:hover { color: rgb(8,8,8); }
+  .rl-sg__tab-btn.is-active {
+    color: rgb(8,8,8);
+    border-bottom-color: rgb(8,8,8);
+  }
+  .rl-sg__table-panel { display: none; }
+  .rl-sg__table-panel.is-active { display: block; }
+
+  /* ── Table ── */
+  .rl-sg__table-wrap {
+    overflow-x: auto;
+    border: 1px solid rgb(235,235,235);
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .rl-sg__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .rl-sg__table thead tr {
+    background: rgb(248,248,248);
+  }
+  .rl-sg__table th {
+    padding: 11px 16px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: rgb(80,80,80);
+    text-align: center;
+    border-bottom: 1px solid rgb(235,235,235);
+  }
+  .rl-sg__table td {
+    padding: 10px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgb(248,248,248);
+    color: rgb(50,50,50);
+  }
+  .rl-sg__table tr:last-child td { border-bottom: none; }
+  .rl-sg__table tbody tr:hover { background: rgb(252,252,252); }
+  .rl-sg__table td:first-child,
+  .rl-sg__table th:first-child {
+    font-weight: 700;
+    background: rgb(248,248,248);
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    text-align: left;
+    min-width: 72px;
+  }
+
+  /* ── Tips box ── */
+  .rl-sg__tips {
+    background: rgb(250,250,250);
+    border-left: 3px solid rgb(8,8,8);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin-top: 4px;
+  }
+  .rl-sg__tips-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: rgb(8,8,8);
+    margin-bottom: 10px;
+  }
+  .rl-sg__tips ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .rl-sg__tips li {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgb(70,70,70);
+    padding: 5px 0;
+    border-bottom: 1px solid rgb(242,242,242);
+    padding-left: 14px;
+    position: relative;
+  }
+  .rl-sg__tips li:last-child { border-bottom: none; }
+  .rl-sg__tips li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: rgb(150,150,150);
+    font-size: 11px;
+  }
+</style>
+
+<div class="rl-sg" data-size-guide-url="{{ size_guide_base_url }}" data-title="{{ sg_title | escape }}" data-title-separator="{{ sg_title_separator | escape }}">
+
+  <div class="rl-sg__header">
+    <nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+      <ol class="breadcrumbs__list list-unstyled">
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+          <span class="breadcrumbs__separator" aria-hidden="true">›</span>
+        </li>
+        <li class="breadcrumbs__item rl-sg__breadcrumb-page">{{ sg_title }}</li>
+        <li class="breadcrumbs__item rl-sg__breadcrumb-brand" hidden></li>
+      </ol>
+    </nav>
+    <h1>{{ sg_title }}</h1>
+  </div>
+
+  <div class="rl-sg__layout">
+
+    <!-- ── Sidebar ── -->
+    <nav class="rl-sg__sidebar" aria-label="{{ sg_brands_label }}">
+      <p class="rl-sg__sidebar-title">{{ sg_brands_label }}</p>
+      <ul>
+        {% assign sg_brands = 'nike,air-jordan,adidas,new-balance,asics,yeezy,ugg,converse,salomon,puma,veja,saucony,essentials' | split: ',' %}
+        {% assign sg_labels = 'Nike,Air Jordan,Adidas,New Balance,Asics,Yeezy,UGG,Converse,Salomon,Puma,Veja,Saucony,Essentials' | split: ',' %}
+        {% for brand in sg_brands %}
+          <li>
+            <button class="rl-sg__nav-btn" data-brand="{{ brand }}" type="button">
+              {{ sg_labels[forloop.index0 ] }}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.5 15l5-5-5-5"/></svg>
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <!-- ── Content ── -->
+    <div class="rl-sg__content">
+
+      <!-- Intro -->
+      <div class="rl-sg__intro">
+        <h2>{{ sg_intro_h2 }}</h2>
+        <p>{{ sg_intro_p1 }}</p>
+        <p>{{ sg_intro_p2 }}</p>
+        <div class="rl-sg__measure-steps">
+          <div class="rl-sg__measure-step">
+            <strong>{{ sg_step1_title }}</strong>
+            {{ sg_step1_body }}
+          </div>
+          <div class="rl-sg__measure-step">
+            <strong>{{ sg_step2_title }}</strong>
+            {{ sg_step2_body }}
+          </div>
+          <div class="rl-sg__measure-step">
+            <strong>{{ sg_step3_title }}</strong>
+            {{ sg_step3_body }}
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════ NIKE ══════════════════════════════ -->
+      <section id="size-nike" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Nike</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_nike }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'nike', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="nike">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids_baby }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35.5</td><td>3.5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36</td><td>4</td><td>3.5</td><td>23</td></tr>
+              <tr><td>36.5</td><td>4.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>5.5</td><td>5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>6</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>6.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>7</td><td>6</td><td>25</td></tr>
+              <tr><td>40.5</td><td>7.5</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>41</td><td>8</td><td>7</td><td>26</td></tr>
+              <tr><td>42</td><td>8.5</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42.5</td><td>9</td><td>8</td><td>27</td></tr>
+              <tr><td>43</td><td>9.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>44</td><td>10</td><td>9</td><td>28</td></tr>
+              <tr><td>44.5</td><td>10.5</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>45</td><td>11</td><td>10</td><td>29</td></tr>
+              <tr><td>45.5</td><td>11.5</td><td>10.5</td><td>29.5</td></tr>
+              <tr><td>46</td><td>12</td><td>11</td><td>30</td></tr>
+              <tr><td>47</td><td>12.5</td><td>11.5</td><td>30.5</td></tr>
+              <tr><td>47.5</td><td>13</td><td>12</td><td>31</td></tr>
+              <tr><td>48</td><td>13.5</td><td>12.5</td><td>31.5</td></tr>
+              <tr><td>48.5</td><td>14</td><td>13</td><td>32</td></tr>
+              <tr><td>49.5</td><td>15</td><td>14</td><td>33</td></tr>
+              <tr><td>50</td><td>15.5</td><td>14.5</td><td>33.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>34.5</td><td>4</td><td>1.5</td><td>21</td></tr>
+              <tr><td>35</td><td>4.5</td><td>2</td><td>21.5</td></tr>
+              <tr><td>35.5</td><td>5</td><td>2.5</td><td>22</td></tr>
+              <tr><td>36</td><td>5.5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36.5</td><td>6</td><td>3.5</td><td>23</td></tr>
+              <tr><td>37.5</td><td>6.5</td><td>4</td><td>23.5</td></tr>
+              <tr><td>38</td><td>7</td><td>4.5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>7.5</td><td>5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>8</td><td>5.5</td><td>25</td></tr>
+              <tr><td>40</td><td>8.5</td><td>6</td><td>25.5</td></tr>
+              <tr><td>40.5</td><td>9</td><td>6.5</td><td>26</td></tr>
+              <tr><td>41</td><td>9.5</td><td>7</td><td>26.5</td></tr>
+              <tr><td>42</td><td>10</td><td>7.5</td><td>27</td></tr>
+              <tr><td>42.5</td><td>10.5</td><td>8</td><td>27.5</td></tr>
+              <tr><td>43</td><td>11</td><td>8.5</td><td>28</td></tr>
+              <tr><td>44</td><td>11.5</td><td>9</td><td>28.5</td></tr>
+              <tr><td>44.5</td><td>12</td><td>9.5</td><td>29</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>16</td><td>1C</td><td>0.5</td><td>7</td></tr>
+              <tr><td>17</td><td>2C</td><td>1</td><td>8</td></tr>
+              <tr><td>18.5</td><td>3C</td><td>2</td><td>9</td></tr>
+              <tr><td>19.5</td><td>4C</td><td>3</td><td>10</td></tr>
+              <tr><td>21</td><td>5C</td><td>4</td><td>11</td></tr>
+              <tr><td>22</td><td>6C</td><td>5</td><td>12</td></tr>
+              <tr><td>23.5</td><td>7C</td><td>6</td><td>13</td></tr>
+              <tr><td>25</td><td>8C</td><td>7</td><td>14</td></tr>
+              <tr><td>26</td><td>9C</td><td>8</td><td>15</td></tr>
+              <tr><td>27</td><td>10C</td><td>9</td><td>16</td></tr>
+              <tr><td>28</td><td>11C</td><td>10</td><td>17</td></tr>
+              <tr><td>29.5</td><td>12C</td><td>11</td><td>18</td></tr>
+              <tr><td>31</td><td>13C</td><td>12</td><td>19</td></tr>
+              <tr><td>32</td><td>1Y</td><td>13</td><td>20</td></tr>
+              <tr><td>33</td><td>1.5Y</td><td>1</td><td>20.5</td></tr>
+              <tr><td>33.5</td><td>2Y</td><td>1.5</td><td>21</td></tr>
+              <tr><td>34</td><td>2.5Y</td><td>2</td><td>21.5</td></tr>
+              <tr><td>35</td><td>3Y</td><td>2.5</td><td>22</td></tr>
+              <tr><td>35.5</td><td>3.5Y</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36</td><td>4Y</td><td>3.5</td><td>23</td></tr>
+              <tr><td>36.5</td><td>4.5Y</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5Y</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>5.5Y</td><td>5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>6Y</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>40</td><td>7Y</td><td>6</td><td>25</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'nike', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ AIR JORDAN ══════════════════════════════ -->
+      <section id="size-air-jordan" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Air Jordan</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_air_jordan }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'air-jordan', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="air-jordan">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids_baby }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35.5</td><td>3.5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36</td><td>4</td><td>3.5</td><td>23</td></tr>
+              <tr><td>36.5</td><td>4.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>5.5</td><td>5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>6</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>6.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>7</td><td>6</td><td>25</td></tr>
+              <tr><td>40.5</td><td>7.5</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>41</td><td>8</td><td>7</td><td>26</td></tr>
+              <tr><td>42</td><td>8.5</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42.5</td><td>9</td><td>8</td><td>27</td></tr>
+              <tr><td>43</td><td>9.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>44</td><td>10</td><td>9</td><td>28</td></tr>
+              <tr><td>44.5</td><td>10.5</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>45</td><td>11</td><td>10</td><td>29</td></tr>
+              <tr><td>45.5</td><td>11.5</td><td>10.5</td><td>29.5</td></tr>
+              <tr><td>46</td><td>12</td><td>11</td><td>30</td></tr>
+              <tr><td>47</td><td>12.5</td><td>11.5</td><td>30.5</td></tr>
+              <tr><td>47.5</td><td>13</td><td>12</td><td>31</td></tr>
+              <tr><td>48</td><td>13.5</td><td>12.5</td><td>31.5</td></tr>
+              <tr><td>48.5</td><td>14</td><td>13</td><td>32</td></tr>
+              <tr><td>49.5</td><td>15</td><td>14</td><td>33</td></tr>
+              <tr><td>50</td><td>15.5</td><td>14.5</td><td>33.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>34.5</td><td>4</td><td>1.5</td><td>21</td></tr>
+              <tr><td>35</td><td>4.5</td><td>2</td><td>21.5</td></tr>
+              <tr><td>35.5</td><td>5</td><td>2.5</td><td>22</td></tr>
+              <tr><td>36</td><td>5.5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36.5</td><td>6</td><td>3.5</td><td>23</td></tr>
+              <tr><td>37.5</td><td>6.5</td><td>4</td><td>23.5</td></tr>
+              <tr><td>38</td><td>7</td><td>4.5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>7.5</td><td>5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>8</td><td>5.5</td><td>25</td></tr>
+              <tr><td>40</td><td>8.5</td><td>6</td><td>25.5</td></tr>
+              <tr><td>40.5</td><td>9</td><td>6.5</td><td>26</td></tr>
+              <tr><td>41</td><td>9.5</td><td>7</td><td>26.5</td></tr>
+              <tr><td>42</td><td>10</td><td>7.5</td><td>27</td></tr>
+              <tr><td>42.5</td><td>10.5</td><td>8</td><td>27.5</td></tr>
+              <tr><td>43</td><td>11</td><td>8.5</td><td>28</td></tr>
+              <tr><td>44</td><td>11.5</td><td>9</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>16</td><td>1C</td><td>0.5</td><td>7</td></tr>
+              <tr><td>17</td><td>2C</td><td>1</td><td>8</td></tr>
+              <tr><td>18.5</td><td>3C</td><td>2</td><td>9</td></tr>
+              <tr><td>19.5</td><td>4C</td><td>3</td><td>10</td></tr>
+              <tr><td>21</td><td>5C</td><td>4</td><td>11</td></tr>
+              <tr><td>22</td><td>6C</td><td>5</td><td>12</td></tr>
+              <tr><td>23.5</td><td>7C</td><td>6</td><td>13</td></tr>
+              <tr><td>25</td><td>8C</td><td>7</td><td>14</td></tr>
+              <tr><td>26</td><td>9C</td><td>8</td><td>15</td></tr>
+              <tr><td>27</td><td>10C</td><td>9</td><td>16</td></tr>
+              <tr><td>28</td><td>11C</td><td>10</td><td>17</td></tr>
+              <tr><td>29.5</td><td>12C</td><td>11</td><td>18</td></tr>
+              <tr><td>31</td><td>13C</td><td>12</td><td>19</td></tr>
+              <tr><td>32</td><td>1Y</td><td>13</td><td>20</td></tr>
+              <tr><td>33.5</td><td>2Y</td><td>1.5</td><td>21</td></tr>
+              <tr><td>35</td><td>3Y</td><td>2.5</td><td>22</td></tr>
+              <tr><td>36</td><td>4Y</td><td>3.5</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5Y</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38.5</td><td>6Y</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>40</td><td>7Y</td><td>6</td><td>25</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'air-jordan', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ ADIDAS ══════════════════════════════ -->
+      <section id="size-adidas" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Adidas</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_adida }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'adida', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="adidas">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids_baby }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36</td><td>4</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>36⅔</td><td>4.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37⅓</td><td>5</td><td>4.5</td><td>23</td></tr>
+              <tr><td>38</td><td>5.5</td><td>5</td><td>23.5</td></tr>
+              <tr><td>38⅔</td><td>6</td><td>5.5</td><td>24</td></tr>
+              <tr><td>39⅓</td><td>6.5</td><td>6</td><td>24.5</td></tr>
+              <tr><td>40</td><td>7</td><td>6.5</td><td>25</td></tr>
+              <tr><td>40⅔</td><td>7.5</td><td>7</td><td>25.5</td></tr>
+              <tr><td>41⅓</td><td>8</td><td>7.5</td><td>26</td></tr>
+              <tr><td>42</td><td>8.5</td><td>8</td><td>26.5</td></tr>
+              <tr><td>42⅔</td><td>9</td><td>8.5</td><td>27</td></tr>
+              <tr><td>43⅓</td><td>9.5</td><td>9</td><td>27.5</td></tr>
+              <tr><td>44</td><td>10</td><td>9.5</td><td>28</td></tr>
+              <tr><td>44⅔</td><td>10.5</td><td>10</td><td>28.5</td></tr>
+              <tr><td>45⅓</td><td>11</td><td>10.5</td><td>29</td></tr>
+              <tr><td>46</td><td>11.5</td><td>11</td><td>29.5</td></tr>
+              <tr><td>46⅔</td><td>12</td><td>11.5</td><td>30</td></tr>
+              <tr><td>47⅓</td><td>12.5</td><td>12</td><td>30.5</td></tr>
+              <tr><td>48</td><td>13</td><td>12.5</td><td>31</td></tr>
+              <tr><td>48⅔</td><td>13.5</td><td>13</td><td>31.5</td></tr>
+              <tr><td>50</td><td>14.5</td><td>14</td><td>32.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>4</td><td>2.5</td><td>21.5</td></tr>
+              <tr><td>35⅔</td><td>4.5</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>5</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>36⅔</td><td>5.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37⅓</td><td>6</td><td>4.5</td><td>23</td></tr>
+              <tr><td>38</td><td>6.5</td><td>5</td><td>23.5</td></tr>
+              <tr><td>38⅔</td><td>7</td><td>5.5</td><td>24</td></tr>
+              <tr><td>39⅓</td><td>7.5</td><td>6</td><td>24.5</td></tr>
+              <tr><td>40</td><td>8</td><td>6.5</td><td>25</td></tr>
+              <tr><td>40⅔</td><td>8.5</td><td>7</td><td>25.5</td></tr>
+              <tr><td>41⅓</td><td>9</td><td>7.5</td><td>26</td></tr>
+              <tr><td>42</td><td>9.5</td><td>8</td><td>26.5</td></tr>
+              <tr><td>42⅔</td><td>10</td><td>8.5</td><td>27</td></tr>
+              <tr><td>43⅓</td><td>10.5</td><td>9</td><td>27.5</td></tr>
+              <tr><td>44</td><td>11</td><td>9.5</td><td>28</td></tr>
+              <tr><td>44⅔</td><td>11.5</td><td>10</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>17</td><td>1K</td><td>1</td><td>8</td></tr>
+              <tr><td>18</td><td>2K</td><td>2</td><td>9</td></tr>
+              <tr><td>19</td><td>3K</td><td>3</td><td>10</td></tr>
+              <tr><td>20</td><td>4K</td><td>4</td><td>11</td></tr>
+              <tr><td>21</td><td>5K</td><td>5</td><td>12</td></tr>
+              <tr><td>22</td><td>5.5K</td><td>5.5</td><td>13</td></tr>
+              <tr><td>23</td><td>6K</td><td>6</td><td>14</td></tr>
+              <tr><td>24</td><td>7K</td><td>7</td><td>15</td></tr>
+              <tr><td>25</td><td>7.5K</td><td>7.5</td><td>16</td></tr>
+              <tr><td>26</td><td>8K</td><td>8</td><td>16.5</td></tr>
+              <tr><td>27</td><td>9K</td><td>9</td><td>17</td></tr>
+              <tr><td>28</td><td>10K</td><td>10</td><td>17.5</td></tr>
+              <tr><td>29</td><td>11K</td><td>11</td><td>18</td></tr>
+              <tr><td>30</td><td>12K</td><td>12</td><td>19</td></tr>
+              <tr><td>31</td><td>13K</td><td>13</td><td>19.5</td></tr>
+              <tr><td>32</td><td>1Y</td><td>13.5</td><td>20</td></tr>
+              <tr><td>33</td><td>1.5Y</td><td>1</td><td>20.5</td></tr>
+              <tr><td>34</td><td>2Y</td><td>2</td><td>21</td></tr>
+              <tr><td>35</td><td>2.5Y</td><td>2.5</td><td>21.5</td></tr>
+              <tr><td>36</td><td>3.5Y</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37⅓</td><td>4.5Y</td><td>4.5</td><td>23</td></tr>
+              <tr><td>38</td><td>5Y</td><td>5</td><td>23.5</td></tr>
+              <tr><td>38⅔</td><td>5.5Y</td><td>5.5</td><td>24</td></tr>
+              <tr><td>40</td><td>6.5Y</td><td>6.5</td><td>25</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'adida', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ NEW BALANCE ══════════════════════════════ -->
+      <section id="size-new-balance" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} New Balance</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_new_balance }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'new-balance', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="new-balance">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids_baby }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36</td><td>4</td><td>3.5</td><td>22</td></tr>
+              <tr><td>36.5</td><td>4.5</td><td>4</td><td>22.5</td></tr>
+              <tr><td>37</td><td>5</td><td>4.5</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5.5</td><td>5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>6</td><td>5.5</td><td>24</td></tr>
+              <tr><td>39</td><td>6.5</td><td>6</td><td>24.5</td></tr>
+              <tr><td>40</td><td>7</td><td>6.5</td><td>25</td></tr>
+              <tr><td>40.5</td><td>7.5</td><td>7</td><td>25.5</td></tr>
+              <tr><td>41.5</td><td>8</td><td>7.5</td><td>26</td></tr>
+              <tr><td>42</td><td>8.5</td><td>8</td><td>26.5</td></tr>
+              <tr><td>42.5</td><td>9</td><td>8.5</td><td>27</td></tr>
+              <tr><td>43</td><td>9.5</td><td>9</td><td>27.5</td></tr>
+              <tr><td>44</td><td>10</td><td>9.5</td><td>28</td></tr>
+              <tr><td>44.5</td><td>10.5</td><td>10</td><td>28.5</td></tr>
+              <tr><td>45</td><td>11</td><td>10.5</td><td>29</td></tr>
+              <tr><td>45.5</td><td>11.5</td><td>11</td><td>29.5</td></tr>
+              <tr><td>46.5</td><td>12</td><td>11.5</td><td>30</td></tr>
+              <tr><td>47</td><td>12.5</td><td>12</td><td>30.5</td></tr>
+              <tr><td>47.5</td><td>13</td><td>12.5</td><td>31</td></tr>
+              <tr><td>48.5</td><td>14</td><td>13.5</td><td>32</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>34</td><td>4</td><td>2</td><td>21</td></tr>
+              <tr><td>34.5</td><td>4.5</td><td>2.5</td><td>21.5</td></tr>
+              <tr><td>35</td><td>5</td><td>3</td><td>22</td></tr>
+              <tr><td>35.5</td><td>5.5</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>6</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>6.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>7</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>7.5</td><td>5</td><td>24</td></tr>
+              <tr><td>39</td><td>8</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>40</td><td>8.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40.5</td><td>9</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>41</td><td>9.5</td><td>7</td><td>26</td></tr>
+              <tr><td>42</td><td>10</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>43</td><td>10.5</td><td>8</td><td>27</td></tr>
+              <tr><td>44</td><td>11</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>45</td><td>12</td><td>9.5</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>16</td><td>1</td><td>0.5</td><td>7</td></tr>
+              <tr><td>17</td><td>1.5</td><td>1</td><td>8</td></tr>
+              <tr><td>18.5</td><td>2.5</td><td>2</td><td>9.5</td></tr>
+              <tr><td>19.5</td><td>3</td><td>2.5</td><td>10.5</td></tr>
+              <tr><td>20</td><td>4</td><td>3.5</td><td>11.5</td></tr>
+              <tr><td>21</td><td>4.5</td><td>4</td><td>12</td></tr>
+              <tr><td>22</td><td>5.5</td><td>5</td><td>13</td></tr>
+              <tr><td>23</td><td>6</td><td>5.5</td><td>14</td></tr>
+              <tr><td>24</td><td>7</td><td>6.5</td><td>15</td></tr>
+              <tr><td>25</td><td>7.5</td><td>7</td><td>15.5</td></tr>
+              <tr><td>26</td><td>8.5</td><td>8</td><td>16.5</td></tr>
+              <tr><td>27</td><td>9</td><td>8.5</td><td>17</td></tr>
+              <tr><td>28</td><td>10</td><td>9.5</td><td>18</td></tr>
+              <tr><td>29</td><td>10.5</td><td>10</td><td>18.5</td></tr>
+              <tr><td>30</td><td>11.5</td><td>11</td><td>19.5</td></tr>
+              <tr><td>31</td><td>12.5</td><td>12</td><td>20</td></tr>
+              <tr><td>32</td><td>13</td><td>12.5</td><td>20.5</td></tr>
+              <tr><td>33</td><td>1Y</td><td>13</td><td>21</td></tr>
+              <tr><td>34</td><td>2Y</td><td>1.5</td><td>21.5</td></tr>
+              <tr><td>35</td><td>2.5Y</td><td>2.5</td><td>22</td></tr>
+              <tr><td>36</td><td>3.5Y</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>4Y</td><td>4</td><td>23</td></tr>
+              <tr><td>38</td><td>5Y</td><td>5</td><td>24</td></tr>
+              <tr><td>39</td><td>6Y</td><td>6</td><td>24.5</td></tr>
+              <tr><td>40</td><td>6.5Y</td><td>6.5</td><td>25</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'new-balance', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ ASICS ══════════════════════════════ -->
+      <section id="size-asics" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Asics</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_asics }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'asics', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="asics">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36</td><td>4</td><td>3</td><td>22.5</td></tr>
+              <tr><td>37</td><td>4.5</td><td>3.5</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5</td><td>4</td><td>23.5</td></tr>
+              <tr><td>38</td><td>5.5</td><td>4.5</td><td>24</td></tr>
+              <tr><td>39</td><td>6</td><td>5</td><td>24.5</td></tr>
+              <tr><td>39.5</td><td>6.5</td><td>5.5</td><td>25</td></tr>
+              <tr><td>40</td><td>7</td><td>6</td><td>25.5</td></tr>
+              <tr><td>40.5</td><td>7.5</td><td>6.5</td><td>26</td></tr>
+              <tr><td>41.5</td><td>8</td><td>7</td><td>26</td></tr>
+              <tr><td>42</td><td>8.5</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42.5</td><td>9</td><td>8</td><td>27</td></tr>
+              <tr><td>43.5</td><td>9.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>44</td><td>10</td><td>9</td><td>28</td></tr>
+              <tr><td>44.5</td><td>10.5</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>45</td><td>11</td><td>10</td><td>29</td></tr>
+              <tr><td>46</td><td>11.5</td><td>10.5</td><td>29.5</td></tr>
+              <tr><td>46.5</td><td>12</td><td>11</td><td>30</td></tr>
+              <tr><td>47.5</td><td>13</td><td>12</td><td>31</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>5</td><td>2.5</td><td>22</td></tr>
+              <tr><td>35.5</td><td>5.5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36</td><td>6</td><td>3.5</td><td>23</td></tr>
+              <tr><td>37</td><td>6.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>7</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>7.5</td><td>5</td><td>24</td></tr>
+              <tr><td>39</td><td>8</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39.5</td><td>8.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>9</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40.5</td><td>9.5</td><td>7</td><td>26</td></tr>
+              <tr><td>41.5</td><td>10</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42</td><td>10.5</td><td>8</td><td>27</td></tr>
+              <tr><td>42.5</td><td>11</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>43.5</td><td>11.5</td><td>9</td><td>28</td></tr>
+              <tr><td>44</td><td>12</td><td>9.5</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>25</td><td>8C</td><td>7.5</td><td>15</td></tr>
+              <tr><td>26</td><td>8.5C</td><td>8</td><td>15.5</td></tr>
+              <tr><td>27</td><td>9.5C</td><td>9</td><td>16.5</td></tr>
+              <tr><td>27.5</td><td>10C</td><td>9.5</td><td>17</td></tr>
+              <tr><td>28</td><td>11C</td><td>10</td><td>17.5</td></tr>
+              <tr><td>30</td><td>12C</td><td>11</td><td>18.5</td></tr>
+              <tr><td>31</td><td>13C</td><td>12</td><td>19.5</td></tr>
+              <tr><td>32</td><td>1Y</td><td>13</td><td>20</td></tr>
+              <tr><td>33</td><td>1.5Y</td><td>1</td><td>20.5</td></tr>
+              <tr><td>34</td><td>2Y</td><td>1.5</td><td>21</td></tr>
+              <tr><td>35</td><td>3Y</td><td>2.5</td><td>22</td></tr>
+              <tr><td>36</td><td>4Y</td><td>3</td><td>22.5</td></tr>
+              <tr><td>37</td><td>4.5Y</td><td>3.5</td><td>23</td></tr>
+              <tr><td>38</td><td>5Y</td><td>4.5</td><td>24</td></tr>
+              <tr><td>39</td><td>6Y</td><td>5.5</td><td>24.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'asics', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ YEEZY ══════════════════════════════ -->
+      <section id="size-yeezy" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Yeezy</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_yeezy }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'yeezy', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="yeezy">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36⅔</td><td>4.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37⅓</td><td>5</td><td>4.5</td><td>23</td></tr>
+              <tr><td>38</td><td>5.5</td><td>5</td><td>23.5</td></tr>
+              <tr><td>38⅔</td><td>6</td><td>5.5</td><td>24</td></tr>
+              <tr><td>39⅓</td><td>6.5</td><td>6</td><td>24.5</td></tr>
+              <tr><td>40</td><td>7</td><td>6.5</td><td>25</td></tr>
+              <tr><td>40⅔</td><td>7.5</td><td>7</td><td>25.5</td></tr>
+              <tr><td>41⅓</td><td>8</td><td>7.5</td><td>26</td></tr>
+              <tr><td>42</td><td>8.5</td><td>8</td><td>26.5</td></tr>
+              <tr><td>42⅔</td><td>9</td><td>8.5</td><td>27</td></tr>
+              <tr><td>43⅓</td><td>9.5</td><td>9</td><td>27.5</td></tr>
+              <tr><td>44</td><td>10</td><td>9.5</td><td>28</td></tr>
+              <tr><td>44⅔</td><td>10.5</td><td>10</td><td>28.5</td></tr>
+              <tr><td>45⅓</td><td>11</td><td>10.5</td><td>29</td></tr>
+              <tr><td>46</td><td>11.5</td><td>11</td><td>29.5</td></tr>
+              <tr><td>46⅔</td><td>12</td><td>11.5</td><td>30</td></tr>
+              <tr><td>47⅓</td><td>12.5</td><td>12</td><td>30.5</td></tr>
+              <tr><td>48⅔</td><td>13.5</td><td>13</td><td>31.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>4</td><td>2.5</td><td>21.5</td></tr>
+              <tr><td>35⅔</td><td>4.5</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>5</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>36⅔</td><td>5.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37⅓</td><td>6</td><td>4.5</td><td>23</td></tr>
+              <tr><td>38</td><td>6.5</td><td>5</td><td>23.5</td></tr>
+              <tr><td>38⅔</td><td>7</td><td>5.5</td><td>24</td></tr>
+              <tr><td>39⅓</td><td>7.5</td><td>6</td><td>24.5</td></tr>
+              <tr><td>40</td><td>8</td><td>6.5</td><td>25</td></tr>
+              <tr><td>40⅔</td><td>8.5</td><td>7</td><td>25.5</td></tr>
+              <tr><td>41⅓</td><td>9</td><td>7.5</td><td>26</td></tr>
+              <tr><td>42</td><td>9.5</td><td>8</td><td>26.5</td></tr>
+              <tr><td>42⅔</td><td>10</td><td>8.5</td><td>27</td></tr>
+              <tr><td>43⅓</td><td>10.5</td><td>9</td><td>27.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'yeezy', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ UGG ══════════════════════════════ -->
+      <section id="size-ugg" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} UGG</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_ugg }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'ugg', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="ugg">
+          <button class="rl-sg__tab-btn is-active" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>5</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>6</td><td>4</td><td>23</td></tr>
+              <tr><td>37</td><td>7</td><td>5</td><td>24</td></tr>
+              <tr><td>38</td><td>8</td><td>6</td><td>25</td></tr>
+              <tr><td>39</td><td>9</td><td>7</td><td>26</td></tr>
+              <tr><td>40</td><td>10</td><td>8</td><td>27</td></tr>
+              <tr><td>41</td><td>11</td><td>9</td><td>28</td></tr>
+              <tr><td>42</td><td>12</td><td>10</td><td>29</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>40</td><td>7</td><td>6</td><td>25</td></tr>
+              <tr><td>41</td><td>8</td><td>7</td><td>26</td></tr>
+              <tr><td>42</td><td>9</td><td>8</td><td>27</td></tr>
+              <tr><td>43</td><td>10</td><td>9</td><td>28</td></tr>
+              <tr><td>44</td><td>11</td><td>10</td><td>29</td></tr>
+              <tr><td>45</td><td>12</td><td>11</td><td>30</td></tr>
+              <tr><td>46</td><td>13</td><td>12</td><td>31</td></tr>
+              <tr><td>47</td><td>14</td><td>13</td><td>32</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>24</td><td>7T</td><td>6.5</td><td>14.5</td></tr>
+              <tr><td>25</td><td>8T</td><td>7.5</td><td>15.5</td></tr>
+              <tr><td>26</td><td>9T</td><td>8.5</td><td>16.5</td></tr>
+              <tr><td>27</td><td>10T</td><td>9.5</td><td>17</td></tr>
+              <tr><td>28</td><td>11</td><td>10</td><td>17.5</td></tr>
+              <tr><td>29</td><td>12</td><td>11</td><td>18.5</td></tr>
+              <tr><td>31</td><td>13</td><td>12</td><td>19.5</td></tr>
+              <tr><td>32</td><td>1Y</td><td>13</td><td>20</td></tr>
+              <tr><td>33</td><td>2Y</td><td>1</td><td>21</td></tr>
+              <tr><td>34</td><td>3Y</td><td>2</td><td>21.5</td></tr>
+              <tr><td>35</td><td>4Y</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>5Y</td><td>4</td><td>23</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'ugg', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ CONVERSE ══════════════════════════════ -->
+      <section id="size-converse" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Converse</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_converse }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'converse', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="converse">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>3.5</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>36</td><td>4</td><td>4</td><td>23</td></tr>
+              <tr><td>36.5</td><td>4.5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>37.5</td><td>5</td><td>5</td><td>24</td></tr>
+              <tr><td>38</td><td>5.5</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>6</td><td>6</td><td>25</td></tr>
+              <tr><td>39.5</td><td>6.5</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40</td><td>7</td><td>7</td><td>26</td></tr>
+              <tr><td>41</td><td>7.5</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>41.5</td><td>8</td><td>8</td><td>27</td></tr>
+              <tr><td>42</td><td>8.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>42.5</td><td>9</td><td>9</td><td>28</td></tr>
+              <tr><td>43</td><td>9.5</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>44</td><td>10</td><td>10</td><td>29</td></tr>
+              <tr><td>44.5</td><td>10.5</td><td>10.5</td><td>29.5</td></tr>
+              <tr><td>45</td><td>11</td><td>11</td><td>30</td></tr>
+              <tr><td>46</td><td>11.5</td><td>11.5</td><td>30.5</td></tr>
+              <tr><td>46.5</td><td>12</td><td>12</td><td>31</td></tr>
+              <tr><td>47</td><td>12.5</td><td>12.5</td><td>31.5</td></tr>
+              <tr><td>48</td><td>13</td><td>13</td><td>32</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>35.5</td><td>5.5</td><td>3.5</td><td>23</td></tr>
+              <tr><td>36</td><td>6</td><td>4</td><td>23</td></tr>
+              <tr><td>36.5</td><td>6.5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>37</td><td>7</td><td>5</td><td>24</td></tr>
+              <tr><td>38</td><td>7.5</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>38.5</td><td>8</td><td>6</td><td>25</td></tr>
+              <tr><td>39</td><td>8.5</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40</td><td>9</td><td>7</td><td>26</td></tr>
+              <tr><td>40.5</td><td>9.5</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>41</td><td>10</td><td>8</td><td>27</td></tr>
+              <tr><td>42</td><td>10.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>42.5</td><td>11</td><td>9</td><td>28</td></tr>
+              <tr><td>43</td><td>11.5</td><td>9.5</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>22</td><td>5.5C</td><td>5</td><td>13</td></tr>
+              <tr><td>23</td><td>6.5C</td><td>6</td><td>14</td></tr>
+              <tr><td>24</td><td>7.5C</td><td>7</td><td>15</td></tr>
+              <tr><td>25</td><td>8.5C</td><td>8</td><td>15.5</td></tr>
+              <tr><td>26</td><td>9.5C</td><td>9</td><td>16.5</td></tr>
+              <tr><td>27</td><td>10.5C</td><td>10</td><td>17.5</td></tr>
+              <tr><td>28</td><td>11.5C</td><td>11</td><td>18</td></tr>
+              <tr><td>29</td><td>12.5C</td><td>12</td><td>19</td></tr>
+              <tr><td>30</td><td>13C</td><td>12.5</td><td>19.5</td></tr>
+              <tr><td>31</td><td>1Y</td><td>13</td><td>20</td></tr>
+              <tr><td>32</td><td>1.5Y</td><td>1</td><td>20.5</td></tr>
+              <tr><td>33</td><td>2Y</td><td>1.5</td><td>21</td></tr>
+              <tr><td>34</td><td>2.5Y</td><td>2</td><td>21.5</td></tr>
+              <tr><td>35</td><td>3Y</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36</td><td>4Y</td><td>4</td><td>23</td></tr>
+              <tr><td>37</td><td>4.5Y</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>5.5Y</td><td>5.5</td><td>24.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'converse', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ SALOMON ══════════════════════════════ -->
+      <section id="size-salomon" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Salomon</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_salomon }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'salomon', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="salomon">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36⅔</td><td>4.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37⅓</td><td>5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>5.5</td><td>5</td><td>24</td></tr>
+              <tr><td>38⅔</td><td>6</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39⅓</td><td>6.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>7</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40⅔</td><td>7.5</td><td>7</td><td>26</td></tr>
+              <tr><td>41⅓</td><td>8</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42</td><td>8.5</td><td>8</td><td>27</td></tr>
+              <tr><td>42⅔</td><td>9</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>43⅓</td><td>9.5</td><td>9</td><td>28</td></tr>
+              <tr><td>44</td><td>10</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>44⅔</td><td>10.5</td><td>10</td><td>29</td></tr>
+              <tr><td>45⅓</td><td>11</td><td>10.5</td><td>29.5</td></tr>
+              <tr><td>46</td><td>11.5</td><td>11</td><td>30</td></tr>
+              <tr><td>46⅔</td><td>12</td><td>11.5</td><td>30.5</td></tr>
+              <tr><td>47⅓</td><td>12.5</td><td>12</td><td>31</td></tr>
+              <tr><td>48</td><td>13</td><td>12.5</td><td>31.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35⅔</td><td>4.5</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>5</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>36⅔</td><td>5.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37⅓</td><td>6</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>6.5</td><td>5</td><td>24</td></tr>
+              <tr><td>38⅔</td><td>7</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39⅓</td><td>7.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>8</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40⅔</td><td>8.5</td><td>7</td><td>26</td></tr>
+              <tr><td>41⅓</td><td>9</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42</td><td>9.5</td><td>8</td><td>27</td></tr>
+              <tr><td>42⅔</td><td>10</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>43⅓</td><td>10.5</td><td>9</td><td>28</td></tr>
+              <tr><td>44</td><td>11</td><td>9.5</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'salomon', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ PUMA ══════════════════════════════ -->
+      <section id="size-puma" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Puma</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_puma }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'puma', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="puma">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36</td><td>4</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>5</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5.5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>6</td><td>5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>6.5</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>7</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>7.5</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40.5</td><td>8</td><td>7</td><td>26</td></tr>
+              <tr><td>41</td><td>8.5</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42</td><td>9</td><td>8</td><td>27</td></tr>
+              <tr><td>42.5</td><td>9.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>43</td><td>10</td><td>9</td><td>28</td></tr>
+              <tr><td>44</td><td>10.5</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>44.5</td><td>11</td><td>10</td><td>29</td></tr>
+              <tr><td>45</td><td>11.5</td><td>10.5</td><td>29.5</td></tr>
+              <tr><td>46</td><td>12</td><td>11</td><td>30</td></tr>
+              <tr><td>46.5</td><td>12.5</td><td>11.5</td><td>30.5</td></tr>
+              <tr><td>47</td><td>13</td><td>12</td><td>31</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>4.5</td><td>2.5</td><td>22</td></tr>
+              <tr><td>35.5</td><td>5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36</td><td>5.5</td><td>3.5</td><td>23</td></tr>
+              <tr><td>37</td><td>6</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>6.5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>7</td><td>5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>7.5</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>8</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>8.5</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40.5</td><td>9</td><td>7</td><td>26</td></tr>
+              <tr><td>41</td><td>9.5</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42</td><td>10</td><td>8</td><td>27</td></tr>
+              <tr><td>42.5</td><td>10.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>43</td><td>11</td><td>9</td><td>28</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>20</td><td>4C</td><td>4</td><td>11.5</td></tr>
+              <tr><td>21</td><td>5C</td><td>5</td><td>12.5</td></tr>
+              <tr><td>22</td><td>5.5C</td><td>5.5</td><td>13.5</td></tr>
+              <tr><td>23</td><td>6.5C</td><td>6.5</td><td>14</td></tr>
+              <tr><td>24</td><td>7.5C</td><td>7.5</td><td>15</td></tr>
+              <tr><td>25</td><td>8C</td><td>8</td><td>15.5</td></tr>
+              <tr><td>26</td><td>9C</td><td>9</td><td>16</td></tr>
+              <tr><td>27</td><td>10C</td><td>10</td><td>16.5</td></tr>
+              <tr><td>28</td><td>10.5C</td><td>10.5</td><td>17.5</td></tr>
+              <tr><td>29</td><td>12C</td><td>11.5</td><td>18.5</td></tr>
+              <tr><td>30</td><td>12.5C</td><td>12</td><td>19</td></tr>
+              <tr><td>31</td><td>13C</td><td>13</td><td>19.5</td></tr>
+              <tr><td>32</td><td>1Y</td><td>13.5</td><td>20</td></tr>
+              <tr><td>33</td><td>1.5Y</td><td>1</td><td>20.5</td></tr>
+              <tr><td>34</td><td>2Y</td><td>2</td><td>21</td></tr>
+              <tr><td>35</td><td>3Y</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>3.5Y</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>4.5Y</td><td>4.5</td><td>23</td></tr>
+              <tr><td>38</td><td>5Y</td><td>5</td><td>24</td></tr>
+              <tr><td>39</td><td>6Y</td><td>6</td><td>24.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'puma', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ VEJA ══════════════════════════════ -->
+      <section id="size-veja" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Veja</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_veja }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'veja', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="veja">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36</td><td>4.5</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>5</td><td>4</td><td>23</td></tr>
+              <tr><td>38</td><td>6</td><td>5</td><td>24</td></tr>
+              <tr><td>39</td><td>6.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>7.5</td><td>7</td><td>25.5</td></tr>
+              <tr><td>41</td><td>8</td><td>7.5</td><td>26</td></tr>
+              <tr><td>42</td><td>9</td><td>8</td><td>27</td></tr>
+              <tr><td>43</td><td>9.5</td><td>9</td><td>27.5</td></tr>
+              <tr><td>44</td><td>10.5</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>45</td><td>11</td><td>10.5</td><td>29</td></tr>
+              <tr><td>46</td><td>12</td><td>11</td><td>30</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>5</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>5.5</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>6.5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>7.5</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>8</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>9</td><td>7</td><td>26</td></tr>
+              <tr><td>41</td><td>10</td><td>8</td><td>27</td></tr>
+              <tr><td>42</td><td>10.5</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>43</td><td>11.5</td><td>9.5</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'veja', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ SAUCONY ══════════════════════════════ -->
+      <section id="size-saucony" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Saucony</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_saucony }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'saucony', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="saucony">
+          <button class="rl-sg__tab-btn is-active" data-tab="homme" type="button">{{ sg_tab_men }}</button>
+          <button class="rl-sg__tab-btn" data-tab="femme" type="button">{{ sg_tab_women }}</button>
+          <button class="rl-sg__tab-btn" data-tab="enfant" type="button">{{ sg_tab_kids }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="homme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US H</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>36</td><td>4</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>4.5</td><td>4</td><td>23</td></tr>
+              <tr><td>37.5</td><td>5</td><td>4.5</td><td>23.5</td></tr>
+              <tr><td>38</td><td>5.5</td><td>5</td><td>24</td></tr>
+              <tr><td>38.5</td><td>6</td><td>5.5</td><td>24.5</td></tr>
+              <tr><td>39</td><td>6.5</td><td>6</td><td>25</td></tr>
+              <tr><td>40</td><td>7</td><td>6.5</td><td>25.5</td></tr>
+              <tr><td>40.5</td><td>7.5</td><td>7</td><td>26</td></tr>
+              <tr><td>41</td><td>8</td><td>7.5</td><td>26.5</td></tr>
+              <tr><td>42</td><td>8.5</td><td>8</td><td>27</td></tr>
+              <tr><td>42.5</td><td>9</td><td>8.5</td><td>27.5</td></tr>
+              <tr><td>43</td><td>9.5</td><td>9</td><td>28</td></tr>
+              <tr><td>44</td><td>10</td><td>9.5</td><td>28.5</td></tr>
+              <tr><td>44.5</td><td>10.5</td><td>10</td><td>29</td></tr>
+              <tr><td>45</td><td>11</td><td>10.5</td><td>29.5</td></tr>
+              <tr><td>46</td><td>11.5</td><td>11</td><td>30</td></tr>
+              <tr><td>46.5</td><td>12</td><td>11.5</td><td>30.5</td></tr>
+              <tr><td>47</td><td>12.5</td><td>12</td><td>31</td></tr>
+              <tr><td>48</td><td>13</td><td>12.5</td><td>31.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="femme">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US F</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>35</td><td>5</td><td>2.5</td><td>22</td></tr>
+              <tr><td>35.5</td><td>5.5</td><td>3</td><td>22.5</td></tr>
+              <tr><td>36</td><td>6</td><td>3.5</td><td>23</td></tr>
+              <tr><td>36.5</td><td>6.5</td><td>4</td><td>23.5</td></tr>
+              <tr><td>37</td><td>7</td><td>4.5</td><td>24</td></tr>
+              <tr><td>38</td><td>7.5</td><td>5</td><td>24.5</td></tr>
+              <tr><td>38.5</td><td>8</td><td>5.5</td><td>25</td></tr>
+              <tr><td>39</td><td>8.5</td><td>6</td><td>25.5</td></tr>
+              <tr><td>40</td><td>9</td><td>6.5</td><td>26</td></tr>
+              <tr><td>40.5</td><td>9.5</td><td>7</td><td>26.5</td></tr>
+              <tr><td>41</td><td>10</td><td>7.5</td><td>27</td></tr>
+              <tr><td>42</td><td>10.5</td><td>8</td><td>27.5</td></tr>
+              <tr><td>42.5</td><td>11</td><td>8.5</td><td>28</td></tr>
+              <tr><td>43</td><td>11.5</td><td>9</td><td>28.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="enfant">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table"><thead><tr><th>EU</th><th>US Y/C</th><th>UK</th><th>CM</th></tr></thead><tbody>
+              <tr><td>27</td><td>10C</td><td>9</td><td>16.5</td></tr>
+              <tr><td>28</td><td>11C</td><td>10</td><td>17</td></tr>
+              <tr><td>29</td><td>12C</td><td>11</td><td>18</td></tr>
+              <tr><td>30</td><td>13C</td><td>12</td><td>19</td></tr>
+              <tr><td>31</td><td>1Y</td><td>13</td><td>19.5</td></tr>
+              <tr><td>32</td><td>1.5Y</td><td>1</td><td>20</td></tr>
+              <tr><td>33</td><td>2Y</td><td>1.5</td><td>21</td></tr>
+              <tr><td>34</td><td>2.5Y</td><td>2</td><td>21.5</td></tr>
+              <tr><td>35</td><td>3Y</td><td>3</td><td>22</td></tr>
+              <tr><td>36</td><td>3.5Y</td><td>3.5</td><td>22.5</td></tr>
+              <tr><td>37</td><td>4.5Y</td><td>4.5</td><td>23</td></tr>
+              <tr><td>38</td><td>5Y</td><td>5</td><td>24</td></tr>
+              <tr><td>39</td><td>6Y</td><td>6</td><td>24.5</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'saucony', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════ ESSENTIALS ══════════════════════════════ -->
+      <section id="size-essentials" class="rl-sg__brand">
+        <div class="rl-sg__brand-header">
+          <h2>{{ sg_title }} Fear of God Essentials</h2>
+          <span class="rl-sg__brand-badge">{{ sg_badge_essentials }}</span>
+        </div>
+        <div class="rl-sg__article">
+        {% render 'resell-size-guide-brand-text', brand: 'essentials', part: 'article', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+        <div class="rl-sg__tabs" data-brand-tabs="essentials">
+          <button class="rl-sg__tab-btn is-active" data-tab="tops" type="button">{{ sg_tab_tops }}</button>
+          <button class="rl-sg__tab-btn" data-tab="bottoms" type="button">{{ sg_tab_bottoms }}</button>
+        </div>
+        <div class="rl-sg__table-panel is-active" data-panel="tops">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table">
+              <thead>
+                <tr><th>{{ sg_th_size }}</th><th>{{ sg_th_chest }}</th><th>{{ sg_th_shoulder }}</th><th>{{ sg_th_length }}</th><th>{{ sg_th_standard }}</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>XS</td><td>86–91</td><td>44</td><td>68</td><td>S {{ sg_standard_suffix }}</td></tr>
+                <tr><td>S</td><td>91–96</td><td>46</td><td>71</td><td>M {{ sg_standard_suffix }}</td></tr>
+                <tr><td>M</td><td>99–104</td><td>49</td><td>74</td><td>L {{ sg_standard_suffix }}</td></tr>
+                <tr><td>L</td><td>107–112</td><td>52</td><td>77</td><td>XL {{ sg_standard_suffix }}</td></tr>
+                <tr><td>XL</td><td>117–122</td><td>55</td><td>80</td><td>XXL {{ sg_standard_suffix }}</td></tr>
+                <tr><td>XXL</td><td>127–132</td><td>58</td><td>83</td><td>3XL {{ sg_standard_suffix }}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="rl-sg__table-panel" data-panel="bottoms">
+          <div class="rl-sg__table-wrap">
+            <table class="rl-sg__table">
+              <thead>
+                <tr><th>{{ sg_th_size }}</th><th>{{ sg_th_waist }}</th><th>{{ sg_th_hips }}</th><th>{{ sg_th_inseam }}</th><th>{{ sg_th_standard }}</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>XS</td><td>66–71</td><td>86–91</td><td>71</td><td>S {{ sg_standard_suffix }}</td></tr>
+                <tr><td>S</td><td>71–76</td><td>91–96</td><td>74</td><td>M {{ sg_standard_suffix }}</td></tr>
+                <tr><td>M</td><td>79–84</td><td>99–104</td><td>76</td><td>L {{ sg_standard_suffix }}</td></tr>
+                <tr><td>L</td><td>86–91</td><td>107–112</td><td>78</td><td>XL {{ sg_standard_suffix }}</td></tr>
+                <tr><td>XL</td><td>94–99</td><td>117–122</td><td>80</td><td>XXL {{ sg_standard_suffix }}</td></tr>
+                <tr><td>XXL</td><td>104–109</td><td>127–132</td><td>81</td><td>3XL {{ sg_standard_suffix }}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="rl-sg__tips">
+        {% render 'resell-size-guide-brand-text', brand: 'essentials', part: 'tips', locale_base: locale_base, sg_fitting_tips: sg_fitting_tips, sg_size_tips: sg_size_tips %}
+        </div>
+      </section>
+
+    </div><!-- /.rl-sg__content -->
+  </div><!-- /.rl-sg__layout -->
+</div><!-- /.rl-sg -->
+
+<script>
+(function () {
+  document.querySelectorAll('.rl-sg__brand').forEach(function (brand) {
+    brand.querySelectorAll('[data-brand-tabs]').forEach(function (tabGroup) {
+      var btns = tabGroup.querySelectorAll('.rl-sg__tab-btn');
+      btns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var panel = btn.dataset.tab;
+          btns.forEach(function (b) { b.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          brand.querySelectorAll('.rl-sg__table-panel').forEach(function (p) {
+            p.classList.toggle('is-active', p.dataset.panel === panel);
+          });
+        });
+      });
+    });
+  });
+})();
+</script>

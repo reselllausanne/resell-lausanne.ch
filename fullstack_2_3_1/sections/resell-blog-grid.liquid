@@ -1,0 +1,95 @@
+{% liquid
+  assign grid_columns = section.settings.grid_columns | default: 3
+  assign per_page = section.settings.articles_per_page | default: 12
+%}
+
+<section
+  class="resell-blog-grid color-{{ section.settings.color_scheme }}"
+  style="
+    --padding-top: {{ section.settings.padding_top }}px;
+    --padding-bottom: {{ section.settings.padding_bottom }}px;
+    --rl-blog-cols: {{ grid_columns }};
+  "
+>
+  <div class="resell-blog-grid__inner page-width">
+    {% paginate blog.articles by per_page %}
+      {% if blog.articles.size > 0 %}
+        <div class="resell-blog-grid__list">
+          {% for article in blog.articles %}
+            {% assign card_eager = false %}
+            {% if forloop.index <= 3 and paginate.current_page == 1 %}
+              {% assign card_eager = true %}
+            {% endif %}
+            {% render 'resell-blog-article-card', article: article, eager: card_eager %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="resell-blog-grid__empty">{{ 'blog.empty' | t }}</p>
+      {% endif %}
+
+      {% if paginate.pages > 1 %}
+        {% render 'pagination', paginate_object: paginate %}
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Resell blog grid",
+  "tag": "section",
+  "class": "section-resell-blog-grid",
+  "enabled_on": {
+    "templates": ["blog"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "grid_columns",
+      "label": "Colonnes desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles par page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Resell blog grid"
+    }
+  ]
+}
+{% endschema %}

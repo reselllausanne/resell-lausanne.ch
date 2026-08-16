@@ -1,0 +1,42 @@
+{%- liquid
+  capture faq_returns_url
+    render 'rl-localized-path', path: '/pages/faq?category=echanges-et-retours'
+  endcapture
+  assign faq_returns_url = faq_returns_url | strip
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die Onitsuka Tiger bei Resell Lausanne echt?</summary>
+  <div class="rte">
+    <p>Ja. Jedes Onitsuka Tiger Modell (Mexico 66, Tokuten, Serrano, California 78, Mexico 66 SD) wird von unserem Team geprüft und mit Echtheitszertifikat geliefert.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Grösse soll ich bei Onitsuka Tiger Mexico 66 wählen?</summary>
+  <div class="rte">
+    <p>Die Mexico 66 fällt normal bis leicht gross aus. Bei halben Grössen eine halbe Grösse kleiner wählen. Ansonsten Ihre übliche EU-Grösse nehmen.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Was ist der Unterschied zwischen Mexico 66 und Mexico 66 SD?</summary>
+  <div class="rte">
+    <p>Die Mexico 66 nutzt Standard-Synthetikleder. Die Mexico 66 SD (Super Deluxe) setzt auf Premium-Materialien: Nubukleder, japanisches Wildleder, Lederfutter und feinere Verarbeitung.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Onitsuka Tiger Kollaborationen führt ihr?</summary>
+  <div class="rte">
+    <p>Wir sourcen regelmässig Onitsuka Tiger × Naked Copenhagen, Mihara Yasuhiro, Andrea Pompilio, Sanrio (Hello Kitty) und Cecilie Bahnsen.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung bei Onitsuka Tiger?</summary>
+  <div class="rte">
+    <p>Standardlieferung 5 bis 10 Werktage in der Schweiz und Europa, oder 2 bis 5 Werktage per Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich Onitsuka Tiger zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>

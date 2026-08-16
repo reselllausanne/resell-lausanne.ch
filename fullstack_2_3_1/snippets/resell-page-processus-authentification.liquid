@@ -1,0 +1,587 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign contact_url = 'mailto:contact@resell-lausanne.ch'
+  assign collections_url = '/collections/all'
+  assign faq_authenticite_url = routes.root_url | append: '/pages/faq?category=authenticite#faq-authenticite'
+  if pages.faq != blank
+    assign faq_authenticite_url = pages.faq.url | append: '?category=authenticite#faq-authenticite'
+  endif
+
+  if collections.all != blank
+    assign collections_url = collections.all.url
+  endif
+%}
+
+{% if locale_base == 'de' %}
+<div class="rl-auth-page">
+  <nav class="breadcrumbs breadcrumbs--slash rl-auth-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">Authentifizierungsprozess</li>
+    </ol>
+  </nav>
+  <header class="rl-auth-page__hero">
+    <p class="rl-auth-page__eyebrow">AUTHENTIFIZIERUNG</p>
+    <h1 class="rl-auth-page__title">Keine fakes.<br>Keine kompromisse.</h1>
+    <p class="rl-auth-page__lede">Jeder Artikel wird vor Versand von unserem Team manuell gepruft. Keine schnelle Automatisierung, sondern echte Kontrolle.</p>
+    <p class="rl-auth-page__sub">Unser Ziel ist klar: Risiko von Falschungen zwischen Ihnen und Ihrem Produkt entfernen.</p>
+  </header>
+  <section class="rl-auth-page__process" aria-label="Ablauf in funf schritten">
+    <p class="rl-auth-page__section-eyebrow">PROZESS</p>
+    <h2 class="rl-auth-page__section-title">Funf Schritte, keine Abkurzung.</h2>
+    <ol class="rl-auth-page__steps">
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">01</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Geprufte Beschaffung</h3><p>Produkte kommen nur aus verifiziertem Partnernetzwerk.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">02</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Visuelle Kontrolle</h3><p>Form, Materialien, Nahte, Symmetrie und Verarbeitung werden gepruft.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">03</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Technische Authentifizierung</h3><p>Etiketten, Produktionscodes, Verpackung und Zubehör werden modellgenau validiert.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">04</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Referenzabgleich</h3><p>Zweifelhafte Paare werden mit zertifizierten Referenzen gegengepruft.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">05</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Freigabe und Versand</h3><p>Nur validierte Produkte werden versendet, inklusive Tracking.</p></div></li>
+    </ol>
+  </section>
+  <section class="rl-auth-page__guarantee" aria-label="Garantie">
+    <p class="rl-auth-page__section-eyebrow">GARANTIE</p>
+    <blockquote class="rl-auth-page__quote">Wenn ein anerkanntes Expertensystem Produkt ablehnt, erstatten wir vollstandig. Ruckversand auf unsere Kosten.</blockquote>
+    <p class="rl-auth-page__guarantee-detail">Kontakt: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a></p>
+  </section>
+  <section class="rl-auth-page__cta" aria-label="Katalog ansehen">
+    <h2 class="rl-auth-page__cta-title">Bereit sicher zu kaufen?</h2>
+    <div class="rl-auth-page__cta-actions">
+      <a class="rl-auth-page__cta-link rl-auth-page__cta-link--primary" href="{{ collections_url }}">Zum katalog →</a>
+      <a class="rl-auth-page__cta-link" href="{{ faq_authenticite_url }}">Authentizitat FAQ</a>
+    </div>
+  </section>
+</div>
+{% elsif locale_base == 'en' %}
+<div class="rl-auth-page">
+  <nav class="breadcrumbs breadcrumbs--slash rl-auth-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">Authentication process</li>
+    </ol>
+  </nav>
+  <header class="rl-auth-page__hero">
+    <p class="rl-auth-page__eyebrow">AUTHENTICATION</p>
+    <h1 class="rl-auth-page__title">No fakes.<br>No compromise.</h1>
+    <p class="rl-auth-page__lede">Every item is manually inspected by our team before shipping. No rushed automation, only human checks.</p>
+    <p class="rl-auth-page__sub">Our mission is simple: remove counterfeit risk between you and the product you want.</p>
+  </header>
+  <section class="rl-auth-page__process" aria-label="Five-step process">
+    <p class="rl-auth-page__section-eyebrow">PROCESS</p>
+    <h2 class="rl-auth-page__section-title">Five steps, zero shortcuts.</h2>
+    <ol class="rl-auth-page__steps">
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">01</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Verified sourcing</h3><p>Products come only from a vetted partner network.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">02</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Visual inspection</h3><p>Shape, materials, stitching, symmetry and finishing are checked.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">03</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Technical authentication</h3><p>Labels, production codes, packaging and accessories are validated model-by-model.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">04</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Reference cross-check</h3><p>Any doubtful item is compared with certified references.</p></div></li>
+      <li class="rl-auth-page__step"><span class="rl-auth-page__step-number">05</span><div class="rl-auth-page__step-body"><h3 class="rl-auth-page__step-title">Final approval & shipping</h3><p>Only validated products are dispatched with tracking.</p></div></li>
+    </ol>
+  </section>
+  <section class="rl-auth-page__guarantee" aria-label="Guarantee">
+    <p class="rl-auth-page__section-eyebrow">GUARANTEE</p>
+    <blockquote class="rl-auth-page__quote">If a recognized expert service rejects the item, we issue a full refund and cover return shipping.</blockquote>
+    <p class="rl-auth-page__guarantee-detail">Contact: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a></p>
+  </section>
+  <section class="rl-auth-page__cta" aria-label="Browse catalog">
+    <h2 class="rl-auth-page__cta-title">Ready to shop with confidence?</h2>
+    <div class="rl-auth-page__cta-actions">
+      <a class="rl-auth-page__cta-link rl-auth-page__cta-link--primary" href="{{ collections_url }}">Browse catalog →</a>
+      <a class="rl-auth-page__cta-link" href="{{ faq_authenticite_url }}">Authenticity FAQ</a>
+    </div>
+  </section>
+</div>
+{% else %}
+<div class="rl-auth-page">
+  <nav class="breadcrumbs breadcrumbs--slash rl-auth-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">Notre processus d'authentification</li>
+    </ol>
+  </nav>
+
+  <header class="rl-auth-page__hero">
+    <p class="rl-auth-page__eyebrow">AUTHENTIFICATION</p>
+    <h1 class="rl-auth-page__title">
+      Aucun faux.<br>Aucun compromis.
+    </h1>
+    <p class="rl-auth-page__lede">
+      Chaque paire vendue sur Resell Lausanne passe entre les mains de notre équipe à Lausanne. Pas d'algorithme, pas de scan rapide. Un œil humain entraîné, sur chaque modèle, avant chaque expédition.
+    </p>
+    <p class="rl-auth-page__sub">
+      Le marché de la sneaker et du streetwear en édition limitée est saturé de contrefaçons. Notre métier est simple&nbsp;: faire disparaître ce risque entre vous et la pièce que vous voulez vraiment porter.
+    </p>
+  </header>
+
+  <section class="rl-auth-page__stats" aria-label="Authentification en chiffres">
+    <p class="rl-auth-page__section-eyebrow">EN CHIFFRES</p>
+    <div class="rl-auth-page__stats-grid">
+      <div class="rl-auth-page__stat">
+        <span class="rl-auth-page__stat-number">5&nbsp;000+</span>
+        <span class="rl-auth-page__stat-label">paires authentifiées depuis l'ouverture</span>
+      </div>
+      <div class="rl-auth-page__stat">
+        <span class="rl-auth-page__stat-number">0</span>
+        <span class="rl-auth-page__stat-label">client remboursé pour cause de contrefaçon</span>
+      </div>
+      <div class="rl-auth-page__stat">
+        <span class="rl-auth-page__stat-number">100&nbsp;%</span>
+        <span class="rl-auth-page__stat-label">inspection humaine, jamais automatisée</span>
+      </div>
+      <div class="rl-auth-page__stat">
+        <span class="rl-auth-page__stat-number">24&nbsp;h</span>
+        <span class="rl-auth-page__stat-label">délai maximum de réponse de notre support</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="rl-auth-page__process" aria-label="Notre processus en cinq étapes">
+    <p class="rl-auth-page__section-eyebrow">LE PROCESSUS</p>
+    <h2 class="rl-auth-page__section-title">Cinq étapes, zéro raccourci.</h2>
+
+    <ol class="rl-auth-page__steps">
+      <li class="rl-auth-page__step">
+        <span class="rl-auth-page__step-number">01</span>
+        <div class="rl-auth-page__step-body">
+          <h3 class="rl-auth-page__step-title">Sourcing vérifié</h3>
+          <p>
+            Nous nous approvisionnons uniquement auprès d'un réseau restreint de revendeurs professionnels et de boutiques partenaires, en Suisse comme à l'étranger. Chaque source dispose d'un historique de transactions documenté, de références croisées et d'un volume d'activité cohérent avec le marché. Aucune paire n'entre dans notre stock sans passer cette première barrière de confiance.
+          </p>
+          <p class="rl-auth-page__step-note">
+            En pratique&nbsp;: une part importante des paires qui nous sont proposées est refusée avant même d'arriver au studio.
+          </p>
+        </div>
+      </li>
+
+      <li class="rl-auth-page__step">
+        <span class="rl-auth-page__step-number">02</span>
+        <div class="rl-auth-page__step-body">
+          <h3 class="rl-auth-page__step-title">Inspection visuelle</h3>
+          <p>
+            À l'arrivée, chaque paire est sortie de sa boîte et examinée à la lumière naturelle. Nous regardons la silhouette générale, l'alignement des coutures, la symétrie entre les deux chaussures, la qualité des matières et la propreté des finitions. La moindre asymétrie suspecte ou finition hors standard déclenche un contrôle plus poussé avant l'authentification technique.
+          </p>
+          <p class="rl-auth-page__step-note">
+            En pratique&nbsp;: on tourne la paire dans tous les sens pendant cinq à dix minutes avant même de regarder les étiquettes.
+          </p>
+        </div>
+      </li>
+
+      <li class="rl-auth-page__step">
+        <span class="rl-auth-page__step-number">03</span>
+        <div class="rl-auth-page__step-body">
+          <h3 class="rl-auth-page__step-title">Authentification technique</h3>
+          <p>
+            Nous vérifions ensuite tous les points critiques propres à chaque modèle&nbsp;: typographie et alignement des étiquettes intérieures, code de production (date, usine, lot), texture et gravure de la semelle, packaging complet (boîte, étiquette, code-barres), accessoires (lacets, papiers de calage, dust bag selon le modèle). Chaque marque et chaque silhouette a ses propres critères&nbsp;: nous connaissons les détails qui trahissent autant une réplique haut de gamme qu'une contrefaçon évidente.
+          </p>
+          <p class="rl-auth-page__step-note">
+            En pratique&nbsp;: nous utilisons les mêmes outils que les services d'authentification payants, sans facturer ce coût à l'acheteur.
+          </p>
+        </div>
+      </li>
+
+      <li class="rl-auth-page__step">
+        <span class="rl-auth-page__step-number">04</span>
+        <div class="rl-auth-page__step-body">
+          <h3 class="rl-auth-page__step-title">Recoupement avec nos références certifiées</h3>
+          <p>
+            Toute paire douteuse est comparée à des références authentiques validées soit par la marque, soit par la communauté internationale d'experts (bases de données type Legit Check, CheckCheck, archives de marque). Nous maintenons une bibliothèque d'images haute résolution constamment mise à jour, recoupée avec les sources officielles. Si une paire ne correspond pas à la référence, elle ne passe pas, même si toutes les autres étapes sont validées.
+          </p>
+          <p class="rl-auth-page__step-note">
+            En pratique&nbsp;: il nous arrive de refuser une paire à cette étape alors que le sourcing était irréprochable.
+          </p>
+        </div>
+      </li>
+
+      <li class="rl-auth-page__step">
+        <span class="rl-auth-page__step-number">05</span>
+        <div class="rl-auth-page__step-body">
+          <h3 class="rl-auth-page__step-title">Validation finale et expédition</h3>
+          <p>
+            Une fois validée, la paire est conditionnée dans sa boîte d'origine avec l'ensemble de ses accessoires (lacets de rechange, papiers de calage, dust bag, étiquettes) puis expédiée en suivi. Le carton extérieur est rigide et matelassé&nbsp;: aucun choc ne doit pouvoir abîmer la boîte d'origine pendant le transport.
+          </p>
+          <p class="rl-auth-page__step-note">
+            En pratique&nbsp;: vous recevez une paire prête à ouvrir, à porter — ou à revendre intacte plus tard.
+          </p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="rl-auth-page__guarantee" aria-label="Notre garantie">
+    <p class="rl-auth-page__section-eyebrow">NOTRE GARANTIE</p>
+    <blockquote class="rl-auth-page__quote">
+      Si vous recevez une paire qu'un expert reconnu refuserait, vous êtes intégralement remboursé. Le retour est à notre charge.
+    </blockquote>
+    <p class="rl-auth-page__guarantee-sub">Sans condition. Sans question piège.</p>
+    <p class="rl-auth-page__guarantee-detail">
+      Le moindre doute&nbsp;? Écrivez-nous à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a> avec des photos nettes de la paire, de la boîte et de l'étiquette. Nous traitons chaque dossier sous 24&nbsp;heures ouvrées.
+    </p>
+  </section>
+
+  <section class="rl-auth-page__cta" aria-label="Découvrir notre sélection">
+    <h2 class="rl-auth-page__cta-title">Prêt à shopper en confiance&nbsp;?</h2>
+    <p class="rl-auth-page__cta-sub">
+      Toutes les pièces du catalogue ont passé l'intégralité de ce processus avant d'apparaître en ligne.
+    </p>
+    <div class="rl-auth-page__cta-actions">
+      <a class="rl-auth-page__cta-link rl-auth-page__cta-link--primary" href="{{ collections_url }}">Découvrir le catalogue →</a>
+      <a class="rl-auth-page__cta-link" href="{{ faq_authenticite_url }}">Voir la FAQ Authenticité</a>
+    </div>
+  </section>
+</div>
+{% endif %}
+
+<style>
+  .rl-auth-page {
+    --rl-auth-fg: rgb(8, 8, 8);
+    --rl-auth-muted: rgb(110, 110, 110);
+    --rl-auth-soft: rgb(80, 80, 80);
+    --rl-auth-line: rgb(230, 230, 230);
+    --rl-auth-line-soft: rgb(245, 245, 245);
+    --rl-auth-bg-soft: rgb(250, 250, 250);
+
+    width: 100%;
+    max-width: 56rem;
+    margin: 0 auto;
+    color: var(--rl-auth-fg);
+    line-height: 1.65;
+    font-size: 1rem;
+  }
+
+  .rl-auth-page a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .rl-auth-page a:hover {
+    opacity: 0.75;
+  }
+
+  .rl-auth-page__breadcrumbs {
+    margin-bottom: 2.5rem;
+    font-size: 0.8125rem;
+    color: var(--rl-auth-muted);
+  }
+
+  .rl-auth-page__breadcrumbs .breadcrumbs__list {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rl-auth-page__eyebrow,
+  .rl-auth-page__section-eyebrow {
+    margin: 0 0 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--rl-auth-muted);
+    text-transform: uppercase;
+  }
+
+  /* ─── HERO ─── */
+  .rl-auth-page__hero {
+    margin-bottom: 4.5rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--rl-auth-line);
+  }
+
+  .rl-auth-page__title {
+    margin: 0 0 1.75rem;
+    font-size: clamp(2rem, 6vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .rl-auth-page__lede {
+    margin: 0 0 1rem;
+    max-width: 38rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .rl-auth-page__sub {
+    margin: 0;
+    max-width: 38rem;
+    font-size: 0.9375rem;
+    color: var(--rl-auth-soft);
+  }
+
+  /* ─── STATS ─── */
+  .rl-auth-page__stats {
+    margin-bottom: 4.5rem;
+    padding: 2.5rem;
+    border: 1px solid var(--rl-auth-line);
+    border-radius: 8px;
+    background: var(--rl-auth-bg-soft);
+  }
+
+  .rl-auth-page__stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .rl-auth-page__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .rl-auth-page__stat-number {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .rl-auth-page__stat-label {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--rl-auth-muted);
+  }
+
+  /* ─── PROCESS ─── */
+  .rl-auth-page__process {
+    margin-bottom: 4.5rem;
+  }
+
+  .rl-auth-page__section-title {
+    margin: 0 0 2.5rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .rl-auth-page__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .rl-auth-page__step {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1.5rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--rl-auth-line);
+  }
+
+  .rl-auth-page__step:last-child {
+    border-bottom: 1px solid var(--rl-auth-line);
+  }
+
+  .rl-auth-page__step-number {
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--rl-auth-muted);
+    padding-top: 0.25rem;
+  }
+
+  .rl-auth-page__step-body {
+    min-width: 0;
+  }
+
+  .rl-auth-page__step-title {
+    margin: 0 0 0.875rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  .rl-auth-page__step-body p {
+    margin: 0 0 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .rl-auth-page__step-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .rl-auth-page__step-note {
+    font-size: 0.8125rem !important;
+    font-style: italic;
+    color: var(--rl-auth-muted);
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--rl-auth-line-soft);
+    margin-top: 0.75rem !important;
+  }
+
+  /* ─── GUARANTEE ─── */
+  .rl-auth-page__guarantee {
+    margin-bottom: 4.5rem;
+    padding: 3rem 2.5rem;
+    border: 1px solid var(--rl-auth-fg);
+    border-radius: 8px;
+    background: var(--rl-auth-fg);
+    color: rgb(255, 255, 255);
+  }
+
+  .rl-auth-page__guarantee .rl-auth-page__section-eyebrow {
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .rl-auth-page__quote {
+    margin: 0 0 1.25rem;
+    padding: 0;
+    border: 0;
+    font-size: clamp(1.25rem, 2.4vw, 1.625rem);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  .rl-auth-page__guarantee-sub {
+    margin: 0 0 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .rl-auth-page__guarantee-detail {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .rl-auth-page__guarantee-detail a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  /* ─── CTA ─── */
+  .rl-auth-page__cta {
+    padding: 3rem 0 1rem;
+    text-align: center;
+  }
+
+  .rl-auth-page__cta-title {
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .rl-auth-page__cta-sub {
+    margin: 0 auto 1.75rem;
+    max-width: 32rem;
+    font-size: 0.9375rem;
+    color: var(--rl-auth-soft);
+  }
+
+  .rl-auth-page__cta-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+  }
+
+  .rl-auth-page a.rl-auth-page__cta-link--primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--rl-auth-fg);
+    color: rgb(255, 255, 255);
+    padding: 0.875rem 1.75rem;
+    border: 0;
+    border-radius: 999px;
+    line-height: 1.2;
+  }
+
+  .rl-auth-page a.rl-auth-page__cta-link--primary:hover {
+    opacity: 0.85;
+  }
+
+  .rl-auth-page a.rl-auth-page__cta-link:not(.rl-auth-page__cta-link--primary) {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    color: var(--rl-auth-fg);
+  }
+
+  .rl-auth-page a.rl-auth-page__cta-link:not(.rl-auth-page__cta-link--primary):hover {
+    opacity: 0.75;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 749px) {
+    .rl-auth-page {
+      font-size: 0.9375rem;
+    }
+
+    .rl-auth-page__hero {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+    }
+
+    .rl-auth-page__stats {
+      padding: 1.75rem;
+      margin-bottom: 3rem;
+    }
+
+    .rl-auth-page__stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
+
+    .rl-auth-page__process {
+      margin-bottom: 3rem;
+    }
+
+    .rl-auth-page__step {
+      grid-template-columns: 3rem 1fr;
+      gap: 1rem;
+      padding: 1.5rem 0;
+    }
+
+    .rl-auth-page__step-number {
+      font-size: 1rem;
+    }
+
+    .rl-auth-page__step-title {
+      font-size: 1.125rem;
+    }
+
+    .rl-auth-page__guarantee {
+      padding: 2rem 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .rl-auth-page__cta {
+      padding: 2rem 0 0.5rem;
+    }
+
+    .rl-auth-page__cta-actions {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+  }
+</style>

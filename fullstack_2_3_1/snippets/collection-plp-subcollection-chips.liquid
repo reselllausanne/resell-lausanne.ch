@@ -1,0 +1,146 @@
+{% comment %}
+  PLP sub-collection strip — model/collection chips for current brand.
+
+  @param strip_settings {section.settings}
+{% endcomment %}
+{% liquid
+  capture taxonomy_payload
+    render 'breadcrumb-taxonomy-map', primary_collection_handle: collection.handle
+  endcapture
+  assign taxonomy_payload = taxonomy_payload | strip
+
+  assign plp_parent = ''
+  if taxonomy_payload contains '###'
+    assign taxonomy_handles_path = taxonomy_payload | split: '###' | last | strip
+    assign bc_parts = taxonomy_handles_path | split: '|'
+    if bc_parts.size >= 2
+      assign plp_parent = bc_parts[1]
+    endif
+  endif
+
+  if plp_parent == blank
+    capture plp_child_map_raw
+      render 'plp-brand-child-map'
+    endcapture
+    assign plp_child_map = plp_child_map_raw | strip | split: '|'
+    for brand_entry in plp_child_map
+      assign brand_parts = brand_entry | split: ':'
+      assign brand_key = brand_parts.first
+      assign brand_children = brand_parts.last | split: ','
+      for child_handle in brand_children
+        if collection.handle == child_handle
+          assign plp_parent = brand_key
+          break
+        endif
+      endfor
+      if plp_parent != blank
+        break
+      endif
+    endfor
+  endif
+
+  if plp_parent == blank
+    capture collectibles_child_map_raw
+      render 'plp-collectibles-child-map'
+    endcapture
+    assign collectibles_child_map = collectibles_child_map_raw | strip | split: '|'
+    for collectibles_entry in collectibles_child_map
+      assign collectibles_parts = collectibles_entry | split: ':'
+      assign collectibles_parent = collectibles_parts.first
+      assign collectibles_children = collectibles_parts.last | split: ','
+      for child_handle in collectibles_children
+        if collection.handle == child_handle
+          assign plp_parent = collectibles_parent
+          break
+        endif
+      endfor
+      if plp_parent != blank
+        break
+      endif
+    endfor
+  endif
+
+  if plp_parent == blank
+    if collection.handle == 'performance-basketball-bags' or collection.handle contains '-performance-basketball-bags'
+      assign plp_parent = 'performance-basketball-bags'
+    elsif collection.handle == 'performance-basket' or collection.handle contains 'basketball-'
+      assign plp_parent = 'performance-basket'
+    endif
+  endif
+
+  # Streetwear marque PLPs (drawer Marques list) share one sibling chip strip.
+  # Remap leaf brand → streetwear-marques. Skip category leaves (hoodie, t-shirt…).
+  assign streetwear_marque_handles = 'vetements,fear-of-god-essentials,essentials,sp5der,denim-tears,off-white,vetement-travis,gallery-dept,hellstar,jacquemus,ami-paris,the-north-face,stone-island,supreme,bape,aime-leon-dore,chrome-hearts' | split: ','
+  if plp_parent != blank
+    for sw_handle in streetwear_marque_handles
+      if plp_parent == sw_handle or collection.handle == sw_handle
+        assign plp_parent = 'streetwear-marques'
+        break
+      endif
+    endfor
+  elsif collection.handle != blank
+    for sw_handle in streetwear_marque_handles
+      if collection.handle == sw_handle
+        assign plp_parent = 'streetwear-marques'
+        break
+      endif
+    endfor
+  endif
+
+  assign plp_parent_brands = 'air-jordan,nike,asics,yeezy,adidas,new-balance,maison-mihara,lego,pop-mart,saucony,puma,ugg,birkenstock,performance-basket,performance-basketball-bags,streetwear-marques' | split: ','
+  assign show_strip = false
+  if plp_parent != blank
+    for brand in plp_parent_brands
+      if plp_parent == brand
+        assign show_strip = true
+        break
+      endif
+    endfor
+  endif
+
+  if strip_settings.show_brand_strip == false
+    assign show_strip = false
+  endif
+
+  assign subcol_atf_limit = 8
+  assign subcol_has_deferred = false
+  if show_strip and plp_parent != blank
+    capture registry_raw
+      render 'plp-subcollection-chip-registry', parent: plp_parent
+    endcapture
+    assign registry_raw = registry_raw | strip
+    if registry_raw != blank
+      assign subcol_chip_count = registry_raw | split: '||' | size
+      if subcol_chip_count > subcol_atf_limit
+        assign subcol_has_deferred = true
+      endif
+    endif
+  endif
+%}
+
+{% if show_strip %}
+  <div
+    class="collection-plp-brand-chips collection-plp-brand-chips--subcollections{% if subcol_has_deferred %} collection-plp-brand-chips--has-deferred{% endif %}"
+    data-collection-plp-subcollection-chips
+    {% if subcol_has_deferred %}
+      data-rl-subcollection-has-deferred
+    {% endif %}
+  >
+    <div
+      class="collection-plp-brand-chips__scroller"
+      role="region"
+      aria-label="{{ strip_settings.aria_label | default: 'Filtrer par collection' | escape }}"
+      data-collection-plp-brand-scroller
+      data-rl-subcollection-scroller
+    >
+      <ul class="collection-plp-brand-chips__track" role="list" data-rl-subcollection-atf>
+        {% render 'collection-plp-subcollection-track', parent: plp_parent, chip_zone: 'atf', atf_limit: subcol_atf_limit %}
+      </ul>
+      {% if subcol_has_deferred %}
+        <template data-rl-subcollection-chips-deferred>
+          {% render 'collection-plp-subcollection-track', parent: plp_parent, chip_zone: 'deferred', atf_limit: subcol_atf_limit %}
+        </template>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

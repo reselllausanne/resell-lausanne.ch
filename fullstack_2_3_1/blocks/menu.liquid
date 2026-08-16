@@ -22,17 +22,83 @@
     {% endif %}
 
     {% if block.settings.menu != blank %}
+      {% liquid
+        assign faq_url = routes.root_url | append: '/pages/faq'
+        assign has_faq_link = false
+        assign menu_handle = block.settings.menu
+        assign inject_faq_link = false
+
+        assign inject_livraison_link = false
+        assign livraison_url = routes.root_url | append: '/pages/faq?category=livraison'
+        if pages.faq != blank
+          assign livraison_url = pages.faq.url | append: '?category=livraison'
+        endif
+
+        if section.type == 'footer'
+          assign inject_faq_link = true
+          assign inject_livraison_link = true
+        elsif menu_handle == 'footer' or menu_handle == 'footer-services' or menu_handle contains 'footer'
+          assign inject_faq_link = true
+          assign inject_livraison_link = true
+        endif
+
+        assign has_livraison_link = false
+        for link in linklists[menu_handle].links
+          assign menu_link_title = link.title | downcase
+          if link.url contains '/pages/livraison' or link.url contains 'category=livraison' or menu_link_title contains 'livraison'
+            assign has_livraison_link = true
+            break
+          endif
+        endfor
+
+        for link in linklists[menu_handle].links
+          assign menu_link_title = link.title | downcase
+          if link.url contains '/pages/faq' or menu_link_title == 'faq'
+            assign has_faq_link = true
+            break
+          endif
+        endfor
+      %}
       <ul class="menu-block__list">
-        {% for link in linklists[block.settings.menu].links %}
+        {% for link in linklists[menu_handle].links %}
+          {% liquid
+            assign link_href = link.url
+            assign menu_link_title = link.title | downcase
+            if menu_link_title contains 'livraison' or link.url contains '/pages/livraison'
+              assign link_href = livraison_url
+            elsif menu_link_title == 'faq' or link.url contains '/pages/faq'
+              assign link_href = faq_url
+            elsif menu_link_title contains 'échange' or menu_link_title contains 'echanges' or menu_link_title contains 'remboursement'
+              if pages.faq != blank
+                assign link_href = pages.faq.url | append: '?category=echanges-et-retours'
+              else
+                assign link_href = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+              endif
+            endif
+          %}
           <li class="menu-block__item">
             <a
-              href="{{ link.url }}"
+              href="{{ link_href }}"
               class="menu-block__link{% if block.settings.underline_links %} menu-block__link--underlined{% endif %}"
             >
               {{- link.title -}}
             </a>
           </li>
         {% endfor %}
+        {% if inject_faq_link and has_faq_link == false %}
+          <li class="menu-block__item">
+            <a href="{{ faq_url }}" class="menu-block__link{% if block.settings.underline_links %} menu-block__link--underlined{% endif %}">
+              FAQ
+            </a>
+          </li>
+        {% endif %}
+        {% if inject_livraison_link and has_livraison_link == false %}
+          <li class="menu-block__item">
+            <a href="{{ livraison_url }}" class="menu-block__link{% if block.settings.underline_links %} menu-block__link--underlined{% endif %}">
+              Livraison &amp; délais
+            </a>
+          </li>
+        {% endif %}
       </ul>
     {% endif %}
   </div>

@@ -1,0 +1,42 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les Nike TN Air Max Plus vendues sur Resell Lausanne sont-elles authentiques ?</summary>
+  <div class="rte">
+    <p>Oui. Chaque paire Nike TN est vérifiée par notre équipe (qualité de l'arête TPU, alignement du Swoosh, Tuned Air dans le talon, tampon SKU) et livrée avec certificat d'authenticité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelle taille choisir pour une Nike TN ?</summary>
+  <div class="rte">
+    <p>La TN taille normalement à légèrement grand. Si vous chaussez en demi-pointure, la demi-pointure inférieure est souvent recommandée. Pour pied large, demi-pointure au-dessus.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quels coloris TN sont les plus recherchés en Suisse ?</summary>
+  <div class="rte">
+    <p>Hyper Blue, Voltage Purple, Volt, Triple Black, Triple White restent les références. Les éditions city (Atlanta, Marseille) et collaborations Corteiz, Patta, Skepta sortent en stock limité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Différence entre Nike TN et Nike Air Max Terrascape Plus ?</summary>
+  <div class="rte">
+    <p>La Nike TN classique est urbaine et streetwear. La Terrascape Plus reprend la silhouette TN avec semelle crampons outdoor et matériaux recyclés, pour un usage randonnée / streetwear technique.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel est le délai de livraison pour une commande Nike TN ?</summary>
+  <div class="rte">
+    <p>Livraison standard 5 à 10 jours ouvrables en Suisse et en Europe, ou 2 à 5 jours ouvrables en express sur produits éligibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Puis-je retourner une paire Nike TN ?</summary>
+  <div class="rte">
+    <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
+  </div>
+</details>

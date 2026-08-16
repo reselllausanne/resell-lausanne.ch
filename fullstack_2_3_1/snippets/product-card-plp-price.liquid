@@ -1,0 +1,91 @@
+{% doc %}
+  PLP product card price row: À partir de + optional compare + sale price.
+
+  @param {product} product - Product object
+{% enddoc %}
+
+{%- liquid
+  assign card_product = product | default: closest.product
+  capture price_snapshot
+    render 'rs-product-price-snapshot', product: card_product
+  endcapture
+  assign price_parts = price_snapshot | strip | split: '|'
+  assign min_present = price_parts[8]
+  assign show_from = price_parts[5]
+  assign price_min = 0
+  assign compare_min = 0
+  if min_present == '1'
+    assign price_min = price_parts[2] | plus: 0
+    assign compare_min = price_parts[3] | plus: 0
+  endif
+  assign show_compare = false
+
+  if compare_min > price_min and compare_min > 0
+    assign show_compare = true
+  endif
+
+  if settings.show_trailing_zeros
+    assign price_formatted = price_min | money
+    assign compare_formatted = compare_min | money
+  else
+    assign price_formatted = price_min | money_without_trailing_zeros
+    assign compare_formatted = compare_min | money_without_trailing_zeros
+  endif
+-%}
+
+{% if min_present == '1' %}
+  <div class="product-card-plp-price">
+    {% if show_from == '1' %}
+      <span class="product-card-plp-price__from">{{ 'collections.filters.from' | t }}</span>
+    {% endif %}
+    <span
+      class="product-card-plp-price__compare"
+      {% unless show_compare %}
+        hidden
+      {% endunless %}
+    >
+      {{- compare_formatted -}}
+    </span>
+    <span class="product-card-plp-price__current{% if show_compare %} product-card-plp-price__current--sale{% endif %}">
+      {{- price_formatted -}}
+    </span>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .product-card-plp-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 6px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.35;
+    color: #080808;
+  }
+
+  .product-card-plp-price__from {
+    font-weight: 400;
+    color: #080808;
+  }
+
+  .product-card-plp-price__compare {
+    text-decoration: line-through;
+    color: #737373;
+    font-weight: 400;
+  }
+
+  .product-card-plp-price__compare[hidden] {
+    display: none;
+  }
+
+  .product-card-plp-price__current {
+    font-weight: 500;
+    color: #080808;
+  }
+
+  .product-card-plp-price__current--sale {
+    color: #4b56d2;
+    font-weight: 600;
+  }
+{% endstylesheet %}

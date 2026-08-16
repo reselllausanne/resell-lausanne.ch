@@ -1,0 +1,36 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les Denim Tears vendus sur Resell Lausanne sont-ils authentiques ?</summary>
+  <div class="rte">
+    <p>Oui. Chaque pièce Denim Tears est vérifiée par notre équipe (qualité du denim, régularité de l'impression Cotton Wreath, étiquette intérieure, qualité des coutures) et livrée avec certificat d'authenticité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelle taille choisir pour un jean Cotton Wreath Denim Tears ?</summary>
+  <div class="rte">
+    <p>Le jean Cotton Wreath taille proche d'un Levi's 501. Prenez votre taille habituelle pour un fit regular, ou une taille au-dessus pour un fit loose conforme au lookbook.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelles collaborations Denim Tears sont disponibles ?</summary>
+  <div class="rte">
+    <p>Nous sourçons régulièrement les collaborations Denim Tears × Levi's, Stüssy, Converse (Chuck 70 Cotton Wreath), Dior (capsule été 2024 Kim Jones) et Concepts.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel est le délai de livraison pour une commande Denim Tears ?</summary>
+  <div class="rte">
+    <p>Livraison standard 5 à 10 jours ouvrables en Suisse et en Europe, ou 2 à 5 jours ouvrables en express sur produits éligibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Puis-je retourner une pièce Denim Tears ?</summary>
+  <div class="rte">
+    <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
+  </div>
+</details>

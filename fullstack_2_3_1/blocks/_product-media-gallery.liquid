@@ -4,7 +4,7 @@
   @param {object} product - Produit
 {% enddoc %}
 
-<script src="{{ 'product-media-gallery.js' | asset_url }}" type="module"></script>
+<script type="module" src="{{ 'product-media-gallery.js' | asset_url }}"></script>
 
 {%- liquid
   assign selected_variant_media = product.selected_or_first_available_variant.featured_media
@@ -30,6 +30,168 @@
   else
     assign sorted_media = product.media
   endif
+
+  assign use_stockx_media = false
+  if request.page_type == 'product'
+    assign use_stockx_media = true
+  endif
+  assign spin_file_frames = product.metafields.custom.spin_360_frames.value
+  assign spin_enabled = product.metafields.custom.spin_360_enabled.value
+  assign spin_alt = product.metafields.custom.spin_360_alt.value
+  if spin_alt == blank
+    assign spin_alt = product.title | append: ' - vue 360'
+  endif
+
+  assign spin_media_image_count = 0
+  for media in sorted_media
+    if media.media_type == 'image'
+      assign spin_media_image_count = spin_media_image_count | plus: 1
+    endif
+  endfor
+
+  assign spin_use_media_frames = false
+  if spin_file_frames == blank
+    if spin_enabled == true and spin_media_image_count > 1
+      assign spin_use_media_frames = true
+    elsif spin_media_image_count >= 24
+      assign spin_use_media_frames = true
+    endif
+  endif
+
+  assign spin_frame_count = 0
+  if spin_file_frames != blank
+    assign spin_frame_count = spin_file_frames.size
+  elsif spin_use_media_frames
+    assign spin_frame_count = spin_media_image_count
+  endif
+
+  assign has_spin_frames = false
+  if spin_frame_count > 1
+    assign has_spin_frames = true
+  endif
+
+  assign has_single_product_image = false
+  if request.page_type == 'product' and product.images.size <= 1 and has_spin_frames == false
+    assign has_single_product_image = true
+  endif
+
+  assign fallback_image = product.featured_image | default: product.images.first
+  if selected_variant_media != blank and selected_variant_media.media_type == 'image'
+    assign fallback_image = selected_variant_media.preview_image
+  endif
+
+  assign fallback_ratio = 1
+  if fallback_image != blank and fallback_image.aspect_ratio != blank
+    assign fallback_ratio = fallback_image.aspect_ratio
+  endif
+  assign fallback_ratio_style = 'aspect-ratio: ' | append: fallback_ratio
+  assign stockx_ratio = 1.376
+  assign stockx_ratio_style = 'aspect-ratio: ' | append: stockx_ratio
+  assign spin_lcp_width = 1400
+  assign spin_frame_width = 1000
+
+  assign fallback_src = ''
+  if fallback_image != blank
+    assign fallback_src = fallback_image | image_url: width: 1800
+  endif
+
+  assign spin_first_src = ''
+  if has_spin_frames
+    if spin_file_frames != blank
+      assign spin_first = spin_file_frames.first
+      assign spin_first_src = spin_first | image_url: width: spin_lcp_width
+      if spin_first_src == blank
+        assign spin_first_src = spin_first | file_url
+      endif
+    elsif spin_use_media_frames
+      for media in sorted_media
+        if media.media_type != 'image'
+          continue
+        endif
+        assign spin_first_src = media.preview_image | image_url: width: spin_lcp_width
+        break
+      endfor
+    endif
+  endif
+
+  assign spin_lcp_image = blank
+  if has_spin_frames
+    if spin_file_frames != blank
+      assign spin_lcp_image = spin_file_frames.first
+    elsif spin_use_media_frames
+      for media in sorted_media
+        if media.media_type == 'image'
+          assign spin_lcp_image = media.preview_image
+          break
+        endif
+      endfor
+    endif
+  endif
+
+  assign spin_lcp_srcset = ''
+  if spin_lcp_image != blank
+    capture spin_lcp_srcset
+      echo spin_lcp_image | image_url: width: 320
+      echo ' 320w, '
+      echo spin_lcp_image | image_url: width: 375
+      echo ' 375w, '
+      echo spin_lcp_image | image_url: width: 412
+      echo ' 412w, '
+      echo spin_lcp_image | image_url: width: 550
+      echo ' 550w, '
+      echo spin_lcp_image | image_url: width: 750
+      echo ' 750w, '
+      echo spin_lcp_image | image_url: width: 900
+      echo ' 900w, '
+      echo spin_lcp_image | image_url: width: 1024
+      echo ' 1024w, '
+      echo spin_lcp_image | image_url: width: 1400
+      echo ' 1400w'
+    endcapture
+  endif
+
+  assign spin_secondary_index_a = 0
+  assign spin_secondary_index_b = 0
+  assign spin_secondary_src_a = ''
+  assign spin_secondary_src_b = ''
+  if has_spin_frames
+    assign spin_secondary_index_a = spin_frame_count | times: 2 | divided_by: 9
+    assign spin_secondary_index_b = spin_frame_count | times: 6 | divided_by: 9
+    if spin_secondary_index_b <= spin_secondary_index_a
+      assign spin_secondary_index_b = spin_secondary_index_a | plus: 1
+    endif
+    assign spin_last_index = spin_frame_count | minus: 1
+    if spin_secondary_index_b > spin_last_index
+      assign spin_secondary_index_b = spin_last_index
+    endif
+
+    if spin_file_frames != blank
+      assign secondary_frame_a = spin_file_frames[spin_secondary_index_a]
+      assign secondary_frame_b = spin_file_frames[spin_secondary_index_b]
+      assign spin_secondary_src_a = secondary_frame_a | image_url: width: 1400
+      if spin_secondary_src_a == blank
+        assign spin_secondary_src_a = secondary_frame_a | file_url
+      endif
+      assign spin_secondary_src_b = secondary_frame_b | image_url: width: 1400
+      if spin_secondary_src_b == blank
+        assign spin_secondary_src_b = secondary_frame_b | file_url
+      endif
+    elsif spin_use_media_frames
+      assign media_frame_index = 0
+      for media in sorted_media
+        if media.media_type != 'image'
+          continue
+        endif
+        if media_frame_index == spin_secondary_index_a
+          assign spin_secondary_src_a = media.preview_image | image_url: width: 1400
+        endif
+        if media_frame_index == spin_secondary_index_b
+          assign spin_secondary_src_b = media.preview_image | image_url: width: 1400
+        endif
+        assign media_frame_index = media_frame_index | plus: 1
+      endfor
+    endif
+  endif
 -%}
 
 <product-media-gallery
@@ -37,231 +199,358 @@
     class="{{ block.settings.additional_class }}"
   {% endif %}
 >
-  <slider-component
-    data-per-page-mobile="1"
-    data-per-page-desktop="1"
-    data-gap="20"
-    data-show-arrows="{{ block.settings.show_arrows }}"
-    data-show-arrows-thumbnails="{{ block.settings.thumbnails_show_arrows }}"
-    data-show-pagination="{{ block.settings.show_pagination }}"
-    data-show-pagination-mobile="{{ block.settings.show_pagination }}"
-    data-rewind="false"
-    style="
-      --margin-top: 0px;
-      --margin-bottom: 0px;
-      --grid-columns: {{ block.settings.grid_columns }};
-      --grid-gap: {{ block.settings.grid_gap }}px;
-    "
-    class="
-      product-media-gallery
-      product-media-gallery--{{ block.settings.media_display }}
-      {%- if block.settings.show_a_bit_of_next_image_on_mobile %} slider-component--85-percent{% endif -%}
-    "
-    {{ block.shopify_attributes }}
-  >
-    <div class="product-media-gallery-main-slider splide" role="group" data-ref="main-slider">
-      {% if block.settings.show_arrows %}
-        <div class="splide__arrows">
-          <button class="splide__arrow splide__arrow--prev button button--{{ block.settings.arrows_button_style }} button--small button--icon-only">
-            {% render 'icon', icon: 'arrow_back' %}
-          </button>
-          <button class="splide__arrow splide__arrow--next button button--{{ block.settings.arrows_button_style }} button--small button--icon-only">
-            {% render 'icon', icon: 'arrow_forward' %}
-          </button>
+  {% if use_stockx_media %}
+    <div
+      class="
+        product-media-gallery-stockx
+        {%- if block.settings.media_rounded %} product-media-gallery-stockx--rounded{% endif -%}
+        {%- if has_single_product_image %} product-media-gallery-stockx--single-image{% endif -%}
+      "
+      style="--stockx-ratio: {{ stockx_ratio }};"
+      {{ block.shopify_attributes }}
+    >
+      {% if has_spin_frames %}
+        <product-360-spin
+          class="product-360-spin"
+          data-step-px="14"
+          data-fallback-src="{{ fallback_src | escape }}"
+          data-lcp-image
+          aria-label="{{ spin_alt | escape }}"
+        >
+          <img
+            class="product-media-gallery-stockx__image"
+            src="{% if spin_lcp_image != blank %}{{ spin_lcp_image | image_url: width: 750 }}{% else %}{{ spin_first_src | default: fallback_src }}{% endif %}"
+            {% if spin_lcp_srcset != blank %}
+              srcset="{{ spin_lcp_srcset }}"
+              sizes="(min-width: 751px) 70vw, 100vw"
+            {% endif %}
+            alt="{{ spin_alt | escape }}"
+            width="1400"
+            height="{{ 1400 | divided_by: stockx_ratio | round }}"
+            loading="eager"
+            fetchpriority="high"
+            decoding="sync"
+            draggable="false"
+            data-spin-stage
+            style="{{ stockx_ratio_style }}"
+          >
+          <span class="product-360-spin__hint" aria-hidden="true">360°</span>
+          <div class="product-360-spin__slider-wrap">
+            <input
+              class="product-360-spin__slider"
+              type="range"
+              min="0"
+              max="{{ spin_frame_count | minus: 1 }}"
+              step="1"
+              value="0"
+              aria-label="360 Slider Track"
+              data-spin-slider
+            >
+          </div>
+          <script type="application/json" data-spin-frames>
+            [
+              {% if spin_file_frames != blank %}
+                {% for frame in spin_file_frames %}
+                  {% if forloop.first %}
+                    {% assign frame_url = frame | image_url: width: spin_lcp_width %}
+                  {% else %}
+                    {% assign frame_url = frame | image_url: width: spin_frame_width %}
+                  {% endif %}
+                  {% if frame_url == blank %}
+                    {% assign frame_url = frame | file_url %}
+                  {% endif %}
+                  {{ frame_url | json }}{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+              {% elsif spin_use_media_frames %}
+                {% assign emitted_count = 0 %}
+                {% for media in sorted_media %}
+                  {% if media.media_type != 'image' %}
+                    {% continue %}
+                  {% endif %}
+                  {% if emitted_count == 0 %}
+                    {% assign media_spin_src = media.preview_image | image_url: width: spin_lcp_width %}
+                  {% else %}
+                    {% assign media_spin_src = media.preview_image | image_url: width: spin_frame_width %}
+                  {% endif %}
+                  {{ media_spin_src | json }}
+                  {% assign emitted_count = emitted_count | plus: 1 %}
+                  {% if emitted_count < spin_frame_count %},{% endif %}
+                {% endfor %}
+              {% endif %}
+            ]
+          </script>
+          <script src="{{ 'product-360-spin.js' | asset_url }}" defer></script>
+        </product-360-spin>
+      {% elsif fallback_image != blank %}
+        <button
+          type="button"
+          class="pdp-lightbox-trigger"
+          data-lightbox-src="{{ fallback_image | image_url: width: 1600 }}"
+          data-lightbox-alt="{{ spin_alt | escape }}"
+          data-lcp-image
+          aria-label="Agrandir l'image"
+        >
+          {{
+            fallback_image
+            | image_url: width: 1600
+            | image_tag:
+              sizes: '(min-width: 751px) 70vw, 100vw',
+              widths: '320, 375, 412, 550, 750, 900, 1024, 1200, 1400, 1600',
+              alt: spin_alt,
+              class: 'product-media-gallery-stockx__image',
+              style: stockx_ratio_style,
+              loading: 'eager',
+              fetchpriority: 'high',
+              decoding: 'sync'
+          }}
+        </button>
+      {% else %}
+        <img
+          src="{{ 'placeholder-product.jpg' | asset_img_url: 'x1000' }}"
+          alt="placeholder product"
+          width="750"
+          height="750"
+          class="placeholder-image"
+          loading="lazy"
+        >
+      {% endif %}
+
+      {% liquid
+        assign sub_image_a = spin_secondary_src_a
+        assign sub_image_b = spin_secondary_src_b
+        if sub_image_a == blank and product.images.size > 1
+          assign sub_image_a = product.images[1] | image_url: width: 1400
+        endif
+        if sub_image_b == blank and product.images.size > 2
+          assign sub_image_b = product.images[2] | image_url: width: 1400
+        endif
+      %}
+      {% if sub_image_a != blank or sub_image_b != blank %}
+        <div
+          class="product-media-gallery-stockx__subgrid{% if sub_image_b == blank %} product-media-gallery-stockx__subgrid--single{% endif %}"
+          aria-label="Vues produit secondaires"
+        >
+          {% if sub_image_a != blank %}
+            <figure class="product-media-gallery-stockx__subcard">
+              <button
+                type="button"
+                class="pdp-lightbox-trigger"
+                data-lightbox-src="{{ sub_image_a }}"
+                data-lightbox-alt="{{ product.title | escape }} - vue secondaire A"
+                aria-label="Agrandir l'image"
+              >
+                <img
+                  class="product-media-gallery-stockx__subimage"
+                  src="{{ sub_image_a }}"
+                  alt="{{ product.title | escape }} - vue secondaire A"
+                  loading="lazy"
+                  width="900"
+                  height="{{ 900 | divided_by: stockx_ratio | round }}"
+                >
+              </button>
+            </figure>
+          {% endif %}
+          {% if sub_image_b != blank %}
+            <figure class="product-media-gallery-stockx__subcard">
+              <button
+                type="button"
+                class="pdp-lightbox-trigger"
+                data-lightbox-src="{{ sub_image_b }}"
+                data-lightbox-alt="{{ product.title | escape }} - vue secondaire B"
+                aria-label="Agrandir l'image"
+              >
+                <img
+                  class="product-media-gallery-stockx__subimage"
+                  src="{{ sub_image_b }}"
+                  alt="{{ product.title | escape }} - vue secondaire B"
+                  loading="lazy"
+                  width="900"
+                  height="{{ 900 | divided_by: stockx_ratio | round }}"
+                >
+              </button>
+            </figure>
+          {% endif %}
         </div>
       {% endif %}
 
-      <div class="splide__track">
-        <ul class="splide__list">
-          {% for media in sorted_media %}
-            <li
-              class="
-                splide__slide
-                product-media-gallery__media
-                {%- if forloop.index == 1 and block.settings.main_image_full_width %} product-media-gallery__media--full-width{% endif -%}
-                {%- if block.settings.media_rounded %} product-media-gallery__media--rounded{% endif -%}
-              "
-            >
-              {% if block.settings.media_ratio == 'adapt' %}
-                {% assign ratio = media.aspect_ratio %}
-              {% else %}
-                {% assign ratio = block.settings.media_ratio %}
-              {% endif %}
-
-              {% render 'product-media',
-                media: media,
-                show_video: true,
-                video_loop: block.settings.video_loop,
-                enable_video_controls: block.settings.enable_video_controls,
-                ratio: ratio
-              %}
-
-              {% if block.settings.media_display == 'grid' and forloop.index == 1 and block.settings.show_badges %}
-                {% render 'product-badges', product: product %}
-              {% endif %}
-            </li>
-          {% else %}
-            <img
-              src="{{ 'placeholder-product.jpg' | asset_img_url: 'x1000' }}"
-              alt="placeholder product"
-              width="750"
-              height="750"
-              class="placeholder-image"
-              loading="lazy"
-            >
-          {% endfor %}
-        </ul>
-      </div>
-
-      {% if block.settings.media_display == 'carrousel' and block.settings.show_badges %}
-        {% render 'product-badges', product: product %}
+      {% if block.settings.show_badges %}
+        {% render 'product-card-promotional-pictos', product: product, stacked: true %}
       {% endif %}
-    </div>
 
-    {% if block.settings.show_thumbnails %}
-      <div
-        class="
-          splide product-media-gallery__thumbnails
-          {%- if block.settings.show_thumbnails_on_display == 'desktop_only' and block.settings.media_display == 'carrousel' %} mobile-hide{% endif -%}
-          {%- if block.settings.show_thumbnails_on_display == 'mobile_only' %} desktop-hide{% endif -%}
-        "
-        role="group"
-        data-ref="thumbnail-slider"
-      >
-        {% if block.settings.thumbnails_show_arrows %}
+      <dialog class="pdp-lightbox" aria-label="Image agrandie">
+        <button type="button" class="pdp-lightbox__close" aria-label="Fermer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <button type="button" class="pdp-lightbox__nav pdp-lightbox__nav--prev" aria-label="Image précédente" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <img class="pdp-lightbox__img" src="" alt="" loading="eager">
+        <button type="button" class="pdp-lightbox__nav pdp-lightbox__nav--next" aria-label="Image suivante" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </dialog>
+    </div>
+  {% else %}
+    <slider-component
+      data-per-page-mobile="1"
+      data-per-page-desktop="1"
+      data-gap="20"
+      data-show-arrows="{{ block.settings.show_arrows }}"
+      data-show-arrows-thumbnails="{{ block.settings.thumbnails_show_arrows }}"
+      data-show-pagination="{{ block.settings.show_pagination }}"
+      data-show-pagination-mobile="{{ block.settings.show_pagination }}"
+      data-rewind="false"
+      style="
+        --margin-top: 0px;
+        --margin-bottom: 0px;
+        --grid-columns: {{ block.settings.grid_columns }};
+        --grid-gap: {{ block.settings.grid_gap }}px;
+      "
+      class="
+        product-media-gallery
+        product-media-gallery--{{ block.settings.media_display }}
+        {%- if block.settings.show_a_bit_of_next_image_on_mobile %} slider-component--85-percent{% endif -%}
+      "
+      {{ block.shopify_attributes }}
+    >
+      <div class="product-media-gallery-main-slider splide" role="group" data-ref="main-slider">
+        {% if block.settings.show_arrows %}
           <div class="splide__arrows">
-            <button class="splide__arrow splide__arrow--prev button button--{{ block.settings.thumbnails_arrows_button_style }} button--small button--icon-only">
+            <button class="splide__arrow splide__arrow--prev button button--{{ block.settings.arrows_button_style }} button--small button--icon-only">
               {% render 'icon', icon: 'arrow_back' %}
             </button>
-            <button class="splide__arrow splide__arrow--next button button--{{ block.settings.thumbnails_arrows_button_style }} button--small button--icon-only">
+            <button class="splide__arrow splide__arrow--next button button--{{ block.settings.arrows_button_style }} button--small button--icon-only">
               {% render 'icon', icon: 'arrow_forward' %}
             </button>
           </div>
         {% endif %}
+
         <div class="splide__track">
           <ul class="splide__list">
             {% for media in sorted_media %}
-              <li class="splide__slide product-media-gallery__thumbnail {% if block.settings.media_rounded %}product-media-gallery__thumbnail--rounded{% endif %}">
+              <li
+                class="
+                  splide__slide
+                  product-media-gallery__media
+                  {%- if forloop.index == 1 and block.settings.main_image_full_width %} product-media-gallery__media--full-width{% endif -%}
+                  {%- if block.settings.media_rounded %} product-media-gallery__media--rounded{% endif -%}
+                "
+              >
                 {% if block.settings.media_ratio == 'adapt' %}
-                  {% assign ratio = 'aspect-ratio: ' | append: media.aspect_ratio %}
+                  {% assign ratio = media.aspect_ratio %}
                 {% else %}
-                  {% assign ratio = 'aspect-ratio: ' | append: block.settings.media_ratio %}
+                  {% assign ratio = block.settings.media_ratio %}
                 {% endif %}
 
-                {{
-                  media.preview_image
-                  | image_url: width: 1024
-                  | image_tag:
-                    sizes: 'auto, 110, (width >750px) 160',
-                    widths: '300, 375, 450, 525, 600, 675, 750, 768, 850, 900, 1024',
-                    alt: media.alt,
-                    class: 'product-media-gallery__thumbnail-image',
-                    style: ratio
-                  | escape
-                }}
-                {% if media.media_type == 'video' %}
-                  <div class="product-media-gallery__thumbnail-play-button">
-                    {% render 'icon', icon: 'play_circle' %}
-                  </div>
+                {% if forloop.index == 1 %}
+                  {% render 'product-media',
+                    alt_fallback: product.title,
+                    media: media,
+                    show_video: true,
+                    video_loop: block.settings.video_loop,
+                    enable_video_controls: block.settings.enable_video_controls,
+                    ratio: ratio,
+                    loading: 'eager',
+                    fetchpriority: 'high'
+                  %}
+                {% else %}
+                  {% render 'product-media',
+                    alt_fallback: product.title,
+                    media: media,
+                    show_video: true,
+                    video_loop: block.settings.video_loop,
+                    enable_video_controls: block.settings.enable_video_controls,
+                    ratio: ratio,
+                    loading: 'lazy'
+                  %}
+                {% endif %}
+
+                {% if block.settings.media_display == 'grid' and forloop.index == 1 and block.settings.show_badges %}
+                  {% render 'product-card-promotional-pictos', product: product, stacked: true %}
                 {% endif %}
               </li>
+            {% else %}
+              <img
+                src="{{ 'placeholder-product.jpg' | asset_img_url: 'x1000' }}"
+                alt="placeholder product"
+                width="750"
+                height="750"
+                class="placeholder-image"
+                loading="lazy"
+              >
             {% endfor %}
           </ul>
         </div>
+
+        {% if block.settings.media_display == 'carrousel' and block.settings.show_badges %}
+          {% render 'product-card-promotional-pictos', product: product, stacked: true %}
+        {% endif %}
       </div>
-    {% endif %}
-  </slider-component>
+
+      {% if block.settings.show_thumbnails %}
+        <div
+          class="
+            splide product-media-gallery__thumbnails
+            {%- if block.settings.show_thumbnails_on_display == 'desktop_only' and block.settings.media_display == 'carrousel' %} mobile-hide{% endif -%}
+            {%- if block.settings.show_thumbnails_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+          "
+          role="group"
+          data-ref="thumbnail-slider"
+        >
+          {% if block.settings.thumbnails_show_arrows %}
+            <div class="splide__arrows">
+              <button class="splide__arrow splide__arrow--prev button button--{{ block.settings.thumbnails_arrows_button_style }} button--small button--icon-only">
+                {% render 'icon', icon: 'arrow_back' %}
+              </button>
+              <button class="splide__arrow splide__arrow--next button button--{{ block.settings.thumbnails_arrows_button_style }} button--small button--icon-only">
+                {% render 'icon', icon: 'arrow_forward' %}
+              </button>
+            </div>
+          {% endif %}
+          <div class="splide__track">
+            <ul class="splide__list">
+              {% for media in sorted_media %}
+                <li class="splide__slide product-media-gallery__thumbnail {% if block.settings.media_rounded %}product-media-gallery__thumbnail--rounded{% endif %}">
+                  {% if block.settings.media_ratio == 'adapt' %}
+                    {% assign ratio = 'aspect-ratio: ' | append: media.aspect_ratio %}
+                  {% else %}
+                    {% assign ratio = 'aspect-ratio: ' | append: block.settings.media_ratio %}
+                  {% endif %}
+
+                  {{
+                    media.preview_image
+                    | image_url: width: 1024
+                    | image_tag:
+                      sizes: 'auto, 110, (width >750px) 160',
+                      widths: '300, 375, 450, 525, 600, 675, 750, 768, 850, 900, 1024',
+                      alt: media.alt,
+                      class: 'product-media-gallery__thumbnail-image',
+                      style: ratio,
+                      loading: 'lazy',
+                      decoding: 'async'
+                    | escape
+                  }}
+                  {% if media.media_type == 'video' %}
+                    <div class="product-media-gallery__thumbnail-play-button">
+                      {% render 'icon', icon: 'play_circle' %}
+                    </div>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+    </slider-component>
+  {% endif %}
 </product-media-gallery>
-
-{% stylesheet %}
-  @media (width > 750px) {
-    .product-media-gallery .splide__arrow,
-    .product-media-gallery .splide__arrow:disabled,
-    .product-media-gallery .splide__pagination {
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out;
-    }
-
-    .product-media-gallery:hover .splide__arrow,
-    .product-media-gallery:hover .splide__pagination {
-      opacity: 1;
-    }
-
-    .product-media-gallery:hover .splide__arrow:disabled {
-      opacity: 0.5;
-    }
-  }
-
-  @media (width > 750px) {
-    .product-media-gallery--grid {
-      .splide__list {
-        display: grid;
-        grid-template-columns: repeat(var(--grid-columns), 1fr);
-        gap: var(--grid-gap);
-
-        .product-media-gallery__media--full-width {
-          grid-column: span var(--grid-columns);
-        }
-      }
-      .product-media-gallery__thumbnails {
-        display: none;
-      }
-    }
-  }
-
-  .product-media-gallery__media {
-    height: 100%;
-  }
-
-  .product-media-gallery__media--rounded {
-    border-radius: var(--card-border-radius);
-    overflow: hidden;
-  }
-
-  .product-media-gallery .splide__pagination {
-    bottom: 5px;
-  }
-
-  .product-media-gallery__thumbnails {
-    margin-top: 10px;
-  }
-
-  .product-media-gallery__thumbnail {
-    position: relative;
-    height: auto !important;
-
-    .product-media-gallery__thumbnail-play-button {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.1);
-
-      .icon--play_circle {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-
-        position: absolute;
-        font-size: 36px !important;
-        color: var(--color-primary-button-text);
-      }
-    }
-  }
-
-  .product-media-gallery__thumbnail-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .product-media-gallery__thumbnail--rounded,
-  .product-media-gallery__thumbnail--rounded .product-media-gallery__thumbnail-image,
-  .product-media-gallery__thumbnail--rounded .product-media-gallery__thumbnail-play-button {
-    border-radius: calc(var(--card-border-radius) - (var(--card-padding) * 0.5));
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
@@ -301,7 +590,7 @@
         { "value": "4 / 3", "label": "t:landscape" },
         { "value": "adapt", "label": "t:adapt" }
       ],
-      "default": "1 / 1"
+      "default": "adapt"
     },
     {
       "type": "checkbox",

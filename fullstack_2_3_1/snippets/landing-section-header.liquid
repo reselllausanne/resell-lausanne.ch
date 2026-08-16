@@ -1,0 +1,33 @@
+{% doc %}
+  Renders a reusable section heading group for landing page blocks.
+
+  @param {string} [eyebrow] - Optional small label above title
+  @param {string} title - Main heading content
+  @param {string} [description] - Optional supporting text
+  @param {string} [link_url] - Optional CTA link URL
+  @param {string} [link_label] - Optional CTA link label
+{% enddoc %}
+
+{% if title != blank %}
+  <header class="landing-section-header">
+    {% if eyebrow != blank %}
+      <p class="landing-section-header__eyebrow">{{ eyebrow }}</p>
+    {% endif %}
+
+    <div class="landing-section-header__row">
+      <h2 class="landing-section-header__title">{{ title }}</h2>
+
+      {% if link_url != blank and link_label != blank %}
+        <a class="landing-section-header__link" href="{{ link_url }}">
+          {{ link_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    {% if description != blank %}
+      <div class="landing-section-header__description rte">
+        {{ description }}
+      </div>
+    {% endif %}
+  </header>
+{% endif %}

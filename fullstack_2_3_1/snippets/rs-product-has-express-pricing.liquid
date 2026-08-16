@@ -1,0 +1,39 @@
+{% comment %}
+  True when any variant has custom.express_price (standard vs express choice in size modal).
+
+  @param product {product}
+{% endcomment %}
+{% liquid
+  assign rs_has_express_pricing = false
+
+  for variant in product.variants
+    if variant.metafields.custom.express_price == blank
+      continue
+    endif
+
+    assign exp_mv = variant.metafields.custom.express_price.value
+    assign express_price_cents = 0
+    assign express_price_defined = false
+
+    if exp_mv.amount != blank
+      assign express_price_cents = exp_mv.amount | times: 100 | round
+      assign express_price_defined = true
+    else
+      assign exp_mv_str = exp_mv | append: '' | strip
+      if exp_mv_str contains '.'
+        assign express_price_cents = exp_mv_str | times: 100 | round
+      else
+        assign express_price_cents = exp_mv_str | plus: 0
+      endif
+      if express_price_cents > 0
+        assign express_price_defined = true
+      endif
+    endif
+
+    if express_price_defined
+      assign rs_has_express_pricing = true
+      break
+    endif
+  endfor
+-%}
+{%- if rs_has_express_pricing -%}true{%- else -%}false{%- endif -%}

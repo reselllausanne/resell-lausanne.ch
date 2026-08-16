@@ -1,0 +1,45 @@
+{% doc %}
+  Drawer menu thumbnail from a Shopify collection (featured image, metafields, or first product).
+
+  @param {string} handle - Collection handle
+  @param {string} [alt] - Alt text (defaults to collection title)
+  @param {string} [wrap_modifier] - Extra wrap class, e.g. is-badge-image
+  @param {string} [loading] - Image loading attribute passed to thumb/logo snippets
+{% enddoc %}
+{% liquid
+  assign thumb = blank
+  assign c = collections[handle]
+  assign alt_text = alt | default: c.title | default: handle
+  assign wrap_class = wrap_modifier | default: 'is-menu-thumb'
+  assign thumb_loading = loading | default: 'lazy'
+
+  if c != blank
+    if c.metafields.custom.menu_brand_image != blank and c.metafields.custom.menu_brand_image.value != blank
+      assign thumb = c.metafields.custom.menu_brand_image.value
+    elsif c.metafields.custom.brand_logo != blank and c.metafields.custom.brand_logo.value != blank
+      assign thumb = c.metafields.custom.brand_logo.value
+    elsif c.featured_image != blank
+      assign thumb = c.featured_image
+    elsif c.products.size > 0 and c.products.first.featured_image != blank
+      assign thumb = c.products.first.featured_image
+    endif
+  endif
+
+  capture brand_logo_src
+    render 'brand-menu-logo-url', handle: handle
+  endcapture
+  assign brand_logo_src = brand_logo_src | strip
+  assign use_brand_asset = false
+  if brand_logo_src != blank and brand_logo_src contains '/assets/'
+    assign use_brand_asset = true
+  endif
+%}
+<span class="header__mobile-menu-link-image-wrap {{ wrap_class }}">
+  {% if use_brand_asset %}
+    {% render 'menu-brand-image', handle: handle, alt: alt_text, loading: thumb_loading %}
+  {% elsif thumb != blank %}
+    {% render 'drawer-menu-thumb-img', image: thumb, alt: alt_text, loading: thumb_loading %}
+  {% else %}
+    <span class="header__mobile-menu-link-placeholder">{{ alt_text | slice: 0, 2 | upcase }}</span>
+  {% endif %}
+</span>

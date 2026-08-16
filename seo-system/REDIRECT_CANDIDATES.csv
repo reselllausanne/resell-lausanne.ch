@@ -1,0 +1,9 @@
+from_url,to_url,reason,confidence,priority
+/collections/travis-scott,/collections/air-jordan-x-travis-scott,"Alias already canonicalized in meta-tags.liquid; 301 consolidates duplicate + passes equity",high,P1
+/collections/vetement-travis,/collections/air-jordan-x-travis-scott,"Alias already canonicalized in theme; streetwear-Travis handle; 301 consolidates",high,P1
+/collections/travis-scott-cactus-jack,/collections/air-jordan-x-travis-scott,"Gap handle from collections-manquantes; same entity",medium,P2
+/collections/fear-of-god-essentials,/collections/essentials,"Canonical target is /essentials in theme; consolidate (verify which handle Shopify collection actually uses first)",medium,P1
+/collections/crampons,/collections/crampons-de-foot,"Alias canonicalized in theme; 301 consolidates",high,P1
+/collections/football,/collections/crampons-de-foot,"Alias canonicalized in theme; 301 consolidates",high,P1
+/collections/new-balance-204,/collections/new-balance-204l,"Alias canonicalized in theme (204 -> 204l); 301 consolidates",high,P1
+/collections/yeezy-foam-rnnr,/collections/foam-rnr,"Gap handle vs existing foam-rnr model collection; consolidate spelling variant",medium,P2

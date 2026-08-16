@@ -31,12 +31,6 @@
   {% render 'quantity-selector', value: 1, min: 1, max: max_quantity, name: 'quantity', disabled: disabled %}
 </div>
 
-{% stylesheet %}
-  shopify-visual-preview-block-list .product-quantity-selector-block[data-visual-preview-mode] {
-    width: 100px;
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:quantity_selector",

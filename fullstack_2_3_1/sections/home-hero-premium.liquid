@@ -1,0 +1,528 @@
+{% liquid
+  assign marquee_blocks = section.blocks | where: 'type', 'marquee_item'
+  assign slide_blocks   = section.blocks | where: 'type', 'slide'
+
+  assign rl_default_desktop_file = section.settings.default_desktop_hero_filename | default: 'header-essential-laptop.avif' | strip
+  assign rl_default_mobile_file = section.settings.default_mobile_hero_filename | default: 'Header-essential-phone.avif' | strip
+
+  assign campaign_enabled = section.settings.campaign_slide_enabled
+  assign total_slides = slide_blocks.size
+  if campaign_enabled
+    assign total_slides = total_slides | plus: 1
+  endif
+
+  if total_slides > 0
+    assign use_blocks = true
+  else
+    assign use_blocks = false
+  endif
+%}
+
+{%- comment -%}
+  LCP preload moved to layout/theme.liquid (snippets/lcp-preload-home.liquid)
+  so it fires before any CSS/JS in <head>.
+{%- endcomment -%}
+
+<section
+  id="RlHome-{{ section.id }}"
+  class="rl-home color-{{ section.settings.color_scheme }}"
+  style="
+    --rl-padding-top: {{ section.settings.section_padding_top }}px;
+    --rl-padding-bottom: {{ section.settings.section_padding_bottom }}px;
+    --ticker-duration: {{ section.settings.ticker_speed }}s;
+  "
+>
+  {%- comment -%}
+    SEO H1: page-level heading required for ranking. Hidden visually, full keyword target
+    for "sneakers suisse" / brand. Visible card text (h2) remains unchanged.
+  {%- endcomment -%}
+  <h1 class="visually-hidden">
+    {{- section.settings.seo_h1 | default: 'Resell Lausanne — Sneakers et streetwear authentiques en Suisse' -}}
+  </h1>
+
+  <div class="rl-home__hero" id="RlHero-{{ section.id }}">
+
+    {% comment %}——— SLIDES ———{% endcomment %}
+    {% if use_blocks %}
+
+      {% if campaign_enabled %}
+        {% liquid
+          assign campaign_link = section.settings.campaign_button_link
+          if campaign_link == blank
+            assign campaign_link = '/collections/back-to-school-2026'
+          endif
+        %}
+        {% render 'rl-home-hero-slide',
+          slide_idx: 0,
+          is_active: true,
+          is_lcp: true,
+          desktop_image: section.settings.campaign_desktop_image,
+          mobile_image: section.settings.campaign_mobile_image,
+          desktop_filename: section.settings.campaign_desktop_filename,
+          mobile_filename: section.settings.campaign_mobile_filename,
+          default_desktop_filename: rl_default_desktop_file,
+          default_mobile_filename: rl_default_mobile_file,
+          alt: section.settings.campaign_title,
+          title: section.settings.campaign_title,
+          text: section.settings.campaign_text,
+          button_label: section.settings.campaign_button_label,
+          button_link: campaign_link,
+          hide_cta_card: false
+        %}
+      {% endif %}
+
+      {% for block in slide_blocks %}
+        {% liquid
+          assign slide_idx = forloop.index0
+          if campaign_enabled
+            assign slide_idx = slide_idx | plus: 1
+          endif
+          assign is_active = false
+          unless campaign_enabled
+            if forloop.first
+              assign is_active = true
+            endif
+          endunless
+          assign is_lcp = false
+          unless campaign_enabled
+            if forloop.first
+              assign is_lcp = true
+            endif
+          endunless
+        %}
+        {% render 'rl-home-hero-slide',
+          slide_idx: slide_idx,
+          is_active: is_active,
+          is_lcp: is_lcp,
+          desktop_image: block.settings.image,
+          mobile_image: block.settings.image_mobile,
+          desktop_filename: block.settings.desktop_filename,
+          mobile_filename: block.settings.mobile_filename,
+          default_desktop_filename: rl_default_desktop_file,
+          default_mobile_filename: rl_default_mobile_file,
+          alt: block.settings.title,
+          title: block.settings.title,
+          text: block.settings.text,
+          button_label: block.settings.button_label,
+          button_link: block.settings.button_link,
+          hide_cta_card: block.settings.hide_cta_card,
+          shopify_attributes: block.shopify_attributes
+        %}
+      {% endfor %}
+
+    {% endif %}
+
+    {% comment %}——— ARROWS (only when multiple slides) ———{% endcomment %}
+    {% if section.settings.show_hero_arrows and total_slides > 1 %}
+      <button type="button" class="rl-home__hero-arrow rl-home__hero-arrow--prev" aria-label="Slide précédente">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button type="button" class="rl-home__hero-arrow rl-home__hero-arrow--next" aria-label="Slide suivante">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    {% endif %}
+
+    {% comment %}——— DOTS (only when multiple slides) ———{% endcomment %}
+    {% if section.settings.show_hero_dots and total_slides > 1 %}
+      <div class="rl-home__hero-dots" aria-hidden="true" id="RlDots-{{ section.id }}">
+        {% if use_blocks %}
+          {% if campaign_enabled %}
+            <button type="button" class="rl-home__hero-dot is-active" data-dot="0" aria-label="Slide 1"></button>
+          {% endif %}
+          {% for block in slide_blocks %}
+            {% liquid
+              assign dot_idx = forloop.index0
+              if campaign_enabled
+                assign dot_idx = dot_idx | plus: 1
+              endif
+            %}
+            <button
+              type="button"
+              class="rl-home__hero-dot{% if campaign_enabled == false and forloop.first %} is-active{% endif %}"
+              data-dot="{{ dot_idx }}"
+              aria-label="Slide {{ forloop.index }}"
+            ></button>
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+  {% comment %}— END .rl-home__hero —{% endcomment %}
+
+  {% if marquee_blocks.size > 0 %}
+    <div class="rl-home__ticker" role="region" aria-label="Store highlights">
+      <div class="rl-home__ticker-track">
+        {% for _ in (1..2) %}
+          <div class="rl-home__ticker-segment"{% if forloop.index > 1 %} aria-hidden="true"{% endif %}>
+            {% for block in marquee_blocks %}
+              <span class="rl-home__ticker-item">{{ block.settings.text }}</span>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <script>
+    (function () {
+      var heroEl = document.getElementById('RlHero-{{ section.id }}');
+      if (!heroEl) return;
+
+      var slides  = heroEl.querySelectorAll('.rl-home__hero-slide');
+      var dots    = heroEl.querySelectorAll('.rl-home__hero-dot');
+      var prevBtn = heroEl.querySelector('.rl-home__hero-arrow--prev');
+      var nextBtn = heroEl.querySelector('.rl-home__hero-arrow--next');
+      var total   = slides.length;
+      if (total <= 1) return;
+
+      var current  = 0;
+      var autoTimer = null;
+
+      function goTo(idx) {
+        slides[current].classList.remove('is-active');
+        slides[current].setAttribute('aria-hidden', 'true');
+        if (dots[current]) dots[current].classList.remove('is-active');
+        current = (idx + total) % total;
+        slides[current].classList.add('is-active');
+        slides[current].removeAttribute('aria-hidden');
+        if (dots[current]) dots[current].classList.add('is-active');
+      }
+
+      function startAuto() {
+        autoTimer = setInterval(function () { goTo(current + 1); }, 5000);
+      }
+
+      function resetAuto() {
+        clearInterval(autoTimer);
+        startAuto();
+      }
+
+      if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); resetAuto(); });
+      if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); resetAuto(); });
+
+      dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          goTo(parseInt(dot.dataset.dot, 10));
+          resetAuto();
+        });
+      });
+
+      startAuto();
+    })();
+  </script>
+</section>
+
+{% comment %} Hero styles → assets/rl-home-hero.css {% endcomment %}
+
+{% schema %}
+{
+  "name": "Home hero premium",
+  "tag": "section",
+  "class": "section-home-hero-premium",
+  "max_blocks": 8,
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.cart_drawer", "custom.breadcrumbs"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "SEO"
+    },
+    {
+      "type": "text",
+      "id": "seo_h1",
+      "label": "H1 (hidden, SEO)",
+      "default": "Resell Lausanne — Sneakers et streetwear authentiques en Suisse",
+      "info": "Rendered visually-hidden. Page-level H1 for ranking. Visible hero card text stays unchanged."
+    },
+    {
+      "type": "header",
+      "content": "Campaign slide"
+    },
+    {
+      "type": "checkbox",
+      "id": "campaign_slide_enabled",
+      "label": "Show campaign hero slide first",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "campaign_desktop_filename",
+      "label": "Campaign desktop filename (Shopify Files)",
+      "default": "resell-lausanne-back-to-school-desktop-v2.webp",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "campaign_mobile_filename",
+      "label": "Campaign mobile filename (Shopify Files)",
+      "default": "resell-lausanne-back-to-school-mobile-v2.png",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_desktop_image",
+      "label": "Campaign desktop image (optional override)",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_mobile_image",
+      "label": "Campaign mobile image (optional override)",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "campaign_title",
+      "label": "Campaign title",
+      "default": "Back to School 2026",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "campaign_text",
+      "label": "Campaign subtitle",
+      "default": "Ton meilleur ensemble pour la rentrée",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "text",
+      "id": "campaign_button_label",
+      "label": "Campaign CTA label",
+      "default": "Acheter",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "url",
+      "id": "campaign_button_link",
+      "label": "Campaign CTA link",
+      "visible_if": "{{ section.settings.campaign_slide_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Default hero images (Shopify Files)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Upload in Admin → Content → Files. Used when slide image pickers are empty — survives every theme push. Exact filename including extension, e.g. header-essential-laptop.avif"
+    },
+    {
+      "type": "text",
+      "id": "default_desktop_hero_filename",
+      "label": "Desktop hero filename",
+      "default": "header-essential-laptop.avif",
+      "info": "Landscape laptop hero in Shopify Files"
+    },
+    {
+      "type": "text",
+      "id": "default_mobile_hero_filename",
+      "label": "Mobile hero filename",
+      "default": "Header-essential-phone.avif",
+      "info": "Portrait phone hero in Shopify Files"
+    },
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "paragraph",
+      "content": "Hero slide blocks: image pickers OR leave empty to use default filenames above."
+    },
+    {
+      "type": "header",
+      "content": "Slider controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hero_arrows",
+      "label": "Show side arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hero_dots",
+      "label": "Show slide dots",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "range",
+      "id": "ticker_speed",
+      "label": "Ticker speed",
+      "min": 12,
+      "max": 80,
+      "step": 2,
+      "default": 34,
+      "unit": "s"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Hero slide",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Images (laptop + phone)"
+        },
+        {
+          "type": "paragraph",
+          "content": "Laptop: landscape ≥1920×810. Phone: portrait ≈1000×1250. If phone is empty, laptop crop is used on mobile."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image laptop"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image phone"
+        },
+        {
+          "type": "text",
+          "id": "desktop_filename",
+          "label": "Desktop filename override (optional)",
+          "info": "Shopify Files name for this slide only."
+        },
+        {
+          "type": "text",
+          "id": "mobile_filename",
+          "label": "Phone filename override (optional)",
+          "info": "Shopify Files name for this slide only."
+        },
+        {
+          "type": "header",
+          "content": "CTA card (shared laptop + phone)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Nouvelle collection"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Découvrir"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_cta_card",
+          "label": "Image-only slide (hide card, full cover link)",
+          "default": false,
+          "info": "Use when copy is baked into the creative (e.g. Back to School). Requires Button link."
+        }
+      ]
+    },
+    {
+      "type": "marquee_item",
+      "name": "Marquee item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Produits authentiques et jamais portés"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home hero premium",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Essentials Summer Sets",
+            "text": "L'uniforme de l'été, version Essentials.",
+            "button_label": "Découvrir",
+            "button_link": "/collections/fear-of-god-essentials"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Slide 2",
+            "text": "Titre et CTA personnalisables.",
+            "button_label": "Découvrir",
+            "button_link": "/collections/nouveautes"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Slide 3",
+            "text": "Titre et CTA personnalisables.",
+            "button_label": "Découvrir",
+            "button_link": "/collections/toutes-nos-paires"
+          }
+        },
+        {
+          "type": "marquee_item",
+          "settings": { "text": "Produits authentiques et jamais portés" }
+        },
+        {
+          "type": "marquee_item",
+          "settings": { "text": "Paiement en 2, 3 ou 4 fois avec Alma" }
+        },
+        {
+          "type": "marquee_item",
+          "settings": { "text": "Service client dédié et disponible" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

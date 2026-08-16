@@ -1,0 +1,24 @@
+{% doc %}
+  Drawer menu link resolved from a Shopify collection handle.
+
+  @param {string} handle - Collection handle (may include ®, ™ when that is the admin handle)
+  @param {string} label - Visible link label
+  @param {string} [link_class] - Link CSS classes
+{% enddoc %}
+
+{% liquid
+  assign col = collections[handle]
+  if col != blank
+    assign link_url = col.url
+  else
+    assign link_url = '/collections/' | append: handle
+  endif
+  assign link_class = link_class | default: 'header__mobile-menu-link header__mobile-menu-link--child'
+%}
+
+<a href="{{ link_url }}" class="{{ link_class }}">
+  <span class="header__mobile-menu-link-main">
+    {% render 'drawer-menu-collection-image', handle: handle, alt: label, wrap_modifier: 'is-menu-thumb' %}
+    <span class="header__mobile-menu-link-text">{{ label }}</span>
+  </span>
+</a>

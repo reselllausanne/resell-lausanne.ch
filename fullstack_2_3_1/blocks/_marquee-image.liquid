@@ -50,7 +50,9 @@
         height: block.settings.image.height,
         class: 'marquee-image-block__image',
         sizes: sizes,
-        alt: image_alt
+        alt: image_alt,
+        loading: 'lazy',
+        decoding: 'async'
     }}
   {%- else -%}
     <img

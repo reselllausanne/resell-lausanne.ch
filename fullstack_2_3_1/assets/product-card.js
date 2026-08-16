@@ -16,13 +16,20 @@ class ProductCard extends HTMLElement {
   }
 
   handleClick(event) {
-    if (event.target instanceof Element) {
-      const interactiveElement = event.target.closest(
+    const clickTarget =
+      event.target instanceof Element
+        ? event.target
+        : event.target?.parentElement instanceof Element
+          ? event.target.parentElement
+          : null;
+    if (clickTarget) {
+      const interactiveElement = clickTarget.closest(
         'button, input, label, select, [tabindex="1"], a, quick-add-component, add-to-wishlist-button',
       );
       if (interactiveElement) return;
     }
 
+    if (!this.productUrl) return;
     window.location.href = this.productUrl;
   }
 }

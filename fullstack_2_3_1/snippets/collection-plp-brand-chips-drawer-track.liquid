@@ -1,0 +1,22 @@
+{% comment %}
+  One drawer-synced brand row for PLP chips.
+
+  @param mode {string} "primary" | "other"
+  @param autres_url {string}
+  @param autres_active {boolean}
+{% endcomment %}
+{% if mode == 'primary' %}
+  {% render 'collection-plp-brand-chip', title: 'Air Jordan', url: collections['air-jordan'].url | default: '/collections/air-jordan', handle: 'air-jordan', chip_eager: true %}
+  {% render 'collection-plp-brand-chip', title: 'Nike', url: collections['nike'].url | default: '/collections/nike', handle: 'nike', chip_eager: true %}
+  {% render 'collection-plp-brand-chip', title: 'Asics', url: collections['asics'].url | default: '/collections/asics', handle: 'asics' %}
+  {% render 'collection-plp-brand-chip', title: 'Yeezy', url: collections['yeezy'].url | default: '/collections/yeezy', handle: 'yeezy' %}
+  {% render 'collection-plp-brand-chip', title: 'Adidas', url: collections['adidas'].url | default: '/collections/adidas', handle: 'adidas' %}
+  {% render 'collection-plp-brand-chip', title: 'New Balance', url: collections['new-balance'].url | default: '/collections/new-balance', handle: 'new-balance' %}
+  {% render 'collection-plp-brand-chip', title: 'Maison Mihara', url: collections['maison-mihara'].url | default: '/collections/maison-mihara', handle: 'maison-mihara' %}
+  {% render 'collection-plp-brand-chip', title: 'Saucony', url: collections['saucony'].url | default: '/collections/saucony', handle: 'saucony' %}
+  {% render 'collection-plp-brand-chip', title: 'Mizuno', url: collections['mizuno'].url | default: '/collections/mizuno', handle: 'mizuno' %}
+  {% render 'collection-plp-brand-chip', title: 'Autres marques', url: autres_url, handle: 'autres-marques', active: autres_active, placeholder: true %}
+{% else %}
+  {% render 'menu-other-sneaker-brands', format: 'chips' %}
+  {% render 'collection-plp-brand-chip', title: 'Autres marques', url: autres_url, handle: 'autres-marques', active: autres_active, placeholder: true %}
+{% endif %}

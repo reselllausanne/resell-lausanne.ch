@@ -1,0 +1,22 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+
+  if pages['conditions-generales-vente'] != blank
+    assign cgv_powerpay_url = pages['conditions-generales-vente'].url | append: '#powerpay'
+  else
+    assign cgv_powerpay_url = routes.root_url | append: 'pages/conditions-generales-vente#powerpay'
+  endif
+%}
+
+<p class="rs-cart__powerpay-cgv-link">
+  {% if locale_base == 'de' %}
+    POWERPAY Kauf auf Rechnung: Bedingungen in unseren <a href="{{ cgv_powerpay_url }}" class="link">AGB</a>.
+  {% elsif locale_base == 'en' %}
+    POWERPAY pay by invoice: terms in our <a href="{{ cgv_powerpay_url }}" class="link">T&amp;Cs</a>.
+  {% elsif locale_base == 'it' %}
+    POWERPAY acquisto su fattura: condizioni nelle nostre <a href="{{ cgv_powerpay_url }}" class="link">CGV</a>.
+  {% else %}
+    Achat sur facture Powerpay : conditions dans nos <a href="{{ cgv_powerpay_url }}" class="link">CGV</a>.
+  {% endif %}
+</p>

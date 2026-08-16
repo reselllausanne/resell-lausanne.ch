@@ -1,0 +1,70 @@
+{%- comment -%}
+  Single source of truth for Shopify Files hero URLs (mobile + desktop crops).
+  Used by lcp-preload-home (mode: preload) and rl-home-hero-media (mode: picture)
+  so imagesrcset/srcset URLs are byte-identical → no duplicate LCP download.
+
+  @param {string} mode - "preload" | "picture"
+  @param {string} mobile_file - Shopify Files filename (phone crop)
+  @param {string} desktop_file - Shopify Files filename (laptop crop)
+  @param {string} [alt] - img alt (picture mode)
+  @param {boolean} [is_first] - LCP eager/high priority (picture mode)
+{%- endcomment -%}
+
+{%- liquid
+  assign rl_mob_base = mobile_file | strip | file_url
+  assign rl_desk_base = desktop_file | strip | file_url
+  if rl_mob_base contains '?'
+    assign rl_mob_sep = '&'
+  else
+    assign rl_mob_sep = '?'
+  endif
+  if rl_desk_base contains '?'
+    assign rl_desk_sep = '&'
+  else
+    assign rl_desk_sep = '?'
+  endif
+-%}
+
+{%- capture rl_mob_srcset -%}
+  {{ rl_mob_base }}{{ rl_mob_sep }}width=480 480w,
+  {{ rl_mob_base }}{{ rl_mob_sep }}width=750 750w,
+  {{ rl_mob_base }}{{ rl_mob_sep }}width=960 960w,
+  {{ rl_mob_base }}{{ rl_mob_sep }}width=1100 1100w
+{%- endcapture -%}
+{%- capture rl_desk_srcset -%}
+  {{ rl_desk_base }}{{ rl_desk_sep }}width=960 960w,
+  {{ rl_desk_base }}{{ rl_desk_sep }}width=1280 1280w,
+  {{ rl_desk_base }}{{ rl_desk_sep }}width=1600 1600w,
+  {{ rl_desk_base }}{{ rl_desk_sep }}width=2000 2000w
+{%- endcapture -%}
+
+{%- if mode == 'preload' -%}
+  <link rel="preload" as="image" imagesrcset="{{ rl_mob_srcset }}" imagesizes="100vw" media="(max-width: 749px)" fetchpriority="high">
+  <link rel="preload" as="image" imagesrcset="{{ rl_desk_srcset }}" imagesizes="100vw" media="(min-width: 750px)" fetchpriority="high">
+
+{%- elsif mode == 'picture' -%}
+  {%- liquid
+    assign rl_loading = 'lazy'
+    assign rl_fetchpriority = blank
+    assign rl_decoding = 'async'
+    if is_first
+      assign rl_loading = 'eager'
+      assign rl_fetchpriority = 'high'
+      assign rl_decoding = 'sync'
+    endif
+  -%}
+  <picture>
+    <source media="(max-width: 749px)" srcset="{{ rl_mob_srcset }}" sizes="100vw">
+    <source media="(min-width: 750px)" srcset="{{ rl_desk_srcset }}" sizes="100vw">
+    <img
+      src="{{ rl_mob_base }}{{ rl_mob_sep }}width=750"
+      class="rl-home__hero-image"
+      width="1100"
+      height="1375"
+      loading="{{ rl_loading }}"
+      decoding="{{ rl_decoding }}"
+      {% if rl_fetchpriority != blank %}fetchpriority="{{ rl_fetchpriority }}"{% endif %}
+      alt="{{ alt | escape }}"
+    >
+  </picture>
+{%- endif -%}

@@ -1,0 +1,29 @@
+{% doc %}
+  FIRST10 promo copy for top announcement bar only.
+{% enddoc %}
+
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+%}
+
+<p>
+  {%- if locale_base == 'de' -%}
+    <strong>CHF 10 Rabatt</strong> auf Ihre erste Bestellung mit dem Code <strong>FIRST10</strong>
+  {%- elsif locale_base == 'en' -%}
+    <strong>CHF 10 off</strong> your first order with code <strong>FIRST10</strong>
+  {%- else -%}
+    <strong>CHF 10 offerts</strong> sur votre première commande avec le code <strong>FIRST10</strong>
+  {%- endif -%}
+</p>
+
+{% stylesheet %}
+  .announcement-bar.rl-promo-strip p,
+  .announcement-bar.rl-promo-strip p strong {
+    color: #fff;
+  }
+
+  .announcement-bar.rl-promo-strip p strong {
+    font-weight: 600;
+  }
+{% endstylesheet %}

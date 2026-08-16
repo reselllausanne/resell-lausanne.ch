@@ -17,7 +17,7 @@
           "name": "t:title",
           "settings": {
             "show_on_display": "desktop_and_mobile",
-            "text": "<h1>404</h1>",
+            "text": "<h1>Page introuvable</h1>",
             "text_style": "h1",
             "font_weight": 400,
             "alignment": "center",
@@ -44,14 +44,46 @@
           },
           "blocks": {}
         },
+        "text_search_link": {
+          "type": "text",
+          "name": "t:text",
+          "settings": {
+            "show_on_display": "desktop_and_mobile",
+            "text": "<p><a href=\"/\">Retour à l'accueil</a> ou <a href=\"/search\">rechercher un produit</a> sur le site.</p>",
+            "text_style": "paragraph",
+            "font_weight": 400,
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "margin_top": 12,
+            "margin_bottom": 0,
+            "additional_class": ""
+          },
+          "blocks": {}
+        },
+        "text_collections": {
+          "type": "text",
+          "name": "t:text",
+          "settings": {
+            "show_on_display": "desktop_and_mobile",
+            "text": "<p><strong>Sneakers</strong> : <a href=\"/collections/nike\">Nike</a> · <a href=\"/collections/air-jordan\">Air Jordan</a> · <a href=\"/collections/adidas\">Adidas</a> · <a href=\"/collections/asics\">ASICS</a> · <a href=\"/collections/new-balance\">New Balance</a> · <a href=\"/collections/yeezy\">Yeezy</a> · <a href=\"/collections/onitsuka-tiger\">Onitsuka Tiger</a> · <a href=\"/collections/dunk-sb\">SB Dunk</a> · <a href=\"/collections/air-jordan-4\">Jordan 4</a> · <a href=\"/collections/nike-air-max-plus-tn\">TN Air Max Plus</a></p><p><strong>Streetwear</strong> : <a href=\"/collections/fear-of-god-essentials\">Fear of God Essentials</a> · <a href=\"/collections/chrome-hearts\">Chrome Hearts</a> · <a href=\"/collections/supreme\">Supreme</a> · <a href=\"/collections/denim-tears\">Denim Tears</a> · <a href=\"/collections/off-white\">Off-White</a> · <a href=\"/collections/bape\">BAPE</a> · <a href=\"/collections/air-jordan-x-travis-scott\">Travis Scott</a></p><p><strong>Collectibles</strong> : <a href=\"/collections/labubu\">Labubu</a> · <a href=\"/collections/lego\">LEGO</a></p><p><a href=\"/pages/faq\">FAQ Resell Lausanne</a> · <a href=\"/pages/livraison\">Livraison &amp; délais</a> · <a href=\"/pages/guide-des-tailles\">Guide des tailles</a> · <a href=\"/pages/authenticite\">Authenticité</a></p>",
+            "text_style": "paragraph",
+            "font_weight": 400,
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "margin_top": 16,
+            "margin_bottom": 0,
+            "additional_class": ""
+          },
+          "blocks": {}
+        },
         "button_nEQ4R9": {
           "type": "button",
           "name": "t:button",
           "settings": {
             "show_on_display": "desktop_and_mobile",
-            "link": "",
+            "link": "/",
             "open_in_new_tab": false,
-            "label": "Retour sur l'accueil",
+            "label": "Retour à l'accueil",
             "button_style": "primary",
             "button_shape": "default",
             "icon": "arrow_back",
@@ -64,7 +96,7 @@
           "blocks": {}
         }
       },
-      "block_order": ["text_3Dx7Ue", "text_YktYzA", "button_nEQ4R9"],
+      "block_order": ["text_3Dx7Ue", "text_YktYzA", "text_search_link", "text_collections", "button_nEQ4R9"],
       "name": "404",
       "settings": {
         "show_on_display": "desktop_and_mobile",

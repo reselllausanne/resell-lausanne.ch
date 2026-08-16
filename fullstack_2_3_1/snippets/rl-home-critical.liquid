@@ -1,0 +1,29 @@
+{%- comment -%}
+  Homepage CLS guards only — full below-fold layout lives in rl-home-below-fold.css (deferred).
+{%- endcomment -%}
+<style>
+  .template-index .rl-image-tag-slider--home-strip {
+    min-height: 44px;
+  }
+
+  .template-index .rl-image-tag-slider--brand-rail {
+    margin-block: 80px;
+    min-height: 390px;
+  }
+
+  .template-index .home-partner-trust {
+    min-height: 120px;
+  }
+
+  @media (width <= 400px) {
+    .template-index .home-partner-trust {
+      min-height: 170px;
+    }
+  }
+
+  @media (width >= 750px) {
+    .template-index .rl-image-tag-slider--brand-rail {
+      min-height: 470px;
+    }
+  }
+</style>

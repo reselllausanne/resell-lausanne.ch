@@ -1,0 +1,18 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les sneakers Puma sont-elles authentiques ?</summary>
+  <div class="rte"><p>Oui. Contrôle expert et certificat d'authenticité sur chaque commande.</p></div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Délai de livraison Puma ?</summary>
+  <div class="rte"><p>5 à 10 jours ouvrés en standard en Suisse et en Europe, 2 à 5 jours ouvrés en express sur produits éligibles.</p></div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Retours Puma ?</summary>
+  <div class="rte"><p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %) — <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p></div>
+</details>

@@ -1,0 +1,98 @@
+{%- comment -%}
+  Homepage: load compiled section CSS after first paint, not on critical path.
+  ATF: rl-header.css + base.css + rl-home-hero.css.
+{%- endcomment -%}
+<script>
+  (function () {
+    if (window.__rlHomeCssInit) return;
+    window.__rlHomeCssInit = true;
+
+    var queue = (window.__rlDeferredCss || []).slice();
+    var loaded = false;
+
+    function injectStylesheet(href) {
+      if (!href) return;
+      if (document.querySelector('link[data-rl-idle-css="' + href + '"]')) return;
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      link.setAttribute('data-rl-idle-css', href);
+      document.head.appendChild(link);
+    }
+
+    function flush() {
+      if (loaded) return;
+      loaded = true;
+      queue.forEach(injectStylesheet);
+    }
+
+    function onNavIntent(event) {
+      var target = event.target;
+      if (!(target instanceof Element)) return;
+      var link = target.closest('a[href]');
+      if (!link || !link.href || link.getAttribute('href') === '#') return;
+      try {
+        var url = new URL(link.href, window.location.origin);
+        if (url.origin === window.location.origin) flush();
+      } catch (_) {}
+    }
+
+    function onIntent(event) {
+      var target = event.target;
+      if (!(target instanceof Element)) return;
+      if (
+        target.closest(
+          'cart-icon, .header__icon-cart, .rl-mobile-floating-nav, [data-ref="menu-toggle"], dialog-component, .search-popup, wishlist-drawer, [data-rl-action="wishlist"], .header__predictive-search'
+        )
+      ) {
+        flush();
+      }
+    }
+
+    document.addEventListener('pointerdown', onIntent, true);
+    document.addEventListener('keydown', onIntent, true);
+    document.addEventListener('pointerdown', onNavIntent, true);
+    document.addEventListener('click', onNavIntent, true);
+    window.addEventListener(
+      'scroll',
+      function () {
+        flush();
+      },
+      { once: true, passive: true }
+    );
+
+    function scheduleLoad() {
+      var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      var weak =
+        conn &&
+        (conn.saveData || /slow-2g|2g|3g/i.test(String(conn.effectiveType || '').toLowerCase()));
+      var idleTimeout = weak ? 800 : 2200;
+
+      if (weak) {
+        if (document.readyState === 'loading') {
+          document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+              setTimeout(flush, 120);
+            },
+            { once: true }
+          );
+        } else {
+          setTimeout(flush, 120);
+        }
+      }
+
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(flush, { timeout: idleTimeout });
+      } else {
+        setTimeout(flush, weak ? 300 : 900);
+      }
+    }
+
+    if (document.readyState === 'complete') {
+      scheduleLoad();
+    } else {
+      window.addEventListener('load', scheduleLoad, { once: true });
+    }
+  })();
+</script>

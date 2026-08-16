@@ -1,0 +1,188 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign contact_url = 'mailto:contact@resell-lausanne.ch'
+  assign livraison_url = routes.root_url | append: '/pages/livraison'
+  if pages.livraison != blank
+    assign livraison_url = pages.livraison.url
+  endif
+%}
+
+<div class="resell-content-page">
+  <nav class="breadcrumbs breadcrumbs--slash resell-content-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">
+        {% if locale_base == 'de' %}
+          Versand und lieferzeiten
+        {% elsif locale_base == 'en' %}
+          Shipping and delivery times
+        {% else %}
+          Livraison &amp; délais
+        {% endif %}
+      </li>
+    </ol>
+  </nav>
+
+  <header>
+    <h1>
+      {% if locale_base == 'de' %}
+        Versand und lieferzeiten
+      {% elsif locale_base == 'en' %}
+        Shipping and delivery times
+      {% else %}
+        Livraison &amp; délais
+      {% endif %}
+    </h1>
+  </header>
+
+  {% if locale_base == 'de' %}
+    <h2>Wie läuft der Versand ab?</h2>
+    <p>Resell Lausanne liefert in die Schweiz und nach Europa mit zuverlässigen Partnern wie Post, DHL oder FedEx je nach Ziel und Produkt.</p>
+    <p>Standardlieferung dauert in der Regel 5 bis 10 Werktage. Für berechtigte Produkte ist Expresslieferung in 2 bis 5 Werktagen verfügbar.</p>
+
+    <h2>Warum dauern manche Bestellungen länger?</h2>
+    <p>Ein Teil des Katalogs wird über unser Partnernetzwerk beschafft. Danach folgt Qualitäts- und Echtheitskontrolle vor Versand.</p>
+
+    <h2>Was passiert nach der Bestellung?</h2>
+    <p>Nach Bestätigung erhalten Sie eine E-Mail. Sobald Versand startet, erhalten Sie Trackingnummer.</p>
+
+    <h2>Versandkosten</h2>
+    <p>Versand ist in der Schweiz und in Europa kostenlos.</p>
+    <p>Bei internationalen Lieferungen können lokale Steuern oder Zollgebühren zusätzlich anfallen.</p>
+
+    <h2>Tracking und Verzögerung</h2>
+    <p>Wenn kein finales Tracking verfügbar ist, befindet sich Bestellung meist noch in Beschaffung oder Kontrolle.</p>
+    <p>Lieferfristen sind Schätzungen. Bei signifikanter Überschreitung muss der Kunde Resell Lausanne zuerst eine angemessene zusätzliche Frist schriftlich einräumen, bevor er die Stornierung verlangen kann.</p>
+    <p>Bei Verzögerung kontaktieren Sie <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+  {% elsif locale_base == 'en' %}
+    <h2>How does shipping work?</h2>
+    <p>Resell Lausanne ships to Switzerland and Europe through trusted carriers such as Swiss Post, DHL or FedEx depending on destination and product.</p>
+    <p>Most orders are delivered in 5 to 10 business days. Eligible products can be shipped express in 2 to 5 business days.</p>
+
+    <h2>Why can some orders take longer?</h2>
+    <p>Part of our catalog is sourced through partner network. Each item then goes through quality and authenticity checks before dispatch.</p>
+
+    <h2>What happens after order?</h2>
+    <p>After confirmation you receive an email. When final shipment leaves, you receive tracking number.</p>
+
+    <h2>Shipping cost</h2>
+    <p>Shipping is free in Switzerland on orders over 50 CHF. Flat fee of 10 CHF to Europe.</p>
+    <p>For some international shipments, local VAT/custom duties may still apply.</p>
+
+    <h2>Tracking and delays</h2>
+    <p>If final tracking is not yet available, order is usually still in sourcing or quality-control stage.</p>
+    <p>Delivery timeframes are estimates. If significantly exceeded, you must first grant Resell Lausanne a reasonable additional period in writing before requesting cancellation, subject to mandatory rights.</p>
+    <p>If your delay exceeds the estimate, contact <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+  {% else %}
+    <h2>Comment se déroule la livraison ?</h2>
+    <p>
+      Resell Lausanne livre ses produits en Suisse et en Europe avec des transporteurs fiables tels que La Poste Suisse, DHL ou FedEx, selon la destination, le type de produit et le mode d’expédition le plus adapté.
+    </p>
+    <p>
+      La majorité de nos commandes sont livrées en 5 à 10 jours ouvrables. Certains produits éligibles à la livraison express peuvent être livrés en 2 à 5 jours ouvrables. Ces délais peuvent varier selon la disponibilité du produit, son lieu d’approvisionnement, le transporteur et les éventuelles périodes de forte demande.
+    </p>
+    <p>
+      Chaque produit commandé sur Resell Lausanne est traité individuellement afin de garantir une expérience d’achat simple, sécurisée et transparente.
+    </p>
+
+    <h2>Pourquoi certains produits prennent-ils plus de temps à être livrés ?</h2>
+    <p>
+      Resell Lausanne fonctionne avec un très large catalogue de produits. Certains articles sont déjà disponibles rapidement, tandis que d’autres sont sourcés auprès de notre réseau de revendeurs et partenaires professionnels en Suisse, en Europe ou à l’international.
+    </p>
+    <p>
+      Lorsqu’un produit n’est pas immédiatement disponible dans nos locaux, il est d’abord recherché auprès de notre réseau de partenaires. Une fois trouvé, il est acheminé vers notre équipe, contrôlé, puis préparé avant d’être expédié au client.
+    </p>
+    <p>
+      Ce fonctionnement nous permet de proposer un catalogue beaucoup plus large et des prix compétitifs, tout en maintenant une exigence forte sur l’authenticité des articles.
+    </p>
+
+    <h2>Que se passe-t-il après ma commande ?</h2>
+    <p>Après validation de votre commande, vous recevez un e-mail de confirmation.</p>
+    <p>
+      Si le produit doit être sourcé auprès de notre réseau, il est d’abord acheminé vers nos locaux ou vers notre centre de traitement. Vous pouvez recevoir des mises à jour liées à son acheminement, notamment lorsque le produit est en route depuis notre fournisseur vers notre équipe.
+    </p>
+    <p>
+      Une fois le produit réceptionné, il est contrôlé, remis dans son emballage d’origine lorsque cela est applicable, conditionné avec soin, puis expédié vers votre adresse de livraison.
+    </p>
+    <p>
+      Dès l’expédition finale, vous recevez un e-mail contenant un numéro de suivi afin de suivre l’acheminement de votre colis.
+    </p>
+
+    <h2>Quels sont les délais de livraison ?</h2>
+    <p>
+      Nos délais estimés sont de 5 à 10 jours ouvrables pour la livraison standard en Suisse et en Europe.
+    </p>
+    <p>
+      Pour certains produits sélectionnés, une livraison express en 2 à 5 jours ouvrables est également proposée.
+    </p>
+    <p>
+      Ces délais sont donnés à titre indicatif. Ils peuvent être légèrement dépassés selon la disponibilité du produit, les délais de traitement de nos partenaires, les périodes de forte activité ou les éventuels retards liés au transporteur.
+    </p>
+    <p>
+      Notre objectif est toujours de traiter et d’expédier chaque commande le plus rapidement possible, tout en garantissant un contrôle sérieux des articles envoyés.
+    </p>
+
+    <h2>Livraison en Suisse</h2>
+    <p>La livraison est gratuite en Suisse dès 50 CHF d'achat. En dessous de ce montant, un forfait est appliqué au checkout.</p>
+    <p>
+      Les commandes sont généralement expédiées avec La Poste Suisse ou un transporteur équivalent lorsque cela permet un traitement plus rapide ou plus fiable.
+    </p>
+    <p>Une fois le colis remis au transporteur, vous recevez un lien de suivi par e-mail.</p>
+
+    <h2>Livraison en Europe</h2>
+    <p>Nous livrons également en Europe.</p>
+    <p>
+      Forfait de livraison de 10 CHF en Europe. Selon le pays de destination, l’expédition peut être effectuée avec DHL, FedEx, La Poste Suisse ou un transporteur partenaire.
+    </p>
+    <p>
+      Pour les commandes livrées en dehors de la Suisse, des frais de TVA, de douane ou d’importation peuvent être appliqués par les autorités locales. Ces frais restent à la charge du client.
+    </p>
+    <p>
+      Lorsque cela est possible, nous nous efforçons d’expédier les commandes européennes depuis l’Europe afin de limiter les frais et d’améliorer les délais de livraison.
+    </p>
+
+    <h2>Combien coûte la livraison ?</h2>
+    <p>Livraison gratuite en Suisse dès 50 CHF d'achat. Forfait de 10 CHF pour les livraisons en Europe.</p>
+    <p>
+      Des frais supplémentaires peuvent toutefois être appliqués par les autorités locales pour certaines commandes internationales, notamment en cas de TVA, frais de douane ou frais d’importation.
+    </p>
+
+    <h2>Comment suivre mon colis ?</h2>
+    <p>
+      Une fois votre commande expédiée, vous recevez un e-mail contenant un lien de suivi.
+    </p>
+    <p>
+      Avant cette étape, votre commande peut encore être en cours de traitement, notamment si le produit est en cours d’acheminement depuis notre fournisseur vers notre équipe.
+    </p>
+    <p>
+      Dans certains cas, vous pouvez recevoir des informations de suivi liées à l’acheminement du produit avant son expédition finale vers votre adresse.
+    </p>
+
+    <h2>Pourquoi je n’ai pas encore reçu mon numéro de suivi ?</h2>
+    <p>
+      Le numéro de suivi final est envoyé uniquement lorsque votre commande a été préparée et remise au transporteur pour l’expédition vers votre adresse.
+    </p>
+    <p>
+      Si votre commande est encore en cours de sourcing, de réception ou de contrôle, il est normal que le suivi final ne soit pas encore disponible.
+    </p>
+    <p>
+      Cela ne signifie pas que la commande est bloquée. Elle est simplement encore dans le processus de traitement.
+    </p>
+
+    <h2>Mon délai semble dépassé, que faire ?</h2>
+    <p>
+      Il peut arriver qu’un délai estimé soit dépassé en raison de la disponibilité du produit, d’un retard fournisseur, d’un contrôle supplémentaire ou d’un ralentissement du transporteur.
+    </p>
+    <p>
+      Les délais de livraison sont indicatifs. En cas de dépassement significatif, vous devez d’abord accorder à Resell Lausanne un délai supplémentaire raisonnable, communiqué par écrit, avant de pouvoir demander l’annulation de la commande, sous réserve des droits impératifs applicables.
+    </p>
+    <p>
+      Contactez-nous à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>. Notre équipe vérifiera l’état de votre commande et vous apportera une réponse dès que possible.
+    </p>
+  {% endif %}
+</div>
+
+{% render 'resell-content-page-styles' %}

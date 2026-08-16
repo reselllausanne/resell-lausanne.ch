@@ -1,0 +1,48 @@
+# Resell Lausanne — theme-check config
+# Suppress known false positives from app-injected or vendor code.
+
+root: .
+
+ignore:
+  - node_modules/**
+  - assets/vendor/**
+
+ChecksExcludePatterns:
+  # App-injected snippets (Judge.me, Wishlist King, etc.)
+  - snippets/judgeme_widgets.liquid
+  - snippets/wishlist-king*.liquid
+  - assets/wishlist-king*.css
+
+checks:
+  # Theme check tries to resolve translation keys that live in app translations.
+  # These are valid at runtime but fail static analysis.
+  TranslationKeyExists:
+    enabled: true
+    severity: style
+
+  # Vendor JS files often contain minified code flagged as large asset.
+  AssetSizeCSS:
+    enabled: true
+    threshold_in_bytes: 120000
+
+  AssetSizeJavaScript:
+    enabled: true
+    threshold_in_bytes: 300000
+
+  # Template/section files that render only on specific page types
+  # trigger missing-template warnings for blocks rendered conditionally.
+  MissingTemplate:
+    enabled: true
+
+  # Custom app blocks (cart-upsell, filters-sheet) reference sections
+  # that are injected by apps and not in the theme directory.
+  UndefinedObject:
+    enabled: true
+
+  # Allow content_for_header placement flexibility.
+  ContentForHeaderModification:
+    enabled: true
+
+  # Liquid comments in JSON files (e.g. index.json) — used intentionally.
+  ValidJson:
+    enabled: false

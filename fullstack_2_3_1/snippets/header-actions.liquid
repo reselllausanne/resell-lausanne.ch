@@ -3,7 +3,7 @@
     {{ localization_markup }}
   {% endif %}
 
-  {% if show_search %}
+  {% if show_search and hide_search_icon != true %}
     {% render 'search-popup' %}
   {% endif %}
 
@@ -14,7 +14,7 @@
   {% endif %}
 
   {% if shop.customer_accounts_enabled %}
-    <a href="{{ routes.account_url }}" class="header__icon header__icon-account">
+    <a href="{{ routes.account_url }}" class="header__icon header__icon-account" aria-label="{{ 'customer.account.title' | t }}">
       <span class="material-symbols-{{ settings.icon_style }} notranslate icon" translate="no">
         {{- account_icon -}}
       </span>
@@ -22,34 +22,20 @@
   {% endif %}
 
   {% render 'cart-icon', cart_icon: cart_icon %}
+
+  {% if show_side_menu_toggle %}
+    <button
+      type="button"
+      class="header__icon header__side-menu-toggle"
+      data-ref="menu-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="header-mobile-drawer"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.5 10h15m-15-5h15m-15 10h15"></path>
+      </svg>
+    </button>
+  {% endif %}
 </div>
 
-{% stylesheet %}
-  .header__actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    height: var(--header-height);
-  }
-
-  .header__actions a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .header__actions .dropdown-toggle:hover {
-    opacity: 1;
-  }
-
-  .header__icon {
-    height: 24px;
-  }
-
-  @media (width < 1000px) {
-    .header__actions .dropdown-localization,
-    .header__actions .search-popup,
-    .header__actions .header__icon-account {
-      display: none;
-    }
-  }
-{% endstylesheet %}

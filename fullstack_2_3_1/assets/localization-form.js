@@ -8,8 +8,7 @@ class LocalizationFormComponent extends HTMLElement {
   }
 
   connectedCallback() {
-    // On utilise l'ID exceptionnellement à la place des data-ref car c'est une balise {% form %}
-    this.form = this.querySelector('#LocalizationForm');
+    this.form = this.querySelector('form.localization-form');
     this.languageInput = this.querySelector('[data-ref="language-input"]');
     this.countryInput = this.querySelector('[data-ref="country-input"]');
     this.countryInputItems = this.querySelectorAll('[data-ref="country-input-item"]');
@@ -47,12 +46,11 @@ class LocalizationFormComponent extends HTMLElement {
   };
 
   changeLanguage(event) {
-    const value = event.target instanceof HTMLSelectElement ? event.target.value : null;
-
-    if (value) {
-      this.languageInput.value = value;
-      this.form?.submit();
+    if (!(event.target instanceof HTMLSelectElement) || !this.form) {
+      return;
     }
+
+    this.form.submit();
   }
 }
 

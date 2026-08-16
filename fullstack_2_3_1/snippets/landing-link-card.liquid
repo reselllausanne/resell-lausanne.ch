@@ -1,0 +1,41 @@
+{% doc %}
+  Renders a model or brand link card.
+
+  @param {string} title - Card title
+  @param {string} url - Destination URL
+  @param {image} [image] - Optional visual media
+  @param {string} [subtitle] - Optional secondary text
+  @param {boolean} [force_media] - Forces media placeholder when image missing
+{% enddoc %}
+
+{% if title != blank and url != blank %}
+  <a class="landing-link-card" href="{{ url }}">
+    {% if image != blank or force_media %}
+      <div class="landing-link-card__media">
+        {% if image != blank %}
+          {% capture card_srcset %}
+            {{ image | image_url: width: 240 }} 240w, {{ image | image_url: width: 320 }} 320w, {{ image | image_url: width: 480 }} 480w, {{ image | image_url: width: 640 }} 640w
+          {% endcapture %}
+          {% assign rl_card_img_src = image | image_url: width: 640 %}
+          {% render 'rl-deferred-img',
+            lazy_src: rl_card_img_src,
+            lazy_srcset: card_srcset,
+            sizes: '(min-width: 1000px) 20vw, (min-width: 750px) 30vw, 44vw',
+            alt: title,
+            width: 320,
+            height: 400
+          %}
+        {% else %}
+          <span class="landing-link-card__placeholder" aria-hidden="true"></span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="landing-link-card__content">
+      <p class="landing-link-card__title">{{ title }}</p>
+      {% if subtitle != blank %}
+        <p class="landing-link-card__subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </div>
+  </a>
+{% endif %}

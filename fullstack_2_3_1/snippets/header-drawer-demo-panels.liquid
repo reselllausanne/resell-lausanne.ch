@@ -1,0 +1,1444 @@
+{% doc %}
+  Renders demo nested panels for header drawer.
+
+  @param {string} menu_title - Root menu title.
+  @param {string} view_all_label - Root CTA label.
+  @param {string} view_all_url - Root CTA URL.
+  @param {boolean} uppercase - Whether labels are uppercase.
+  @param {number} font_weight - Label font weight.
+  @param {boolean} [show_top_image] - Show submenu hero placeholders.
+  @param {string} [branch] - Panel branch: root, selections, sneakers, streetwear, active, chaussures, collectibles, misc
+  @param {string} [root_hero_filename] - Shopify Files name for root panel hero (default top-menu-picture.jpg).
+{% enddoc %}
+
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+
+  assign label_sales = 'Soldes'
+  assign label_selections = 'Nos sélections'
+  assign label_sneakers = 'Sneakers'
+  assign label_streetwear = 'Streetwear'
+  assign label_active = 'Active'
+  assign label_shoes = 'Chaussures'
+  assign label_collectibles = 'Collectibles'
+  assign label_express_delivery = 'Livraison express'
+  assign label_nouveautes = 'Les Nouveautés'
+  assign label_categories = 'Catégories'
+  assign label_collabs = 'Les Meilleures Collaborations'
+  assign label_slides_sandals = 'Slides & Sandales'
+  assign label_cat_casual = 'Casual / Lifestyle'
+  assign label_cat_retro_sn = 'Retro Sneakers'
+  assign label_cat_retro_bk = 'Basket Retro'
+  assign label_cat_perf_bk = 'Performance Basketball'
+  assign label_cat_skate = 'Skate sneakers'
+  assign label_cat_foot = 'Crampon de Football'
+  assign label_autres_marques = 'Autres marques'
+  assign label_view_all = 'Tout voir'
+  assign label_wellness = 'Wellness'
+  assign label_accessories = 'Accessoires'
+  assign label_discover = 'Découvrir'
+  assign label_ensembles = 'Les Ensembles'
+  assign label_marques = 'Les Marques'
+  assign label_tshirts = 'T-Shirts'
+  assign label_sweatshirts = 'Sweatshirts'
+  assign label_pants = 'Pants, Jogging & Shorts'
+  assign label_vestes = 'Vestes'
+  assign label_caps = 'Casquettes & Bonnets'
+  assign label_skincare = 'Skincare'
+  assign label_makeup = 'Make Up'
+  assign label_parfums = 'Parfums'
+  assign label_active_shoes = 'Active Shoes'
+  assign label_active_clothing = 'Active Clothing'
+  assign label_perf_bk_shoes = 'Chaussures'
+  assign label_perf_bk_bags = 'Sacs'
+  assign label_other_perf_bk = 'Autres'
+  assign label_sneakers_men = 'Sneakers Homme'
+  assign label_sneakers_women = 'Sneakers Femme'
+  assign label_sneakers_kids = 'Sneakers Enfant'
+  assign label_boots_slippers = 'Bottes & chaussons'
+  assign label_eco_sneakers = 'Sneakers éco-responsables'
+  assign label_eyewear = 'Eyewear'
+  assign label_jewelry = 'Bijoux'
+  assign label_care_products = "Produits d'entretien"
+  assign label_independent_brands = 'Les marques indépendantes'
+  assign label_other_prefix = 'Autres'
+
+  if locale_base == 'de'
+    assign label_sales = 'Sale'
+    assign label_selections = 'Unsere Auswahl'
+    assign label_sneakers = 'Sneakers'
+    assign label_streetwear = 'Streetwear'
+    assign label_active = 'Active'
+    assign label_shoes = 'Schuhe'
+    assign label_collectibles = 'Collectibles'
+    assign label_express_delivery = 'Expresslieferung'
+    assign label_nouveautes = 'Neuheiten'
+    assign label_categories = 'Kategorien'
+    assign label_collabs = 'Die besten Kollaborationen'
+    assign label_slides_sandals = 'Slides & Sandalen'
+    assign label_cat_casual = 'Casual / Lifestyle'
+    assign label_cat_retro_sn = 'Retro Sneakers'
+    assign label_cat_retro_bk = 'Retro Basketball'
+    assign label_cat_perf_bk = 'Performance Basketball'
+    assign label_cat_skate = 'Skate Sneakers'
+    assign label_cat_foot = 'Fußballschuhe'
+    assign label_autres_marques = 'Weitere Marken'
+    assign label_view_all = 'Alle ansehen'
+    assign label_wellness = 'Wellness'
+    assign label_accessories = 'Accessoires'
+    assign label_discover = 'Entdecken'
+    assign label_ensembles = 'Sets'
+    assign label_marques = 'Marken'
+    assign label_tshirts = 'T-Shirts'
+    assign label_sweatshirts = 'Sweatshirts'
+    assign label_pants = 'Hosen, Jogging & Shorts'
+    assign label_vestes = 'Jacken'
+    assign label_caps = 'Caps & Mützen'
+    assign label_skincare = 'Skincare'
+    assign label_makeup = 'Make-up'
+    assign label_parfums = 'Parfums'
+    assign label_active_shoes = 'Active Schuhe'
+    assign label_active_clothing = 'Active Bekleidung'
+    assign label_perf_bk_shoes = 'Schuhe'
+    assign label_perf_bk_bags = 'Taschen'
+    assign label_other_perf_bk = 'Weitere'
+    assign label_sneakers_men = 'Sneakers Herren'
+    assign label_sneakers_women = 'Sneakers Damen'
+    assign label_sneakers_kids = 'Sneakers Kinder'
+    assign label_boots_slippers = 'Stiefel & Hausschuhe'
+    assign label_eco_sneakers = 'Nachhaltige Sneakers'
+    assign label_eyewear = 'Brillen'
+    assign label_jewelry = 'Schmuck'
+    assign label_care_products = 'Pflegeprodukte'
+    assign label_independent_brands = 'Unabhängige Marken'
+    assign label_other_prefix = 'Weitere'
+  elsif locale_base == 'en'
+    assign label_sales = 'Sale'
+    assign label_selections = 'Our selection'
+    assign label_sneakers = 'Sneakers'
+    assign label_streetwear = 'Streetwear'
+    assign label_active = 'Active'
+    assign label_shoes = 'Shoes'
+    assign label_collectibles = 'Collectibles'
+    assign label_express_delivery = 'Express delivery'
+    assign label_nouveautes = 'New arrivals'
+    assign label_categories = 'Categories'
+    assign label_collabs = 'Best collaborations'
+    assign label_slides_sandals = 'Slides & sandals'
+    assign label_cat_casual = 'Casual / Lifestyle'
+    assign label_cat_retro_sn = 'Retro sneakers'
+    assign label_cat_retro_bk = 'Retro basketball'
+    assign label_cat_perf_bk = 'Performance basketball'
+    assign label_cat_skate = 'Skate sneakers'
+    assign label_cat_foot = 'Football boots'
+    assign label_autres_marques = 'Other brands'
+    assign label_view_all = 'View all'
+    assign label_wellness = 'Wellness'
+    assign label_accessories = 'Accessories'
+    assign label_discover = 'Discover'
+    assign label_ensembles = 'Sets'
+    assign label_marques = 'Brands'
+    assign label_tshirts = 'T-shirts'
+    assign label_sweatshirts = 'Sweatshirts'
+    assign label_pants = 'Pants, joggers & shorts'
+    assign label_vestes = 'Jackets'
+    assign label_caps = 'Caps & beanies'
+    assign label_skincare = 'Skincare'
+    assign label_makeup = 'Make-up'
+    assign label_parfums = 'Fragrances'
+    assign label_active_shoes = 'Active shoes'
+    assign label_active_clothing = 'Active clothing'
+    assign label_perf_bk_shoes = 'Shoes'
+    assign label_perf_bk_bags = 'Bags'
+    assign label_other_perf_bk = 'Other'
+    assign label_sneakers_men = "Men's sneakers"
+    assign label_sneakers_women = "Women's sneakers"
+    assign label_sneakers_kids = "Kids' sneakers"
+    assign label_boots_slippers = 'Boots & slippers'
+    assign label_eco_sneakers = 'Eco-friendly sneakers'
+    assign label_eyewear = 'Eyewear'
+    assign label_jewelry = 'Jewellery'
+    assign label_care_products = 'Care products'
+    assign label_independent_brands = 'Independent brands'
+    assign label_other_prefix = 'Other'
+  endif
+
+  assign label_other_jordan = label_other_prefix | append: ' Air Jordan'
+  assign label_other_nike = label_other_prefix | append: ' Nike'
+  assign label_other_asics = label_other_prefix | append: ' Asics'
+  assign label_other_yeezy = label_other_prefix | append: ' Yeezy'
+  assign label_other_adida = label_other_prefix | append: ' Adidas'
+  assign label_other_nb = label_other_prefix | append: ' New Balance'
+  assign label_other_saucony = label_other_prefix | append: ' Saucony'
+  assign label_other_puma = label_other_prefix | append: ' Puma'
+  assign label_other_salomon = label_other_prefix | append: ' Salomon'
+
+  assign drawer_menu_title = menu_title | default: 'Nos Produits'
+  assign drawer_view_all = view_all_label | default: label_view_all
+  if locale_base == 'de'
+    assign drawer_menu_title = 'Unsere Produkte'
+    assign drawer_view_all = 'Alle ansehen'
+  elsif locale_base == 'en'
+    assign drawer_menu_title = 'Our products'
+    assign drawer_view_all = 'View all'
+  endif
+
+  assign rl_menu_col_vetements = collections['vetements']
+  if rl_menu_col_vetements != blank
+    assign rl_menu_url_vetements = rl_menu_col_vetements.url
+  else
+    assign rl_menu_url_vetements = '/collections/vetements'
+  endif
+
+  assign rl_menu_sales_handle = 'soldes-48h'
+  if collections[rl_menu_sales_handle] == blank
+    assign rl_menu_sales_handle = 'soldes'
+  endif
+
+  assign rl_menu_col_sales = collections[rl_menu_sales_handle]
+  if rl_menu_col_sales != blank
+    assign rl_menu_url_sales = rl_menu_col_sales.url
+  else
+    assign rl_menu_url_sales = routes.root_url | append: 'collections/soldes-48h'
+  endif
+
+  assign rl_menu_col_nouveautes = collections['nouveautes']
+  if rl_menu_col_nouveautes != blank
+    assign rl_menu_url_nouveautes = rl_menu_col_nouveautes.url
+  else
+    assign rl_menu_url_nouveautes = '/collections/nouveautes'
+  endif
+
+  assign rl_menu_col_collabs = collections['les-meilleures-collaborations']
+  if rl_menu_col_collabs != blank
+    assign rl_menu_url_collabs = rl_menu_col_collabs.url
+  else
+    assign rl_menu_url_collabs = '/collections/les-meilleures-collaborations'
+  endif
+
+  assign rl_menu_col_cat_casual = collections['court-tenis-retro']
+  assign rl_menu_col_cat_retro_sn = collections['retro-sneakers']
+  assign rl_menu_col_cat_retro_bk = collections['retro-basket']
+  assign rl_menu_col_cat_perf_bk = collections['performance-basket']
+  assign rl_menu_col_cat_skate = collections['skateboard']
+  assign rl_menu_col_cat_slides = collections['slide-mules']
+  assign rl_menu_col_cat_foot = collections['crampons-de-foot']
+  if rl_menu_col_cat_casual != blank
+    assign rl_menu_url_cat_casual = rl_menu_col_cat_casual.url
+  else
+    assign rl_menu_url_cat_casual = '/collections/court-tenis-retro'
+  endif
+  if rl_menu_col_cat_retro_sn != blank
+    assign rl_menu_url_cat_retro_sn = rl_menu_col_cat_retro_sn.url
+  else
+    assign rl_menu_url_cat_retro_sn = '/collections/retro-sneakers'
+  endif
+  if rl_menu_col_cat_retro_bk != blank
+    assign rl_menu_url_cat_retro_bk = rl_menu_col_cat_retro_bk.url
+  else
+    assign rl_menu_url_cat_retro_bk = '/collections/retro-basket'
+  endif
+  if rl_menu_col_cat_perf_bk != blank
+    assign rl_menu_url_cat_perf_bk = rl_menu_col_cat_perf_bk.url
+  else
+    assign rl_menu_url_cat_perf_bk = '/collections/performance-basket'
+  endif
+  if rl_menu_col_cat_skate != blank
+    assign rl_menu_url_cat_skate = rl_menu_col_cat_skate.url
+  else
+    assign rl_menu_url_cat_skate = '/collections/skateboard'
+  endif
+  if rl_menu_col_cat_slides != blank
+    assign rl_menu_url_cat_slides = rl_menu_col_cat_slides.url
+  else
+    assign rl_menu_url_cat_slides = '/collections/slide-mules'
+  endif
+  if rl_menu_col_cat_foot != blank
+    assign rl_menu_url_cat_foot = rl_menu_col_cat_foot.url
+  else
+    assign rl_menu_url_cat_foot = '/collections/crampons-de-foot'
+  endif
+
+  assign rl_menu_col_express_delivery = collections['express-delivery']
+  if rl_menu_col_express_delivery != blank
+    assign rl_menu_url_express_delivery = rl_menu_col_express_delivery.url
+  else
+    assign rl_menu_url_express_delivery = '/collections/express-delivery'
+  endif
+
+  capture autres_marques_url
+    render 'rl-autres-marques-url'
+  endcapture
+  assign autres_marques_url = autres_marques_url | strip
+
+  assign _menu_branch = branch | default: 'all'
+  assign _show_root = false
+  assign _show_selections = false
+  assign _show_sneakers = false
+  assign _show_streetwear = false
+  assign _show_active = false
+  assign _show_chaussures = false
+  assign _show_collectibles = false
+  assign _show_misc = false
+
+  if _menu_branch == 'all'
+    assign _show_root = true
+    assign _show_selections = true
+    assign _show_sneakers = true
+    assign _show_streetwear = true
+    assign _show_active = true
+    assign _show_chaussures = true
+    assign _show_collectibles = true
+    assign _show_misc = true
+  elsif _menu_branch == 'root'
+    assign _show_root = true
+  elsif _menu_branch == 'selections'
+    assign _show_selections = true
+  elsif _menu_branch == 'sneakers'
+    assign _show_sneakers = true
+  elsif _menu_branch == 'streetwear'
+    assign _show_streetwear = true
+  elsif _menu_branch == 'active'
+    assign _show_active = true
+  elsif _menu_branch == 'chaussures'
+    assign _show_chaussures = true
+  elsif _menu_branch == 'collectibles'
+    assign _show_collectibles = true
+  elsif _menu_branch == 'misc'
+    assign _show_misc = true
+  endif
+%}
+
+{% if _show_root %}
+<section class="header__mobile-menu-panel is-active" data-panel-id="root" data-panel-depth="0" aria-hidden="false">
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, hero_filename: root_hero_filename, title: drawer_menu_title %}
+  <div class="header__mobile-menu-panel-header">
+    <p class="header__mobile-menu-panel-title">{{ drawer_menu_title }}</p>
+    <a class="header__mobile-menu-panel-link" href="{{ view_all_url | default: '/collections/toutes-nos-paires' }}">{{ drawer_view_all }}</a>
+  </div>
+
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="{{ rl_menu_url_sales }}" class="header__mobile-menu-link">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: rl_menu_sales_handle, alt: label_sales, wrap_modifier: 'is-badge-image' %}
+        <span class="header__mobile-menu-link-text">{{ label_sales }}</span>
+      </span>
+    </a>
+
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--parent" data-panel-target="demo-selections">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'nouveautes', alt: label_selections, wrap_modifier: 'is-badge-image' %}
+        <span class="header__mobile-menu-link-text">{{ label_selections }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron">
+        <path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path>
+      </svg>
+    </button>
+
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--parent" data-panel-target="demo-sneakers">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'toutes-nos-paires', alt: label_sneakers, wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">{{ label_sneakers }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron">
+        <path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path>
+      </svg>
+    </button>
+
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--parent" data-panel-target="demo-streetwear">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'vetements', alt: label_streetwear, wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">{{ label_streetwear }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron">
+        <path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path>
+      </svg>
+    </button>
+
+    {% comment %} Wellness hidden — no collections yet {% endcomment %}
+
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--parent" data-panel-target="demo-active">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'running', alt: label_active, wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">{{ label_active }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--parent" data-panel-target="demo-chaussures">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'timberland', alt: label_shoes, wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">{{ label_shoes }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--parent" data-panel-target="demo-collectibles">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'pop-mart', alt: label_collectibles, wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">{{ label_collectibles }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+
+    {% comment %} Accessoires hidden — no collections yet {% endcomment %}
+
+    <a href="{{ rl_menu_url_express_delivery }}" class="header__mobile-menu-link">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'express-delivery', alt: 'Livraison express', wrap_modifier: 'is-badge-image' %}
+        <span class="header__mobile-menu-link-text">{{ label_express_delivery }}</span>
+      </span>
+    </a>
+
+    {% comment %} Découvrir hidden {% endcomment %}
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_selections %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-selections" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_selections %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_selections }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="{{ rl_menu_url_nouveautes }}" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_nouveautes }}</span></span></a>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-selections-categories">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_categories }}</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <a href="{{ rl_menu_url_collabs }}" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_collabs }}</span></span></a>
+    <a href="{{ rl_menu_url_cat_slides }}" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_slides_sandals }}</span></span></a>
+    {% comment %} Sélection Luxe hidden — no collection yet {% endcomment %}
+    {% comment %} Les marques indépendantes hidden — moved Sp5der to Streetwear {% endcomment %}
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_selections %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-selections-categories" data-parent-panel="demo-selections" data-panel-depth="2" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_categories %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_selections }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_categories }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="{{ rl_menu_url_cat_casual }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_cat_casual }}</span></span></a>
+    <a href="{{ rl_menu_url_cat_retro_sn }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_cat_retro_sn }}</span></span></a>
+    <a href="{{ rl_menu_url_cat_retro_bk }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_cat_retro_bk }}</span></span></a>
+    <a href="{{ rl_menu_url_cat_skate }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_cat_skate }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_sneakers %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_sneakers }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-jordan">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'air-jordan', alt: 'Air Jordan' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Air Jordan</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-nike">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'nike', alt: 'Nike' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Nike</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-asics">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'asics', alt: 'Asics' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Asics</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-yeezy">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'yeezy', alt: 'Yeezy' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Yeezy</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-adidas">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'adidas', alt: 'Adidas' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Adidas</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-newbalance">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'new-balance', alt: 'New Balance' %}
+        </span>
+        <span class="header__mobile-menu-link-text">New Balance</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-mihara">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'maison-mihara', alt: 'Maison Mihara' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Maison Mihara</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    {%- assign _col_saucony = collections['saucony'] -%}
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-saucony">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'saucony', alt: 'Saucony' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Saucony</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    {%- assign _col_mizuno = collections['mizuno'] -%}
+    <a href="{{ _col_mizuno.url | default: '/collections/mizuno' }}" class="header__mobile-menu-link header__mobile-menu-link--child">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'mizuno', alt: 'Mizuno' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Mizuno</span>
+      </span>
+    </a>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-sneakers-other">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap">
+          <span class="header__mobile-menu-link-placeholder">+</span>
+        </span>
+        <span class="header__mobile-menu-link-text">{{ label_autres_marques }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-jordan" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Air Jordan</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--grandchild" data-panel-target="demo-sneakers-jordan-1">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 1</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <a href="/collections/air-jordan-2" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 2</span></span></a>
+    <a href="/collections/air-jordan-5" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 3</span></span></a>
+    <a href="/collections/air-jordan-4" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 4</span></span></a>
+    <a href="/collections/air-jordan-5" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 5</span></span></a>
+    <a href="/collections/air-jordan-6" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 6</span></span></a>
+    <a href="/collections/air-jordan-11" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 11</span></span></a>
+    <a href="/collections/autre-jordan" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_jordan }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-jordan-1" data-parent-panel="demo-sneakers-jordan" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">Air Jordan</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Air Jordan 1</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/air-jordan-1-low" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 1 Low</span></span></a>
+    <a href="/collections/air-jordan-1-mid" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 1 Mid</span></span></a>
+    <a href="/collections/air-jordan-1-high" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Air Jordan 1 High</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-nike" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Nike</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {%- assign _col_nike_mind = collections['nike-mind'] -%}
+    <a href="{{ _col_nike_mind.url | default: '/collections/nike-mind' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Mind 001</span></span></a>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--grandchild" data-panel-target="demo-sneakers-nike-dunk">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Dunk</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--grandchild" data-panel-target="demo-sneakers-nike-af1">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Force 1</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--grandchild" data-panel-target="demo-sneakers-nike-airmax">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Max</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <a href="/collections/air-jordan-x-travis-scott" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike x Travis Scott</span></span></a>
+    <a href="/collections/nike-shox" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Shox</span></span></a>
+    <a href="{{ collections['nike-x-sacai'].url | default: '/collections/nike-x-sacai' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike x Sacai</span></span></a>
+    <a href="/collections/nike-x-off-white" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike x Off-White</span></span></a>
+    <a href="{{ collections['nike-x-nocta'].url | default: '/collections/nike-x-nocta' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike x NOCTA</span></span></a>
+    <a href="{{ collections['nike-reactx-rejuven8'].url | default: '/collections/nike-reactx-rejuven8' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike ReactX Rejuven8</span></span></a>
+    <a href="/collections/vomero" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Zoom Vomero 5</span></span></a>
+    <a href="/collections/p-6000" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike P-6000</span></span></a>
+    <a href="/collections/nike" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike x Supreme</span></span></a>
+    <a href="/collections/nike-cortez" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Cortez</span></span></a>
+    <a href="/collections/nike-blazer" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Blazer</span></span></a>
+    <a href="/collections/nike" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_nike }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-nike-dunk" data-parent-panel="demo-sneakers-nike" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">Nike</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Nike Dunk</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/dunk-low" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Dunk Low</span></span></a>
+    <a href="/collections/nike-dunk-high" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Dunk High</span></span></a>
+    <a href="/collections/dunk-sb" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Dunk SB</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-nike-af1" data-parent-panel="demo-sneakers-nike" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">Nike</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Nike Air Force 1</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/air-force-1" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Force 1 Low</span></span></a>
+    <a href="/collections/air-force-1" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Force 1 Mid &amp; High</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-nike-airmax" data-parent-panel="demo-sneakers-nike" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">Nike</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Nike Air Max</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/nike-air-max-one" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Max 1</span></span></a>
+    <a href="/collections/nike-air-max-plus-tn" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Max Plus TN</span></span></a>
+    <a href="/collections/nike-air-max-90" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Max 90</span></span></a>
+    <a href="/collections/nike-air-max-95" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Nike Air Max 95</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-mihara" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Maison Mihara</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {%- assign _col_mihara_peterson = collections['maison-mihara-peterson'] -%}
+    {%- assign _col_mihara_hank = collections['maison-mihara-hank'] -%}
+    {%- assign _col_mihara_blakey = collections['maison-mihara-blakey'] -%}
+    {%- assign _col_mihara = collections['maison-mihara'] -%}
+    <a href="{{ _col_mihara_peterson.url | default: _col_mihara.url | default: '/collections/maison-mihara-peterson' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Maison Mihara Peterson</span></span></a>
+    <a href="{{ _col_mihara_hank.url | default: _col_mihara.url | default: '/collections/maison-mihara-hank' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Maison Mihara Hank</span></span></a>
+    <a href="{{ _col_mihara_blakey.url | default: _col_mihara.url | default: '/collections/maison-mihara-blakey' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Maison Mihara Blakey</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-saucony" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Saucony</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {%- assign _col_saucony_omni = collections['saucony-progrid-omni-9'] -%}
+    <a href="{{ _col_saucony_omni.url | default: '/collections/saucony-progrid-omni-9' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Saucony ProGrid Omni 9</span></span></a>
+    {%- assign _col_saucony_triumph = collections['saucony-progrid-triumph-4'] -%}
+    <a href="{{ _col_saucony_triumph.url | default: '/collections/saucony-progrid-triumph-4' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Saucony ProGrid Triumph 4</span></span></a>
+    {%- assign _col_saucony = collections['saucony'] -%}
+    <a href="{{ _col_saucony.url | default: '/collections/saucony' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_saucony }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-other" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_autres_marques }}</p>
+  </div>
+  <div class="header__mobile-menu-panel-header">
+    <p class="header__mobile-menu-panel-title">{{ label_autres_marques }}</p>
+    <a class="header__mobile-menu-panel-link" href="{{ autres_marques_url }}">{{ drawer_view_all }}</a>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {% render 'menu-other-sneaker-brands', format: 'drawer', link_class: 'header__mobile-menu-link--child' %}
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-other-converse" data-parent-panel="demo-sneakers-other" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_autres_marques }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Converse</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/converse" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Chuck Taylor All Star 70s</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-other-hoka" data-parent-panel="demo-sneakers-other" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_autres_marques }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Hoka</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/hoka" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Hoka Clifton 8</span></span></a>
+    <a href="/collections/hoka" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Hoka Casserole</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_streetwear %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-streetwear" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_streetwear %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_streetwear }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="{{ rl_menu_url_vetements }}" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_ensembles }}</span></span></a>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-streetwear-marques">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_marques }}</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <a href="/collections/t-shirt" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_tshirts }}</span></span></a>
+    <a href="/collections/hoodie" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_sweatshirts }}</span></span></a>
+    <a href="/collections/training" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_pants }}</span></span></a>
+    <a href="/collections/puffer" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_vestes }}</span></span></a>
+    <a href="/collections/bonnet-et-casquette" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_caps }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_misc %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-wellness" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_wellness %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_wellness }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="#" data-drawer-missing-collection="skincare" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_skincare }}</span></span></a>
+    <a href="#" data-drawer-missing-collection="make-up" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_makeup }}</span></span></a>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-wellness-parfums">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_parfums }}</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_active %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-active" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_active %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_active }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-active-performance-basket">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'performance-basket', alt: label_cat_perf_bk, wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">{{ label_cat_perf_bk }}</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <a href="{{ rl_menu_url_cat_foot }}" class="header__mobile-menu-link header__mobile-menu-link--child">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'crampons-de-foot', alt: label_cat_foot, wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">{{ label_cat_foot }}</span>
+      </span>
+    </a>
+    <a href="/collections/running" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_active_shoes }}</span></span></a>
+    {%- assign _col_active_clothing = collections['active-clothing'] -%}
+    <a href="{{ _col_active_clothing.url | default: '/collections/active-clothing' }}" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_active_clothing }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_active %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-active-performance-basket" data-parent-panel="demo-active" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_active }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_cat_perf_bk }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--grandchild" data-panel-target="demo-active-performance-basket-shoes">
+      <span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_perf_bk_shoes }}</span></span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    {%- assign _col_perf_bk_bags = collections['performance-basketball-bags'] -%}
+    {%- assign _col_nike_perf_bk_bags = collections['nike-performance-basketball-bags'] -%}
+    {%- assign _col_perf_bk_bags_url = rl_menu_url_cat_perf_bk -%}
+    {%- if _col_nike_perf_bk_bags != blank and _col_nike_perf_bk_bags.url != blank -%}
+      {%- assign _col_perf_bk_bags_url = _col_nike_perf_bk_bags.url -%}
+    {%- elsif _col_perf_bk_bags != blank and _col_perf_bk_bags.url != blank -%}
+      {%- assign _col_perf_bk_bags_url = _col_perf_bk_bags.url -%}
+    {%- endif -%}
+    <a href="{{ _col_perf_bk_bags_url }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_perf_bk_bags }}</span></span></a>
+    <a href="{{ rl_menu_url_cat_perf_bk }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_view_all }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_active %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-active-performance-basket-shoes" data-parent-panel="demo-active-performance-basket" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_cat_perf_bk }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_perf_bk_shoes }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {%- capture perf_bk_brand_map_raw -%}{%- render 'perf-basketball-brand-map' -%}{%- endcapture -%}
+    {%- assign perf_bk_brand_map = perf_bk_brand_map_raw | strip | split: '|' -%}
+    {%- for perf_bk_brand_entry in perf_bk_brand_map -%}
+      {%- liquid
+        assign perf_bk_brand_parts = perf_bk_brand_entry | split: ':'
+        assign perf_bk_logo_handle = perf_bk_brand_parts[0]
+        assign perf_bk_brand_title = perf_bk_brand_parts[1]
+        assign perf_bk_col_handle = perf_bk_brand_parts[2]
+        assign perf_bk_col = collections[perf_bk_col_handle]
+        assign perf_bk_col_url = rl_menu_url_cat_perf_bk
+        if perf_bk_col != blank and perf_bk_col.url != blank
+          assign perf_bk_col_url = perf_bk_col.url
+        endif
+      -%}
+      <a href="{{ perf_bk_col_url }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+        <span class="header__mobile-menu-link-main">
+          <span class="header__mobile-menu-link-image-wrap is-badge-image">
+            {% render 'menu-brand-image', handle: perf_bk_logo_handle, alt: perf_bk_brand_title %}
+          </span>
+          <span class="header__mobile-menu-link-text">{{ perf_bk_brand_title }}</span>
+        </span>
+      </a>
+    {%- endfor -%}
+    <a href="{{ rl_menu_url_cat_perf_bk }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_view_all }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_chaussures %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-chaussures" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_shoes %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_shoes }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-chaussures-ugg">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'ugg', alt: 'UGG' %}
+        </span>
+        <span class="header__mobile-menu-link-text">UGG</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-chaussures-clarks">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'clarks', alt: 'Clarks' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Clarks</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-chaussures-birkenstock">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'birkenstock', alt: 'Birkenstock' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Birkenstock</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+    <a href="/collections/dr-martens" class="header__mobile-menu-link header__mobile-menu-link--child">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'dr-martens', alt: 'Dr. Martens' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Dr. Martens</span>
+      </span>
+    </a>
+    <a href="/collections/timberland" class="header__mobile-menu-link header__mobile-menu-link--child">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">
+          {% render 'menu-brand-image', handle: 'timberland', alt: 'Timberland' %}
+        </span>
+        <span class="header__mobile-menu-link-text">Timberland</span>
+      </span>
+    </a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_chaussures %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-chaussures-birkenstock" data-parent-panel="demo-chaussures" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_shoes }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Birkenstock</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {%- assign _col_birkenstock_boston = collections['birkenstock-boston'] -%}
+    {%- assign _col_birkenstock_arizona = collections['birkenstock-arizona'] -%}
+    <a href="{{ _col_birkenstock_boston.url | default: '/collections/birkenstock-boston' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Birkenstock Boston</span></span></a>
+    <a href="{{ _col_birkenstock_arizona.url | default: '/collections/birkenstock-arizona' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Birkenstock Arizona</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_misc %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-discover" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_discover }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/homme" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_sneakers_men }}</span></span></a>
+    <a href="/collections/femme" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_sneakers_women }}</span></span></a>
+    <a href="/collections/enfant" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_sneakers_kids }}</span></span></a>
+    <a href="/collections/ugg" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_boots_slippers }}</span></span></a>
+    <a href="#" data-drawer-missing-collection="sneakers-eco-responsables" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_eco_sneakers }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% comment %} ===== Brand sub-panels (depth 2) ===== {% endcomment %}
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-asics" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Asics</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/asics-gel-kayano-14" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Asics Gel-Kayano 14</span></span></a>
+    <a href="/collections/gel-1130" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Asics Gel-1130</span></span></a>
+    <a href="/collections/gel-nyc" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">ASICS Gel-NYC</span></span></a>
+    {%- assign _col_asics_nimbus = collections['asics-gel-nimbus'] -%}
+    <a href="{{ _col_asics_nimbus.url | default: '/collections/asics-gel-nimbus' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Asics Gel-Nimbus</span></span></a>
+    <a href="/collections/onitsuka-tiger" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Onitsuka Tiger</span></span></a>
+    {%- assign _col_asics_gt2160 = collections['asics-gt-2160'] -%}
+    <a href="{{ _col_asics_gt2160.url | default: '/collections/asics-gt-2160' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Asics GT-2160</span></span></a>
+    {%- assign _col_asics_other = collections['asics-other-models'] -%}
+    <a href="{{ _col_asics_other.url | default: '/collections/asics-other-models' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_asics }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-yeezy" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Yeezy</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {%- assign _col_yeezy_slide = collections['yeezy-slide'] -%}
+    <a href="{{ _col_yeezy_slide.url | default: '/collections/yeezy-slide' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Yeezy Slide</span></span></a>
+    <a href="/collections/foam-rnr" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Yeezy Foam RNNR</span></span></a>
+    <a href="/collections/yeezy-350" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Yeezy 350 V2</span></span></a>
+    {%- assign _col_yeezy_380 = collections['yeezy-380'] -%}
+    <a href="{{ _col_yeezy_380.url | default: '/collections/yeezy-380' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Yeezy 380</span></span></a>
+    {%- assign _col_yeezy_500 = collections['yeezy-500'] -%}
+    <a href="{{ _col_yeezy_500.url | default: '/collections/yeezy-500' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Yeezy 500</span></span></a>
+    <a href="/collections/yeezy-700" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Yeezy 700</span></span></a>
+    <a href="/collections/autre-yeezy" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_yeezy }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-adidas" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Adidas</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/adidas-spezial" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas Spezial</span></span></a>
+    <a href="/collections/adidas-sl72" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas SL 72</span></span></a>
+    {%- assign _col_adidas_xlg = collections['adidas-xlg-runner'] -%}
+    <a href="{{ _col_adidas_xlg.url | default: '/collections/adidas-xlg-runner' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas XLG Runner</span></span></a>
+    {%- assign _col_adidas_superstar = collections['adidas-superstar'] -%}
+    <a href="{{ _col_adidas_superstar.url | default: '/collections/adidas-superstar' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas Superstar</span></span></a>
+    <a href="/collections/adidas-samba" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas Samba</span></span></a>
+    <a href="/collections/adidas-campus" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas Campus</span></span></a>
+    <a href="/collections/adidas-gazelle" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas Gazelle</span></span></a>
+    <a href="/collections/adidas-forum-low" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Adidas Forum Low</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-newbalance" data-parent-panel="demo-sneakers" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_sneakers }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">New Balance</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/new-balance-2002r" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 2002R</span></span></a>
+    <a href="/collections/new-balance-204l" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 204L</span></span></a>
+    <a href="/collections/new-balance-740" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 740</span></span></a>
+    <a href="/collections/new-balance-530" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 530</span></span></a>
+    <a href="/collections/9060" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 9060</span></span></a>
+    <a href="/collections/new-balance-1906r" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 1906R</span></span></a>
+    <a href="/collections/new-balance-550" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 550</span></span></a>
+    {%- assign _col_nb_574 = collections['new-balance-574'] -%}
+    <a href="{{ _col_nb_574.url | default: '/collections/new-balance-574' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 574</span></span></a>
+    <a href="/collections/new-balance-990" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 990</span></span></a>
+    {%- assign _col_nb_327 = collections['new-balance-327'] -%}
+    <a href="{{ _col_nb_327.url | default: '/collections/new-balance-327' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 327</span></span></a>
+    {%- assign _col_nb_1000 = collections['new-balance-1000'] -%}
+    <a href="{{ _col_nb_1000.url | default: '/collections/new-balance-1000' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Balance 1000</span></span></a>
+    {%- assign _col_nb_other = collections['new-balance-other-models'] -%}
+    <a href="{{ _col_nb_other.url | default: '/collections/new-balance-other-models' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_nb }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-other-puma" data-parent-panel="demo-sneakers-other" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_autres_marques }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Puma</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    {%- assign _col_puma_speedcat = collections['puma-speedcat'] -%}
+    <a href="{{ _col_puma_speedcat.url | default: '/collections/puma-speedcat' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Puma Speedcat</span></span></a>
+    {%- assign _col_puma = collections['puma'] -%}
+    <a href="{{ _col_puma.url | default: '/collections/puma' }}" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_puma }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_sneakers %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-sneakers-other-salomon" data-parent-panel="demo-sneakers-other" data-panel-depth="3" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_autres_marques }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Salomon</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/salomon" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Salomon XT-6</span></span></a>
+    <a href="/collections/salomon" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_other_salomon }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% comment %} ===== Streetwear marques (depth 2) ===== {% endcomment %}
+
+{% if _show_streetwear %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-streetwear-marques" data-parent-panel="demo-streetwear" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_streetwear }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_marques }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/vetements" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'vetements', alt: 'Vetements' %}</span>
+        <span class="header__mobile-menu-link-text">Vetements</span>
+      </span>
+    </a>
+    <a href="/collections/fear-of-god-essentials" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'fear-of-god-essentials', alt: 'Fear of God Essentials' %}</span>
+        <span class="header__mobile-menu-link-text">Fear of God Essentials</span>
+      </span>
+    </a>
+    <a href="/collections/sp5der" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'sp5der', alt: 'Sp5der' %}</span>
+        <span class="header__mobile-menu-link-text">Sp5der</span>
+      </span>
+    </a>
+    <a href="/collections/denim-tears" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'denim-tears', alt: 'Denim Tears' %}</span>
+        <span class="header__mobile-menu-link-text">Denim Tears</span>
+      </span>
+    </a>
+    <a href="/collections/off-white" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'off-white', alt: 'OFF-WHITE Vetement' %}</span>
+        <span class="header__mobile-menu-link-text">OFF-WHITE Vetement</span>
+      </span>
+    </a>
+    <a href="/collections/vetement-travis" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'vetement-travis', alt: 'Vetement Travis' %}</span>
+        <span class="header__mobile-menu-link-text">Vetement Travis</span>
+      </span>
+    </a>
+    <a href="/collections/gallery-dept" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'gallery-dept', alt: 'Gallery Dept.' %}</span>
+        <span class="header__mobile-menu-link-text">Gallery Dept.</span>
+      </span>
+    </a>
+    <a href="/collections/hellstar" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'hellstar', alt: 'Hellstar' %}</span>
+        <span class="header__mobile-menu-link-text">Hellstar</span>
+      </span>
+    </a>
+    <a href="/collections/jacquemus" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'jacquemus', alt: 'Jacquemus' %}</span>
+        <span class="header__mobile-menu-link-text">Jacquemus</span>
+      </span>
+    </a>
+    <a href="/collections/ami-paris" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'ami-paris', alt: 'AMI Paris' %}</span>
+        <span class="header__mobile-menu-link-text">AMI Paris</span>
+      </span>
+    </a>
+    <a href="/collections/the-north-face" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'the-north-face', alt: 'The North Face' %}</span>
+        <span class="header__mobile-menu-link-text">The North Face</span>
+      </span>
+    </a>
+    <a href="/collections/stone-island" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'stone-island', alt: 'Stone Island' %}</span>
+        <span class="header__mobile-menu-link-text">Stone Island</span>
+      </span>
+    </a>
+    <a href="/collections/supreme" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'supreme', alt: 'Supreme' %}</span>
+        <span class="header__mobile-menu-link-text">Supreme</span>
+      </span>
+    </a>
+    <a href="/collections/bape" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'bape', alt: 'BAPE' %}</span>
+        <span class="header__mobile-menu-link-text">BAPE</span>
+      </span>
+    </a>
+    <a href="/collections/aime-leon-dore" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'aime-leon-dore', alt: 'Aimé Leon Dore' %}</span>
+        <span class="header__mobile-menu-link-text">Aimé Leon Dore</span>
+      </span>
+    </a>
+    <a href="/collections/chrome-hearts" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'chrome-hearts', alt: 'Chrome Hearts' %}</span>
+        <span class="header__mobile-menu-link-text">Chrome Hearts</span>
+      </span>
+    </a>
+    <a href="#" data-drawer-missing-collection="casablanca" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'casablanca', alt: 'Casablanca' %}</span>
+        <span class="header__mobile-menu-link-text">Casablanca</span>
+      </span>
+    </a>
+    <a href="#" data-drawer-missing-collection="carhartt" class="header__mobile-menu-link header__mobile-menu-link--grandchild">
+      <span class="header__mobile-menu-link-main">
+        <span class="header__mobile-menu-link-image-wrap is-badge-image">{% render 'menu-brand-image', handle: 'carhartt', alt: 'Carhartt' %}</span>
+        <span class="header__mobile-menu-link-text">Carhartt</span>
+      </span>
+    </a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% comment %} ===== Selections marques indépendantes (depth 2) — hidden from nav {% endcomment %}
+
+{% if _show_selections %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-selections-marques-indep" data-parent-panel="demo-selections" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_selections }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_independent_brands }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="#" data-drawer-missing-collection="gramicci" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Gramicci</span></span></a>
+    <a href="#" data-drawer-missing-collection="pierre-bassene" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Pierre Bassene</span></span></a>
+    <a href="#" data-drawer-missing-collection="perplex" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Perplex</span></span></a>
+    <a href="#" data-drawer-missing-collection="flower-instinct" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Flower Instinct</span></span></a>
+    <a href="/collections/sp5der" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Sp5der</span></span></a>
+    <a href="#" data-drawer-missing-collection="apf" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">APF</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% comment %} ===== Wellness Parfums (depth 2) — hidden from root nav {% endcomment %}
+
+{% if _show_misc %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-wellness-parfums" data-parent-panel="demo-wellness" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_wellness }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_parfums }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="#" data-drawer-missing-collection="sarah-baker" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Sarah Baker</span></span></a>
+    <a href="#" data-drawer-missing-collection="sora-dora" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Sora Dora</span></span></a>
+    <a href="#" data-drawer-missing-collection="tobba" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Tobba</span></span></a>
+    <a href="#" data-drawer-missing-collection="goldfield-banks" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Goldfield &amp; Banks</span></span></a>
+    <a href="#" data-drawer-missing-collection="liquides-imaginaires" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Liquides Imaginaires</span></span></a>
+    <a href="#" data-drawer-missing-collection="oman-luxury" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Oman Luxury</span></span></a>
+    <a href="#" data-drawer-missing-collection="new-notes" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">New Notes</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% comment %} ===== Chaussures sub-brands (depth 2) ===== {% endcomment %}
+
+{% if _show_chaussures %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-chaussures-ugg" data-parent-panel="demo-chaussures" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_shoes }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">UGG</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/ugg-tazz" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">UGG Tazz</span></span></a>
+    <a href="/collections/ugg-lowmell" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">UGG Lowmel</span></span></a>
+    <a href="/collections/ugg-mini-boot" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">UGG Ultra Mini</span></span></a>
+    <a href="/collections/ugg-tasman" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">UGG Tasman</span></span></a>
+    <a href="/collections/ugg-classic-mini" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">UGG Classic Mini</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_chaussures %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-chaussures-clarks" data-parent-panel="demo-chaussures" data-panel-depth="2" aria-hidden="true" inert>
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ label_shoes }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">Clarks</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/clarks-wallabee" class="header__mobile-menu-link header__mobile-menu-link--grandchild"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Clarks Wallabee</span></span></a>
+  </nav>
+</section>
+{% endif %}
+
+
+{% comment %} ===== Collectibles & Accessoires (depth 1) ===== {% endcomment %}
+
+{% if _show_collectibles %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-collectibles" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_collectibles %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_collectibles }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/pokemon" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Pokémon</span></span></a>
+    <a href="/collections/one-piece" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">One Piece</span></span></a>
+    <a href="/collections/pop-mart" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Labubu / Pop Mart</span></span></a>
+    {%- assign _col_moonswatch = collections['moonswatch'] -%}
+    <a href="{{ _col_moonswatch.url | default: '/collections/moonswatch' }}" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Moonswatch</span></span></a>
+    <a href="/collections/sonny-angel" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">Sonny Angel</span></span></a>
+    <button type="button" class="header__mobile-menu-link header__mobile-menu-link--child" data-panel-target="demo-collectibles-lego">
+      <span class="header__mobile-menu-link-main">
+        {% render 'drawer-menu-collection-image', handle: 'lego', alt: 'LEGO', wrap_modifier: 'is-menu-thumb' %}
+        <span class="header__mobile-menu-link-text">LEGO</span>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" class="header__mobile-menu-link-chevron"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M7.5 15l5-5-5-5"></path></svg>
+    </button>
+  </nav>
+</section>
+{% endif %}
+
+
+{% if _show_collectibles %}
+{% render 'drawer-menu-lego-panel',
+  uppercase: uppercase,
+  font_weight: font_weight,
+  show_top_image: show_top_image,
+  label_collectibles: label_collectibles
+%}
+{% endif %}
+
+{% if _show_misc %}
+<section class="header__mobile-menu-panel" data-panel-id="demo-accessoires" data-parent-panel="root" data-panel-depth="1" aria-hidden="true" inert>
+  {% render 'drawer-menu-panel-hero', show_hero: show_top_image, title: label_accessories %}
+  <div class="header__mobile-menu-breadcrumb">
+    <button type="button" class="header__mobile-menu-back" data-panel-back>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" class="header__mobile-menu-back-icon"><path stroke="#666" stroke-linecap="round" stroke-linejoin="round" d="M15.833 10H4.167M10 15.833L4.167 10 10 4.167"></path></svg>
+      <span class="header__mobile-menu-back-label">{{ drawer_menu_title }}</span>
+    </button>
+    <p class="header__mobile-menu-breadcrumb-title">{{ label_accessories }}</p>
+  </div>
+  <nav class="header__mobile-menu-nav{% if uppercase %} header__mobile-menu-nav--uppercase{% endif %}" style="--font-weight: {{ font_weight }};">
+    <a href="/collections/lunettes" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_eyewear }}</span></span></a>
+    <a href="#" data-drawer-missing-collection="bijoux" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_jewelry }}</span></span></a>
+    <a href="#" data-drawer-missing-collection="produits-entretien" class="header__mobile-menu-link header__mobile-menu-link--child"><span class="header__mobile-menu-link-main"><span class="header__mobile-menu-link-text">{{ label_care_products }}</span></span></a>
+  </nav>
+</section>
+{% endif %}
+

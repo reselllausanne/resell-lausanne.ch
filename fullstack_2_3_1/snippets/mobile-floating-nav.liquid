@@ -1,0 +1,116 @@
+{% comment %}
+  Floating mobile bottom navigation.
+  Reuses existing theme drawers/triggers:
+  - Burger -> [data-ref="menu-toggle"] inside <header-component>
+  - Search -> [data-ref="popup-toggle"] inside <dialog-component class="search-popup">
+  - Cart   -> routes.cart_url (full cart page)
+
+  Visible only below 768px. Critical styles live in mobile-floating-nav-critical.liquid.
+{% endcomment %}
+
+{% liquid
+  assign account_url = routes.account_url
+  assign cart_url = routes.cart_url
+  assign search_nav_mode = 'open'
+  assign search_nav_action = 'search'
+  assign search_nav_label = 'Search'
+  if template.name == 'search'
+    assign search_nav_mode = 'close'
+    assign search_nav_action = 'search-close'
+    assign search_nav_label = 'Close search'
+  endif
+%}
+
+<nav
+  class="rl-mobile-floating-nav"
+  data-rl-mobile-floating-nav
+  aria-label="Mobile primary navigation"
+>
+  <button
+    type="button"
+    class="rl-mobile-floating-nav__item"
+    data-rl-action="menu"
+    aria-label="Open menu"
+  >
+    <svg class="rl-mobile-floating-nav__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+      <path d="M2.5 5h15M2.5 10h15M2.5 15h15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </button>
+
+  <a
+    href="{{ account_url }}"
+    class="rl-mobile-floating-nav__item"
+    data-rl-action="account"
+    aria-label="Account"
+  >
+    <svg class="rl-mobile-floating-nav__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+      <circle cx="10" cy="7" r="3.25" stroke="currentColor" stroke-width="1.5"></circle>
+      <path d="M3.5 17c.9-2.7 3.45-4.25 6.5-4.25S15.6 14.3 16.5 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </a>
+
+  {% if search_nav_action == 'search-close' %}
+  <button
+    type="button"
+    class="rl-mobile-floating-nav__item rl-mobile-floating-nav__item--search"
+    data-rl-search-trigger
+    data-rl-action="{{ search_nav_action }}"
+    data-rl-search-mode="{{ search_nav_mode }}"
+    aria-label="{{ search_nav_label }}"
+  >
+  {% else %}
+  <a
+    href="{{ routes.search_url }}"
+    class="rl-mobile-floating-nav__item rl-mobile-floating-nav__item--search"
+    data-rl-search-trigger
+    data-rl-action="{{ search_nav_action }}"
+    data-rl-search-mode="{{ search_nav_mode }}"
+    aria-label="{{ search_nav_label }}"
+  >
+  {% endif %}
+    <svg class="rl-mobile-floating-nav__icon rl-mobile-floating-nav__icon--search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+      <circle cx="9" cy="9" r="5.25" stroke="currentColor" stroke-width="1.6"></circle>
+      <path d="m13.5 13.5 3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+    </svg>
+    <svg class="rl-mobile-floating-nav__icon rl-mobile-floating-nav__icon--close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+      <path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+    </svg>
+  {% if search_nav_action == 'search-close' %}
+  </button>
+  {% else %}
+  </a>
+  {% endif %}
+
+  {% if settings.activate_wishlist %}
+    {% capture wishlist_url %}{% render 'rl-wishlist-url' %}{% endcapture %}
+    <button
+      type="button"
+      class="rl-mobile-floating-nav__item"
+      data-rl-action="wishlist"
+      data-rl-wishlist-url="{{ wishlist_url }}"
+      aria-label="{{ 'accessibility.wishlist' | t }}"
+    >
+      <svg class="rl-mobile-floating-nav__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+        <path d="M10 16.5s-6-3.7-6-8.1A3.4 3.4 0 0 1 10 6.2a3.4 3.4 0 0 1 6 2.2c0 4.4-6 8.1-6 8.1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+      </svg>
+    </button>
+  {% else %}
+    <span class="rl-mobile-floating-nav__item rl-mobile-floating-nav__item--wishlist-spacer" aria-hidden="true"></span>
+  {% endif %}
+
+  <a
+    href="{{ cart_url }}"
+    class="rl-mobile-floating-nav__item"
+    data-rl-action="cart"
+    aria-label="{{ 'accessibility.cart' | t }}"
+  >
+    <span class="rl-mobile-floating-nav__cart-wrap">
+      <svg class="rl-mobile-floating-nav__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
+        <path d="M3 4.5h2l1.5 8.5a1.5 1.5 0 0 0 1.5 1.25h6.5a1.5 1.5 0 0 0 1.5-1.2l1-5.05H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        <circle cx="8" cy="17" r="1" stroke="currentColor" stroke-width="1.5"></circle>
+        <circle cx="14" cy="17" r="1" stroke="currentColor" stroke-width="1.5"></circle>
+      </svg>
+      <span class="rl-mobile-floating-nav__badge" data-rl-cart-count aria-hidden="true">{{ cart.item_count }}</span>
+    </span>
+  </a>
+</nav>

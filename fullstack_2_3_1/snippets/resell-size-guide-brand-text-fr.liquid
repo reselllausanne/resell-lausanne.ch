@@ -1,0 +1,211 @@
+{% comment %} French size guide copy. Params: brand, part (article|tips), sg_fitting_tips, sg_size_tips {% endcomment %}
+{% case brand %}
+{% when 'nike' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les chaussures Nike ?</h3>
+          <p>Nike utilise un système de demi-pointures (40, 40.5, 41…). La majorité des modèles taillent normalement, mais quelques silhouettes iconiques ont des particularités. Sur la fiche produit, le libellé indique si c'est un modèle <em>Nike</em> (homme), <em>Nike W</em> (femme) ou <em>Nike Y</em> (enfant).</p>
+          <h3>Quelle taille prendre selon le modèle ?</h3>
+          <p>La Nike Dunk et la Nike Air Max taillent normalement — prenez votre pointure habituelle. La Nike Blazer taille légèrement petit : prenez une demi-pointure au-dessus. La Nike Air Force 1 taille grand : vous pouvez descendre d'une demi-pointure. L'épaisseur de vos chaussettes et la largeur de votre pied peuvent aussi influencer votre choix.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Nike</p>
+          <ul>
+            <li><strong>Dunk Low/High :</strong> taille normalement — prenez votre pointure habituelle.</li>
+            <li><strong>Air Force 1 :</strong> taille grand — une demi-pointure en dessous est souvent conseillée.</li>
+            <li><strong>Blazer :</strong> taille petit — prenez une demi-pointure au-dessus.</li>
+            <li><strong>Air Max 90/97/1 :</strong> taille normalement.</li>
+            <li>Pied large ? Certains modèles existent en coupe Large (2E) — vérifiez la fiche produit.</li>
+          </ul>
+  {% endcase %}
+{% when 'air-jordan' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Air Jordan ?</h3>
+          <p>Les Air Jordan partagent le même système de pointure que Nike (demi-pointures). La quasi-totalité des modèles rétro — Jordan 1, 3, 4, 5, 11 — taille normalement. Sur la fiche produit, <em>Nike</em> renvoie au guide homme, <em>Nike W</em> au guide femme, et <em>Nike Y</em> au guide enfant (ou au guide homme pour les tailles ≥ 40).</p>
+          <h3>Est-ce que les Jordan 4 taillent grand ?</h3>
+          <p>Non — les Jordan 4 taillent normalement, comme l'ensemble de la gamme Jordan rétro. Si vous hésitez entre deux demi-pointures, prenez la plus grande pour plus de confort.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Air Jordan</p>
+          <ul>
+            <li><strong>Jordan 1 / 3 / 4 / 5 / 11 :</strong> taille normalement — prenez votre pointure habituelle.</li>
+            <li><strong>Jordan Low / Mid / High :</strong> le sizing est identique quelle que soit la hauteur de la tige.</li>
+            <li>Entre deux tailles ? Prenez la plus grande — vous pourrez ajuster avec les lacets.</li>
+            <li>Pied large : la Jordan 1 offre une bonne largeur d'avant-pied.</li>
+          </ul>
+  {% endcase %}
+{% when 'adida' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les chaussures Adidas ?</h3>
+          <p>Adidas utilise un système de <strong>tiers de pointures</strong> (36, 36⅔, 37⅓, 38…) au lieu des demi-pointures classiques. Cela signifie qu'il n'existe pas de 36.5, mais un 36⅔. Cette particularité peut perturber, surtout lorsqu'on compare avec Nike ou New Balance.</p>
+          <h3>Quelle taille choisir pour une basket Adidas ?</h3>
+          <p>La plupart des modèles lifestyle (Stan Smith, Samba, Gazelle, Forum) taillent normalement à légèrement grand. Si vous hésitez, il est souvent préférable de prendre la taille inférieure plutôt que la supérieure. Pour les modèles de running, consultez directement les conseils de la fiche produit.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Adidas</p>
+          <ul>
+            <li><strong>Samba / Gazelle :</strong> taille normalement — prenez votre pointure habituelle.</li>
+            <li><strong>Stan Smith :</strong> taille légèrement grand — une demi-pointure en dessous possible.</li>
+            <li><strong>Superstar :</strong> taille grand — prenez une demi-pointure en dessous de votre taille Nike.</li>
+            <li><strong>Forum Low/High :</strong> taille normalement.</li>
+            <li>Pas de demi-pointure ? Adidas propose le tiers supérieur (ex : 42 → 42⅔) pour un peu plus de place.</li>
+          </ul>
+  {% endcase %}
+{% when 'new-balance' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les New Balance ?</h3>
+          <p>New Balance utilise des demi-pointures et propose, sur certains modèles, des <strong>largeurs différentes</strong> : D (standard), 2E (large) et 4E (extra-large). Si votre pied est large, vérifier la disponibilité d'une coupe élargie peut éviter de monter d'une pointure.</p>
+          <h3>Quelques conseils avant d'acheter</h3>
+          <p>Essayez vos chaussures en fin de journée — vos pieds gonflent légèrement au fil des heures. Vos deux pieds ne faisant généralement pas exactement la même taille, basez-vous sur le plus grand. Laissez environ 1 cm d'espace devant votre orteil le plus long.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} New Balance</p>
+          <ul>
+            <li><strong>550 / 530 / 2002R :</strong> taille normalement — prenez votre pointure habituelle.</li>
+            <li><strong>990v6 :</strong> disponible en largeur D (standard) ou 2E (large) — choisissez selon votre morphologie.</li>
+            <li>Pieds larges ? Cherchez les modèles en coupe 2E ou 4E avant de monter de taille.</li>
+            <li>Essayez en fin de journée pour un ajustement optimal.</li>
+          </ul>
+  {% endcase %}
+{% when 'asics' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Asics ?</h3>
+          <p>Asics est connue pour tailler <strong>légèrement petit</strong>, en particulier sur les modèles de running (Gel-Kayano, Gel-Nimbus, Gel-Cumulus). La coupe est généralement ajustée pour un maintien ferme du pied. Pour les modèles lifestyle (Gel-Lyte III, Japan S), le sizing est plus proche de la normale.</p>
+          <h3>Quelle taille prendre pour des Asics ?</h3>
+          <p>Pour les modèles de running et les silhouettes ajustées, prenez une demi-pointure au-dessus de votre taille Nike habituelle. Pour les modèles lifestyle, votre taille standard convient généralement.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Asics</p>
+          <ul>
+            <li><strong>Gel-Kayano / Gel-Nimbus :</strong> taille petit — prenez +0.5 par rapport à votre Nike habituel.</li>
+            <li><strong>Gel-Lyte III / V :</strong> taille normalement — votre taille standard convient.</li>
+            <li><strong>Japan S :</strong> taille normalement, comparable aux tailles Nike.</li>
+            <li>Pied large ou fort ? Montez d'une pointure complète plutôt que d'une demi.</li>
+          </ul>
+  {% endcase %}
+{% when 'yeezy' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Yeezy ?</h3>
+          <p>Les Yeezy suivent le système de tiers de pointures d'Adidas, mais la taille varie <strong>considérablement d'un modèle à l'autre</strong>. Les Yeezy 350 V2 sont connues pour tailler petit à cause de leur construction en Primeknit élastique et leur semelle intérieure fine. Les Yeezy 700 taillent plus normalement. Les Yeezy Slide et Foam Runner, elles, taillent très petit.</p>
+          <h3>Quel taille prendre selon le modèle ?</h3>
+          <p>Pour les Yeezy 350 V2 : prenez une demi-pointure au-dessus (voire une pointure entière si votre pied est large ou si vous portez des chaussettes épaisses). Pour les Yeezy Slide et Foam Runner : prenez au minimum une pointure au-dessus de votre taille habituelle.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Yeezy</p>
+          <ul>
+            <li><strong>Yeezy 350 V2 :</strong> taille petit — prenez +0.5 (ou +1 si pied large).</li>
+            <li><strong>Yeezy 500 :</strong> taille petit — prenez +0.5.</li>
+            <li><strong>Yeezy 700 V1/V2/V3 :</strong> taille normalement.</li>
+            <li><strong>Yeezy Slide :</strong> taille très petit — prenez au moins +1 pointure.</li>
+            <li><strong>Yeezy Foam Runner :</strong> taille très petit — prenez +1 à +2 pointures.</li>
+          </ul>
+  {% endcase %}
+{% when 'ugg' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les UGG ?</h3>
+          <p>UGG utilise principalement les pointures US entières. Les bottes Classic (Mini, Short, Tall) sont garnies de fourrure mouton qui <strong>se tasse naturellement</strong> avec le temps et s'adapte à la forme de votre pied. Il est généralement conseillé de prendre votre pointure habituelle — la chaussure s'élargit légèrement après quelques semaines de port.</p>
+          <h3>Entre deux tailles ?</h3>
+          <p>Si vous hésitez entre deux pointures, prenez la plus petite. La fourrure se compresse et la botte gagnera un peu en largeur, sans jamais devenir trop grande. Pour les modèles en cuir ou synthétique (Tasman, Ultra Mini Platform), la taille est plus standard.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} UGG</p>
+          <ul>
+            <li><strong>Classic Mini / Short / Tall :</strong> prenez votre taille habituelle — la fourrure se compresse.</li>
+            <li><strong>Tasman / Ultra Mini :</strong> taille normalement.</li>
+            <li>Entre deux tailles ? Prenez la plus petite — la botte s'élargit avec le temps.</li>
+            <li>Port de chaussettes épaisses prévu ? Montez d'une demi-pointure.</li>
+          </ul>
+  {% endcase %}
+{% when 'converse' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Converse ?</h3>
+          <p>Les Converse, et particulièrement les Chuck Taylor All Star, sont réputées pour <strong>tailler grand</strong>. Leur construction en toile souple et leur semelle plate laissent plus d'espace que la moyenne. En règle générale, si vous faites du 43 chez Nike, prenez du 42 chez Converse.</p>
+          <h3>Chuck Taylor vs Chuck 70 : quelle différence ?</h3>
+          <p>Le Chuck 70 taille légèrement moins grand que le Chuck Taylor classique (environ une demi-pointure d'écart), car sa construction est légèrement plus structurée. Le One Star, lui, taille normalement.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Converse</p>
+          <ul>
+            <li><strong>Chuck Taylor All Star :</strong> taille grand — prenez une pointure en dessous de votre Nike (ex : Nike 43 → Converse 42).</li>
+            <li><strong>Chuck 70 :</strong> taille légèrement grand — descendez d'une demi-pointure.</li>
+            <li><strong>One Star / Run Star :</strong> taille normalement.</li>
+            <li>La tige en toile s'assouplit avec le port — évitez de prendre trop grand au risque d'avoir un jeu excessif.</li>
+          </ul>
+  {% endcase %}
+{% when 'salomon' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Salomon ?</h3>
+          <p>Salomon utilise le même système de tiers de pointures qu'Adidas. Les modèles lifestyle (XT-6, XT-4) taillent normalement, avec une coupe ajustée autour du pied. Pour les modèles techniques de trail, il est recommandé de laisser environ 1 cm d'espace devant l'orteil pour absorber les impacts en descente.</p>
+          <h3>Salomon XT-6 : quelle taille choisir ?</h3>
+          <p>Le XT-6 est sans doute le modèle Salomon le plus populaire en lifestyle. Sa coupe est ajustée mais confortable — prenez votre taille habituelle. Si vous avez un pied particulièrement large, envisagez de monter d'un tiers de pointure.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Salomon</p>
+          <ul>
+            <li><strong>XT-6 / XT-4 :</strong> taille normalement — prenez votre pointure habituelle.</li>
+            <li><strong>Speedcross :</strong> coupe étroite — prenez +0.5 si pied large.</li>
+            <li>Trail : laissez 1 cm d'espace devant l'orteil pour les descentes.</li>
+            <li>Pas de demi-pointure disponible ? Le tiers supérieur (ex : 42 → 42⅔) offre un peu plus de place.</li>
+          </ul>
+  {% endcase %}
+{% when 'puma' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Puma ?</h3>
+          <p>Puma utilise les demi-pointures classiques et taille globalement de manière similaire à Nike. La plupart des modèles lifestyle — RS-X, Suede, Clyde — suivent ce standard. Certains modèles comme la Puma Suede peuvent paraître légèrement étroits au premier port, mais le cuir s'assouplit naturellement après quelques semaines.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Puma</p>
+          <ul>
+            <li><strong>RS-X :</strong> taille normalement, coupe confortable.</li>
+            <li><strong>Suede :</strong> peut être étroit au début — le cuir s'assouplit avec le port.</li>
+            <li><strong>Speedcat :</strong> taille légèrement petit — prenez +0.5.</li>
+            <li>Globalement comparable aux tailles Nike — votre pointure habituelle convient.</li>
+          </ul>
+  {% endcase %}
+{% when 'veja' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Veja ?</h3>
+          <p>Veja utilise principalement des <strong>pointures entières</strong> sans demi-tailles sur la plupart de ses modèles. Les sneakers Veja taillent légèrement grand : si vous faites habituellement un 42.5 chez Nike, vous pouvez opter pour un 42 chez Veja. En cas d'hésitation entre deux tailles, prenez la plus petite.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Veja</p>
+          <ul>
+            <li><strong>V-10 / V-12 :</strong> taille légèrement grand — prenez une demi-taille en dessous de votre Nike.</li>
+            <li><strong>Campo :</strong> taille normalement à légèrement grand.</li>
+            <li><strong>Esplar :</strong> taille grand — descendez d'une pointure entière.</li>
+            <li>Pas de demi-pointure disponible ? Entre deux tailles, prenez la plus petite.</li>
+          </ul>
+  {% endcase %}
+{% when 'saucony' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les Saucony ?</h3>
+          <p>Saucony utilise les demi-pointures classiques et taille globalement normalement, comme Nike. Les modèles lifestyle (Jazz Original, Shadow 6000, Grid Web) offrent une coupe légèrement plus large que les modèles de running, ce qui les rend confortables dès le premier port sans période de rodage.</p>
+          <h3>Quelle taille prendre pour des Saucony ?</h3>
+          <p>Prenez votre pointure habituelle. Si vous avez un pied large ou que vous portez des chaussettes épaisses, une demi-pointure au-dessus peut améliorer le confort. Les modèles de running (Ride, Kinvara) peuvent bénéficier d'une demi-pointure supplémentaire pour absorber le gonflement du pied à l'effort.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Saucony</p>
+          <ul>
+            <li><strong>Jazz Original / Shadow 6000 :</strong> taille normalement — prenez votre pointure habituelle.</li>
+            <li><strong>Grid Web / Grid 9000 :</strong> taille normalement, coupe légèrement plus large.</li>
+            <li><strong>Ride / Kinvara (running) :</strong> prenez +0.5 pour compenser le gonflement du pied à l'effort.</li>
+            <li>Pied large ? La coupe lifestyle Saucony est naturellement plus généreuse que Nike.</li>
+          </ul>
+  {% endcase %}
+{% when 'essentials' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Comment taillent les vêtements Essentials ?</h3>
+          <p>Fear of God Essentials est conçu avec une <strong>coupe oversized intentionnelle</strong>. Contrairement à un vêtement classique, la silhouette ample et tombante est voulue par le designer Jerry Lorenzo. Cela dit, les pièces taillent réellement grand — il est systématiquement recommandé de <strong>prendre une taille en dessous</strong> de votre taille habituelle pour un fit équilibré.</p>
+          <h3>Dois-je vraiment descendre d'une taille ?</h3>
+          <p>Oui, sans exception. Si vous portez habituellement du L chez d'autres marques streetwear, prenez un M en Essentials. Si vous cherchez un look encore plus fitted, certains descendent même de deux tailles. L'aspect oversized reste présent quelle que soit la taille choisie — c'est l'ADN de la marque.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_size_tips }} Essentials</p>
+          <ul>
+            <li><strong>Règle d'or :</strong> prenez toujours une taille en dessous de votre taille habituelle.</li>
+            <li>Vous portez du L habituellement ? Prenez un M en Essentials.</li>
+            <li>Vous voulez un fit plus proche du corps ? Descendez de deux tailles.</li>
+            <li>La coupe oversized est intentionnelle — même en petite taille, la pièce restera ample.</li>
+            <li>Hoodies et sweatshirts : les manches sont très longues par design, tenez-en compte.</li>
+          </ul>
+  {% endcase %}
+{% endcase %}

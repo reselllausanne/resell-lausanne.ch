@@ -1,0 +1,263 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign authenticity_url = routes.root_url | append: '/pages/notre-processus-d-authentification'
+  assign livraison_url = routes.root_url | append: '/pages/livraison'
+
+  if pages['notre-processus-d-authentification'] != blank
+    assign authenticity_url = pages['notre-processus-d-authentification'].url
+  endif
+  if pages.livraison != blank
+    assign livraison_url = pages.livraison.url
+  elsif pages['livraison-delais'] != blank
+    assign livraison_url = pages['livraison-delais'].url
+  endif
+%}
+
+<div class="resell-content-page">
+  <nav class="breadcrumbs breadcrumbs--slash resell-content-page__breadcrumbs" aria-label="{{ 'accessibility.breadcrumb' | t }}">
+    <ol class="breadcrumbs__list">
+      <li class="breadcrumbs__item">
+        <a class="breadcrumbs__link link" href="{{ routes.root_url }}">{{ 'breadcrumbs.home' | t }}</a>
+      </li>
+      <li class="breadcrumbs__item">
+        {% if locale_base == 'de' %}
+          Unser Konzept
+        {% elsif locale_base == 'en' %}
+          Our concept
+        {% else %}
+          Notre concept
+        {% endif %}
+      </li>
+    </ol>
+  </nav>
+
+  <header>
+    <h1>
+      {% if locale_base == 'de' %}
+        Unser Konzept
+      {% elsif locale_base == 'en' %}
+        Our concept
+      {% else %}
+        Notre concept
+      {% endif %}
+    </h1>
+  </header>
+
+  {% if locale_base == 'de' %}
+    <h2>Eine Schweizer Referenz für authentische Sneakers und Collectibles</h2>
+    <p>
+      Resell Lausanne ist ein Schweizer Online-Shop, spezialisiert auf den Weiterverkauf authentischer Sneakers, Streetwear und Collectibles.
+    </p>
+    <p>
+      Unser Ziel ist einfach: den Kauf gesuchter Produkte für Kundinnen und Kunden in der Schweiz und in Europa zugänglicher, sicherer und transparenter zu machen.
+    </p>
+    <p>
+      Die Idee hinter Resell Lausanne geht auf 2016 zurück, als Théo feststellt, dass es noch keine echte Schweizer Plattform für seltene, limitierte oder schwer zu findende Sneakers gibt. Alles beginnt auf Instagram — mit Content rund um Sneaker-Kultur, Limited Releases und den Resell-Markt.
+    </p>
+    <p>
+      Die Community wächst schnell und erreicht über 5'000 Follower. 2020 wird Resell Lausanne angesichts der steigenden Nachfrage offiziell zum Online-Shop.
+    </p>
+    <p>
+      Die Idee bleibt dieselbe: gesuchte Artikel einfacher, zuverlässiger und professioneller kaufen — bei gleichbleibend direkter, leidenschaftlicher Haltung.
+    </p>
+
+    <h2>Ein grosses Sortiment für mehr Auswahl</h2>
+    <p>
+      Heute bietet Resell Lausanne eines der grössten Sortimente der Schweiz mit über 20'000 verfügbaren Produkten: Sneakers, Streetwear, LEGO, Konsolen, Pokémon-Karten und weitere gesuchte Artikel.
+    </p>
+    <p>
+      Dieses Modell ermöglicht eine deutlich breitere Auswahl als ein klassisches Geschäft. Statt uns auf begrenzten Lagerbestand zu beschränken, nutzt Resell Lausanne ein Netzwerk privater Reseller, professioneller Partner, spezialisierter Plattformen und anerkannter Lieferanten in der Schweiz, Europa und international.
+    </p>
+    <p>
+      So bieten wir mehr Auswahl, bleiben preislich wettbewerbsfähig und machen Produkte zugänglich, die auf dem Schweizer Markt oft schwer zu finden sind.
+    </p>
+
+    <h2>Ein moderner, automatisierter Ansatz</h2>
+    <p>
+      Resell Lausanne setzt auf automatisierte Tools und Prozesse, um Marktbewegungen, Verfügbarkeiten und Preise laufend zu verfolgen.
+    </p>
+    <p>
+      Preise gesuchter Produkte entwickeln sich ständig — je nach Nachfrage, Seltenheit, verfügbaren Grössen und internationalen Märkten. Unser System hilft uns, diese Schwankungen zu überwachen und möglichst kohärente, wettbewerbsfähige Angebote zu liefern.
+    </p>
+    <p>
+      Dieser technologische Ansatz steht im Zentrum unseres Modells: grosses Sortiment verwalten, Markttrends verfolgen und das Kundenerlebnis kontinuierlich verbessern.
+    </p>
+
+    <h2>Anders als klassischer Retail</h2>
+    <p>
+      Resell Lausanne arbeitet überwiegend online — ohne öffentlich zugängliches Ladengeschäft.
+    </p>
+    <p>
+      Diese Entscheidung ist bewusst: Sie senkt Fixkosten, erlaubt ein deutlich grösseres Sortiment und hält Preise wettbewerbsfähig. Im Gegenzug benötigen manche Produkte je nach Beschaffung <a href="{{ livraison_url }}">längere Bearbeitungszeiten</a> als Artikel, die bereits physisch vorrätig sind.
+    </p>
+    <p>
+      Unsere Priorität: ein klares Gleichgewicht zwischen mehr Auswahl, wettbewerbsfähigen Preisen, einfachem Einkauf und hohen Authentizitätsansprüchen.
+    </p>
+
+    <h2>Schweizerisch, menschlich, direkt</h2>
+    <p>
+      Auch mit modernen, automatisierten Systemen bleibt Resell Lausanne ein menschliches Unternehmen — mit direkter, transparenter Kommunikation.
+    </p>
+    <p>
+      Unsere Mission: Sneakers, Streetwear und Collectibles mit Vertrauen kaufen — ohne riskante Privatgeschäfte oder unklare Plattformen.
+    </p>
+    <p>
+      Jeder Artikel auf unserer Website wird mit klaren Authentizitätsanforderungen ausgewählt. Mehr dazu in unserem <a href="{{ authenticity_url }}">Authentifizierungsprozess</a>.
+    </p>
+
+    <h2>Schweiz. Authentisch. Einfach. Innovativ.</h2>
+    <p>Resell Lausanne basiert auf vier Prinzipien:</p>
+    <p><strong>Schweiz</strong> — ein Unternehmen mit Sitz in der Schweiz, gedacht für Kundinnen und Kunden in der Schweiz und Europa.</p>
+    <p><strong>Authentisch</strong> — eine Auswahl aus verifizierten Quellen mit klaren Authentizitätsansprüchen.</p>
+    <p><strong>Einfach</strong> — eine klare Website, ein direkter Kaufprozess und transparente Informationen.</p>
+    <p><strong>Innovativ</strong> — automatisierte Tools, um den Markt zu verfolgen, das Sortiment zu erweitern und wettbewerbsfähige Preise anzubieten.</p>
+    <p>
+      Unser Anspruch: die Schweizer Referenz für den sicheren Kauf authentischer Sneakers, Streetwear und Collectibles zu werden.
+    </p>
+  {% elsif locale_base == 'en' %}
+    <h2>A Swiss reference for authentic sneakers and collectibles</h2>
+    <p>
+      Resell Lausanne is a Swiss online store specializing in authentic sneakers, streetwear and collectibles.
+    </p>
+    <p>
+      Our goal is simple: make sought-after products more accessible, safer and more transparent for customers in Switzerland and Europe.
+    </p>
+    <p>
+      The Resell Lausanne story started in 2016, when Théo noticed there was no real Swiss platform dedicated to rare, limited or hard-to-find sneakers. It began on Instagram — content around sneaker culture, limited drops and the resale market.
+    </p>
+    <p>
+      The community grew quickly to over 5,000 followers. In 2020, driven by rising demand, Resell Lausanne officially became an online store.
+    </p>
+    <p>
+      The idea has stayed the same: a simpler, more reliable and more professional way to buy sought-after items — while keeping the direct, passionate approach from day one.
+    </p>
+
+    <h2>A large catalog built for choice</h2>
+    <p>
+      Today Resell Lausanne offers one of the largest catalogs in Switzerland, with over 20,000 products available: sneakers, streetwear, LEGO, consoles, Pokémon cards and other sought-after items.
+    </p>
+    <p>
+      This model lets us offer a much wider selection than a traditional store. Instead of limiting stock to a small physical inventory, Resell Lausanne relies on a network of private resellers, professional partners, specialized platforms and trusted suppliers in Switzerland, Europe and internationally.
+    </p>
+    <p>
+      That means more choice, competitive pricing and access to products that are often hard to find on the Swiss market.
+    </p>
+
+    <h2>A modern, automated approach</h2>
+    <p>
+      Resell Lausanne uses automated tools and processes to track market moves, availability and pricing on an ongoing basis.
+    </p>
+    <p>
+      Prices for sought-after products shift constantly — based on demand, rarity, available sizes and international markets. Our system monitors those changes to keep offers as consistent and competitive as possible.
+    </p>
+    <p>
+      This technology-first approach is core to our model: managing a large catalog, tracking market trends and continuously improving the customer experience.
+    </p>
+
+    <h2>Different from traditional retail</h2>
+    <p>
+      Resell Lausanne operates mainly online, without a public retail store.
+    </p>
+    <p>
+      That choice is deliberate. It lowers fixed costs, supports a much larger catalog and keeps prices competitive. In return, some products require <a href="{{ livraison_url }}">longer processing times</a> than items already in a physical store, depending on sourcing.
+    </p>
+    <p>
+      Our priority is a clear balance: more choice, competitive prices, a simple experience and strict authenticity standards.
+    </p>
+
+    <h2>Swiss, human, straightforward</h2>
+    <p>
+      Even with modern automated systems, Resell Lausanne remains a human company built on direct, transparent communication.
+    </p>
+    <p>
+      Our mission is to let everyone buy sneakers, streetwear and collectibles with confidence — without risky peer-to-peer deals or unclear platforms.
+    </p>
+    <p>
+      Every item listed on our site is selected with clear authenticity requirements. Learn more on our dedicated <a href="{{ authenticity_url }}">authentication process</a> page.
+    </p>
+
+    <h2>Swiss. Authentic. Simple. Innovative.</h2>
+    <p>Resell Lausanne is built on four principles:</p>
+    <p><strong>Swiss</strong> — a Switzerland-based company designed for Swiss and European customers.</p>
+    <p><strong>Authentic</strong> — a selection from verified sources with clear authenticity standards.</p>
+    <p><strong>Simple</strong> — a clear website, a direct checkout flow and transparent information.</p>
+    <p><strong>Innovative</strong> — automated tools to track the market, expand the catalog and offer competitive prices.</p>
+    <p>
+      Our ambition is to become the Swiss reference for buying authentic sneakers, streetwear and collectibles with confidence.
+    </p>
+  {% else %}
+    <h2>Une référence suisse pour les sneakers et collectibles authentiques</h2>
+    <p>
+      Resell Lausanne est une boutique en ligne suisse spécialisée dans la revente de sneakers, streetwear et collectibles authentiques.
+    </p>
+    <p>
+      Notre objectif est simple : rendre l’achat de produits recherchés plus accessible, plus sécurisé et plus transparent pour les clients en Suisse et en Europe.
+    </p>
+    <p>
+      Le concept de Resell Lausanne remonte à 2016, lorsque Théo remarque qu’il n’existe pas encore de véritable plateforme suisse dédiée à l’achat de sneakers rares, limitées ou difficiles à trouver. L’aventure commence d’abord sur Instagram, avec du contenu autour de la culture sneakers, des sorties limitées et du marché de la revente.
+    </p>
+    <p>
+      La communauté grandit rapidement et rassemble plus de 5’000 abonnés. En 2020, face à l’intérêt croissant et à la demande des clients, Resell Lausanne devient officiellement une boutique en ligne.
+    </p>
+    <p>
+      L’idée reste la même depuis le début : proposer une manière plus simple, plus fiable et plus professionnelle d’acheter des articles recherchés, tout en gardant l’approche directe et passionnée des débuts.
+    </p>
+
+    <h2>Un catalogue large, pensé pour offrir plus de choix</h2>
+    <p>
+      Aujourd’hui, Resell Lausanne propose l’un des plus grands catalogues en Suisse, avec plus de 20’000 produits disponibles : sneakers, vêtements streetwear, LEGO, consoles, cartes Pokémon et autres articles recherchés.
+    </p>
+    <p>
+      Ce modèle nous permet de proposer une sélection beaucoup plus large qu’une boutique traditionnelle. Au lieu de limiter l’offre à un stock physique restreint, Resell Lausanne s’appuie sur un réseau de revendeurs privés, partenaires professionnels, plateformes spécialisées et fournisseurs reconnus en Suisse, en Europe et à l’international.
+    </p>
+    <p>
+      Cette approche permet d’offrir plus de choix, de rester compétitif sur les prix et de rendre accessibles des produits parfois difficiles à trouver sur le marché suisse.
+    </p>
+
+    <h2>Une approche moderne et automatisée</h2>
+    <p>
+      Resell Lausanne s’appuie sur des outils et processus automatisés pour suivre l’évolution du marché, analyser les disponibilités et ajuster les prix de manière régulière.
+    </p>
+    <p>
+      Les prix des produits recherchés évoluent constamment selon la demande, la rareté, les tailles disponibles et les marchés internationaux. Notre système nous permet de monitorer ces variations afin de proposer des offres aussi cohérentes et compétitives que possible.
+    </p>
+    <p>
+      Cette approche technologique est au cœur de notre modèle : elle nous permet de gérer un catalogue très large, de suivre les tendances du marché et d’améliorer continuellement l’expérience client.
+    </p>
+
+    <h2>Un modèle différent d’une boutique traditionnelle</h2>
+    <p>
+      Resell Lausanne fonctionne principalement en ligne, sans magasin physique ouvert au public.
+    </p>
+    <p>
+      Ce choix est volontaire. Il nous permet de réduire certains coûts fixes, de proposer un catalogue beaucoup plus large et de rester compétitif sur les prix. En contrepartie, certains produits nécessitent un <a href="{{ livraison_url }}">délai de traitement plus long</a> qu’un article déjà présent dans un magasin physique.
+    </p>
+    <p>
+      Notre priorité est de proposer un équilibre clair : plus de choix, des prix compétitifs, une expérience simple et une exigence forte sur l’authenticité des articles proposés.
+    </p>
+
+    <h2>Une entreprise suisse, simple et humaine</h2>
+    <p>
+      Même si notre fonctionnement repose sur des systèmes modernes et automatisés, Resell Lausanne reste avant tout une entreprise suisse, construite autour d’une approche humaine, directe et transparente.
+    </p>
+    <p>
+      Notre mission est de permettre à chacun d’acheter des sneakers, du streetwear et des collectibles avec confiance, sans devoir passer par des échanges risqués entre particuliers ou des plateformes peu claires.
+    </p>
+    <p>
+      Chaque article proposé sur notre site est sélectionné avec une exigence claire sur l’authenticité. Pour en savoir plus, consultez notre page dédiée à notre <a href="{{ authenticity_url }}">processus d’authentification</a>.
+    </p>
+
+    <h2>Suisse. Authentique. Simple. Innovant.</h2>
+    <p>Resell Lausanne s’est construit autour de quatre principes :</p>
+    <p><strong>Suisse</strong> — une entreprise basée en Suisse, pensée pour les clients suisses et européens.</p>
+    <p><strong>Authentique</strong> — une sélection d’articles provenant de sources vérifiées, avec une exigence claire sur l’authenticité.</p>
+    <p><strong>Simple</strong> — un site clair, un processus d’achat direct et des informations transparentes.</p>
+    <p><strong>Innovant</strong> — des outils automatisés pour suivre le marché, élargir le catalogue et proposer des prix compétitifs.</p>
+    <p>
+      Notre ambition est de devenir la référence suisse pour l’achat sécurisé de sneakers, streetwear et collectibles authentiques.
+    </p>
+  {% endif %}
+</div>
+
+{% render 'resell-content-page-styles' %}

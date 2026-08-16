@@ -1,0 +1,207 @@
+{%- comment -%}
+  Filter Shopify Markets hreflang, defer heavy checkout preloads (home),
+  strip Wishlist King (loaded via rl-defer-non-critical.liquid). Analytics / Web Pixels always kept.
+  Caller must capture {{ content_for_header }} in theme.liquid (Shopify platform requirement).
+{%- endcomment -%}
+
+{%- liquid
+  assign rl_header = shopify_header
+  assign rl_deferred_stylesheets = ''
+  assign rl_is_fast_template = false
+  assign rl_is_collection_like = false
+  assign rl_is_home = false
+  assign rl_is_cart = false
+  assign rl_is_product = false
+
+  if template_name == 'collection' or template_name == 'search' or request.page_type == 'collection' or request.page_type == 'search'
+    assign rl_is_collection_like = true
+  endif
+  if template_name == 'index' or request.page_type == 'index'
+    assign rl_is_home = true
+  endif
+  if template_name == 'cart' or request.page_type == 'cart'
+    assign rl_is_cart = true
+  endif
+  if template_name == 'product' or request.page_type == 'product'
+    assign rl_is_product = true
+  endif
+  if rl_is_collection_like or rl_is_home
+    assign rl_is_fast_template = true
+  endif
+
+  assign hreflang_chunks = rl_header | split: '<link rel="alternate" hreflang="'
+  assign rl_header = hreflang_chunks.first
+  for chunk in hreflang_chunks offset: 1
+    assign chunk_parts = chunk | split: '>'
+    assign chunk_rest = ''
+    for part in chunk_parts offset: 1
+      if chunk_rest != blank
+        assign chunk_rest = chunk_rest | append: '>'
+      endif
+      assign chunk_rest = chunk_rest | append: part
+    endfor
+    assign rl_header = rl_header | append: chunk_rest
+  endfor
+
+  assign link_chunks = rl_header | split: '<link'
+  assign rl_header = link_chunks.first
+  for chunk in link_chunks offset: 1
+    assign link_body = chunk | split: '>' | first
+    assign rl_skip_link = false
+    assign rl_defer_stylesheet = false
+
+    if link_body contains 'swish-wishlist-king' or link_body contains 'appmate.io'
+      assign rl_skip_link = true
+    endif
+
+    if link_body contains 'rel="stylesheet"' or link_body contains "rel='stylesheet'"
+      if rl_is_fast_template
+        if link_body contains 'compiled_assets/styles.css' or link_body contains '/styles.css?v='
+          assign rl_skip_link = true
+          assign rl_defer_stylesheet = true
+        endif
+      endif
+      if link_body contains 'accelerated-checkout-backwards-compat.css'
+        if rl_is_cart
+          comment
+            Cart only — keep accelerated checkout CSS for Shop Pay / wallet buttons.
+          endcomment
+        elsif rl_is_home
+          assign rl_skip_link = true
+          assign rl_defer_stylesheet = true
+        elsif rl_is_product
+          comment
+            PDP keeps it for Shop Pay button.
+          endcomment
+        else
+          assign rl_skip_link = true
+        endif
+      endif
+    endif
+
+    if rl_defer_stylesheet and link_body contains 'href='
+      assign link_href = link_body | split: 'href="' | last | split: '"' | first
+      if link_href == blank
+        assign link_href = link_body | split: "href='" | last | split: "'" | first
+      endif
+      if link_href != blank
+        assign rl_deferred_stylesheets = rl_deferred_stylesheets | append: link_href | append: '||'
+      endif
+    endif
+
+    unless rl_skip_link
+      assign rl_header = rl_header | append: '<link' | append: chunk
+    endunless
+  endfor
+
+  assign script_chunks = rl_header | split: '<script'
+  assign rl_header = script_chunks.first
+  for chunk in script_chunks offset: 1
+    assign script_body = chunk | split: '</script>' | first
+    assign rl_skip_script = false
+
+    if rl_is_fast_template
+      comment
+        Keep only truly render-critical platform scripts. PLP/search first paint does not need
+        checkout wallets, review widgets, or performance beacons — never analytics / Web Pixels.
+      endcomment
+      if script_body contains 'shopify_pay'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'storefront-bf'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'portable-wallets'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'shop-js/modules'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'perf-kit'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'checkouts/internal/preloads.js'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'shop.app/checkouts/internal/preloads.js'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'window.jdgm'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'jdgmSettings'
+        assign rl_skip_script = true
+      endif
+      if script_body contains 'cdnwidget.judge.me'
+        assign rl_skip_script = true
+      endif
+    endif
+
+    if rl_is_product
+      comment
+        Keep accelerated checkout scripts on PDP for Shop Pay. Drop perf-kit on PDP.
+      endcomment
+      if script_body contains 'perf-kit'
+        assign rl_skip_script = true
+      endif
+    endif
+
+    if script_body contains 'swish-wishlist-king' or script_body contains 'appmate.io'
+      assign rl_skip_script = true
+    endif
+
+    if script_body contains 'invitejs.trustpilot' or script_body contains 'widget.trustpilot' or script_body contains 'ecommplugins' or script_body contains 'cdn.judge.me' or script_body contains 'static.klaviyo.com'
+      assign rl_skip_script = true
+    endif
+
+    if rl_is_fast_template
+      if script_body contains 'checkouts/internal/preloads.js' or script_body contains 'shop.app/checkouts/internal/preloads.js'
+        assign rl_skip_script = true
+      endif
+    endif
+
+    unless rl_skip_script
+      assign rl_header = rl_header | append: '<script' | append: chunk
+    endunless
+  endfor
+
+  assign style_chunks = rl_header | split: '<style'
+  assign rl_header = style_chunks.first
+  for chunk in style_chunks offset: 1
+    assign style_body = chunk | split: '</style>' | first
+    assign rl_skip_style = false
+
+    if rl_is_collection_like
+      if style_body contains 'shopify-accelerated-checkout' or style_body contains 'accelerated-checkout-compact'
+        assign rl_skip_style = true
+      endif
+      if style_body contains 'jdgm-' or style_body contains 'judge.me' or style_body contains 'gsf-' or style_body contains 'shopify-payment-button'
+        assign rl_skip_style = true
+      endif
+    endif
+
+    unless rl_skip_style
+      assign rl_header = rl_header | append: '<style' | append: chunk
+    endunless
+  endfor
+-%}
+
+{{ rl_header }}
+{%- assign rl_deferred_urls = rl_deferred_stylesheets | split: '||' -%}
+{%- for deferred_url in rl_deferred_urls -%}
+    {%- if deferred_url != blank -%}
+      {%- if rl_is_home -%}
+        <script>
+          window.__rlDeferredCss = window.__rlDeferredCss || [];
+          window.__rlDeferredCss.push({{ deferred_url | json }});
+        </script>
+      {%- else -%}
+        {% render 'deferred-stylesheet', href: deferred_url %}
+      {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
+{%- comment -%}
+  Hreflang render moved to `snippets/meta-tags.liquid` so it can be gated by
+  `robots_content` / canonical / 404 / alias-collection guards. Shopify's
+  native hreflang is stripped above; custom hreflang now emitted from meta-tags.
+{%- endcomment -%}

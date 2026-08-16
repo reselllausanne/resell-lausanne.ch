@@ -27,26 +27,46 @@ class SortInlineComponent extends HTMLElement {
   }
 
   #onClick = (event) => {
-    const sortOptionClicked = event.target;
-    const sortOptionValue = sortOptionClicked.dataset.value;
+    const sortOptionClicked = event.target.closest('[data-value]');
+    const sortOptionValue = sortOptionClicked?.dataset?.value;
 
-    if (sortOptionValue && !sortOptionClicked.classList.contains('sorting__select--selected')) {
+    if (
+      sortOptionValue &&
+      sortOptionClicked &&
+      !sortOptionClicked.classList.contains('sorting__select--selected')
+    ) {
       this.resetSelectedItem();
 
       sortOptionClicked.classList.add('sorting__select--selected');
 
-      this.sortingInput.value = sortOptionValue;
+      if (this.sortingInput) {
+        this.sortingInput.value = sortOptionValue;
+      }
 
-      const filterParams = this.closest('filter-and-sort-component').getCurrentFiltersParams();
-      const sortingParams = this.getSortingParams();
+      if (this.#isStagedContext()) return;
 
-      document.dispatchEvent(new FiltersChangedEvent(filterParams, sortingParams));
-
-      this.dropdown.close();
+      this.#dispatchSortChange();
+      this.dropdown?.close();
     }
   };
 
+  #isStagedContext() {
+    return Boolean(this.closest('filters-sheet-component'));
+  }
+
+  #dispatchSortChange() {
+    const wrapper = this.closest('filter-and-sort-component');
+    if (!wrapper) return;
+
+    const filterParams = wrapper.getCurrentFiltersParams();
+    const sortingParams = this.getSortingParams();
+    if (!sortingParams) return;
+
+    document.dispatchEvent(new FiltersChangedEvent(filterParams, sortingParams));
+  }
+
   getSortingParams() {
+    if (!this.sortingInput?.value) return '';
     return `sort_by=${this.sortingInput.value}`;
   }
 
@@ -70,26 +90,36 @@ class SortComponent extends HTMLElement {
 
   connectedCallback() {
     this.sortingSelect = this.querySelector('[data-ref="sorting-select"]');
+    if (!this.sortingSelect) return;
 
     this.sortingSelect.addEventListener('change', this.#onChange);
   }
 
   disconnectedCallback() {
-    this.sortingSelect.removeEventListener('change', this.#onChange);
+    this.sortingSelect?.removeEventListener('change', this.#onChange);
+  }
+
+  #isStagedContext() {
+    return Boolean(this.closest('filters-sheet-component'));
   }
 
   #onChange = (event) => {
     const sortOptionValue = event.target.value;
 
-    if (sortOptionValue) {
-      const filterParams = this.closest('filter-and-sort-component').getCurrentFiltersParams();
-      const sortingParams = this.getSortingParams();
+    if (!sortOptionValue || this.#isStagedContext()) return;
 
-      document.dispatchEvent(new FiltersChangedEvent(filterParams, sortingParams));
-    }
+    const wrapper = this.closest('filter-and-sort-component');
+    if (!wrapper) return;
+
+    const filterParams = wrapper.getCurrentFiltersParams();
+    const sortingParams = this.getSortingParams();
+    if (!sortingParams) return;
+
+    document.dispatchEvent(new FiltersChangedEvent(filterParams, sortingParams));
   };
 
   getSortingParams() {
+    if (!this.sortingSelect?.value) return '';
     return `sort_by=${this.sortingSelect.value}`;
   }
 }

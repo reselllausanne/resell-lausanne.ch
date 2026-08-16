@@ -1,0 +1,48 @@
+{% comment %}
+  Resolve taxonomy token from breadcrumb-taxonomy-map to a storefront collection URL.
+
+  @param taxonomy_handle {string}
+{% endcomment %}
+{% liquid
+  assign resolved_handle = taxonomy_handle | default: '' | strip
+  if resolved_handle == 'sneakers'
+    assign resolved_handle = 'toutes-nos-paires'
+  elsif resolved_handle == 'streetwear'
+    assign resolved_handle = 'vetements'
+  elsif resolved_handle == 'discover'
+    assign resolved_handle = 'toutes-nos-paires'
+  elsif resolved_handle == 'accessories'
+    assign resolved_handle = 'lunettes'
+  elsif resolved_handle == 'active'
+    assign resolved_handle = 'running'
+  elsif resolved_handle == 'active'
+    assign resolved_handle = 'running'
+  elsif resolved_handle == 'footwear'
+    assign resolved_handle = 'toutes-nos-paires'
+  elsif resolved_handle == 'nike-running'
+    assign resolved_handle = 'running'
+  elsif resolved_handle == 'on-running'
+    assign resolved_handle = 'on'
+  elsif resolved_handle == 'jordan'
+    assign resolved_handle = 'air-jordan'
+  elsif resolved_handle == 'objets-de-collection'
+    if collections['pop-mart'] != blank
+      assign resolved_handle = 'pop-mart'
+    elsif collections['lego'] != blank
+      assign resolved_handle = 'lego'
+    else
+      assign resolved_handle = 'pop-mart'
+    endif
+  elsif resolved_handle == 'lego'
+    assign resolved_handle = 'lego'
+  endif
+
+  assign resolved_url = ''
+  if resolved_handle != blank
+    assign resolved_collection = collections[resolved_handle]
+    if resolved_collection != blank and resolved_collection.url != blank
+      assign resolved_url = resolved_collection.url
+    endif
+  endif
+%}
+{{- resolved_url -}}

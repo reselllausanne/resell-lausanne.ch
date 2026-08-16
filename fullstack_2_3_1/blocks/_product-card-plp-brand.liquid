@@ -1,0 +1,28 @@
+{% doc %}
+  PLP product card brand (vendor).
+{% enddoc %}
+
+{% render 'product-card-plp-brand', product: closest.product %}
+
+{% schema %}
+{
+  "name": "Marque (PLP)",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:go_further"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:go_further_description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marque (PLP)",
+      "category": "t:product"
+    }
+  ]
+}
+{% endschema %}

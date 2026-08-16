@@ -1,0 +1,20 @@
+{% liquid
+  assign contact_url = routes.root_url | append: '/pages/contact'
+  if pages.contact != blank
+    assign contact_url = pages.contact.url
+  endif
+%}
+
+<div class="rl-footer-contact">
+  <h3 class="rl-footer-heading">{{ 'rl_footer.contact_heading' | t }}</h3>
+  <a class="rl-footer-contact__link" href="{{ contact_url }}">
+    <span class="rl-footer-contact__icon" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="5" width="18" height="14" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span>{{ 'rl_footer.contact_form' | t }}</span>
+  </a>
+  <p class="rl-footer-contact__note">{{ 'rl_footer.contact_note' | t }}</p>
+</div>

@@ -1,0 +1,18 @@
+{% comment %}
+  PLP multilingual registry — theme snippets with locale variants (not FR-only).
+  Extend this list when adding -en/-de snippet routers for a brand collection.
+  Usage:
+    {% render 'plp-locale-registry' %}
+    if plp_has_theme_locale_content → safe to render theme FAQ/SEO on en/de
+{% endcomment %}
+{%- liquid
+  assign plp_handle = handle | default: collection.handle | downcase
+  assign plp_has_theme_locale_content = false
+  assign plp_multilingual_handles = 'onitsuka-tiger|onitsuka|onitsuka-tokuten' | split: '|'
+  for ml_handle in plp_multilingual_handles
+    if plp_handle == ml_handle or plp_handle contains ml_handle
+      assign plp_has_theme_locale_content = true
+      break
+    endif
+  endfor
+-%}

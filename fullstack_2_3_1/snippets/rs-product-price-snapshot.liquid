@@ -1,0 +1,113 @@
+{%- doc -%}
+  Computes validated product price data for cards, PDPs, docks and schema.
+
+  Rules:
+  - Ignore available variants with effective price <= 0 when at least one paid variant exists
+  - Allow 0 only when the product is genuinely free (all available effective prices are 0)
+  - Validate compare-at only when compare_at_price > effective price and compare_at_price > 0
+
+  Output:
+  current_price|current_compare|min_price|min_compare|valid_count|show_from|genuine_free|current_present|min_present|current_variant_id|min_variant_id
+
+  @param {product} product
+{%- enddoc -%}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign current_price = blank
+  assign current_compare = 0
+  assign current_present = false
+  assign current_variant_id = ''
+  assign min_price = blank
+  assign min_compare = 0
+  assign min_present = false
+  assign min_variant_id = ''
+  assign valid_positive_count = 0
+  assign valid_zero_count = 0
+
+  for variant in product.variants
+    unless variant.available
+      continue
+    endunless
+
+    capture effective_price_raw
+      render 'rs-variant-effective-price', variant: variant
+    endcapture
+    assign effective_price = effective_price_raw | strip | plus: 0
+    assign validated_compare = 0
+    if variant.compare_at_price > effective_price and variant.compare_at_price > 0
+      assign validated_compare = variant.compare_at_price
+    endif
+
+    if effective_price > 0
+      assign valid_positive_count = valid_positive_count | plus: 1
+      if min_present == false or effective_price < min_price
+        assign min_price = effective_price
+        assign min_compare = validated_compare
+        assign min_present = true
+        assign min_variant_id = variant.id
+      endif
+    elsif effective_price == 0
+      assign valid_zero_count = valid_zero_count | plus: 1
+      if min_present == false
+        assign min_price = 0
+        assign min_compare = 0
+        assign min_present = true
+        assign min_variant_id = variant.id
+      endif
+    endif
+
+    if current_variant != blank and variant.id == current_variant.id
+      assign current_price = effective_price
+      assign current_compare = validated_compare
+      assign current_present = true
+      assign current_variant_id = variant.id
+    endif
+  endfor
+
+  assign genuine_free = false
+  if valid_positive_count == 0 and valid_zero_count > 0
+    assign genuine_free = true
+  endif
+
+  if genuine_free == false and valid_positive_count > 0
+    if current_present and current_price <= 0
+      assign current_present = false
+      assign current_price = blank
+      assign current_compare = 0
+      assign current_variant_id = ''
+    endif
+  endif
+
+  if genuine_free
+    assign valid_count = valid_zero_count
+    assign min_price = 0
+    assign min_compare = 0
+    assign min_present = true
+    if current_present == false
+      assign current_price = 0
+      assign current_compare = 0
+      assign current_present = true
+    endif
+  else
+    assign valid_count = valid_positive_count
+    if min_present and min_price <= 0
+      assign min_present = false
+      assign min_price = blank
+      assign min_compare = 0
+      assign min_variant_id = ''
+    endif
+    if current_present == false and min_present
+      assign current_price = min_price
+      assign current_compare = min_compare
+      assign current_present = true
+      assign current_variant_id = min_variant_id
+    endif
+  endif
+
+  assign show_from = false
+  if valid_count > 1
+    assign show_from = true
+  endif
+-%}
+{%- if current_present -%}{{ current_price }}{%- endif -%}|{{ current_compare }}|{%- if min_present -%}{{ min_price }}{%- endif -%}|{{ min_compare }}|{{ valid_count }}|{%- if show_from -%}1{%- else -%}0{%- endif -%}|{%- if genuine_free -%}1{%- else -%}0{%- endif -%}|{%- if current_present -%}1{%- else -%}0{%- endif -%}|{%- if min_present -%}1{%- else -%}0{%- endif -%}|{{ current_variant_id }}|{{ min_variant_id }}

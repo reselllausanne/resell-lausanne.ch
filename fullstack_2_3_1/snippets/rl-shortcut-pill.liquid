@@ -1,0 +1,24 @@
+{% doc %}
+  Renders one shortcut pill with optional thumbnail.
+
+  @param {string} title - Shortcut title
+  @param {string} url - Shortcut URL
+  @param {image} [image] - Optional shortcut image
+{% enddoc %}
+
+{% if title != blank and url != blank %}
+  <a class="rl-shortcut-pill" href="{{ url }}">
+    <span class="rl-shortcut-pill__thumb" aria-hidden="true">
+      {% if image != blank %}
+        {{
+          image
+          | image_url: width: 120
+          | image_tag: loading: 'lazy', widths: '60,90,120', sizes: '40px', alt: title
+        }}
+      {% else %}
+        <span class="rl-shortcut-pill__thumb-placeholder"></span>
+      {% endif %}
+    </span>
+    <span class="rl-shortcut-pill__label">{{ title }}</span>
+  </a>
+{% endif %}

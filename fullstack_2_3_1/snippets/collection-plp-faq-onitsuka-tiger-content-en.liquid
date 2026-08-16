@@ -1,0 +1,42 @@
+{%- liquid
+  capture faq_returns_url
+    render 'rl-localized-path', path: '/pages/faq?category=echanges-et-retours'
+  endcapture
+  assign faq_returns_url = faq_returns_url | strip
+-%}
+<details class="main-collection__faq-item">
+  <summary>Are the Onitsuka Tiger sneakers sold on Resell Lausanne authentic?</summary>
+  <div class="rte">
+    <p>Yes. Every Onitsuka Tiger pair (Mexico 66, Tokuten, Serrano, California 78, Mexico 66 SD) is checked by our team and shipped with a certificate of authenticity.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>What size should I choose for Onitsuka Tiger Mexico 66?</summary>
+  <div class="rte">
+    <p>Mexico 66 fits true to size or slightly large. If you are between sizes, go half a size down. Otherwise, choose your usual EU size.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>What is the difference between Mexico 66 and Mexico 66 SD?</summary>
+  <div class="rte">
+    <p>Mexico 66 uses standard synthetic leather. Mexico 66 SD (Super Deluxe) uses premium materials: nubuck leather, Japanese suede, leather lining and finer finishing.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Which Onitsuka Tiger collaborations do you stock?</summary>
+  <div class="rte">
+    <p>We regularly source Onitsuka Tiger × Naked Copenhagen, Mihara Yasuhiro, Andrea Pompilio, Sanrio (Hello Kitty) and Cecilie Bahnsen collaborations.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>How long does delivery take for an Onitsuka Tiger order?</summary>
+  <div class="rte">
+    <p>Standard delivery takes 5 to 10 business days in Switzerland and Europe, or 2 to 5 business days with express shipping on eligible products.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Can I return a pair of Onitsuka Tiger sneakers?</summary>
+  <div class="rte">
+    <p>Returns within 14 days as exchange or store credit (10% fee). See our <a href="{{ faq_returns_url }}">Exchanges &amp; returns FAQ</a> for full terms.</p>
+  </div>
+</details>

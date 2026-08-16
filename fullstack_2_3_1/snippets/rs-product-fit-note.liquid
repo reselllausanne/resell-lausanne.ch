@@ -1,0 +1,65 @@
+{%- doc -%}
+  Product fit / size note for PDP size selector and modal.
+
+  Admin fields (first match wins):
+  - custom.size_guide_note ("Size guide note" — rich text in admin)
+  - custom.fit_note ("Fit note" — multi-line text)
+  - custom.size_fit_note (SEO system alias)
+
+  LEGO / sealed collectibles: "Produit scelé et neuf" — no size guide link on PDP.
+{%- enddoc -%}
+
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+
+  if locale_base == 'fr'
+    assign rs_fit_default = 'Ce modèle taille normalement'
+  elsif locale_base == 'de'
+    assign rs_fit_default = 'Dieses Modell fällt normal aus'
+  else
+    assign rs_fit_default = 'This model fits true to size'
+  endif
+
+  capture rs_is_sealed_flag
+    render 'rs-product-is-sealed-collectible', product: product
+  endcapture
+  if rs_is_sealed_flag != blank
+    assign rs_fit_note = 'products.pdp.size_modal.lego_fit_note' | t
+    echo rs_fit_note
+  else
+    assign rs_fit_note = rs_fit_default
+    assign rs_fit_custom = blank
+
+  if product.metafields.custom.size_guide_note != blank
+    capture rs_fit_custom
+      echo product.metafields.custom.size_guide_note | metafield_tag
+    endcapture
+    assign rs_fit_custom = rs_fit_custom | strip_html | strip
+  endif
+
+  if rs_fit_custom == blank
+    capture rs_fit_custom
+      render 'rs-metafield-text', metafield: product.metafields.custom.fit_note
+    endcapture
+    assign rs_fit_custom = rs_fit_custom | strip
+  endif
+
+  if rs_fit_custom == blank
+    capture rs_fit_custom
+      render 'rs-metafield-text', metafield: product.metafields.custom.size_fit_note
+    endcapture
+    assign rs_fit_custom = rs_fit_custom | strip
+  endif
+
+  if rs_fit_custom != blank
+    assign rs_fit_note = rs_fit_custom
+  endif
+
+  assign rs_fit_note_legacy = rs_fit_note | append: '' | strip | downcase
+  if rs_fit_note_legacy == 'take your usual size.' or rs_fit_note_legacy == 'take your usual size' or rs_fit_note_legacy == 'prenez votre taille normal' or rs_fit_note_legacy == 'prenez votre taille normale'
+    assign rs_fit_note = rs_fit_default
+  endif
+  echo rs_fit_note
+  endif
+-%}

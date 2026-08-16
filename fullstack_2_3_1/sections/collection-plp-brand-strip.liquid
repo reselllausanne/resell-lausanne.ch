@@ -1,0 +1,207 @@
+{% comment %}
+  Deprecated: use section `collection-plp-header` instead.
+{% endcomment %}
+<div class="collection-plp-brand-strip-legacy page-width" style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;">
+  {% render 'collection-plp-brand-chips',
+    strip_settings: section.settings,
+    strip_blocks: section.blocks
+  %}
+</div>
+
+{% stylesheet %}
+  .collection-plp-brand-chips {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .collection-plp-brand-chips__scroller {
+    cursor: grab;
+    touch-action: pan-x;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-left: calc(-1 * var(--page-x));
+    padding-left: var(--page-x);
+    padding-right: var(--page-x);
+    box-sizing: border-box;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .collection-plp-brand-chips__scroller:active {
+    cursor: grabbing;
+  }
+
+  .collection-plp-brand-chips__scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .collection-plp-brand-chips__track {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 2px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--grid-gap);
+    width: max-content;
+    min-width: min-content;
+  }
+
+  .collection-plp-brand-chips__item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .collection-plp-brand-chips__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 10px;
+    box-sizing: border-box;
+    width: auto;
+    min-width: max-content;
+    min-height: 44px;
+    padding: 1px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #080808;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: border-color 0.2s ease;
+    flex-shrink: 0;
+    touch-action: pan-x;
+  }
+
+  .collection-plp-brand-chips__chip:hover {
+    border-color: #999;
+  }
+
+  .collection-plp-brand-chips__chip:focus-visible {
+    outline: 2px solid #080808;
+    outline-offset: 2px;
+  }
+
+  .collection-plp-brand-chips__chip.is-active {
+    border-color: #080808;
+    box-shadow: inset 0 0 0 1px #080808;
+  }
+
+  .collection-plp-brand-chips__chip--text-only {
+    padding-inline: 14px;
+  }
+
+  .collection-plp-brand-chips__chip--static {
+    cursor: default;
+  }
+
+  .collection-plp-brand-chips__media {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    overflow: hidden;
+  }
+
+  .collection-plp-brand-chips__media:empty {
+    display: none;
+  }
+
+  .collection-plp-brand-chips__media img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .collection-plp-brand-chips__label {
+    flex: 0 0 auto;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection marques (PLP)",
+  "tag": "section",
+  "class": "section-collection-plp-brand-strip",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "only_on_all_collection",
+      "label": "Afficher uniquement sur Toutes nos paires (/collections/all)",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "brand_menu",
+      "label": "Menu marques (prioritaire)"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Libellé accessibilité",
+      "default": "Filtrer par marque"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "additional_class",
+      "label": "Additional CSS class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Marque",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Label", "default": "Nike" },
+        { "type": "url", "id": "link", "label": "Lien collection" },
+        { "type": "image_picker", "id": "image", "label": "Logo (optionnel)" },
+        { "type": "text", "id": "image_asset", "label": "Theme asset filename (optional)" },
+        { "type": "text", "id": "image_url", "label": "URL logo (fallback)" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Collection marques (PLP)" }]
+}
+{% endschema %}

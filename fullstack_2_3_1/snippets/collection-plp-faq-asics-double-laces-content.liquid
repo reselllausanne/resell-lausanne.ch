@@ -1,0 +1,42 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Les ASICS Gel-NYC double lacets sur Resell Lausanne sont-elles authentiques ?</summary>
+  <div class="rte">
+    <p>Oui. Chaque paire ASICS Gel-NYC double lacets est vérifiée par notre équipe (mesh, overlays, semelle Gel, étiquette style, lacets) et livrée avec certificat d'authenticité.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelle est la différence entre ASICS double lacets et Gel-NYC standard ?</summary>
+  <div class="rte">
+    <p>Les éditions double lacets incluent deux jeux de lacets (souvent contrastés) sur la même silhouette Gel-NYC. La base technique (semelle Gel, mesh, overlays) est identique à la Gel-NYC classique.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quelle taille choisir pour une ASICS Gel-NYC double lacets ?</summary>
+  <div class="rte">
+    <p>La Gel-NYC taille en général normalement à légèrement grand. Prenez votre taille EU habituelle ; en demi-pointure, la demi-pointure inférieure peut être plus confortable.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quels coloris ASICS rose double lacets avez-vous en stock ?</summary>
+  <div class="rte">
+    <p>Nous sourçons régulièrement Cream Rose Water, Cream Sweet Pink, Mineral Beige Pink et autres coloris rose/pink selon disponibilité. Consultez la page pour les tailles EU disponibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Quel est le délai de livraison pour une commande ASICS double lacets ?</summary>
+  <div class="rte">
+    <p>Livraison standard 5 à 10 jours ouvrables en Suisse et en Europe, ou 2 à 5 jours ouvrables en express sur produits éligibles.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Puis-je retourner une paire ASICS Gel-NYC double lacets ?</summary>
+  <div class="rte">
+    <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
+  </div>
+</details>

@@ -1,0 +1,15 @@
+{% doc %}
+  Renders one trust signal item.
+
+  @param {string} text - Trust message text
+  @param {string} [icon] - Optional icon name from icon snippet
+{% enddoc %}
+
+{% if text != blank %}
+  <li class="landing-trust-item">
+    <span class="landing-trust-item__icon" aria-hidden="true">
+      {% render 'icon', icon: icon | default: 'verified' %}
+    </span>
+    <span class="landing-trust-item__text">{{ text }}</span>
+  </li>
+{% endif %}

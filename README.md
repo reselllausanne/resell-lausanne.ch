@@ -149,6 +149,50 @@ For CSS and JavaScript, we recommend using the [`{% stylesheet %}`](https://shop
 
 The Skeleton Theme explicitly separates essential CSS necessary for every page into a dedicated `critical.css` file.
 
+## FAQ seed script (collections)
+
+Idempotent seed for `collection.metafields.custom.collection_faq_items` (consumed by [`fullstack_2_3_1/sections/main-collection.liquid`](./fullstack_2_3_1/sections/main-collection.liquid) and [`fullstack_2_3_1/snippets/meta-tags.liquid`](./fullstack_2_3_1/snippets/meta-tags.liquid)).
+
+### Prereqs
+
+- Node 18+ (native `fetch`).
+- Admin app token with scopes: `read_metaobjects`, `write_metaobjects`, `read_products`, `write_products`.
+- Metaobject definition `faq_item` exists with fields `question` (single line) and `answer` (rich text).
+
+### Env
+
+Create `.env` at repo root:
+
+```
+SHOP=resell-lausanne.myshopify.com
+SHOPIFY_ADMIN_TOKEN=shpat_xxxxxxxxxxxxxxxx
+# Optional: override Admin API version
+# SHOPIFY_API_VERSION=2025-01
+```
+
+### Commands
+
+```bash
+node --env-file=.env faq-seed.mjs --dry-run             # preflight only, no writes
+node --env-file=.env faq-seed.mjs --brand=adidas        # single brand
+node --env-file=.env faq-seed.mjs                       # all brands
+node --env-file=.env faq-seed.mjs --brand=adidas --dry-run
+```
+
+### Re-runs
+
+Safe. Uses `metaobjectUpsert` with deterministic handles (`<brand>-faq-<n>`) and `metafieldsSet` to overwrite the collection list. No duplicate metaobjects on relance.
+
+### Adding a brand
+
+Append to `BRANDS` in [`faq-seed.mjs`](./faq-seed.mjs):
+
+```js
+{ collectionHandle: "crocs", label: "Crocs" },
+```
+
+For brand-specific FAQs, replace the `faqTemplate(b.label)` call with a custom array for that entry.
+
 ## Contributing
 
 We're excited for your contributions to the Skeleton Theme! This repository aims to remain as lean, lightweight, and fundamental as possible, and we kindly ask your contributions to align with this intention.

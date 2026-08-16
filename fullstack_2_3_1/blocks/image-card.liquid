@@ -79,7 +79,9 @@
           widths: widths,
           height: block.settings.image.height,
           alt: block.settings.image.alt,
-          sizes: sizes
+          sizes: sizes,
+          loading: 'lazy',
+          decoding: 'async'
       }}
     {% else %}
       {% assign default_alt = 'placeholder.placeholder_banner_alt' | t %}

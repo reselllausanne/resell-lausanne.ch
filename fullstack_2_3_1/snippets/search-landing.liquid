@@ -1,0 +1,286 @@
+{%- liquid
+  assign landing_disabled = false
+  if section.settings.search_show_landing == false
+    assign landing_disabled = true
+  endif
+  if context == 'search_page'
+    assign landing_disabled = false
+  endif
+-%}
+{%- unless landing_disabled -%}
+  {%- liquid
+    assign search_base_url = routes.search_url | default: '/search'
+    assign recent_heading = 'search.landing_recent' | t
+    assign popular_heading = 'search.landing_popular' | t
+
+    assign popular_raw = section.settings.search_popular_lines | strip
+  -%}
+  {%- if popular_raw == blank -%}
+    {%- capture popular_raw -%}Nike x Travis Scott|{{ search_base_url }}?q=Nike+x+Travis+Scott
+Air Jordan 4|{{ search_base_url }}?q=Air+Jordan+4
+Essentials Fear of God|{{ search_base_url }}?q=Essentials+Fear+of+God{%- endcapture -%}
+  {%- endif -%}
+  {%- liquid
+    assign promo_url = section.settings.search_promo_url
+    assign promo_image = section.settings.search_promo_image
+    assign promo_cta = 'search.landing_promo_cta' | t
+    assign promo_title = 'search.landing_promo_title' | t
+    if promo_url == blank
+      assign rl_travis_collection = collections['air-jordan-x-travis-scott']
+      if rl_travis_collection != blank and rl_travis_collection.url != blank
+        assign promo_url = rl_travis_collection.url
+      else
+        assign promo_url = routes.root_url | append: '/collections/air-jordan-x-travis-scott'
+      endif
+    endif
+
+    assign show_promo = false
+    if promo_url != blank
+      if promo_image != blank
+        assign show_promo = true
+      elsif context == 'search_page'
+        assign show_promo = true
+      endif
+    endif
+  -%}
+  <div
+    class="search-landing"
+    data-ref="search-landing"
+  >
+    <div class="search-landing__inner">
+      <div class="search-landing__cols">
+        <div class="search-landing__block search-landing__block--recent" data-ref="search-landing-recent-wrap" hidden>
+          <h3 class="search-landing__title">{{ recent_heading }}</h3>
+          <ul class="search-landing__list" data-ref="search-landing-recent-list"></ul>
+        </div>
+
+        {%- if popular_raw != blank -%}
+          <div class="search-landing__block search-landing__block--popular">
+            <h3 class="search-landing__title">{{ popular_heading }}</h3>
+            <ul class="search-landing__list">
+              {%- assign popular_lines = popular_raw | split: '
+' -%}
+              {%- for line in popular_lines -%}
+                {%- assign line_strip = line | strip -%}
+                {%- if line_strip != blank -%}
+                  {%- assign parts = line_strip | split: '|' -%}
+                  {%- assign chip_label = parts[0] | strip -%}
+                  {%- assign chip_href = parts[1] | strip -%}
+                  {%- assign chip_href_head = chip_href | slice: 0, 7 -%}
+                  {%- if chip_href != blank and chip_href contains '/search' and chip_href_head == '/search' -%}
+                    {%- assign chip_href = chip_href | replace_first: '/search', search_base_url -%}
+                  {%- endif -%}
+                  {%- if chip_label != blank -%}
+                    <li class="search-landing__item">
+                      {%- if chip_href != blank -%}
+                        <a href="{{ chip_href }}" class="search-landing__chip">{{ chip_label }}</a>
+                      {%- else -%}
+                        <button type="button" class="search-landing__chip" data-search-chip="{{ chip_label | escape }}">
+                          {{ chip_label }}
+                        </button>
+                      {%- endif -%}
+                    </li>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if show_promo -%}
+        <div class="search-landing__promo">
+          {%- if promo_image != blank -%}
+            <a class="search-landing__promo-visual" href="{{ promo_url }}">
+              {{
+                promo_image
+                | image_url: width: 800
+                | image_tag: loading: 'lazy', class: 'search-landing__promo-img', widths: '400, 800', sizes: '(min-width: 750px) 360px, 100vw'
+              }}
+            </a>
+          {%- endif -%}
+          <div class="search-landing__promo-body">
+            {%- if promo_title != blank -%}
+              <p class="search-landing__promo-title">{{ promo_title }}</p>
+            {%- endif -%}
+            <a class="search-landing__promo-cta" href="{{ promo_url }}">
+              {{ promo_cta }}
+            </a>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endunless -%}
+
+{% stylesheet %}
+  .search-landing {
+    width: 100%;
+    padding-top: 1.25rem;
+    margin-top: 0.25rem;
+  }
+
+  .search-landing__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .search-landing__cols {
+    display: grid;
+    gap: 2rem;
+  }
+
+  @media (width >= 750px) {
+    .search-landing__cols {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .search-landing__inner:has(.search-landing__promo) .search-landing__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .search-landing__inner:has(.search-landing__promo) {
+      display: grid;
+      grid-template-columns: 1fr 1fr minmax(200px, 0.85fr);
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .search-landing__inner:has(.search-landing__promo) .search-landing__promo {
+      grid-column: 3;
+      grid-row: 1;
+      padding-top: 0;
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .search-landing__title {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: #080808;
+  }
+
+  .search-landing__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .search-landing__item {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .search-landing__chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #080808;
+    font: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: left;
+    transition: color 0.15s ease;
+  }
+
+  .search-landing__chip:hover {
+    color: #4d4d4d;
+  }
+
+  .search-landing__chip-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #999;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .search-landing__chip-remove:hover {
+    background: #f0f0f0;
+    color: #080808;
+  }
+
+  .search-landing__promo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 1rem;
+    align-items: center;
+    padding-top: 0.25rem;
+  }
+
+  @media (width < 600px) {
+    .search-landing__promo {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .search-landing__promo-visual {
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f5f5f5;
+  }
+
+  .search-landing__promo-img {
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    display: block;
+  }
+
+  .search-landing__promo-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .search-landing__promo-title {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    color: #080808;
+  }
+
+  .search-landing__promo-cta {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #080808;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    width: max-content;
+  }
+
+  .search-landing__promo-cta:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .rl-search-dropdown .search-landing {
+    padding-top: 0.75rem;
+    margin-top: 0;
+  }
+
+  .rl-search-dropdown .search-landing__promo {
+    grid-template-columns: 1fr;
+  }
+{% endstylesheet %}

@@ -5,20 +5,6 @@
   {% content_for 'blocks' %}
 </div>
 
-{% stylesheet %}
-  .cart-header-blocks {
-    margin-top: var(--margin-top);
-    margin-bottom: var(--margin-bottom);
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-sm);
-  }
-
-  .cart-drawer .cart-header-blocks:not(.card) > div:first-of-type {
-    margin-top: var(--padding-md);
-  }
-{% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:cart_header_blocks",

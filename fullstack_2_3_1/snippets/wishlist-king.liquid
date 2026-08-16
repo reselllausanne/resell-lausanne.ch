@@ -1,0 +1,25 @@
+{% comment %}
+  Swish (Wishlist King) page embed.
+  Requires App embeds active in Theme Editor: App Settings + Wishlist Page.
+  Set Swish wishlist path to /pages/liste-de-souhaits in app settings (store page handle).
+{% endcomment %}
+
+{% liquid
+  if empty_link != blank
+    assign rl_wk_empty_link = empty_link
+  else
+    assign rl_wk_empty_link = routes.root_url | append: '/collections/all'
+  endif
+%}
+
+<wishlist-page
+  show-product-title
+  show-price
+  {% if show_vendor %}show-vendor{% endif %}
+  {% if show_share_button %}show-share-button{% endif %}
+  {% if show_buy_all_button %}show-buy-all-button{% endif %}
+  cta-button="{{ cta_button | default: 'add-to-cart' }}"
+  product-options="{{ product_options | default: 'dropdowns' }}"
+  {% if move_to_cart %}move-to-cart{% endif %}
+  wishlist-empty-link="{{ rl_wk_empty_link }}"
+></wishlist-page>

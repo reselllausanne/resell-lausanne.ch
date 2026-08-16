@@ -1,0 +1,57 @@
+{% doc %}
+  Top hero for drawer submenu panels.
+
+  Priority: hero_image (image object) → hero_filename (Shopify Files) → collection featured (link only).
+
+  Upload images in Admin → Content → Files using an explicit filename in hero_filename.
+  No auto menu-{panel_id}.jpg — avoids empty/broken hero slots.
+
+  @param {boolean} [show_hero] - Show hero block
+  @param {link} [link] - Navigation link for collection featured fallback
+  @param {string} [title] - Alt text
+  @param {image} [hero_image] - Optional image override
+  @param {string} [hero_filename] - Shopify Files filename, e.g. menu-demo-sneakers.jpg
+{% enddoc %}
+
+{% if show_hero %}
+  {% liquid
+    assign panel_hero = hero_image
+    assign panel_title = title | default: ''
+    assign panel_hero_src = blank
+    assign resolved_filename = hero_filename | strip
+
+    if panel_hero == blank and resolved_filename != blank
+      assign panel_hero_src = resolved_filename | file_url
+    endif
+
+    unless panel_hero != blank or panel_hero_src != blank
+      if link != blank
+        if link.type == 'collection_link' and link.object != blank and link.object.featured_image != blank
+          assign panel_hero = link.object.featured_image
+        elsif link.type == 'product_link' and link.object != blank and link.object.featured_image != blank
+          assign panel_hero = link.object.featured_image
+        elsif link.type == 'article_link' and link.object != blank and link.object.image != blank
+          assign panel_hero = link.object.image
+        endif
+      endif
+    endunless
+  %}
+
+  {% if panel_hero != blank or panel_hero_src != blank %}
+    <div class="header__mobile-menu-panel-hero" data-panel-hero>
+      {% if panel_hero != blank %}
+        {{ panel_hero | image_url: width: 900 | image_tag: loading: 'eager', fetchpriority: 'high', alt: panel_title, class: 'header__mobile-menu-panel-hero-image' }}
+      {% else %}
+        <img
+          src="{{ panel_hero_src }}"
+          alt="{{ panel_title | escape }}"
+          width="900"
+          height="675"
+          loading="eager"
+          fetchpriority="high"
+          class="header__mobile-menu-panel-hero-image"
+        >
+      {% endif %}
+    </div>
+  {% endif %}
+{% endif %}

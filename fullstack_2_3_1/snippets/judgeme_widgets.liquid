@@ -1,0 +1,61 @@
+{% comment %}
+  Judge.me widgets — push-safe implementation.
+
+  Why this file exists:
+  - App embeds and app-injected snippets often get reset by theme pushes.
+  - This snippet reads Judge.me metafields server-side so stars/reviews survive pushes.
+{% endcomment %}
+
+{% liquid
+  assign jm_type = widget_type | default: ''
+  assign jm_product = product | default: closest.product
+%}
+
+{% case jm_type %}
+  {% when 'judgeme_review_widget' %}
+    {% if jm_product != blank %}
+      {% assign jm_widget = jm_product.metafields.judgeme.widget %}
+      {% if jm_widget != blank %}
+        {{ jm_widget }}
+      {% else %}
+        <div
+          class="jdgm-widget jdgm-review-widget"
+          data-id="{{ jm_product.id }}"
+          data-auto-install="{% if concierge_install %}true{% else %}false{% endif %}"
+        ></div>
+      {% endif %}
+    {% endif %}
+
+  {% when 'judgeme_preview_badge' %}
+    {% if jm_product != blank %}
+      {% assign jm_badge = jm_product.metafields.judgeme.badge %}
+      {% if jm_badge != blank %}
+        {{ jm_badge }}
+      {% else %}
+        <div
+          class="jdgm-widget jdgm-preview-badge"
+          data-id="{{ jm_product.id }}"
+          data-auto-install="{% if concierge_install %}true{% else %}false{% endif %}"
+        ></div>
+      {% endif %}
+    {% endif %}
+
+  {% when 'judgeme_all_reviews_rating' %}
+    {% assign jm_rating = shop.metafields.judgeme.all_reviews_rating.value | default: shop.metafields.judgeme.all_reviews_rating %}
+    {% if jm_rating != blank %}
+      <span class="jdgm-widget jdgm-all-reviews-rating">{{ jm_rating }}</span>
+    {% else %}
+      <div class="jdgm-widget jdgm-all-reviews-rating" data-auto-install="{% if concierge_install %}true{% else %}false{% endif %}"></div>
+    {% endif %}
+
+  {% when 'judgeme_all_reviews_count' %}
+    {% assign jm_count = shop.metafields.judgeme.all_reviews_count.value | default: shop.metafields.judgeme.all_reviews_count %}
+    {% if jm_count != blank %}
+      <span class="jdgm-widget jdgm-all-reviews-count">{{ jm_count }}</span>
+    {% else %}
+      <div class="jdgm-widget jdgm-all-reviews-count" data-auto-install="{% if concierge_install %}true{% else %}false{% endif %}"></div>
+    {% endif %}
+
+  {% else %}
+    {% comment %} Unknown widget type — no output {% endcomment %}
+{% endcase %}

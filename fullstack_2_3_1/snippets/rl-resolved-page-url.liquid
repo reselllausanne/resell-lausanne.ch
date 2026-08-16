@@ -1,0 +1,20 @@
+{% comment %}
+  Locale-aware page URL — prefers Admin page object, falls back to rl-localized-path.
+
+  @param handle {string} - Page handle without /pages/ prefix
+{% endcomment %}
+{% liquid
+  assign page_handle = handle | default: '' | strip
+  assign resolved_page_url = ''
+
+  if page_handle != blank and pages[page_handle] != blank and pages[page_handle].url != blank
+    assign resolved_page_url = pages[page_handle].url
+  elsif page_handle != blank
+    assign page_path = '/pages/' | append: page_handle
+    capture resolved_page_url
+      render 'rl-localized-path', path: page_path
+    endcapture
+    assign resolved_page_url = resolved_page_url | strip
+  endif
+%}
+{{- resolved_page_url -}}

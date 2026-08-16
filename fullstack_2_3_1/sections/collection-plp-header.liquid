@@ -1,0 +1,330 @@
+{%- liquid
+  assign show_header = section.settings.show_heading
+  assign show_brand_strip = section.settings.show_brand_strip
+  assign seo_collection_title = collection.title
+  assign seo_collection_intro = collection.metafields.custom.seo_intro.value | default: collection.metafields.custom.seo_intro
+  assign seo_h1_metafield = collection.metafields.custom.seo_h1.value | default: collection.metafields.custom.seo_h1
+  assign _rl_handle = collection.handle | downcase
+
+  assign brand_strip_qs = ''
+  assign raw_query_string = request.query_string | default: '' | downcase
+  if raw_query_string contains 'brand_strip=other'
+    assign brand_strip_qs = 'other'
+  endif
+
+  assign autres_marques_title = 'Autres marques'
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign is_fr_locale = false
+  if locale_base == 'fr'
+    assign is_fr_locale = true
+  endif
+  if locale_base == 'de'
+    assign autres_marques_title = 'Weitere Marken'
+  elsif locale_base == 'en'
+    assign autres_marques_title = 'Other brands'
+  endif
+
+  assign is_autres_marques_view = false
+  if _rl_handle == 'autres-marques' or _rl_handle == 'autres-marques-sneakers'
+    assign is_autres_marques_view = true
+  elsif brand_strip_qs == 'other'
+    if _rl_handle == 'toutes-nos-paires' or _rl_handle == 'all' or _rl_handle == 'nouveautes'
+      assign is_autres_marques_view = true
+    endif
+  endif
+
+  if is_autres_marques_view
+    assign seo_collection_title = autres_marques_title
+  elsif seo_h1_metafield != blank
+    assign seo_collection_title = seo_h1_metafield
+  endif
+
+  if is_autres_marques_view
+    assign seo_collection_intro = blank
+  endif
+
+  assign collection_tax_labels_path = ''
+  assign collection_tax_handles_path = ''
+  capture collection_taxonomy_payload
+    render 'collection-breadcrumb-resolve'
+  endcapture
+  assign collection_taxonomy_payload = collection_taxonomy_payload | strip
+  if collection_taxonomy_payload contains '###'
+    assign collection_tax_labels_path = collection_taxonomy_payload | split: '###' | first | strip
+    assign collection_tax_handles_path = collection_taxonomy_payload | split: '###' | last | strip
+  endif
+-%}
+{%- unless is_autres_marques_view -%}
+  {%- if seo_collection_title == collection.title and seo_h1_metafield == blank -%}
+    {%- capture plp_header_payload -%}
+      {%- render 'plp-collection-header-copy', locale_base: locale_base -%}
+    {%- endcapture -%}
+    {%- assign plp_header_title = plp_header_payload | split: '|||' | first | strip -%}
+    {%- assign plp_header_intro_fallback = plp_header_payload | split: '|||' | last | strip -%}
+    {%- if plp_header_title != blank -%}
+      {%- assign seo_collection_title = plp_header_title -%}
+    {%- endif -%}
+    {%- if seo_collection_intro == blank and plp_header_intro_fallback != blank -%}
+      {%- assign seo_collection_intro = plp_header_intro_fallback -%}
+    {%- endif -%}
+  {%- elsif seo_collection_intro == blank -%}
+    {%- capture plp_header_payload -%}
+      {%- render 'plp-collection-header-copy', locale_base: locale_base -%}
+    {%- endcapture -%}
+    {%- assign plp_header_intro_fallback = plp_header_payload | split: '|||' | last | strip -%}
+    {%- if plp_header_intro_fallback != blank -%}
+      {%- assign seo_collection_intro = plp_header_intro_fallback -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endunless -%}
+
+<div
+  class="collection-plp-header color-{{ section.settings.color_scheme }}{% if section.settings.additional_class != blank %} {{ section.settings.additional_class }}{% endif %}"
+  style="
+    --padding-top: {{ section.settings.padding_top }}px;
+    --padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="collection-plp-header__inner page-width">
+    {% if show_header %}
+      <header class="collection-plp-header__title-block" data-commerce-collection-header>
+        {% render 'collection-breadcrumb-nav',
+          breadcrumb_labels_path: collection_tax_labels_path,
+          breadcrumb_handles_path: collection_tax_handles_path
+        %}
+        <h1 class="collection-plp-header__title">{{ seo_collection_title }}</h1>
+        {%- unless is_autres_marques_view or current_page != 1 -%}
+          {%- if collection.metafields.custom.seo_intro != blank -%}
+            {% capture seo_collection_intro_html %}
+              {% render 'metaobject-rich-text', source: collection.metafields.custom.seo_intro %}
+            {% endcapture %}
+            {% assign seo_collection_intro_html = seo_collection_intro_html | strip %}
+            {%- if seo_collection_intro_html != blank -%}
+              <div class="collection-plp-header__intro rte">{{ seo_collection_intro_html }}</div>
+            {%- endif -%}
+          {%- elsif seo_collection_intro != blank -%}
+            <p class="collection-plp-header__intro">{{ seo_collection_intro }}</p>
+          {%- endif -%}
+        {%- endunless -%}
+      </header>
+    {% endif %}
+
+    {% if show_brand_strip %}
+      {% liquid
+        assign plp_catalog_handles = 'toutes-nos-paires,all,nouveautes,autres-marques,autres-marques-sneakers' | split: ','
+        assign use_menu_brand_strip = false
+        for catalog_handle in plp_catalog_handles
+          if collection.handle == catalog_handle
+            assign use_menu_brand_strip = true
+            break
+          endif
+        endfor
+        if is_autres_marques_view
+          assign use_menu_brand_strip = true
+        endif
+      %}
+      {% if use_menu_brand_strip %}
+        {% render 'collection-plp-brand-chips', strip_settings: section.settings, strip_blocks: section.blocks %}
+      {% else %}
+        {% render 'collection-plp-subcollection-chips', strip_settings: section.settings %}
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection en-tête PLP",
+  "tag": "section",
+  "class": "section-collection-plp-header",
+  "enabled_on": {
+    "templates": ["collection"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Afficher fil d'Ariane et titre",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brand_strip",
+      "label": "Afficher le sélecteur de collections",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sync_with_menu_drawer",
+      "label": "Synchroniser avec le menu Sneakers (drawer)",
+      "info": "Obsolète — le sélecteur affiche les sous-collections de la marque courante.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "only_on_all_collection",
+      "label": "Afficher sur /collections/all et pages marque liées",
+      "info": "Obsolète — le sélecteur s'affiche sur les pages marque avec sous-collections.",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "brand_menu",
+      "label": "Menu marques (prioritaire)",
+      "info": "Si vide, les blocs Marque ci-dessous sont utilisés."
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Libellé accessibilité (sélecteur marques)",
+      "default": "Filtrer par collection"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "additional_class",
+      "label": "Additional CSS class"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Marque",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Label",
+          "default": "Nike"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo (optionnel)"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Theme asset filename (optional)",
+          "info": "Used when Image is empty, e.g. plp-brand-chip-nike.webp."
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "URL logo (si pas d'image Shopify)",
+          "info": "Fallback only if Image and Theme asset are empty."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection en-tête PLP",
+      "blocks": [
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Air Jordan",
+            "link": "/collections/air-jordan",
+            "image_asset": "plp-brand-chip-air-jordan.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Nike",
+            "link": "/collections/nike",
+            "image_asset": "plp-brand-chip-nike.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Asics",
+            "link": "/collections/asics",
+            "image_asset": "plp-brand-chip-asics.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Yeezy",
+            "link": "/collections/yeezy",
+            "image_asset": "plp-brand-chip-yeezy.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "New Balance",
+            "link": "/collections/new-balance",
+            "image_asset": "plp-brand-chip-new-balance.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Maison Mihara",
+            "link": "/collections/maison-mihara",
+            "image_asset": "plp-brand-chip-maison-mihara.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Crocs",
+            "link": "/collections/crocs",
+            "image_asset": "plp-brand-chip-adidas.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Mizuno",
+            "link": "/collections/mizuno",
+            "image_asset": "plp-brand-chip-puma.webp"
+          }
+        },
+        {
+          "type": "brand",
+          "settings": {
+            "title": "Autres marques",
+            "link": "/collections/all"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

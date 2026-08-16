@@ -1,15 +1,107 @@
 {% if section.settings.hide_header_and_footer %}
   <style>
     .shopify-section-group-header-group,
-    .shopify-section-group-footer-group {
+    .shopify-section-group-footer-group,
+    .shopify-section-group-custom-prefooter {
       display: none !important;
     }
   </style>
 {% endif %}
 
+{% assign is_resell_faq_page = false %}
+{% assign is_resell_content_page = false %}
+{% assign is_resell_contact_page = false %}
+{% assign is_resell_size_guide_page = false %}
+{% assign is_resell_return_request_page = false %}
+{% assign is_resell_return_policy_page = false %}
+{% assign is_resell_wishlist_page = false %}
+{% assign is_resell_legal_page = false %}
+{% assign resell_legal_key = blank %}
+{% assign page_title_downcase = page.title | downcase %}
+{% assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase %}
+{% assign locale_base = locale_iso | split: '-' | first %}
+
+{% if page.handle == 'faq'
+  or page.handle == 'faq-resell-lausanne'
+  or request.path contains '/pages/faq'
+  or page_title_downcase == 'faq'
+%}
+  {% assign is_resell_faq_page = true %}
+{% elsif page.handle == 'notre-concept' or request.path contains '/pages/notre-concept' %}
+  {% assign is_resell_content_page = true %}
+  {% assign resell_content_page_type = 'notre-concept' %}
+{% elsif page.handle == 'authenticite' or request.path contains '/pages/authenticite' %}
+  {% assign is_resell_content_page = true %}
+  {% assign resell_content_page_type = 'authenticite' %}
+{% elsif page.handle == 'paiement-securise' or request.path contains '/pages/paiement-securise' %}
+  {% assign is_resell_content_page = true %}
+  {% assign resell_content_page_type = 'paiement-securise' %}
+{% elsif page.handle == 'notre-processus-d-authentification' or request.path contains '/pages/notre-processus-d-authentification' %}
+  {% assign is_resell_content_page = true %}
+  {% assign resell_content_page_type = 'processus-authentification' %}
+{% elsif page.handle == 'redaction' or page.handle == 'auteur' or page.handle == 'author' or request.path contains '/pages/redaction' %}
+  {% assign is_resell_content_page = true %}
+  {% assign resell_content_page_type = 'redaction' %}
+{% elsif page.handle == 'contact' or request.path contains '/pages/contact' %}
+  {% assign is_resell_contact_page = true %}
+{% elsif page.handle == 'livraison'
+  or page.handle == 'livraison-delais'
+  or page.handle == 'faq-livraison'
+  or request.path contains '/pages/livraison'
+%}
+  {% assign is_resell_faq_page = true %}
+  {% assign faq_active_category = 'livraison' %}
+{% elsif page.handle == 'guide-des-tailles'
+  or request.path contains '/pages/guide-des-tailles'
+%}
+  {% assign is_resell_size_guide_page = true %}
+{% elsif page.handle == 'demande-retour'
+  or request.path contains '/pages/demande-retour'
+%}
+  {% assign is_resell_return_request_page = true %}
+{% elsif page.handle == 'politique-de-retour'
+  or page.handle == 'echanges-remboursements'
+  or request.path contains '/pages/politique-de-retour'
+  or request.path contains '/pages/echanges-remboursements'
+%}
+  {% assign is_resell_return_policy_page = true %}
+{% elsif page.handle == 'conditions-generales-vente'
+  or page.handle == 'conditions-generales-de-vente'
+  or page.handle == 'cgv'
+  or request.path contains '/pages/conditions-generales-vente'
+  or request.path contains '/pages/conditions-generales-de-vente'
+%}
+  {% assign is_resell_legal_page = true %}
+  {% assign resell_legal_key = 'cgv' %}
+{% elsif page.handle == 'mentions-legales'
+  or request.path contains '/pages/mentions-legales'
+%}
+  {% assign is_resell_legal_page = true %}
+  {% assign resell_legal_key = 'mentions' %}
+{% elsif page.handle == 'politique-de-confidentialite'
+  or request.path contains '/pages/politique-de-confidentialite'
+%}
+  {% assign is_resell_legal_page = true %}
+  {% assign resell_legal_key = 'privacy' %}
+{% elsif page.handle == 'conditions-generales-utilisation'
+  or page.handle == 'conditions-generales-d-utilisation'
+  or request.path contains '/pages/conditions-generales-utilisation'
+%}
+  {% assign is_resell_legal_page = true %}
+  {% assign resell_legal_key = 'cgu' %}
+{% elsif page.handle == 'liste-de-souhaits'
+  or page.handle == 'wishlist'
+  or request.path contains '/pages/liste-de-souhaits'
+  or request.path contains '/pages/wishlist'
+%}
+  {% assign is_resell_wishlist_page = true %}
+{% endif %}
+
 <div
   class="
     main-page
+    {% if is_resell_wishlist_page %}main-page--wishlist{% endif %}
+    {% if is_resell_legal_page or is_resell_faq_page %}main-page--faq-shell{% endif %}
     main-page--{{ section.settings.layout_type }}
     main-page--{{ section.settings.layout_flex_direction_desktop }}-desktop
     {% if section.settings.same_as_desktop == false %}
@@ -58,16 +150,52 @@
       --padding-bottom: {{ section.settings.padding_bottom }}px;
     "
   >
-    {% capture blocks_content %}
-      {% content_for 'blocks' %}
-    {% endcapture %}
-
-    {% if section.settings.wrap_in_card %}
-      <div class="main-page__inner card color-{{ section.settings.color_scheme_card }}">
-        {{ blocks_content }}
-      </div>
+    {% if is_resell_faq_page %}
+      {% if page.handle == 'livraison' or page.handle == 'livraison-delais' or page.handle == 'faq-livraison' %}
+        {% render 'livraison-page-extra' %}
+      {% endif %}
+      {% render 'resell-faq-content', active_category: faq_active_category %}
+    {% elsif is_resell_size_guide_page %}
+      {% render 'resell-size-guide-content' %}
+    {% elsif is_resell_content_page %}
+      {% if resell_content_page_type == 'processus-authentification' %}
+        {% render 'resell-page-processus-authentification' %}
+      {% elsif resell_content_page_type == 'authenticite' %}
+        {% render 'resell-page-authenticite' %}
+      {% elsif resell_content_page_type == 'paiement-securise' %}
+        {% render 'resell-page-paiement-securise' %}
+      {% elsif resell_content_page_type == 'redaction' %}
+        {% render 'resell-page-redaction' %}
+      {% else %}
+        {% render 'resell-page-notre-concept' %}
+      {% endif %}
+    {% elsif is_resell_contact_page %}
+      {% render 'resell-page-contact' %}
+    {% elsif is_resell_return_request_page %}
+      {% render 'resell-return-request-content' %}
+    {% elsif is_resell_return_policy_page %}
+      {% render 'resell-page-return-policy' %}
+    {% elsif is_resell_legal_page %}
+      {% render 'resell-legal-hub', legal_key: resell_legal_key %}
+    {% elsif is_resell_wishlist_page %}
+      {% render 'resell-wishlist-page-shell',
+        cta_button: 'add-to-cart',
+        product_options: 'dropdowns',
+        show_buy_all_button: true,
+        move_to_cart: true
+      %}
     {% else %}
-      {{ blocks_content }}
+      {% capture blocks_content %}
+        {% content_for 'blocks' %}
+      {% endcapture %}
+
+      {% if section.settings.wrap_in_card %}
+        <div class="main-page__inner card color-{{ section.settings.color_scheme_card }}">
+          {{ blocks_content }}
+        </div>
+      {% else %}
+        {{ blocks_content }}
+      {% endif %}
     {% endif %}
   </div>
 </div>
@@ -93,6 +221,31 @@
     margin-bottom: var(--margin-bottom);
     display: flex;
     justify-content: center;
+  }
+
+  .main-page--wishlist {
+    margin-top: 0;
+    margin-bottom: 0;
+    display: block;
+  }
+
+  .main-page--wishlist .main-page__inner {
+    width: 100%;
+    max-width: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-inline: 0;
+  }
+
+  .main-page--faq-shell .main-page__inner {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .section-main-wishlist {
+    width: 100%;
+    max-width: none;
+    padding: 0;
   }
 
   .main-page .main-page__inner {

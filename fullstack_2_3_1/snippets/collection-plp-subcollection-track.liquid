@@ -1,0 +1,76 @@
+{% comment %}
+  Sub-collection chips for one parent brand (synced with mobile drawer).
+
+  @param parent {string} parent brand handle
+  @param chip_zone {string} atf | deferred — first N chips vs overflow
+  @param atf_limit {number} chips with full media lookup (default 8)
+{% endcomment %}
+{% liquid
+  assign chip_zone = chip_zone | default: 'atf'
+  assign atf_limit = atf_limit | default: 8
+
+  if parent == 'maison-mihara'
+    assign chip_entries = '' | split: ','
+  else
+    capture registry_raw
+      render 'plp-subcollection-chip-registry', parent: parent
+    endcapture
+    assign registry_raw = registry_raw | strip
+    assign chip_entries = registry_raw | split: '||'
+  endif
+%}
+
+{% if parent == 'maison-mihara' %}
+  {% if chip_zone == 'atf' %}
+    {% render 'collection-plp-brand-chip', title: 'Maison Mihara Peterson', url: collections['maison-mihara-peterson'].url | default: collections['maison-mihara'].url | default: '/collections/maison-mihara-peterson', handle: 'maison-mihara-peterson', subcollection: true, chip_eager: true %}
+    {% render 'collection-plp-brand-chip', title: 'Maison Mihara Hank', url: collections['maison-mihara-hank'].url | default: collections['maison-mihara'].url | default: '/collections/maison-mihara-hank', handle: 'maison-mihara-hank', subcollection: true, chip_eager: true %}
+    {% render 'collection-plp-brand-chip', title: 'Maison Mihara Blakey', url: collections['maison-mihara-blakey'].url | default: collections['maison-mihara'].url | default: '/collections/maison-mihara-blakey', handle: 'maison-mihara-blakey', subcollection: true, chip_eager: true %}
+    {% render 'collection-plp-brand-chip', title: 'Autres Maison Mihara', url: collections['maison-mihara'].url | default: '/collections/maison-mihara', handle: 'maison-mihara', subcollection: true, chip_eager: true %}
+  {% endif %}
+{% else %}
+  {% for entry in chip_entries %}
+    {% assign chip_idx = forloop.index0 %}
+    {% if chip_zone == 'atf' and chip_idx >= atf_limit %}
+      {% continue %}
+    {% endif %}
+    {% if chip_zone == 'deferred' and chip_idx < atf_limit %}
+      {% continue %}
+    {% endif %}
+
+    {% assign parts = entry | split: '::' %}
+    {% assign chip_title = parts[0] | strip %}
+    {% assign chip_handle = parts[1] | strip %}
+    {% if chip_title == blank or chip_handle == blank %}
+      {% continue %}
+    {% endif %}
+
+    {% liquid
+      assign chip_lightweight = false
+      assign chip_eager_load = false
+      assign chip_url = ''
+      assign chip_col = collections[chip_handle]
+      if chip_col != blank and chip_col.url != blank
+        assign chip_url = chip_col.url
+      endif
+      if chip_zone == 'deferred'
+        assign chip_lightweight = true
+      elsif chip_idx < 4
+        assign chip_eager_load = true
+      endif
+    %}
+
+    {% comment %} existence/products_count guard — never link to a missing or empty collection {% endcomment %}
+    {% if chip_col == blank or chip_col.products_count == 0 %}
+      {% continue %}
+    {% endif %}
+
+    {% render 'collection-plp-brand-chip',
+      title: chip_title,
+      url: chip_url,
+      handle: chip_handle,
+      subcollection: true,
+      chip_eager: chip_eager_load,
+      lightweight: chip_lightweight
+    %}
+  {% endfor %}
+{% endif %}

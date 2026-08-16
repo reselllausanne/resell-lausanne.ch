@@ -28,8 +28,6 @@
     "
   >
     {% if recommendations.performed and recommendations.products_count > 0 %}
-      {% content_for 'block', type: 'text', id: 'title' %}
-
       <div
         class="product-recommendations__grid"
         style="
@@ -41,6 +39,151 @@
           {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
         {% endfor %}
       </div>
+    {% else %}
+      {%- comment -%}
+        SEO SSR fallback: render static <a> links so non-JS crawlers (Ahrefs, Bingbot, social previews)
+        always see in-page links to related products. Removes "orphan product" issue on PDPs.
+        Hydration: when the JS module fetches real recommendations, it replaces innerHTML and removes this block.
+      {%- endcomment -%}
+      {%- liquid
+        # Visible count for real users mirrors the setting; the SSR fallback renders
+        # more static links so crawlers see wider internal linking (JS replaces it on load).
+        assign fallback_limit = section.settings.max_products | default: 4
+        assign fallback_render = 12
+        assign fallback_products = ''
+        assign fallback_ids = ''
+        assign fallback_collections = ''
+        assign current_id_str = product.id | append: ''
+
+        # Per-product offset seed → each PDP links to DIFFERENT neighbours in its
+        # collections. Across the catalog this forms a link "ring" so deep-catalog
+        # products are no longer orphaned (0 incoming internal links).
+        assign link_seed = product.id | modulo: 23
+        assign link_seed_alt = product.id | modulo: 13 | plus: 7
+
+        assign primary_collection_handle = ''
+        if product.metafields.custom.primary_collection_handle != blank
+          assign primary_collection_handle = product.metafields.custom.primary_collection_handle.value | default: product.metafields.custom.primary_collection_handle | append: '' | strip
+        endif
+        if primary_collection_handle == blank
+          capture auto_collection_handle
+            render 'product-breadcrumb-auto-handle'
+          endcapture
+          assign auto_collection_handle = auto_collection_handle | strip
+          if auto_collection_handle != blank
+            assign primary_collection_handle = auto_collection_handle
+          endif
+        endif
+
+        assign primary_collection = collections[primary_collection_handle]
+        if primary_collection != blank and primary_collection.products_count > 0
+          assign fallback_collections = fallback_collections | append: primary_collection.handle | append: '|'
+          for p in primary_collection.products offset: link_seed limit: 8
+            assign pid_str = p.id | append: ''
+            unless pid_str == current_id_str or fallback_ids contains pid_str
+              assign fallback_ids = fallback_ids | append: pid_str | append: '|'
+              assign fallback_products = fallback_products | append: p.handle | append: '|'
+            endunless
+          endfor
+          for p in primary_collection.products offset: link_seed_alt limit: 6
+            assign pid_str = p.id | append: ''
+            unless pid_str == current_id_str or fallback_ids contains pid_str
+              assign fallback_ids = fallback_ids | append: pid_str | append: '|'
+              assign fallback_products = fallback_products | append: p.handle | append: '|'
+            endunless
+          endfor
+        endif
+
+        if product.collections.size > 0
+          for col in product.collections limit: 4
+            unless col.handle == 'all' or col.handle == 'frontpage'
+              assign fallback_collections = fallback_collections | append: col.handle | append: '|'
+              for p in col.products offset: link_seed limit: 5
+                assign pid_str = p.id | append: ''
+                unless pid_str == current_id_str or fallback_ids contains pid_str
+                  assign fallback_ids = fallback_ids | append: pid_str | append: '|'
+                  assign fallback_products = fallback_products | append: p.handle | append: '|'
+                endunless
+              endfor
+            endunless
+          endfor
+        endif
+
+        if product.vendor != blank
+          assign vendor_handle = product.vendor | handleize
+          assign vendor_collection = collections[vendor_handle]
+          if vendor_collection != blank and vendor_collection.products.size > 0
+            assign fallback_collections = fallback_collections | append: vendor_collection.handle | append: '|'
+            for p in vendor_collection.products offset: link_seed limit: 6
+              assign pid_str = p.id | append: ''
+              unless pid_str == current_id_str or fallback_ids contains pid_str
+                assign fallback_ids = fallback_ids | append: pid_str | append: '|'
+                assign fallback_products = fallback_products | append: p.handle | append: '|'
+              endunless
+            endfor
+          endif
+        endif
+
+        assign fallback_handles = fallback_products | split: '|' | uniq
+        assign fallback_collection_handles = fallback_collections | split: '|' | uniq
+      -%}
+
+      {%- if fallback_handles.size > 0 -%}
+        <h2 class="product-recommendations__title product-recommendations__fallback-title">
+          {{- 'recommendations.related_products' | t | default: 'Vous pourriez aussi aimer' -}}
+        </h2>
+        <ul
+          class="product-recommendations__fallback"
+          aria-label="Produits similaires"
+          data-rl-recos-fallback
+        >
+          {%- for handle in fallback_handles limit: fallback_render -%}
+            {%- assign rel_p = all_products[handle] -%}
+            {%- if rel_p != blank and rel_p.handle != blank -%}
+              {%- comment -%} Links past the visible count stay crawlable but hidden from users (JS replaces this block on load). {%- endcomment -%}
+              <li class="product-recommendations__fallback-item{% if forloop.index0 >= fallback_limit %} product-recommendations__fallback-item--overflow{% endif %}">
+                <a class="product-recommendations__fallback-link" href="{{ rel_p.url }}">
+                  {%- if rel_p.featured_media != blank -%}
+                    <img
+                      class="product-recommendations__fallback-img"
+                      src="{{ rel_p.featured_media.preview_image | image_url: width: 400 }}"
+                      alt="{{ rel_p.title | escape }}"
+                      loading="lazy"
+                      width="200"
+                      height="200"
+                    >
+                  {%- endif -%}
+                  <span class="product-recommendations__fallback-text">
+                    {%- if rel_p.vendor != blank -%}
+                      <span class="product-recommendations__fallback-vendor">{{ rel_p.vendor | escape }}</span>
+                    {%- endif -%}
+                    <span class="product-recommendations__fallback-title-text">{{ rel_p.title | escape }}</span>
+                    {%- if rel_p.price != blank -%}
+                      <span class="product-recommendations__fallback-price">{{ rel_p.price | money }}</span>
+                    {%- endif -%}
+                  </span>
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- comment -%}
+        Crawler-only collection link block: hidden from users (display:none), kept in DOM so Ahrefs / Googlebot
+        see PDP → parent PLP and sibling collection links. Directly reduces "orphan collection" signals.
+        JS hydration replaces the entire `<product-recommendations>` innerHTML, so this disappears for real users.
+      {%- endcomment -%}
+      {%- if fallback_collection_handles.size > 0 -%}
+        <nav class="product-recommendations__crawler-collections" aria-hidden="true" data-rl-crawler-collections>
+          {%- for chandle in fallback_collection_handles limit: 6 -%}
+            {%- assign rel_col = collections[chandle] -%}
+            {%- if rel_col != blank and rel_col.handle != blank and rel_col.products_count > 0 -%}
+              <a class="product-recommendations__crawler-collection-link" href="{{ rel_col.url }}">{{ rel_col.title | escape }}</a>
+            {%- endif -%}
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
     {% endif %}
   </div>
 </product-recommendations>
@@ -69,9 +212,109 @@
     row-gap: var(--grid-gap-horizontal);
   }
 
+  .product-recommendations__fallback-title {
+    margin: 0 0 20px;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .product-recommendations__fallback {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 16px;
+    row-gap: 24px;
+  }
+
+  .product-recommendations__fallback-item {
+    min-width: 0;
+  }
+
+  /* Extra internal links for crawlers only — kept in the DOM (crawlable) but
+     hidden from users so the visible grid stays one clean row before JS hydration. */
+  .product-recommendations__fallback-item--overflow {
+    display: none;
+  }
+
+  .product-recommendations__crawler-collections {
+    display: none;
+  }
+
+  .product-recommendations__fallback-link {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .product-recommendations__fallback-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    background: rgb(255 255 255);
+    border-radius: 8px;
+  }
+
+  .product-recommendations__fallback-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .product-recommendations__fallback-vendor {
+    color: rgb(0 0 0 / 55%);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .product-recommendations__fallback-price {
+    font-weight: 500;
+  }
+
+  @media (width >= 750px) {
+    .product-recommendations__fallback {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .rl-pdp-recommendations .product-recommendations__title {
+    margin-bottom: 24px;
+  }
+
+  .rl-pdp-recommendations .product-recommendations__grid {
+    column-gap: 20px;
+    row-gap: 28px;
+  }
+
   @media (width > 750px) {
     .product-recommendations__grid {
       grid-template-columns: repeat(var(--grid-columns), 1fr);
+    }
+
+    .rl-pdp-recommendations .product-recommendations__inner {
+      --rl-lower-gutter: clamp(48px, 8vw, 128px);
+      width: 100%;
+      max-width: none !important;
+      padding-inline: var(--rl-lower-gutter) !important;
+      box-sizing: border-box;
+    }
+
+    .rl-pdp-recommendations .product-recommendations__grid {
+      column-gap: 16px;
+      row-gap: 24px;
+    }
+
+    .rl-pdp-recommendations .product-card-media-gallery__media .product-media img {
+      object-fit: contain;
+      background: rgb(255 255 255);
     }
   }
 {% endstylesheet %}
@@ -229,23 +472,6 @@
       },
       "blocks": [
         {
-          "type": "text",
-          "id": "title",
-          "static": true,
-          "settings": {
-            "show_on_display": "desktop_and_mobile",
-            "text": "t:product_recommendations_title_default",
-            "show_read_more": false,
-            "read_more_length": 200,
-            "text_style": "h3",
-            "font_weight": 400,
-            "alignment": "left",
-            "margin_top": 0,
-            "margin_bottom": 30,
-            "additional_class": ""
-          }
-        },
-        {
           "id": "product-card",
           "type": "_product-card",
           "static": true,
@@ -261,7 +487,7 @@
               "settings": {
                 "show_slider": false,
                 "media_rounded": true,
-                "media_ratio": "1 / 1"
+                "media_ratio": "adapt"
               },
               "blocks": []
             },

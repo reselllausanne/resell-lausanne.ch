@@ -1,40 +1,267 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "home_skeleton": {
-      "type": "custom-section",
+    "home_hero_premium": {
+      "type": "home-hero-premium",
+      "name": "Home hero premium",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "default_desktop_hero_filename": "header-essential-laptop.avif",
+        "default_mobile_hero_filename": "Header-essential-phone.avif",
+        "show_hero_arrows": true,
+        "show_hero_dots": true,
+        "ticker_speed": 34,
+        "section_padding_top": 0,
+        "section_padding_bottom": 0
+      },
+      "blocks": {
+        "slide_bts_2026": {
+          "type": "slide",
+          "settings": {
+            "desktop_filename": "resell-lausanne-back-to-school-desktop-v2.webp",
+            "mobile_filename": "resell-lausanne-back-to-school-mobile-v2.png",
+            "title": "Back to School 2026",
+            "text": "Ton meilleur ensemble pour la rentrée",
+            "button_label": "Acheter",
+            "button_link": "/collections/back-to-school-2026",
+            "hide_cta_card": false
+          }
+        },
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "title": "Essentials Summer Sets",
+            "text": "L'uniforme de l'été, version Essentials.",
+            "button_label": "Découvrir",
+            "button_link": "/collections/fear-of-god-essentials"
+          }
+        },
+        "marquee_1": { "type": "marquee_item", "settings": { "text": "Produits authentiques et jamais portés" } },
+        "marquee_2": { "type": "marquee_item", "settings": { "text": "Paiement en 2, 3 ou 4 fois avec Alma" } },
+        "marquee_3": { "type": "marquee_item", "settings": { "text": "Service client dédié et disponible" } }
+      },
+      "block_order": ["slide_bts_2026", "slide_1", "marquee_1", "marquee_2", "marquee_3"]
+    },
+    "home_slider_nouveautes": {
+      "type": "image-tag-slider",
+      "name": "Accueil — Nouveautés",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "brand_rail",
+        "desktop_columns": 4,
+        "show_heading_link": true,
+        "show_rail_arrows": false,
+        "heading": "Nouveautés",
+        "heading_link": "/collections/nouveautes",
+        "heading_link_label": "Voir plus",
+        "card_ratio": "portrait",
+        "source": "collection",
+        "collection": "nouveautes",
+        "max_products": 12,
+        "additional_class": "rl-home-slider-nouveautes"
+      },
       "blocks": {},
-      "block_order": [],
-      "name": "Home skeleton",
+      "block_order": []
+    },
+    "home_slider_livraison_48h": {
+      "type": "image-tag-slider",
+      "name": "Accueil — Livraison 48H",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "brand_rail",
+        "desktop_columns": 4,
+        "show_heading_link": true,
+        "show_rail_arrows": false,
+        "heading": "Livraison 48H",
+        "heading_link": "/collections/express-delivery",
+        "heading_link_label": "Voir plus",
+        "card_ratio": "portrait",
+        "source": "collection",
+        "collection": "express-delivery",
+        "max_products": 12,
+        "additional_class": "rl-home-slider-livraison-48h"
+      },
+      "blocks": {},
+      "block_order": []
+    },
+    "home_partner_trust": {
+      "type": "home-partner-trust",
+      "name": "Accueil — Ils nous font confiances",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Ils nous font confiances",
+        "subtext": "Retrouvez les produits Resell Lausanne sur les plus grandes marketplaces, de Suisse et d'Europe",
+        "galaxus_url": "https://www.galaxus.ch/fr/search?q=Sneakers%20nike",
+        "decathlon_url": "https://www.decathlon.ch/en/search?Ntt=resell+lausanne",
+        "padding_top": 12,
+        "padding_bottom": 16
+      }
+    },
+    "home_slider_air_jordan": {
+      "type": "image-tag-slider",
+      "name": "Accueil — Air Jordan",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "brand_rail",
+        "desktop_columns": 4,
+        "show_heading_link": true,
+        "show_rail_arrows": false,
+        "heading": "Air Jordan",
+        "heading_link": "/collections/air-jordan",
+        "heading_link_label": "Voir plus",
+        "card_ratio": "portrait",
+        "source": "collection",
+        "collection": "air-jordan",
+        "max_products": 12
+      },
+      "blocks": {},
+      "block_order": []
+    },
+    "home_slider_essentials": {
+      "type": "image-tag-slider",
+      "name": "Accueil — Essentials",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "brand_rail",
+        "desktop_columns": 4,
+        "show_heading_link": true,
+        "show_rail_arrows": false,
+        "heading": "Essentials",
+        "heading_link": "/collections/fear-of-god-essentials",
+        "heading_link_label": "Voir plus",
+        "card_ratio": "portrait",
+        "source": "collection",
+        "collection": "fear-of-god-essentials",
+        "max_products": 12
+      },
+      "blocks": {},
+      "block_order": []
+    },
+    "home_newsletter": {
+      "type": "custom-section",
+      "name": "Accueil — Newsletter",
       "settings": {
         "show_on_display": "desktop_and_mobile",
-        "color_scheme": "scheme-1",
-        "wrap_in_card": false,
-        "color_scheme_card": "",
         "section_width": "normal",
+        "color_scheme": "scheme-1",
+        "wrap_in_card": true,
+        "color_scheme_card": "scheme-2",
         "layout_type": "flex",
         "layout_flex_direction_desktop": "column",
-        "layout_grid_columns_desktop": 3,
         "layout_gap_desktop": 20,
         "layout_wrap_desktop": "nowrap",
-        "layout_flex_justify_desktop": "flex-start",
-        "layout_flex_align_items_desktop": "flex-start",
+        "layout_flex_justify_desktop": "center",
+        "layout_flex_align_items_desktop": "center",
         "same_as_desktop": true,
-        "layout_flex_direction_mobile": "column",
-        "layout_gap_mobile": 20,
-        "layout_wrap_mobile": "nowrap",
-        "layout_flex_justify_mobile": "flex-start",
-        "layout_flex_align_items_mobile": "flex-start",
-        "layout_grid_columns_mobile": 1,
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "margin_top": 0,
-        "margin_bottom": 0,
-        "anchor_id": "home-skeleton",
-        "additional_class": "home-skeleton"
-      }
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "margin_top": 50,
+        "margin_bottom": 50
+      },
+      "blocks": {
+        "nl_title": { "type": "text", "settings": { "show_on_display": "desktop_and_mobile", "text": "<h3>Inscris-toi à la newsletter Resell Lausanne<\/h3>", "text_style": "h3", "font_weight": 400, "alignment": "center", "alignment_mobile": "center", "margin_top": 0, "margin_bottom": 0 } },
+        "nl_desc": { "type": "text", "settings": { "show_on_display": "desktop_and_mobile", "text": "<p>Et obtiens 10 CHF sur ta première commande.<\/p>", "text_style": "paragraph", "font_weight": 400, "alignment": "center", "alignment_mobile": "center", "margin_top": 0, "margin_bottom": 0 } },
+        "nl_form": { "type": "newsletter-signup", "settings": { "show_on_display": "desktop_and_mobile", "newsletter_label": "Votre adresse e-mail", "tag": "newsletter", "margin_top": 10, "margin_bottom": 10 } }
+      },
+      "block_order": ["nl_title", "nl_desc", "nl_form"]
+    },
+    "home_brand_slider_sneakers": {
+      "type": "image-tag-slider",
+      "name": "Accueil — Les Sneakers",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "brand_rail",
+        "desktop_columns": 4,
+        "show_heading_link": false,
+        "show_rail_arrows": false,
+        "heading": "Les Sneakers",
+        "heading_link": "",
+        "heading_link_label": "Voir plus",
+        "card_ratio": "landscape",
+        "source": "manual"
+      },
+      "blocks": {
+        "brand_sneakers_1": { "type": "item", "settings": { "title": "Air Jordan", "collection_handle": "air-jordan", "image_url": "", "link": "/collections/air-jordan" } },
+        "brand_sneakers_2": { "type": "item", "settings": { "title": "Nike", "collection_handle": "nike", "image_url": "", "link": "/collections/nike" } },
+        "brand_sneakers_3": { "type": "item", "settings": { "title": "Saucony", "collection_handle": "saucony", "image_url": "", "link": "/collections/saucony" } },
+        "brand_sneakers_4": { "type": "item", "settings": { "title": "ASICS", "collection_handle": "asics", "image_url": "", "link": "/collections/asics" } },
+        "brand_sneakers_5": { "type": "item", "settings": { "title": "New Balance", "collection_handle": "new-balance", "image_url": "", "link": "/collections/new-balance" } },
+        "brand_sneakers_6": { "type": "item", "settings": { "title": "Adidas", "collection_handle": "adidas", "image_url": "", "link": "/collections/adidas" } },
+        "brand_sneakers_7": { "type": "item", "settings": { "title": "Onitsuka Tiger", "collection_handle": "onitsuka-tiger", "image_url": "", "link": "/collections/onitsuka-tiger" } },
+        "brand_sneakers_8": { "type": "item", "settings": { "title": "Yeezy", "collection_handle": "yeezy", "image_url": "", "link": "/collections/yeezy" } }
+      },
+      "block_order": ["brand_sneakers_1", "brand_sneakers_2", "brand_sneakers_3", "brand_sneakers_4", "brand_sneakers_5", "brand_sneakers_6", "brand_sneakers_7", "brand_sneakers_8"]
+    },
+    "home_brand_slider_streetwear": {
+      "type": "image-tag-slider",
+      "name": "Accueil — Magasins virtuels",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "brand_rail",
+        "desktop_columns": 4,
+        "show_heading_link": false,
+        "show_rail_arrows": false,
+        "heading": "Entrez dans nos magasins virtuels",
+        "heading_link": "",
+        "heading_link_label": "Voir plus",
+        "card_ratio": "landscape",
+        "source": "manual"
+      },
+      "blocks": {
+        "brand_sw_1": { "type": "item", "settings": { "title": "Fear of God Essentials", "collection_handle": "fear-of-god-essentials", "image_url": "", "link": "/collections/fear-of-god-essentials" } },
+        "brand_sw_2": { "type": "item", "settings": { "title": "Jacquemus", "collection_handle": "jacquemus", "image_url": "", "link": "/collections/jacquemus" } },
+        "brand_sw_3": { "type": "item", "settings": { "title": "Chrome Hearts", "collection_handle": "chrome-hearts", "image_url": "", "link": "/collections/chrome-hearts" } },
+        "brand_sw_4": { "type": "item", "settings": { "title": "Supreme", "collection_handle": "supreme", "image_url": "", "link": "/collections/supreme" } },
+        "brand_sw_5": { "type": "item", "settings": { "title": "BAPE", "collection_handle": "bape", "image_url": "", "link": "/collections/bape" } },
+        "brand_sw_6": { "type": "item", "settings": { "title": "Sp5der", "collection_handle": "sp5der", "image_url": "", "link": "/collections/sp5der" } },
+        "brand_sw_7": { "type": "item", "settings": { "title": "AMI Paris", "collection_handle": "ami-paris", "image_url": "", "link": "/collections/ami-paris" } }
+      },
+      "block_order": ["brand_sw_1", "brand_sw_2", "brand_sw_3", "brand_sw_4", "brand_sw_5", "brand_sw_6", "brand_sw_7"]
+    },
+    "home_image_tag_slider": {
+      "type": "image-tag-slider",
+      "name": "Home — strip sous hero",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "layout_style": "home_strip",
+        "slider_aria_label": "Les sélections sneakers",
+        "heading": "",
+        "show_heading_link": false,
+        "show_rail_arrows": false,
+        "card_ratio": "landscape",
+        "source": "manual"
+      },
+      "blocks": {
+        "item_1": { "type": "item", "settings": { "title": "Air Jordan 4", "image": "", "image_asset": "home-strip-air-jordan-4.png", "image_url": "", "collection_handle": "air-jordan-4", "link": "/collections/air-jordan-4" } },
+        "item_2": { "type": "item", "settings": { "title": "Air Jordan 1", "image": "", "image_asset": "home-strip-air-jordan-1.png", "image_url": "", "collection_handle": "air-jordan-1-low", "link": "/collections/air-jordan-1-low" } },
+        "item_3": { "type": "item", "settings": { "title": "Gel-Kayano 14", "image": "", "image_asset": "home-strip-asics-gel-kayano-14.webp", "image_url": "", "collection_handle": "asics-gel-kayano-14", "link": "/collections/asics-gel-kayano-14" } },
+        "item_4": { "type": "item", "settings": { "title": "Gel-NYC", "image": "", "image_asset": "home-strip-gel-nyc.webp", "image_url": "", "collection_handle": "gel-nyc", "link": "/collections/gel-nyc" } },
+        "item_5": { "type": "item", "settings": { "title": "Nike Dunk Low", "image": "", "image_asset": "home-strip-dunk-low.webp", "image_url": "", "collection_handle": "dunk-low", "link": "/collections/dunk-low" } },
+        "item_7": { "type": "item", "settings": { "title": "Nike Mind", "image": "", "image_asset": "home-strip-nike-mind.webp", "image_url": "", "collection_handle": "nike-mind", "link": "/collections/nike-mind" } },
+        "item_8": { "type": "item", "settings": { "title": "Adidas Samba", "image": "", "image_asset": "home-strip-adidas-samba.png", "image_url": "", "collection_handle": "adidas-samba", "link": "/collections/adidas-samba" } },
+        "item_9": { "type": "item", "settings": { "title": "Nike Air Force 1", "image": "", "image_asset": "home-strip-air-force-1.png", "image_url": "", "collection_handle": "air-force-1", "link": "/collections/air-force-1" } }
+      },
+      "block_order": ["item_1", "item_2", "item_3", "item_4", "item_5", "item_7", "item_8", "item_9"]
     }
   },
   "order": [
-    "home_skeleton"
+    "home_hero_premium",
+    "home_image_tag_slider",
+    "home_slider_nouveautes",
+    "home_slider_livraison_48h",
+    "home_partner_trust",
+    "home_slider_air_jordan",
+    "home_slider_essentials",
+    "home_brand_slider_sneakers",
+    "home_brand_slider_streetwear",
+    "home_newsletter"
   ]
 }

@@ -1,0 +1,211 @@
+{% comment %} German size guide copy (CH). Params: brand, part (article|tips), sg_fitting_tips, sg_size_tips {% endcomment %}
+{% case brand %}
+{% when 'nike' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Nike-Schuhe aus?</h3>
+          <p>Nike verwendet ein System mit Halbgrößen (40, 40.5, 41 …). Die meisten Modelle fallen normal aus, einige ikonische Silhouetten haben jedoch Besonderheiten. Auf der Produktseite zeigt die Bezeichnung, ob es sich um ein Modell <em>Nike</em> (Herren), <em>Nike W</em> (Damen) oder <em>Nike Y</em> (Kinder) handelt.</p>
+          <h3>Welche Größe je Modell?</h3>
+          <p>Nike Dunk und Nike Air Max fallen normal aus — nehmen Sie Ihre übliche Größe. Die Nike Blazer fällt etwas klein aus: nehmen Sie eine Halbgröße grösser. Die Nike Air Force 1 fällt gross aus: Sie können eine Halbgröße kleiner wählen. Die Dicke Ihrer Socken und die Breite Ihres Fusses können Ihre Wahl ebenfalls beeinflussen.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Nike</p>
+          <ul>
+            <li><strong>Dunk Low/High :</strong> fällt normal aus — nehmen Sie Ihre übliche Größe.</li>
+            <li><strong>Air Force 1 :</strong> fällt gross aus — eine Halbgröße kleiner wird oft empfohlen.</li>
+            <li><strong>Blazer :</strong> fällt klein aus — nehmen Sie eine Halbgröße grösser.</li>
+            <li><strong>Air Max 90/97/1 :</strong> fällt normal aus.</li>
+            <li>Breiter Fuss? Einige Modelle gibt es in der Weite Large (2E) — prüfen Sie die Produktseite.</li>
+          </ul>
+  {% endcase %}
+{% when 'air-jordan' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Air Jordan aus?</h3>
+          <p>Air Jordan nutzen dasselbe Grössensystem wie Nike (Halbgrößen). Fast alle Retro-Modelle — Jordan 1, 3, 4, 5, 11 — fallen normal aus. Auf der Produktseite verweist <em>Nike</em> auf den Herren-Guide, <em>Nike W</em> auf den Damen-Guide und <em>Nike Y</em> auf den Kinder-Guide (oder ab Grösse ≥ 40 auf den Herren-Guide).</p>
+          <h3>Fallen Jordan 4 gross aus?</h3>
+          <p>Nein — Jordan 4 fallen normal aus, wie die gesamte Jordan-Retro-Linie. Wenn Sie zwischen zwei Halbgrössen schwanken, nehmen Sie die grössere für mehr Komfort.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Air Jordan</p>
+          <ul>
+            <li><strong>Jordan 1 / 3 / 4 / 5 / 11 :</strong> fällt normal aus — nehmen Sie Ihre übliche Größe.</li>
+            <li><strong>Jordan Low / Mid / High :</strong> die Passform ist unabhängig von der Schaft-Höhe identisch.</li>
+            <li>Zwischen zwei Grössen? Nehmen Sie die grössere — Sie können mit den Schnürsenkeln nachjustieren.</li>
+            <li>Breiter Fuss: Jordan 1 bietet gute Weite im Vorfussbereich.</li>
+          </ul>
+  {% endcase %}
+{% when 'adida' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Adidas-Schuhe aus?</h3>
+          <p>Adidas verwendet ein System mit <strong>Grössendrittel</strong> (36, 36⅔, 37⅓, 38 …) statt klassischer Halbgrößen. Das bedeutet: Es gibt keine 36.5, sondern 36⅔. Das kann verwirren, besonders im Vergleich mit Nike oder New Balance.</p>
+          <h3>Welche Größe bei Adidas-Sneakern?</h3>
+          <p>Die meisten Lifestyle-Modelle (Stan Smith, Samba, Gazelle, Forum) fallen normal bis leicht gross aus. Im Zweifelsfall ist oft die kleinere Grösse die bessere Wahl. Für Running-Modelle beachten Sie die Hinweise direkt auf der Produktseite.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Adidas</p>
+          <ul>
+            <li><strong>Samba / Gazelle :</strong> fällt normal aus — nehmen Sie Ihre übliche Größe.</li>
+            <li><strong>Stan Smith :</strong> fällt leicht gross aus — eine Halbgröße kleiner ist möglich.</li>
+            <li><strong>Superstar :</strong> fällt gross aus — nehmen Sie eine Halbgröße kleiner als Ihre Nike-Grösse.</li>
+            <li><strong>Forum Low/High :</strong> fällt normal aus.</li>
+            <li>Keine Halbgröße? Adidas bietet das nächsthöhere Drittel (z. B. 42 → 42⅔) für etwas mehr Platz.</li>
+          </ul>
+  {% endcase %}
+{% when 'new-balance' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen New Balance aus?</h3>
+          <p>New Balance verwendet Halbgrössen und bietet bei einigen Modellen verschiedene <strong>Weiten</strong>: D (Standard), 2E (breit) und 4E (extra breit). Bei breitem Fuss kann eine Weitenvariante verhindern, dass Sie eine ganze Grösse hochgehen müssen.</p>
+          <h3>Tipps vor dem Kauf</h3>
+          <p>Probieren Sie Schuhe am Ende des Tages — Füsse schwellen im Laufe des Tages leicht an. Da beide Füsse selten exakt gleich gross sind, orientieren Sie sich am grösseren Fuss. Lassen Sie etwa 1 cm Platz vor der längsten Zehe.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} New Balance</p>
+          <ul>
+            <li><strong>550 / 530 / 2002R :</strong> fällt normal aus — nehmen Sie Ihre übliche Größe.</li>
+            <li><strong>990v6 :</strong> erhältlich in Weite D (Standard) oder 2E (breit) — wählen Sie nach Ihrer Fussform.</li>
+            <li>Breite Füsse? Suchen Sie Modelle in 2E oder 4E, bevor Sie die Grösse erhöhen.</li>
+            <li>Am Ende des Tages anprobieren für optimale Passform.</li>
+          </ul>
+  {% endcase %}
+{% when 'asics' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Asics aus?</h3>
+          <p>Asics ist bekannt dafür, <strong>etwas klein</strong> auszufallen, besonders bei Running-Modellen (Gel-Kayano, Gel-Nimbus, Gel-Cumulus). Die Passform ist meist eng für festen Halt. Bei Lifestyle-Modellen (Gel-Lyte III, Japan S) liegt die Grösse näher am Normalmass.</p>
+          <h3>Welche Asics-Grösse wählen?</h3>
+          <p>Bei Running-Modellen und eng geschnittenen Silhouetten nehmen Sie eine Halbgröße grösser als Ihre übliche Nike-Grösse. Bei Lifestyle-Modellen passt meist Ihre Standardgrösse.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Asics</p>
+          <ul>
+            <li><strong>Gel-Kayano / Gel-Nimbus :</strong> fällt klein aus — nehmen Sie +0.5 gegenüber Ihrer üblichen Nike-Grösse.</li>
+            <li><strong>Gel-Lyte III / V :</strong> fällt normal aus — Ihre Standardgrösse passt.</li>
+            <li><strong>Japan S :</strong> fällt normal aus, vergleichbar mit Nike-Grössen.</li>
+            <li>Breiter oder kräftiger Fuss? Gehen Sie lieber eine volle Grösse hoch statt nur eine Halbgröße.</li>
+          </ul>
+  {% endcase %}
+{% when 'yeezy' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Yeezy aus?</h3>
+          <p>Yeezy folgen dem Adidas-Grössendrittel-System, die Passform variiert jedoch <strong>stark je Modell</strong>. Yeezy 350 V2 fallen wegen Primeknit und dünner Innensohle klein aus. Yeezy 700 fallen normaler aus. Yeezy Slide und Foam Runner fallen sehr klein aus.</p>
+          <h3>Welche Grösse je Modell?</h3>
+          <p>Für Yeezy 350 V2: nehmen Sie eine Halbgröße grösser (oder eine volle Grösse bei breitem Fuss oder dicken Socken). Für Yeezy Slide und Foam Runner: mindestens eine Grösse grösser als Ihre übliche Grösse.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Yeezy</p>
+          <ul>
+            <li><strong>Yeezy 350 V2 :</strong> fällt klein aus — nehmen Sie +0.5 (oder +1 bei breitem Fuss).</li>
+            <li><strong>Yeezy 500 :</strong> fällt klein aus — nehmen Sie +0.5.</li>
+            <li><strong>Yeezy 700 V1/V2/V3 :</strong> fällt normal aus.</li>
+            <li><strong>Yeezy Slide :</strong> fällt sehr klein aus — nehmen Sie mindestens +1 Grösse.</li>
+            <li><strong>Yeezy Foam Runner :</strong> fällt sehr klein aus — nehmen Sie +1 bis +2 Grössen.</li>
+          </ul>
+  {% endcase %}
+{% when 'ugg' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen UGG aus?</h3>
+          <p>UGG verwendet hauptsächlich ganze US-Grössen. Classic-Stiefel (Mini, Short, Tall) sind mit Schafsfell gefüttert, das sich mit der Zeit <strong>natürlich setzt</strong> und sich dem Fuss anpasst. Empfohlen wird meist Ihre übliche Grösse — der Schuh weitet sich nach einigen Wochen leicht.</p>
+          <h3>Zwischen zwei Grössen?</h3>
+          <p>Im Zweifelsfall nehmen Sie die kleinere Grösse. Das Fell komprimiert sich und der Stiefel gewinnt etwas an Weite, ohne zu gross zu werden. Bei Leder- oder Synthetikmodellen (Tasman, Ultra Mini Platform) ist die Grösse standardmässiger.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} UGG</p>
+          <ul>
+            <li><strong>Classic Mini / Short / Tall :</strong> nehmen Sie Ihre übliche Grösse — das Fell setzt sich.</li>
+            <li><strong>Tasman / Ultra Mini :</strong> fällt normal aus.</li>
+            <li>Zwischen zwei Grössen? Nehmen Sie die kleinere — der Stiefel weitet sich mit der Zeit.</li>
+            <li>Dicke Socken geplant? Gehen Sie eine Halbgröße hoch.</li>
+          </ul>
+  {% endcase %}
+{% when 'converse' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Converse aus?</h3>
+          <p>Converse, besonders Chuck Taylor All Star, sind bekannt dafür, <strong>gross auszufallen</strong>. Weiche Leinenkonstruktion und flache Sohle lassen mehr Raum als der Durchschnitt. Faustregel: Tragen Sie Nike 43, nehmen Sie Converse 42.</p>
+          <h3>Chuck Taylor vs Chuck 70: Was ist der Unterschied?</h3>
+          <p>Chuck 70 fällt etwas weniger gross aus als der klassische Chuck Taylor (etwa eine Halbgröße Unterschied), da die Konstruktion etwas strukturierter ist. One Star fällt normal aus.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Converse</p>
+          <ul>
+            <li><strong>Chuck Taylor All Star :</strong> fällt gross aus — nehmen Sie eine Grösse kleiner als Nike (z. B. Nike 43 → Converse 42).</li>
+            <li><strong>Chuck 70 :</strong> fällt leicht gross aus — gehen Sie eine Halbgröße kleiner.</li>
+            <li><strong>One Star / Run Star :</strong> fällt normal aus.</li>
+            <li>Leinen-Schaft weicht beim Tragen — vermeiden Sie zu grosse Grössen, sonst entsteht zu viel Spiel.</li>
+          </ul>
+  {% endcase %}
+{% when 'salomon' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Salomon aus?</h3>
+          <p>Salomon nutzt dasselbe Grössendrittel-System wie Adidas. Lifestyle-Modelle (XT-6, XT-4) fallen normal aus, mit eng anliegender Passform. Bei Trail-Modellen empfehlen wir etwa 1 cm Platz vor der Zehe für Stossdämpfung bergab.</p>
+          <h3>Salomon XT-6: Welche Grösse?</h3>
+          <p>Der XT-6 ist wohl das beliebteste Salomon-Lifestyle-Modell. Eng geschnitten, aber bequem — nehmen Sie Ihre übliche Grösse. Bei besonders breitem Fuss erwägen Sie ein Grössendrittel hoch.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Salomon</p>
+          <ul>
+            <li><strong>XT-6 / XT-4 :</strong> fällt normal aus — nehmen Sie Ihre übliche Größe.</li>
+            <li><strong>Speedcross :</strong> schmale Passform — nehmen Sie +0.5 bei breitem Fuss.</li>
+            <li>Trail: 1 cm Platz vor der Zehe für Abfahrten.</li>
+            <li>Keine Halbgröße verfügbar? Das nächsthöhere Drittel (z. B. 42 → 42⅔) bietet etwas mehr Platz.</li>
+          </ul>
+  {% endcase %}
+{% when 'puma' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Puma aus?</h3>
+          <p>Puma verwendet klassische Halbgrössen und fällt insgesamt ähnlich wie Nike aus. Die meisten Lifestyle-Modelle — RS-X, Suede, Clyde — folgen diesem Standard. Modelle wie Puma Suede können anfangs etwas eng wirken, das Leder weicht nach einigen Wochen natürlich.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Puma</p>
+          <ul>
+            <li><strong>RS-X :</strong> fällt normal aus, bequeme Passform.</li>
+            <li><strong>Suede :</strong> kann anfangs eng sein — Leder weicht beim Tragen.</li>
+            <li><strong>Speedcat :</strong> fällt etwas klein aus — nehmen Sie +0.5.</li>
+            <li>Insgesamt vergleichbar mit Nike — Ihre übliche Grösse passt.</li>
+          </ul>
+  {% endcase %}
+{% when 'veja' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Veja aus?</h3>
+          <p>Veja bietet bei den meisten Modellen hauptsächlich <strong>ganze Grössen</strong> ohne Halbgrössen. Veja-Sneaker fallen leicht gross aus: Tragen Sie üblicherweise Nike 42.5, wählen Sie Veja 42. Im Zweifelsfall zwischen zwei Grössen: nehmen Sie die kleinere.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Veja</p>
+          <ul>
+            <li><strong>V-10 / V-12 :</strong> fällt leicht gross aus — nehmen Sie eine Halbgrösse kleiner als Nike.</li>
+            <li><strong>Campo :</strong> fällt normal bis leicht gross aus.</li>
+            <li><strong>Esplar :</strong> fällt gross aus — gehen Sie eine volle Grösse kleiner.</li>
+            <li>Keine Halbgröße? Zwischen zwei Grössen: nehmen Sie die kleinere.</li>
+          </ul>
+  {% endcase %}
+{% when 'saucony' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fallen Saucony aus?</h3>
+          <p>Saucony verwendet klassische Halbgrössen und fällt insgesamt normal aus, wie Nike. Lifestyle-Modelle (Jazz Original, Shadow 6000, Grid Web) sind etwas weiter geschnitten als Running-Modelle — bequem ab dem ersten Tragen, ohne Einlaufphase.</p>
+          <h3>Welche Saucony-Grösse wählen?</h3>
+          <p>Nehmen Sie Ihre übliche Grösse. Bei breitem Fuss oder dicken Socken kann eine Halbgröße grösser den Komfort verbessern. Running-Modelle (Ride, Kinvara) profitieren oft von +0.5 für Fussschwellung beim Sport.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Saucony</p>
+          <ul>
+            <li><strong>Jazz Original / Shadow 6000 :</strong> fällt normal aus — nehmen Sie Ihre übliche Größe.</li>
+            <li><strong>Grid Web / Grid 9000 :</strong> fällt normal aus, etwas weiter geschnitten.</li>
+            <li><strong>Ride / Kinvara (Running) :</strong> nehmen Sie +0.5 für Fussschwellung beim Sport.</li>
+            <li>Breiter Fuss? Saucony Lifestyle ist natürlich grosszügiger als Nike.</li>
+          </ul>
+  {% endcase %}
+{% when 'essentials' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>Wie fällt Essentials-Bekleidung aus?</h3>
+          <p>Fear of God Essentials ist mit einer <strong>absichtlich oversize Passform</strong> konzipiert. Anders als klassische Kleidung ist die weite, fallende Silhouette vom Designer Jerry Lorenzo gewollt. Die Teile fallen jedoch wirklich gross aus — es wird systematisch empfohlen, <strong>eine Grösse kleiner</strong> als Ihre übliche Grösse zu nehmen für eine ausgewogene Passform.</p>
+          <h3>Wirklich eine Grösse kleiner?</h3>
+          <p>Ja, ohne Ausnahme. Tragen Sie bei anderen Streetwear-Marken üblicherweise L, nehmen Sie bei Essentials M. Für einen noch figurnäheren Look gehen manche zwei Grössen runter. Der Oversize-Look bleibt bei jeder Grösse erhalten — das ist die DNA der Marke.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_size_tips }} Essentials</p>
+          <ul>
+            <li><strong>Goldene Regel :</strong> nehmen Sie immer eine Grösse kleiner als Ihre übliche Grösse.</li>
+            <li>Tragen Sie üblicherweise L? Nehmen Sie bei Essentials M.</li>
+            <li>Wünschen Sie eine figurnähere Passform? Gehen Sie zwei Grössen kleiner.</li>
+            <li>Oversize ist beabsichtigt — auch in kleinerer Grösse bleibt das Teil weit.</li>
+            <li>Hoodies und Sweatshirts: Ärmel sind by Design sehr lang — berücksichtigen Sie das.</li>
+          </ul>
+  {% endcase %}
+{% endcase %}

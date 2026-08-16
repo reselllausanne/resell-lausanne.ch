@@ -9,8 +9,6 @@
   {% render 'product-card', product: product, block: block, children: children %}
 {% enddoc %}
 
-<script src="{{ 'product-card.js' | asset_url }}" type="module"></script>
-
 <product-card
   class="product-card{% if block.settings.wrap_in_card %} card color-{{ block.settings.color_scheme }}{% endif %}"
   style="--gap: {{ block.settings.layout_gap }}px;"
@@ -46,4 +44,17 @@
       transform: translateY(-2px);
     }
   }
+
+  /* PLP / search grids: premium card footer (title + price only) */
+  .main-collection__products-grid .product-card quick-add-component,
+  .main-collection__products-grid .product-card _product-card-quick-add,
+  .main-search__products-grid .product-card quick-add-component,
+  .main-search__products-grid .product-card _product-card-quick-add,
+  .main-collection__products-grid .product-card product-card-swatches,
+  .main-collection__products-grid .product-card rating-stars,
+  .main-search__products-grid .product-card product-card-swatches,
+  .main-search__products-grid .product-card rating-stars {
+    display: none !important;
+  }
+
 {% endstylesheet %}

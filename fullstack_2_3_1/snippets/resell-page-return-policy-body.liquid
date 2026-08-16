@@ -1,0 +1,149 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign contact_url = 'mailto:contact@resell-lausanne.ch'
+  assign return_request_url = pages['demande-retour'].url | default: '/pages/demande-retour'
+  assign cgv_url = pages['conditions-generales-vente'].url | default: pages.cgv.url | default: '/pages/conditions-generales-vente'
+  assign livraison_url = pages.livraison.url | default: '/pages/livraison'
+  assign mentions_url = pages['mentions-legales'].url | default: '/pages/mentions-legales'
+%}
+
+<div class="rl-faq-page__legal-body">
+{% if locale_base == 'de' %}
+<p class="rl-faq-page__legal-version">Version vom 18. Juli 2026</p>
+
+<h2>1. Geltungsbereich</h2>
+<p>Diese Rückgabe- und Erstattungsrichtlinie (« Richtlinie ») gilt für alle Bestellungen auf <a href="https://www.resell-lausanne.ch">www.resell-lausanne.ch</a>, betrieben von Solutions Manzinali, Einzelunternehmen, Chemin de Bas-de-Plan 6, 1030 Bussigny, Schweiz, IDE CHE-309.864.712, MwSt.-Nr. CHE-309.864.712 (« Resell Lausanne »).</p>
+<p>Sie ist integraler Bestandteil unserer <a href="{{ cgv_url }}">AGB</a>. Zwingende Verbraucherrechte bleiben vorbehalten.</p>
+
+<h2>2. Freiwillige Retouren — nur Sneakers</h2>
+<p>Freiwillige Retouren (Grösse, Meinungsänderung, Präferenz) sind <strong>ausschliesslich für Sneakers / Schuhe</strong> möglich, die neu, ungetragen und vollständig (Box, Etiketten, Zubehör, Resell-Siegel) zurückkommen.</p>
+<p><strong>Bekleidung, Accessoires und Streetwear</strong> sind von freiwilligen Retouren ausgeschlossen, ausser bei nachgewiesenem Mangel oder unserem Fehler.</p>
+
+<h2>3. Ausgeschlossene Produkte</h2>
+<p>Keine freiwillige Retoure für (ausser unser Fehler oder nachgewiesener Mangel):</p>
+<ul>
+  <li>Uhren, Schmuck, Collectibles und jedes Nicht-Sneaker-Produkt;</li>
+  <li>jeder Artikel mit Kaufpreis über <strong>CHF&nbsp;650.–</strong>;</li>
+  <li>jeder Artikel aus <strong>Sale</strong>, <strong>Soldes 48h</strong>, Liquidation, Archiv oder zum <strong>Aktionspreis</strong> (durchgestrichener Preis);</li>
+  <li>Artikel mit entferntem oder beschädigtem Resell-Siegel nach Anprobe.</li>
+</ul>
+
+<h2>4. Frist</h2>
+<p>Die Anfrage muss innerhalb von <strong>14 Kalendertagen</strong> nach Erhalt gestellt werden, <strong>bevor</strong> ein Paket zurückgesendet wird.</p>
+
+<h2>5. Schriftliche Genehmigung erforderlich</h2>
+<p><strong>Jede Retoure erfordert eine vorherige schriftliche Genehmigung</strong> durch Resell Lausanne. Nach Prüfung Ihrer Anfrage teilen wir Ihnen die anwendbaren Anweisungen und die Rücksendeadresse mit.</p>
+<p>Keine Retoure ohne vorherige Genehmigung, an die in den <a href="{{ mentions_url }}">Impressum</a> genannte Adresse, an eine frühere Adresse oder an eine andere Adresse als die ausdrücklich mitgeteilte, wird angenommen oder bearbeitet. Resell Lausanne lehnt jede Haftung für solche Sendungen ab. Kein Umtausch, Guthaben, keine Erstattung oder Entschädigung kann verlangt werden, bevor die Retoure gemäss mitgeteilter Prozedur eingegangen ist.</p>
+<p>Start: <a href="{{ return_request_url }}">Retourenanfrage</a>.</p>
+
+<h2>6. Gebühren</h2>
+<p>Freiwillige Retouren führen <strong>nicht</strong> zu einer Rückerstattung auf die ursprüngliche Zahlungsmethode.</p>
+<ul>
+  <li><strong>Umtausch</strong> oder <strong>Shop-Guthaben</strong> (Avoir): Abzug von <strong>10&nbsp;%</strong> Bearbeitungsgebühr.</li>
+</ul>
+<p>Beispiel: CHF&nbsp;200 Kauf → CHF&nbsp;180 Guthaben oder Wert für den Umtausch.</p>
+<p>Rückversand, Rücksendeetikett und ursprüngliche Versandkosten trägt der Kunde, ausser bei unserem Fehler oder Mangel.</p>
+
+<h2>7. Mängel, Fehler, Nichtkonformität</h2>
+<p>Bei nachgewiesenem Mangel, falschem Artikel oder Nichtkonformität kontaktieren Sie uns rasch mit Fotos. Nach Prüfung: Umtausch, Ersatz, Guthaben oder gesetzliche Erstattung — ohne die obigen freiwilligen Gebühren.</p>
+
+<h2>8. Stornierung nach Bestellbestätigung</h2>
+<p>Nach Validierung kann eine Bestellung nicht mehr storniert werden, da Beschaffung und Kosten oft sofort starten. Kontaktieren Sie uns rasch bei Änderungswünschen.</p>
+
+<h2>9. Lieferverzögerungen</h2>
+<p>Lieferfristen sind Schätzungen. Bei signifikanter Überschreitung muss der Kunde Resell Lausanne zuerst eine angemessene zusätzliche Frist schriftlich einräumen, bevor er die Stornierung verlangen kann — vorbehaltlich zwingender Rechte. Details: <a href="{{ livraison_url }}">Lieferung &amp; Fristen</a>.</p>
+
+{% elsif locale_base == 'en' %}
+<p class="rl-faq-page__legal-version">Version of 18 July 2026</p>
+
+<h2>1. Scope</h2>
+<p>This return and refund policy (“Policy”) applies to all orders on <a href="https://www.resell-lausanne.ch">www.resell-lausanne.ch</a>, operated by Solutions Manzinali, sole proprietorship, Chemin de Bas-de-Plan 6, 1030 Bussigny, Switzerland, business ID CHE-309.864.712, VAT no. CHE-309.864.712 (“Resell Lausanne”).</p>
+<p>It forms an integral part of our <a href="{{ cgv_url }}">Terms and Conditions of Sale</a>. Mandatory consumer rights remain reserved.</p>
+
+<h2>2. Voluntary returns — sneakers only</h2>
+<p>Voluntary returns (size, change of mind, preference) are available <strong>for sneakers / footwear only</strong>, provided items are returned new, unworn and complete (box, labels, accessories, Resell seal intact).</p>
+<p><strong>Apparel, accessories and streetwear</strong> are excluded from voluntary returns, except in case of proven defect or our error.</p>
+
+<h2>3. Excluded products</h2>
+<p>No voluntary return for (except our error or proven defect):</p>
+<ul>
+  <li>watches, jewellery, collectibles and any non-sneaker product;</li>
+  <li>any item with a purchase price above <strong>CHF&nbsp;650.–</strong>;</li>
+  <li>any item purchased on <strong>sale</strong>, <strong>Soldes 48h</strong>, clearance, archive or at a <strong>promotional price</strong> (compare-at / strikethrough price);</li>
+  <li>items with the Resell seal removed or damaged after trying on.</li>
+</ul>
+
+<h2>4. Time limit</h2>
+<p>Requests must be submitted within <strong>14 calendar days</strong> of receipt, <strong>before</strong> shipping any parcel back.</p>
+
+<h2>5. Prior written approval required</h2>
+<p><strong>Every return requires prior written approval</strong> from Resell Lausanne. Once your request is reviewed, we will send applicable instructions and the return address.</p>
+<p>No return sent without prior approval, to the address in our <a href="{{ mentions_url }}">legal notice</a>, to a former address or to any address other than the one expressly communicated by Resell Lausanne will be accepted or processed. Resell Lausanne declines all liability for such shipments. No exchange, store credit, refund or compensation may be claimed until the return is received in accordance with the communicated procedure.</p>
+<p>Start here: <a href="{{ return_request_url }}">Return request</a>.</p>
+
+<h2>6. Fees</h2>
+<p>Voluntary returns do <strong>not</strong> result in a refund to the original payment method.</p>
+<ul>
+  <li><strong>Exchange</strong> or <strong>store credit</strong>: <strong>10%</strong> processing fee deducted.</li>
+</ul>
+<p>Example: CHF 200 purchase → CHF 180 credit or value applied to an exchange.</p>
+<p>Return shipping, return label and original outbound shipping remain the Customer’s responsibility, except for our error or defect.</p>
+
+<h2>7. Defects, errors, non-conformity</h2>
+<p>For proven defect, wrong item or non-conformity, contact us promptly with photos. After review: exchange, replacement, store credit or mandatory refund — without the voluntary fees above.</p>
+
+<h2>8. Cancellation after order confirmation</h2>
+<p>Once validated, an order generally cannot be cancelled as sourcing and costs are often incurred immediately. Contact us quickly if you need to change your order.</p>
+
+<h2>9. Delivery delays</h2>
+<p>Delivery timeframes are estimates. If significantly exceeded, the Customer must first grant Resell Lausanne a reasonable additional period in writing before requesting cancellation, subject to mandatory rights. Details: <a href="{{ livraison_url }}">Shipping &amp; delivery times</a>.</p>
+
+{% else %}
+<p class="rl-faq-page__legal-version">Version du 18 juillet 2026</p>
+
+<h2>1. Champ d’application</h2>
+<p>La présente politique de retour et de remboursement (« Politique ») s’applique à toute commande passée sur <a href="https://www.resell-lausanne.ch">www.resell-lausanne.ch</a>, exploité par Solutions Manzinali, raison individuelle, Chemin de Bas-de-Plan 6, 1030 Bussigny, Suisse, numéro IDE CHE-309.864.712, inscrite à la TVA sous le numéro CHE-309.864.712 (« Resell Lausanne »).</p>
+<p>Elle fait partie intégrante de nos <a href="{{ cgv_url }}">conditions générales de vente</a>. Les droits impératifs applicables au consommateur demeurent réservés.</p>
+
+<h2>2. Retours volontaires — sneakers uniquement</h2>
+<p>Les retours volontaires (taille, changement d’avis, préférence personnelle) concernent <strong>exclusivement les sneakers / chaussures</strong>, à condition qu’elles soient retournées neuves, non portées et complètes (boîte, étiquettes, accessoires, scellé Resell intact).</p>
+<p>Les <strong>vêtements, accessoires et streetwear</strong> sont exclus des retours volontaires, sauf en cas de défaut avéré ou d’erreur de notre part.</p>
+
+<h2>3. Produits exclus</h2>
+<p>Aucun retour volontaire pour (sauf erreur de notre part ou défaut avéré)&nbsp;:</p>
+<ul>
+  <li>montres, bijoux, collectibles et tout produit hors sneaker ;</li>
+  <li>tout article d’un prix d’achat supérieur à <strong>CHF&nbsp;650.–</strong> ;</li>
+  <li>tout article acheté en <strong>Soldes</strong>, <strong>Soldes 48h</strong>, liquidation, archive ou à <strong>prix promotionnel</strong> (prix barré) ;</li>
+  <li>article dont le scellé Resell a été retiré ou endommagé après essayage.</li>
+</ul>
+
+<h2>4. Délai</h2>
+<p>La demande doit être formulée dans un délai de <strong>14 jours calendaires</strong> après réception, <strong>avant</strong> tout renvoi de colis.</p>
+
+<h2>5. Autorisation écrite préalable obligatoire</h2>
+<p><strong>Tout retour nécessite une autorisation écrite préalable</strong> de Resell Lausanne. Après validation de la demande, Resell Lausanne communique au Client les instructions et l’adresse de retour applicables.</p>
+<p>Aucun retour envoyé sans autorisation préalable, à l’adresse figurant dans les <a href="{{ mentions_url }}">mentions légales</a>, à une ancienne adresse ou à toute autre adresse non expressément communiquée par Resell Lausanne ne pourra être accepté ni traité. Resell Lausanne décline toute responsabilité pour ces envois. Aucun échange, avoir, remboursement ou indemnisation ne pourra être exigé tant que le retour n’aura pas été reçu conformément à la procédure communiquée.</p>
+<p>Pour initier une demande&nbsp;: <a href="{{ return_request_url }}">Demande de retour ou d’échange</a>.</p>
+
+<h2>6. Frais applicables</h2>
+<p>Les retours volontaires acceptés ne donnent <strong>pas</strong> lieu à un remboursement sur le moyen de paiement d’origine.</p>
+<ul>
+  <li><strong>Échange</strong> ou <strong>avoir / crédit boutique</strong>&nbsp;: déduction de <strong>10&nbsp;%</strong> de frais de traitement.</li>
+</ul>
+<p>Exemple&nbsp;: achat CHF&nbsp;200 → crédit boutique CHF&nbsp;180 ou valeur appliquée à l’échange.</p>
+<p>Les frais de renvoi, l’étiquette de retour et les frais d’expédition initiaux restent à la charge du Client, sauf erreur de notre part ou défaut avéré.</p>
+<p>Les commandes réglées totalement ou partiellement avec un crédit boutique ne sont pas remboursables sur le moyen de paiement d’origine&nbsp;; en cas de retour accepté, le montant éligible reste traité sous forme de crédit boutique.</p>
+
+<h2>7. Défauts, erreurs et non-conformité</h2>
+<p>En cas de défaut avéré, mauvais article reçu ou non-conformité, contactez-nous rapidement avec des photos claires. Après vérification, nous proposerons une solution adaptée&nbsp;: échange, remplacement, crédit boutique ou remboursement selon le cas — sans application des frais volontaires ci-dessus.</p>
+
+<h2>8. Annulation après validation de commande</h2>
+<p>Une fois la commande validée, elle ne peut généralement plus être annulée, car la commande peut être sourcée et des frais engagés immédiatement. Contactez-nous rapidement en cas de changement souhaité.</p>
+
+<h2>9. Délais de livraison</h2>
+<p>Les délais de livraison sont indicatifs. En cas de dépassement significatif, le Client doit d’abord accorder à Resell Lausanne un délai supplémentaire raisonnable, communiqué par écrit, avant de pouvoir demander l’annulation de la commande, sous réserve des droits impératifs applicables. Détails&nbsp;: <a href="{{ livraison_url }}">Livraison &amp; délais</a>.</p>
+
+{% endif %}
+</div>

@@ -1,0 +1,44 @@
+{% liquid
+  assign url_faq = routes.root_url | append: '/pages/faq'
+  assign url_livraison = routes.root_url | append: '/pages/faq?category=livraison'
+  assign url_echanges = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  assign url_size_guide = routes.root_url | append: '/pages/guide-des-tailles'
+  assign url_return_request = routes.root_url | append: '/pages/demande-retour'
+  assign url_sitemap = routes.root_url | append: '/pages/plan-du-site'
+
+  if pages.faq != blank
+    assign url_faq = pages.faq.url
+    assign url_livraison = pages.faq.url | append: '?category=livraison'
+    assign url_echanges = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+
+  if pages['guide-des-tailles'] != blank
+    assign url_size_guide = pages['guide-des-tailles'].url
+  endif
+
+  if pages['demande-retour'] != blank
+    assign url_return_request = pages['demande-retour'].url
+  endif
+
+  if pages['plan-du-site'] != blank
+    assign url_sitemap = pages['plan-du-site'].url
+  endif
+
+  assign url_catalog = '/collections/all'
+  if collections.all != blank
+    assign url_catalog = collections.all.url
+  endif
+%}
+
+<div class="rl-footer-links">
+  <h3 class="rl-footer-heading">{{ 'rl_footer.services_heading' | t }}</h3>
+  <ul class="rl-footer-links__list">
+    <li><a href="{{ url_faq }}" class="rl-footer-links__link">{{ 'rl_footer.services_faq' | t }}</a></li>
+    <li><a href="{{ url_livraison }}" class="rl-footer-links__link">{{ 'rl_footer.services_shipping' | t }}</a></li>
+    <li><a href="{{ url_echanges }}" class="rl-footer-links__link">{{ 'rl_footer.services_returns' | t }}</a></li>
+    <li><a href="{{ url_return_request }}" class="rl-footer-links__link">{{ 'rl_footer.services_return_form' | t }}</a></li>
+    <li><a href="{{ url_size_guide }}" class="rl-footer-links__link">{{ 'rl_footer.services_size_guide' | t }}</a></li>
+    <li><a href="{{ url_catalog }}" class="rl-footer-links__link" data-no-locale-lock>{{ 'rl_footer.services_full_catalog' | t }}</a></li>
+    <li><a href="{{ url_sitemap }}" class="rl-footer-links__link">{{ 'rl_footer.services_sitemap' | t }}</a></li>
+  </ul>
+</div>

@@ -1,0 +1,96 @@
+{% liquid
+  assign contact_url = contact_url | default: 'mailto:contact@resell-lausanne.ch'
+  assign faq_return_url = faq_return_url | default: '/pages/demande-retour'
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+%}
+{% if locale_base == 'de' %}
+  {% render 'resell-faq-echanges-article-de', contact_url: contact_url, faq_return_url: faq_return_url %}
+{% elsif locale_base == 'en' %}
+  {% render 'resell-faq-echanges-article-en', contact_url: contact_url, faq_return_url: faq_return_url %}
+{% else %}
+<details class="rl-faq-page__item">
+  <summary>Puis-je annuler une commande&nbsp;?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Une fois la commande validée, elle est automatiquement prise en charge par notre système et peut rapidement passer en traitement auprès de nos partenaires ou fournisseurs.</p>
+    <p>Pour cette raison, une commande ne peut pas être annulée dès qu’elle est en cours de traitement, même si elle n’a pas encore été expédiée.</p>
+    <p>Chez Resell Lausanne, une partie des articles est sourcée spécialement après validation de la commande. Des frais et démarches sont engagés très rapidement afin de sécuriser l’article commandé.</p>
+    <p>Nous ne proposons donc pas de remboursement pour une demande d’annulation après validation de la commande.</p>
+    <p>Si vous souhaitez modifier votre commande, contactez-nous rapidement. Selon l’avancement, nous pourrons éventuellement vous proposer une solution sous forme de crédit boutique.</p>
+    <p>Contact&nbsp;: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Puis-je retourner un article ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Les retours volontaires concernent <strong>exclusivement les sneakers / chaussures</strong>, sous forme d’échange ou de crédit boutique, à condition que l’article soit retourné dans son état d’origine.</p>
+    <p>Les <strong>vêtements et accessoires</strong> ne sont pas repris en retour volontaire, sauf erreur de notre part ou défaut avéré.</p>
+    <p>Délai&nbsp;: <strong>14 jours calendaires</strong> après réception, demande formulée <strong>avant</strong> tout renvoi.</p>
+    <p>Conditions&nbsp;: article neuf, non porté, boîte/étiquettes/accessoires complets, scellé Resell intact, aucune trace d’usage.</p>
+    <p><strong>Exclus du retour volontaire</strong> (sauf erreur ou défaut)&nbsp;: montres, bijoux, collectibles, tout produit hors sneaker, tout article à plus de <strong>CHF&nbsp;650.–</strong>, ainsi que tout article acheté en <strong>Soldes</strong>, <strong>Soldes 48h</strong>, liquidation, archive ou à <strong>prix promotionnel</strong> (prix barré).</p>
+    <p><strong>Autorisation obligatoire&nbsp;:</strong> aucun colis ne doit être renvoyé sans validation préalable. L’adresse de retour vous est communiquée par e-mail après acceptation.</p>
+    <p>Lancez une <a href="{{ faq_return_url }}">demande de retour</a>.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Quels produits ne peuvent pas être retournés&nbsp;?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Pas de retour volontaire pour&nbsp;:</p>
+    <ul>
+      <li>vêtements, accessoires et streetwear ;</li>
+      <li>montres, bijoux, collectibles et tout article hors sneaker ;</li>
+      <li>tout produit acheté à plus de <strong>CHF&nbsp;650.–</strong> ;</li>
+      <li>tout article acheté en <strong>Soldes</strong>, <strong>Soldes 48h</strong>, liquidation, archive ou à <strong>prix promotionnel</strong> (prix barré).</li>
+    </ul>
+    <p>Ces exclusions couvrent les retours volontaires, échanges de taille et crédits boutique. Aucun remboursement pour convenance personnelle sur un achat soldé ou promotionnel.</p>
+    <p>En cas d’erreur de notre part ou de défaut avéré, contactez-nous avec photos à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Les produits Soldes et prix promotionnels sont-ils éligibles au retour&nbsp;?</summary>
+  <div class="rl-faq-page__answer">
+    <p><strong>Non.</strong> Les articles vendus en Soldes, Soldes 48h, liquidation ou archive, ou à prix promotionnel (prix barré), ne sont pas éligibles aux retours volontaires, échanges ou crédit boutique.</p>
+    <p>Ces offres concernent des stocks limités, souvent en livraison 48h depuis notre entrepôt. Le prix réduit est accepté en l’état, sans possibilité de retour pour changement d’avis ou mauvaise taille.</p>
+    <p>Seuls un défaut avéré ou une erreur de notre part peuvent ouvrir un recours, conformément à la loi applicable.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Comment fonctionne le crédit boutique ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Les retours volontaires acceptés ne donnent pas lieu à un remboursement bancaire.</p>
+    <p>Échange ou crédit boutique (avoir)&nbsp;: frais de <strong>10&nbsp;%</strong>.</p>
+    <p>Exemple&nbsp;: achat CHF&nbsp;200 → CHF&nbsp;180 de crédit ou appliqués à un échange.</p>
+    <p>Les commandes réglées avec un crédit boutique restent traitées en crédit boutique en cas de retour accepté.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Quels sont les frais de retour ?</summary>
+  <div class="rl-faq-page__answer">
+    <p><strong>10&nbsp;%</strong> pour un échange de taille ou de modèle, ou pour un crédit boutique.</p>
+    <p>Les frais d’expédition initiaux, de renvoi et l’étiquette de retour sont à votre charge, sauf erreur de notre part ou défaut avéré.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Puis-je échanger ma taille ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>Échange direct si la taille est disponible (frais de <strong>10&nbsp;%</strong>), sinon crédit boutique (frais de <strong>10&nbsp;%</strong>).</p>
+    <p>Contactez-nous à <a href="{{ contact_url }}">contact@resell-lausanne.ch</a> ou via la <a href="{{ faq_return_url }}">demande de retour</a> avant tout envoi.</p>
+  </div>
+</details>
+
+<details class="rl-faq-page__item">
+  <summary>Pourquoi ne proposez-vous pas de remboursement sur le moyen de paiement d'origine ?</summary>
+  <div class="rl-faq-page__answer">
+    <p>La majorité des produits sont sourcés spécifiquement pour chaque commande. Les retours pour convenance personnelle représentent un coût important (achat, transport, contrôle, stock immobilisé).</p>
+    <p>Les retours volontaires sont donc traités en échange ou crédit boutique, ce qui nous permet de maintenir des prix compétitifs et un large catalogue.</p>
+    <p>En cas d’erreur de notre part ou de défaut avéré, nous appliquons les solutions prévues par la loi, y compris le remboursement le cas échéant.</p>
+    <p>Questions&nbsp;: <a href="{{ contact_url }}">contact@resell-lausanne.ch</a>.</p>
+  </div>
+</details>
+{% endif %}

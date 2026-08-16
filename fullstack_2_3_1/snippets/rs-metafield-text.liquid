@@ -1,0 +1,17 @@
+{%- doc -%}
+  Safe single-line metafield text for theme Liquid.
+
+  @param {object} metafield - Shopify metafield object
+{%- enddoc -%}
+
+{%- liquid
+  assign rs_mf_text = ''
+  if metafield != blank
+    if metafield.value != blank
+      assign rs_mf_text = metafield.value | append: '' | strip
+    else
+      assign rs_mf_text = metafield | append: '' | strip
+    endif
+  endif
+-%}
+{{- rs_mf_text -}}

@@ -8,6 +8,8 @@
   @param {string} [widths] - Largeurs d'image pour les images responsives.
   @param {string} [sizes] - Tailles d'image pour les images responsives.
   @param {string} [ratio] - Ratio de l'image.
+  @param {boolean} [preload] - Précharge l'image via Link header Shopify.
+  @param {string} [alt_fallback] - Alt de secours (ex: product.title) utilisé uniquement si media.alt est vide.
 
   @example
   {% render 'product-media', show_video: true, media: media %}
@@ -17,13 +19,32 @@
   assign widths = widths | default: '300, 450, 600, 750, 900, 1050, 1200, 1350, 1500, 1650, 1800, 1950, 2000, 2500, 3000, 3500, 4000, 5000'
   assign video_loop = video_loop | default: true
   assign enable_video_controls = enable_video_controls | default: true
+  assign image_loading = loading | default: 'lazy'
+  assign image_fetchpriority = fetchpriority | default: 'auto'
+  assign image_preload = preload | default: false
+  assign image_width = image_width | default: 1200
+  assign image_decoding = decoding | default: 'async'
+  # SEO: fall back to a product-level alt only when the media has no alt set.
+  # (media.alt is nil/empty when the merchant left the image alt blank in admin.)
+  assign media_alt = media.alt | default: alt_fallback
 %}
 
 <div class="product-media" style="--ratio: {{ ratio | default: media.aspect_ratio }}">
   {% if media != blank %}
     {%- case media.media_type -%}
       {% when 'image' %}
-        {{ media.preview_image | image_url: width: 1200 | image_tag: widths: widths, alt: media.alt, sizes: sizes }}
+        {{
+          media.preview_image
+          | image_url: width: image_width
+          | image_tag:
+            widths: widths,
+            alt: media_alt,
+            sizes: sizes,
+            loading: image_loading,
+            fetchpriority: image_fetchpriority,
+            preload: image_preload,
+            decoding: image_decoding
+        }}
       {% when 'video', 'external_video' %}
         {% if show_video %}
           {%- render 'video',
@@ -35,7 +56,18 @@
             enable_video_controls: enable_video_controls
           -%}
         {% else %}
-          {{ media.preview_image | image_url: width: 1200 | image_tag: widths: widths, alt: media.alt, sizes: sizes }}
+          {{
+            media.preview_image
+            | image_url: width: image_width
+            | image_tag:
+              widths: widths,
+              alt: media_alt,
+              sizes: sizes,
+              loading: image_loading,
+              fetchpriority: image_fetchpriority,
+              preload: image_preload,
+              decoding: image_decoding
+          }}
         {% endif %}
     {% endcase %}
   {% else %}
@@ -46,6 +78,7 @@
       height="750"
       class="placeholder-image"
       loading="lazy"
+      decoding="async"
     >
   {% endif %}
 </div>

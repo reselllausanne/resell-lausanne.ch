@@ -6,6 +6,17 @@
 {% enddoc %}
 
 <div
+  {% liquid
+    assign rl_group_context = block.settings.rl_group_context | default: 'default'
+    if rl_group_context == 'default'
+      assign rl_ac_fb = block.settings.additional_class | default: ''
+      if rl_ac_fb contains 'rl-pdp-prefooter__usp-grid'
+        assign rl_group_context = 'pdp_prefooter_grid'
+      elsif rl_ac_fb contains 'rl-pdp-prefooter__usp-item'
+        assign rl_group_context = 'pdp_prefooter_item'
+      endif
+    endif
+  %}
   class="
     group group--{{ block.settings.layout_type }}
     {%- if block.settings.wrap_in_card %} card color-{{ block.settings.color_scheme }}{% endif -%}
@@ -13,6 +24,8 @@
     {%- if block.settings.card_link != blank and block.settings.wrap_in_card %} stretched-link{% endif -%}
     {%- if block.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
     {%- if block.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+    {%- if rl_group_context == 'pdp_prefooter_grid' %} rl-pdp-prefooter__usp-grid{% endif -%}
+    {%- if rl_group_context == 'pdp_prefooter_item' %} rl-pdp-prefooter__usp-item{% endif -%}
     {%- if block.settings.additional_class != blank %} {{ block.settings.additional_class }}{% endif -%}
   "
   style="
@@ -421,6 +434,18 @@
     {
       "type": "header",
       "content": "t:advanced_settings"
+    },
+    {
+      "type": "select",
+      "id": "rl_group_context",
+      "label": "Resell group context",
+      "info": "Use this instead of CSS classes in Additional class — Translate & Adapt can break translated class names.",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "pdp_prefooter_grid", "label": "PDP prefooter USP grid" },
+        { "value": "pdp_prefooter_item", "label": "PDP prefooter USP item" }
+      ]
     },
     {
       "type": "text",

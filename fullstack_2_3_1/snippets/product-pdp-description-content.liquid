@@ -1,0 +1,67 @@
+
+{% doc %}
+  PDP description accordion body: French intro, sanitized body_html, structured specs.
+
+  @param {product} product - Product object
+{% enddoc %}
+
+{% liquid
+  assign pdp_product = product | default: closest.product
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign use_raw_stockx_description = false
+  if locale_iso == 'en' or locale_iso contains 'en-'
+    assign use_raw_stockx_description = true
+  endif
+  assign raw_description = pdp_product.description | default: pdp_product.body_html | default: ''
+%}
+
+{% if use_raw_stockx_description %}
+  {% assign sanitized_description = raw_description %}
+{% else %}
+  {% assign sanitized_description = raw_description
+    | replace: 'Sold and shipped by StockX', ''
+    | replace: 'sold and shipped by StockX', ''
+    | replace: 'Sold and shipped by stockx', ''
+    | replace: 'sold and shipped by stockx', ''
+    | replace: 'Shipped by StockX', ''
+    | replace: 'shipped by StockX', ''
+    | replace: 'Shipped by stockx', ''
+    | replace: 'shipped by stockx', ''
+    | replace: 'Sold by StockX', ''
+    | replace: 'sold by StockX', ''
+    | replace: 'Sold by stockx', ''
+    | replace: 'sold by stockx', ''
+    | replace: 'Available on StockX', ''
+    | replace: 'available on StockX', ''
+    | replace: 'available on stockx', ''
+    | replace: 'Listed on StockX', ''
+    | replace: 'listed on StockX', ''
+    | replace: 'listed on stockx', ''
+    | replace: 'Purchased from StockX', ''
+    | replace: 'purchased from StockX', ''
+    | replace: 'purchased from stockx', ''
+    | replace: 'STOCKX', 'Resell Lausanne'
+    | replace: 'StockX', 'Resell Lausanne'
+    | replace: 'stockx', 'Resell Lausanne'
+  %}
+{% endif %}
+
+{% capture sanitized_description %}
+  {% render 'rl-sanitize-rich-html', html: sanitized_description %}
+{% endcapture %}
+{% assign sanitized_description = sanitized_description | strip %}
+
+<div class="product-pdp-description">
+  {% render 'product-pdp-seo-boost', product: pdp_product %}
+  {% if sanitized_description != blank %}
+    <div class="product-pdp-description__body rte">
+      {{ sanitized_description }}
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .product-pdp-description__body {
+    margin: 0;
+  }
+{% endstylesheet %}

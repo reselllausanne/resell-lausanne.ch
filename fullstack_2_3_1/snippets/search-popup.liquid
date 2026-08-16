@@ -1,7 +1,15 @@
-{%- if section.settings.enable_predictive_search -%}
-  <script src="{{ 'predictive-search.js' | asset_url }}" type="module"></script>
-{%- endif -%}
+{%- liquid
+  assign popup_nav_mode = section.settings.search_navigation_mode | default: 'live_page'
+  if section.settings.enable_predictive_search != true
+    assign popup_nav_mode = 'off'
+  endif
+-%}
 
+{%- if popup_nav_mode == 'live_page' -%}
+  <a class="header__icon-search header__icon-search--link" href="{{ routes.search_url }}" aria-label="{{ 'search.placeholder' | t }}">
+    <span class="material-symbols-{{ settings.icon_style }} notranslate icon" translate="no">search</span>
+  </a>
+{%- else -%}
 <dialog-component class="search-popup">
   <dialog
     id="search-popup"
@@ -12,9 +20,9 @@
       --search-modal-max-height-mobile: 85dvh;
     "
   >
-    <div class="dialog-modal__content">
+    <div class="dialog-modal__content search-popup__inner">
       {% capture search_form %}
-        <form action="{{ routes.search_url }}" class="search-form">
+        <form action="{{ routes.search_url }}" method="get" class="search-form" role="search">
           {% assign search_terms = search.terms | escape %}
           {% assign search_label = 'search.placeholder' | t %}
           <div class="input-group">
@@ -31,18 +39,32 @@
         </form>
       {% endcapture %}
 
-      {%- if section.settings.enable_predictive_search -%}
-        <predictive-search>
+      {%- assign popup_search_mode = popup_nav_mode -%}
+
+      {%- if popup_search_mode == 'dropdown' -%}
+        <predictive-search data-mode="dropdown">
           {{ search_form }}
 
-          <div data-ref="predictive-search" tabindex="-1" class="predictive-search-results-container">
-            {%- render 'loading-spinner' -%}
+          {% render 'search-landing' %}
+
+          <div
+            data-ref="predictive-live"
+            tabindex="-1"
+            class="predictive-search-results-container predictive-search-live"
+            style="display: none;"
+          >
+            <div data-ref="predictive-search">
+              {%- render 'loading-spinner' -%}
+            </div>
           </div>
 
           <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
         </predictive-search>
       {%- else -%}
-        {{ search_form }}
+        <div class="search-popup__non-predictive">
+          {{ search_form }}
+          {% render 'search-landing' %}
+        </div>
       {%- endif -%}
     </div>
   </dialog>
@@ -51,57 +73,6 @@
     <span class="material-symbols-{{ settings.icon_style }} notranslate icon" translate="no">search</span>
   </button>
 </dialog-component>
+{%- endif -%}
 
-{% stylesheet %}
-  .header__icon-search {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    color: inherit;
-    display: flex;
-  }
-
-  .dialog-modal--search {
-    padding: var(--page-margin-mobile);
-    flex-direction: row;
-    gap: var(--gap-xs);
-    align-items: center;
-    width: var(--modal-width);
-    overflow: hidden !important;
-    max-height: var(--search-modal-max-height-mobile);
-
-    @media (width > 750px) {
-      max-height: var(--search-modal-max-height);
-    }
-
-    &[open] {
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .dialog-modal__content {
-      width: 100%;
-    }
-
-    .dialog-modal__content .search-form {
-      display: flex;
-      flex-direction: row;
-      gap: var(--gap-xs);
-      align-items: center;
-      margin: 0;
-    }
-
-    .dialog-modal__close {
-      position: relative;
-      top: auto;
-      right: auto;
-    }
-  }
-
-  @media (width > 750px) {
-    .dialog-modal--search {
-      padding: var(--padding-md);
-    }
-  }
-{% endstylesheet %}
+{% comment %} Search popup styles → assets/rl-header.css {% endcomment %}

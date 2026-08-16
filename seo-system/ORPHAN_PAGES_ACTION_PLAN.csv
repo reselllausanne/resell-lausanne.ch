@@ -1,0 +1,23 @@
+url,page_type,indexability,organic_value,commercial_value,likely_reason_orphaned,recommended_action,suggested_internal_links_from,suggested_anchor_text,priority,validation
+# NOTE: ORPHAN-RISK derived from taxonomy vs chip-registry vs homepage rails (not in either = weak internal linking). Confirm true orphan status in Ahrefs after ingestion.,,,,,,,,,,
+/collections/nike-air-max-97,model collection,indexable,high,high,"In taxonomy but missing from Nike chip registry (has 90/95/1/TN not 97)",add to Nike subcollection chip registry,Nike PLP + Air Max parent + related model chips,Nike Air Max 97,P1,Ahrefs orphan + inlinks
+/collections/nike-air-max,model-parent collection,indexable,high,high,"Parent Air Max not chipped anywhere",add parent chip + link from AM models,Nike PLP + AM90/95/97/1/TN pages,Nike Air Max,P1,inlinks recount
+/collections/adidas-ultra-boost,model collection,indexable,med,med,"In taxonomy, not in adidas chip registry",add to adidas chip registry,Adidas PLP,Adidas Ultra Boost,P2,Ahrefs orphan
+/collections/adidas-taekwendo,model collection,indexable,med,med,"In taxonomy (note handle spelling), not chipped",add chip or fix handle taekwendo,Adidas PLP,Adidas Taekwondo,P2,Ahrefs orphan
+/collections/asics-running,model collection,indexable,med,med,"Not in ASICS chip registry",add to asics chip registry,ASICS PLP,ASICS Running,P2,Ahrefs orphan
+/collections/asics-gel-lyt-iii,model collection,indexable,med,med,"Not chipped",add to asics chip registry,ASICS PLP + Gel-Lyte guide,ASICS Gel-Lyte III,P2,Ahrefs orphan
+/collections/off-white,brand collection,indexable,med,high,"Not in homepage streetwear rail",add to homepage rail + streetwear menu,Home streetwear rail + Nike x Off-White,Off-White,P1,inlinks
+/collections/denim-tears,brand collection,indexable,med,med,"SEO snippet exists but low internal links",add to streetwear rail/menu,Home + streetwear collections SEO text,Denim Tears,P2,inlinks
+/collections/gallery-dept,brand collection,indexable,med,med,"Not in rails/menu",add to streetwear menu,Streetwear collections cross-links,Gallery Dept.,P2,Ahrefs orphan
+/collections/hellstar,brand collection,indexable,med,med,"Not in rails/menu",add to streetwear menu,Streetwear collections cross-links,Hellstar,P2,Ahrefs orphan
+/collections/stone-island,brand collection,indexable,med,med,"Not in rails/menu",add to streetwear menu,Streetwear collections,Stone Island,P3,Ahrefs orphan
+/collections/the-north-face,brand collection,indexable,med,med,"Not in rails/menu",add to streetwear menu,Streetwear collections,The North Face,P3,Ahrefs orphan
+/collections/aime-leon-dore,brand collection,indexable,low,med,"Not in rails/menu",add to streetwear menu,Streetwear collections,Aime Leon Dore,P3,Ahrefs orphan
+/collections/vomero,model collection,indexable,high,high,"High demand (Vomero 5); ensure chipped",confirm Nike chip + homepage strip,Nike PLP + trend page,Nike Zoom Vomero 5,P1,inlinks
+/collections/puma-speedcat,model collection,indexable,high,high,"Trend model; ensure linked beyond Puma chip",add to trend rail + homepage strip,Home trend rail + Puma PLP,Puma Speedcat,P1,inlinks
+/collections/hoka,brand collection,indexable,med,med,"Brand in taxonomy, no chip/rail",add brand menu + performance running links,Menu + running guide,Hoka,P2,Ahrefs orphan
+/collections/on,brand collection,indexable,med,med,"On Running; SEO snippet exists; weak links",add to menu + running collection,Menu + running guide,On Running,P2,inlinks
+/collections/converse,brand collection,indexable,med,med,"SEO+FAQ snippet exist; ensure linked",add to menu + retro rail,Menu + retro sneakers,Converse,P3,inlinks
+/collections/maison-mihara-peterson,model collection,indexable,low,med,"Deep model, only via breadcrumb inference",add to Maison Mihara chip registry,Maison Mihara PLP,Maison Mihara Peterson,P3,Ahrefs orphan
+/collections/lego-technic,model collection,indexable,med,med,"Collectible sub, menu-only",add to LEGO parent chips + sitemap,LEGO PLP,LEGO Technic,P3,Ahrefs orphan
+/collections/labubu,model collection,indexable,high,high,"High trend; SEO snippet exists; ensure linked",homepage trend + Pop Mart parent,Home trend rail + Pop Mart,Labubu,P1,inlinks

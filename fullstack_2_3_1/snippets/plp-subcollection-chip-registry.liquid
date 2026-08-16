@@ -1,0 +1,45 @@
+{% comment %}
+  Sub-collection chip registry — title::handle pairs (|| separated).
+
+  @param parent {string} parent brand handle
+{% endcomment %}
+{% case parent %}
+  {% when 'asics' %}
+    Asics Gel-Kayano 14::asics-gel-kayano-14||Asics Gel-1130::gel-1130||ASICS Gel-NYC::gel-nyc||Asics Gel-Nimbus::asics-gel-nimbus||Onitsuka Tiger::onitsuka-tiger||Asics GT-2160::asics-gt-2160||Asics Gel-Lyte III::asics-gel-lyt-iii||ASICS Running::asics-running||Autres Asics::asics-other-models
+  {% when 'air-jordan' %}
+    Air Jordan 1 Low::air-jordan-1-low||Air Jordan 1 Mid::air-jordan-1-mid||Air Jordan 1 High::air-jordan-1-high||Air Jordan 2::air-jordan-2||Air Jordan 3::air-jordan-3||Air Jordan 4::air-jordan-4||Air Jordan 5::air-jordan-5||Air Jordan 6::air-jordan-6||Air Jordan 11::air-jordan-11||Autres Air Jordan::autre-jordan
+  {% when 'nike' %}
+    Nike Mind 001::nike-mind||Nike Dunk Low::dunk-low||Nike Dunk High::nike-dunk-high||Nike Dunk SB::dunk-sb||Nike Air Force 1 Low::air-force-1||Nike Air Max::nike-air-max||Nike Air Max 1::nike-air-max-one||Nike Air Max Plus TN::nike-air-max-plus-tn||Nike Air Max 90::nike-air-max-90||Nike Air Max 95::nike-air-max-95||Nike Air Max 97::nike-air-max-97||Nike x Travis Scott::air-jordan-x-travis-scott||Nike Shox::nike-shox||Nike x Sacai::nike-x-sacai||Nike x Off-White::nike-x-off-white||Nike x NOCTA::nike-x-nocta||Nike ReactX Rejuven8::nike-reactx-rejuven8||Nike Zoom Vomero 5::vomero||Nike P-6000::p-6000||Nike Cortez::nike-cortez||Nike Blazer::nike-blazer||Autres Nike::nike
+  {% when 'yeezy' %}
+    Yeezy Slide::yeezy-slide||Yeezy Foam RNNR::foam-rnr||Yeezy 350 V2::yeezy-350||Yeezy 380::yeezy-380||Yeezy 500::yeezy-500||Yeezy 700::yeezy-700||Autres Yeezy::autre-yeezy
+  {% when 'adidas' %}
+    Adidas Spezial::adidas-spezial||Adidas SL 72::adidas-sl72||Adidas XLG Runner::adidas-xlg-runner||Adidas Superstar::adidas-superstar||Adidas Samba::adidas-samba||Adidas Campus::adidas-campus||Adidas Gazelle::adidas-gazelle||Adidas Forum Low::adidas-forum-low||Adidas Ultra Boost::adidas-ultra-boost||Adidas Taekwondo::adidas-taekwendo
+  {% when 'new-balance' %}
+    New Balance 2002R::new-balance-2002r||New Balance 204L::new-balance-204l||New Balance 740::new-balance-740||New Balance 530::new-balance-530||New Balance 9060::9060||New Balance 1906R::new-balance-1906r||New Balance 550::new-balance-550||New Balance 574::new-balance-574||New Balance 990::new-balance-990||New Balance 327::new-balance-327||New Balance 1000::new-balance-1000||Autres New Balance::new-balance-other-models
+  {% when 'saucony' %}
+    Saucony ProGrid Omni 9::saucony-progrid-omni-9||Saucony ProGrid Triumph 4::saucony-progrid-triumph-4||Autres Saucony::saucony
+  {% when 'puma' %}
+    Puma Speedcat::puma-speedcat||Autres Puma::puma
+  {% when 'ugg' %}
+    UGG Tazz::ugg-tazz||UGG Lowmel::ugg-lowmell||UGG Ultra Mini::ugg-mini-boot||UGG Tasman::ugg-tasman||UGG Classic Mini::ugg-classic-mini||Autres UGG::ugg
+  {% when 'birkenstock' %}
+    Birkenstock Boston::birkenstock-boston||Birkenstock Arizona::birkenstock-arizona||Autres Birkenstock::birkenstock
+  {% when 'maison-mihara' %}
+    Maison Mihara Peterson::maison-mihara-peterson||Maison Mihara Hank::maison-mihara-hank||Maison Mihara Blakey::maison-mihara-blakey||Autres Maison Mihara::maison-mihara
+  {% when 'lego' %}
+    LEGO Star Wars::lego-star-wars||LEGO Technic::lego-technic||LEGO Harry Potter::lego-harry-potter||LEGO Marvel::lego-marvel||LEGO Icons::lego-icons||LEGO City::lego-city||LEGO Speed Champions::lego-speed-champions||Autres LEGO::lego
+  {% when 'pop-mart' %}
+    Labubu::labubu||Pop Mart::pop-mart
+  {% when 'performance-basket' %}
+    Nike::basketball-nike||Air Jordan::basketball-air-jordan||Adidas::basketball-adidas||Puma::basketball-puma||New Balance::basketball-new-balance||Under Armour::basketball-under-armour||Reebok::basketball-reebok||Anta::basketball-anta||Li-Ning::basketball-li-ning||361 Degrees::basketball-361-degrees||Rigorer::basketball-rigorer
+  {% when 'performance-basketball-bags' %}
+    Nike::nike-performance-basketball-bags
+  {% comment %}
+    Streetwear marques — sibling brand chips from mobile drawer panel
+    `demo-streetwear-marques` (header-drawer-demo-panels.liquid).
+    Same list on every marque PLP; current brand gets is-active via chip handle match.
+    Casablanca / Carhartt omitted (menu marks missing collections).
+  {% endcomment %}
+  {% when 'streetwear-marques' %}
+    Vetements::vetements||Fear of God Essentials::fear-of-god-essentials||Sp5der::sp5der||Denim Tears::denim-tears||OFF-WHITE::off-white||Vetement Travis::vetement-travis||Gallery Dept.::gallery-dept||Hellstar::hellstar||Jacquemus::jacquemus||AMI Paris::ami-paris||The North Face::the-north-face||Stone Island::stone-island||Supreme::supreme||BAPE::bape||Aimé Leon Dore::aime-leon-dore||Chrome Hearts::chrome-hearts
+{% endcase %}

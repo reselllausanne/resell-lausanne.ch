@@ -1,0 +1,211 @@
+{% comment %} English size guide copy. Params: brand, part (article|tips), sg_fitting_tips, sg_size_tips {% endcomment %}
+{% case brand %}
+{% when 'nike' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Nike shoes fit?</h3>
+          <p>Nike uses a half-size system (40, 40.5, 41…). Most models fit true to size, but a few iconic silhouettes have their quirks. On the product page, the label indicates whether it is a <em>Nike</em> (men's), <em>Nike W</em> (women's) or <em>Nike Y</em> (kids) model.</p>
+          <h3>Which size by model?</h3>
+          <p>Nike Dunk and Nike Air Max fit true to size — take your usual size. Nike Blazer runs slightly small: go up half a size. Nike Air Force 1 runs large: you can go down half a size. Sock thickness and foot width can also affect your choice.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Nike</p>
+          <ul>
+            <li><strong>Dunk Low/High:</strong> true to size — take your usual size.</li>
+            <li><strong>Air Force 1:</strong> runs large — half a size down is often recommended.</li>
+            <li><strong>Blazer:</strong> runs small — go up half a size.</li>
+            <li><strong>Air Max 90/97/1:</strong> true to size.</li>
+            <li>Wide foot? Some models come in a Large width (2E) — check the product page.</li>
+          </ul>
+  {% endcase %}
+{% when 'air-jordan' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Air Jordan shoes fit?</h3>
+          <p>Air Jordan uses the same sizing system as Nike (half sizes). Nearly all retro models — Jordan 1, 3, 4, 5, 11 — fit true to size. On the product page, <em>Nike</em> refers to the men's guide, <em>Nike W</em> to the women's guide, and <em>Nike Y</em> to the kids' guide (or the men's guide for sizes ≥ 40).</p>
+          <h3>Do Jordan 4s run large?</h3>
+          <p>No — Jordan 4 fits true to size, like the rest of the Jordan retro line. If you are between two half sizes, take the larger one for more comfort.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Air Jordan</p>
+          <ul>
+            <li><strong>Jordan 1 / 3 / 4 / 5 / 11:</strong> true to size — take your usual size.</li>
+            <li><strong>Jordan Low / Mid / High:</strong> sizing is the same regardless of collar height.</li>
+            <li>Between two sizes? Choose the larger — you can adjust with the laces.</li>
+            <li>Wide foot: Jordan 1 offers good forefoot width.</li>
+          </ul>
+  {% endcase %}
+{% when 'adida' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Adidas shoes fit?</h3>
+          <p>Adidas uses a <strong>third-size system</strong> (36, 36⅔, 37⅓, 38…) instead of classic half sizes. That means there is no 36.5 — you get 36⅔. This can be confusing, especially when comparing with Nike or New Balance.</p>
+          <h3>Which size for Adidas sneakers?</h3>
+          <p>Most lifestyle models (Stan Smith, Samba, Gazelle, Forum) fit true to size or slightly large. When in doubt, it is often better to take the smaller size rather than the larger. For running models, check the advice on the product page directly.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Adidas</p>
+          <ul>
+            <li><strong>Samba / Gazelle:</strong> true to size — take your usual size.</li>
+            <li><strong>Stan Smith:</strong> runs slightly large — half a size down is possible.</li>
+            <li><strong>Superstar:</strong> runs large — go half a size down from your Nike size.</li>
+            <li><strong>Forum Low/High:</strong> true to size.</li>
+            <li>No half size? Adidas offers the next third up (e.g. 42 → 42⅔) for a bit more room.</li>
+          </ul>
+  {% endcase %}
+{% when 'new-balance' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do New Balance fit?</h3>
+          <p>New Balance uses half sizes and, on some models, offers different <strong>widths</strong>: D (standard), 2E (wide) and 4E (extra wide). If you have a wide foot, checking for a wide fit can save you from going up a full size.</p>
+          <h3>Tips before buying</h3>
+          <p>Try shoes at the end of the day — feet swell slightly over the course of the day. Since both feet are rarely exactly the same size, base your choice on the larger foot. Leave about 1 cm of space in front of your longest toe.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} New Balance</p>
+          <ul>
+            <li><strong>550 / 530 / 2002R:</strong> true to size — take your usual size.</li>
+            <li><strong>990v6:</strong> available in width D (standard) or 2E (wide) — choose based on your foot shape.</li>
+            <li>Wide feet? Look for 2E or 4E widths before sizing up.</li>
+            <li>Try at the end of the day for the best fit.</li>
+          </ul>
+  {% endcase %}
+{% when 'asics' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Asics fit?</h3>
+          <p>Asics is known to run <strong>slightly small</strong>, especially on running models (Gel-Kayano, Gel-Nimbus, Gel-Cumulus). The fit is generally snug for firm support. On lifestyle models (Gel-Lyte III, Japan S), sizing is closer to standard.</p>
+          <h3>Which Asics size to choose?</h3>
+          <p>For running models and snug silhouettes, go up half a size from your usual Nike size. For lifestyle models, your standard size usually works.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Asics</p>
+          <ul>
+            <li><strong>Gel-Kayano / Gel-Nimbus:</strong> runs small — take +0.5 compared to your usual Nike.</li>
+            <li><strong>Gel-Lyte III / V:</strong> true to size — your standard size works.</li>
+            <li><strong>Japan S:</strong> true to size, comparable to Nike sizing.</li>
+            <li>Wide or high-volume foot? Go up a full size rather than half.</li>
+          </ul>
+  {% endcase %}
+{% when 'yeezy' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Yeezy fit?</h3>
+          <p>Yeezy follows Adidas's third-size system, but fit varies <strong>considerably from model to model</strong>. Yeezy 350 V2 are known to run small due to stretchy Primeknit and a thin insole. Yeezy 700 fit more normally. Yeezy Slide and Foam Runner run very small.</p>
+          <h3>Which size by model?</h3>
+          <p>For Yeezy 350 V2: go up half a size (or a full size if you have a wide foot or wear thick socks). For Yeezy Slide and Foam Runner: go at least one size up from your usual size.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Yeezy</p>
+          <ul>
+            <li><strong>Yeezy 350 V2:</strong> runs small — take +0.5 (or +1 for wide feet).</li>
+            <li><strong>Yeezy 500:</strong> runs small — take +0.5.</li>
+            <li><strong>Yeezy 700 V1/V2/V3:</strong> true to size.</li>
+            <li><strong>Yeezy Slide:</strong> runs very small — take at least +1 size.</li>
+            <li><strong>Yeezy Foam Runner:</strong> runs very small — take +1 to +2 sizes.</li>
+          </ul>
+  {% endcase %}
+{% when 'ugg' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do UGG fit?</h3>
+          <p>UGG mainly uses whole US sizes. Classic boots (Mini, Short, Tall) are lined with sheepskin that <strong>naturally compresses</strong> over time and moulds to your foot. Your usual size is generally recommended — the shoe loosens slightly after a few weeks of wear.</p>
+          <h3>Between two sizes?</h3>
+          <p>If you are between sizes, take the smaller one. The fleece compresses and the boot gains a little width without becoming too large. For leather or synthetic models (Tasman, Ultra Mini Platform), sizing is more standard.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} UGG</p>
+          <ul>
+            <li><strong>Classic Mini / Short / Tall:</strong> take your usual size — the fleece compresses.</li>
+            <li><strong>Tasman / Ultra Mini:</strong> true to size.</li>
+            <li>Between two sizes? Choose the smaller — the boot widens over time.</li>
+            <li>Planning to wear thick socks? Go up half a size.</li>
+          </ul>
+  {% endcase %}
+{% when 'converse' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Converse fit?</h3>
+          <p>Converse, especially Chuck Taylor All Star, are known to <strong>run large</strong>. Soft canvas construction and a flat sole leave more room than average. As a rule, if you wear Nike 43, take Converse 42.</p>
+          <h3>Chuck Taylor vs Chuck 70: what's the difference?</h3>
+          <p>Chuck 70 runs slightly less large than the classic Chuck Taylor (about half a size difference), as the construction is a bit more structured. One Star fits true to size.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Converse</p>
+          <ul>
+            <li><strong>Chuck Taylor All Star:</strong> runs large — go one size down from Nike (e.g. Nike 43 → Converse 42).</li>
+            <li><strong>Chuck 70:</strong> runs slightly large — go half a size down.</li>
+            <li><strong>One Star / Run Star:</strong> true to size.</li>
+            <li>Canvas upper softens with wear — avoid sizing too large or you will get excess slippage.</li>
+          </ul>
+  {% endcase %}
+{% when 'salomon' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Salomon fit?</h3>
+          <p>Salomon uses the same third-size system as Adidas. Lifestyle models (XT-6, XT-4) fit true to size with a snug wrap around the foot. For technical trail models, leave about 1 cm of space in front of the toe to absorb impact on descents.</p>
+          <h3>Salomon XT-6: which size?</h3>
+          <p>The XT-6 is arguably Salomon's most popular lifestyle model. Snug but comfortable — take your usual size. If you have a particularly wide foot, consider going up one third size.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Salomon</p>
+          <ul>
+            <li><strong>XT-6 / XT-4:</strong> true to size — take your usual size.</li>
+            <li><strong>Speedcross:</strong> narrow fit — take +0.5 if you have wide feet.</li>
+            <li>Trail: leave 1 cm in front of the toe for descents.</li>
+            <li>No half size available? The next third up (e.g. 42 → 42⅔) offers a bit more room.</li>
+          </ul>
+  {% endcase %}
+{% when 'puma' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Puma fit?</h3>
+          <p>Puma uses classic half sizes and generally fits similarly to Nike. Most lifestyle models — RS-X, Suede, Clyde — follow this standard. Some models like Puma Suede may feel slightly narrow at first, but the leather softens naturally after a few weeks.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Puma</p>
+          <ul>
+            <li><strong>RS-X:</strong> true to size, comfortable fit.</li>
+            <li><strong>Suede:</strong> may feel narrow at first — leather softens with wear.</li>
+            <li><strong>Speedcat:</strong> runs slightly small — take +0.5.</li>
+            <li>Overall comparable to Nike sizing — your usual size works.</li>
+          </ul>
+  {% endcase %}
+{% when 'veja' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Veja fit?</h3>
+          <p>Veja mainly offers <strong>whole sizes</strong> without half sizes on most models. Veja sneakers run slightly large: if you usually wear Nike 42.5, you can choose Veja 42. When torn between two sizes, take the smaller one.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Veja</p>
+          <ul>
+            <li><strong>V-10 / V-12:</strong> runs slightly large — go half a size down from Nike.</li>
+            <li><strong>Campo:</strong> true to size to slightly large.</li>
+            <li><strong>Esplar:</strong> runs large — go down a full size.</li>
+            <li>No half size? Between two sizes, take the smaller one.</li>
+          </ul>
+  {% endcase %}
+{% when 'saucony' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How do Saucony fit?</h3>
+          <p>Saucony uses classic half sizes and generally fits true to size, like Nike. Lifestyle models (Jazz Original, Shadow 6000, Grid Web) offer a slightly wider fit than running models, making them comfortable from the first wear with no break-in period.</p>
+          <h3>Which Saucony size to choose?</h3>
+          <p>Take your usual size. If you have a wide foot or wear thick socks, half a size up can improve comfort. Running models (Ride, Kinvara) may benefit from an extra half size to account for foot swelling during activity.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_fitting_tips }} Saucony</p>
+          <ul>
+            <li><strong>Jazz Original / Shadow 6000:</strong> true to size — take your usual size.</li>
+            <li><strong>Grid Web / Grid 9000:</strong> true to size, slightly wider fit.</li>
+            <li><strong>Ride / Kinvara (running):</strong> take +0.5 to account for foot swelling during activity.</li>
+            <li>Wide foot? Saucony lifestyle fit is naturally more generous than Nike.</li>
+          </ul>
+  {% endcase %}
+{% when 'essentials' %}
+  {% case part %}
+  {% when 'article' %}
+<h3>How does Essentials apparel fit?</h3>
+          <p>Fear of God Essentials is designed with an <strong>intentionally oversized fit</strong>. Unlike classic clothing, the loose, draped silhouette is deliberate by designer Jerry Lorenzo. That said, pieces run genuinely large — it is consistently recommended to <strong>size down</strong> from your usual size for a balanced fit.</p>
+          <h3>Should I really size down?</h3>
+          <p>Yes, without exception. If you usually wear L in other streetwear brands, take M in Essentials. If you want an even closer fit, some people go down two sizes. The oversized look remains whatever size you choose — it is the brand's DNA.</p>
+  {% when 'tips' %}
+<p class="rl-sg__tips-title">{{ sg_size_tips }} Essentials</p>
+          <ul>
+            <li><strong>Golden rule:</strong> always size down from your usual size.</li>
+            <li>Usually wear L? Choose M in Essentials.</li>
+            <li>Want a closer fit? Go down two sizes.</li>
+            <li>The oversized cut is intentional — even in a smaller size, the piece will still feel roomy.</li>
+            <li>Hoodies and sweatshirts: sleeves are very long by design — keep that in mind.</li>
+          </ul>
+  {% endcase %}
+{% endcase %}

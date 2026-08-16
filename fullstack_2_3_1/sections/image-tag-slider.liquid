@@ -1,0 +1,1357 @@
+{% liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign price_from_label = 'search.starting_from' | t
+  assign view_more_label = section.settings.heading_link_label | default: 'See more'
+  assign prev_label = 'Previous'
+  assign next_label = 'Next'
+  if locale_base == 'fr'
+    assign view_more_label = section.settings.heading_link_label | default: 'Voir plus'
+    assign prev_label = 'Precedent'
+    assign next_label = 'Suivant'
+  elsif locale_base == 'de'
+    assign view_more_label = section.settings.heading_link_label | default: 'Mehr sehen'
+    assign prev_label = 'Zuruck'
+    assign next_label = 'Weiter'
+  endif
+  assign is_portrait = false
+  if section.settings.card_ratio == 'portrait'
+    assign is_portrait = true
+  endif
+
+  assign brand_rail = false
+  if section.settings.layout_style == 'brand_rail'
+    assign brand_rail = true
+    assign is_portrait = true
+  endif
+
+  assign home_strip = false
+  if section.settings.layout_style == 'home_strip'
+    assign home_strip = true
+    assign is_portrait = false
+  endif
+
+  assign show_heading_link = section.settings.show_heading_link
+  assign show_rail_arrows = section.settings.show_rail_arrows
+  if brand_rail
+    assign show_rail_arrows = true
+  endif
+
+  if section.id contains 'home_brand_slider_sneakers' or section.id contains 'home_brand_slider_streetwear'
+    assign show_heading_link = false
+  endif
+
+  assign rail_heading = section.settings.heading
+  assign rail_collection = section.settings.collection
+  assign rail_heading_link = section.settings.heading_link
+
+  if section.id contains 'home_slider_nouveautes'
+    assign rail_heading = 'Back to School 2026'
+    assign rail_collection = collections['back-to-school-2026']
+    assign rail_heading_link = '/collections/back-to-school-2026'
+  endif
+
+  assign heading_link_href = rail_heading_link | strip
+  if heading_link_href contains '/collections/'
+    assign heading_link_handle = heading_link_href | split: '/collections/' | last | split: '?' | first | split: '#' | first | strip | handleize
+    capture heading_link_resolved
+      render 'breadcrumb-taxonomy-collection-url', taxonomy_handle: heading_link_handle
+    endcapture
+    assign heading_link_resolved = heading_link_resolved | strip
+    if heading_link_resolved != blank
+      assign heading_link_href = heading_link_resolved
+    endif
+  endif
+
+  assign rl_pdp_placement = section.settings.rl_pdp_placement | default: 'default'
+  if rl_pdp_placement == 'default'
+    assign rl_ac_fb = section.settings.additional_class | default: ''
+    if rl_ac_fb contains 'rl-pdp-product-slider--first'
+      assign rl_pdp_placement = 'pdp_first'
+    elsif rl_ac_fb contains 'rl-pdp-product-slider'
+      assign rl_pdp_placement = 'pdp'
+    endif
+  endif
+
+  assign rl_pdp_slider = false
+  assign rl_pdp_slider_first = false
+  if rl_pdp_placement == 'pdp'
+    assign rl_pdp_slider = true
+  elsif rl_pdp_placement == 'pdp_first'
+    assign rl_pdp_slider = true
+    assign rl_pdp_slider_first = true
+  endif
+
+  assign desktop_cols = section.settings.desktop_columns | default: 4
+  if desktop_cols < 2
+    assign desktop_cols = 2
+  endif
+  if desktop_cols > 6
+    assign desktop_cols = 6
+  endif
+
+%}
+<section
+  class="
+    rl-image-tag-slider color-{{ section.settings.color_scheme }}
+    {%- if is_portrait %} rl-image-tag-slider--portrait{% endif -%}
+    {%- if brand_rail %} rl-image-tag-slider--brand-rail{% endif -%}
+    {%- if home_strip %} rl-image-tag-slider--home-strip{% endif -%}
+    {%- if section.settings.source == 'collection' %} rl-image-tag-slider--collection{% endif -%}
+    {%- if rl_pdp_slider %} rl-pdp-product-slider{% endif -%}
+    {%- if rl_pdp_slider_first %} rl-pdp-product-slider--first{% endif -%}
+    {%- if section.settings.additional_class != blank %} {{ section.settings.additional_class }}{% endif -%}
+  "
+  style="--rl-desktop-cols: {{ desktop_cols }}; --rl-rail-gap: 16px;"
+>
+  <div class="rl-image-tag-slider__base">
+    <div class="rl-image-tag-slider__inner">
+      {% if rail_heading != blank %}
+        <div class="rl-image-tag-slider__head{% if brand_rail %} rl-image-tag-slider__head--premium{% endif %}">
+          <h2 class="rl-image-tag-slider__heading">{{ rail_heading }}</h2>
+          <div class="rl-image-tag-slider__headActions">
+            {% if show_heading_link and heading_link_href != blank %}
+              <a class="rl-image-tag-slider__voir-plus" href="{{ heading_link_href }}">
+                {{ view_more_label }}
+              </a>
+            {% endif %}
+            {% if show_rail_arrows %}
+              <div class="rl-image-tag-slider__railArrows">
+                <button
+                  type="button"
+                  class="rl-image-tag-slider__railBtn rl-image-tag-slider__railBtn--prev"
+                  aria-label="{{ prev_label }}"
+                  data-rl-rail-prev
+                >
+                  {% render 'icon', icon: 'arrow_back' %}
+                </button>
+                <button
+                  type="button"
+                  class="rl-image-tag-slider__railBtn rl-image-tag-slider__railBtn--next"
+                  aria-label="{{ next_label }}"
+                  data-rl-rail-next
+                >
+                  {% render 'icon', icon: 'arrow_forward' %}
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% liquid
+        assign data_source = section.settings.source | default: 'manual'
+        assign col_obj = rail_collection
+        assign max_prod = section.settings.max_products | default: 10
+      %}
+      <div
+        class="rl-image-tag-slider__scroller"
+        role="region"
+        aria-label="{{ rail_heading | default: section.settings.slider_aria_label | default: 'Slider' }}"
+        {% if show_rail_arrows %}
+          data-rl-rail-scroller
+        {% endif %}
+        {% if home_strip %}
+          data-rl-home-scroller
+        {% endif %}
+      >
+        <ul class="rl-image-tag-slider__track" role="list">
+          {% if data_source == 'collection' and col_obj != blank %}
+            {% assign col = col_obj %}
+            {% for product in col.products limit: max_prod %}
+              <li class="rl-image-tag-slider__item">
+                <a class="rl-image-tag-slider__card" href="{{ product.url }}">
+                  <span class="rl-image-tag-slider__media">
+                    {% render 'product-card-promotional-pictos', product: product, stacked: true %}
+                    {% if product.featured_image != blank %}
+                      {% capture product_srcset %}
+                        {{ product.featured_image | image_url: width: 180 }} 180w, {{ product.featured_image | image_url: width: 260 }} 260w, {{ product.featured_image | image_url: width: 360 }} 360w, {{ product.featured_image | image_url: width: 480 }} 480w, {{ product.featured_image | image_url: width: 640 }} 640w
+                      {% endcapture %}
+                      {% liquid
+                        # Only the first visible column of cards loads eagerly; the rest stay
+                        # data-lazy deferred (rl-deferred-img) so deeper rails (e.g. 10) don't hurt LCP.
+                        assign rl_eager_cap = desktop_cols | default: 4
+                        if rl_eager_cap < 2
+                          assign rl_eager_cap = 2
+                        endif
+                        if rl_eager_cap > 4
+                          assign rl_eager_cap = 4
+                        endif
+                        assign rl_img_eager = false
+                        if forloop.index <= rl_eager_cap
+                          assign rl_img_eager = true
+                        endif
+                        assign rl_product_img_src = product.featured_image | image_url: width: 640
+                      %}
+                      {% render 'rl-deferred-img',
+                        lazy_src: rl_product_img_src,
+                        lazy_srcset: product_srcset,
+                        sizes: '(max-width: 749px) 44vw, (max-width: 1100px) 26vw, clamp(120px, 16vw, 220px)',
+                        alt: product.title,
+                        width: 320,
+                        height: 400,
+                        eager: rl_img_eager
+                      %}
+                    {% else %}
+                      <span class="rl-image-tag-slider__placeholder" aria-hidden="true"></span>
+                    {% endif %}
+                  </span>
+                  {%- capture slider_price_snapshot -%}
+                    {% render 'rs-product-price-snapshot', product: product %}
+                  {%- endcapture -%}
+                  {%- assign slider_price_parts = slider_price_snapshot | strip | split: '|' -%}
+                  <span class="rl-image-tag-slider__label">{{ product.title }}</span>
+                  {% if slider_price_parts[8] == '1' %}
+                    <span class="rl-image-tag-slider__price">
+                      {% if slider_price_parts[5] == '1' %}
+                        <span class="rl-image-tag-slider__price-from">{{ price_from_label }}</span>
+                      {% endif %}
+                      {{ slider_price_parts[2] | plus: 0 | money }}
+                    </span>
+                  {% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          {% else %}
+            {% for block in section.blocks %}
+              {%- liquid
+                assign block_col_image = nil
+                assign block_product_image = nil
+                assign block_col = nil
+                assign block_col_handle = ''
+                assign setting_col_handle = block.settings.collection_handle | strip | handleize
+                assign card_link = block.settings.link | strip
+                assign card_manual_image = block.settings.image
+                assign card_image_url = block.settings.image_url
+                assign card_image_asset = block.settings.image_asset | strip
+                assign link_col_handle = ''
+
+                if card_manual_image == blank and card_image_asset != blank
+                  assign card_image_url = card_image_asset | asset_url
+                endif
+
+                if card_link contains '/collections/'
+                  assign link_col_parts = card_link | split: '/collections/'
+                  assign link_col_handle = link_col_parts.last | split: '?' | first | split: '#' | first | strip | handleize
+                endif
+
+                comment
+                  Translate & Adapt can corrupt collection_handle on DE/EN while link stays valid.
+                  Resolve collection from setting handle first, then canonical handle parsed from link.
+                endcomment
+                if setting_col_handle != blank
+                  assign block_col = collections[setting_col_handle]
+                  if block_col != blank
+                    assign block_col_handle = setting_col_handle
+                  endif
+                endif
+
+                if block_col == blank and link_col_handle != blank
+                  assign block_col = collections[link_col_handle]
+                  if block_col != blank
+                    assign block_col_handle = link_col_handle
+                  endif
+                endif
+
+                if block_col_handle == blank
+                  if link_col_handle != blank
+                    assign block_col_handle = link_col_handle
+                  elsif setting_col_handle != blank
+                    assign block_col_handle = setting_col_handle
+                  endif
+                endif
+
+                if block_col == blank and block_col_handle != blank
+                  assign block_col = collections[block_col_handle]
+                endif
+
+                if block_col != blank
+                  if block_col.image != blank
+                    assign block_col_image = block_col.image
+                  elsif block_col.products.size > 0 and block_col.products.first.featured_image != blank
+                    assign block_product_image = block_col.products.first.featured_image
+                  endif
+                  if card_link == blank
+                    assign card_link = block_col.url
+                  endif
+                endif
+
+                if brand_rail
+                  if block_col_image != blank or block_product_image != blank
+                    assign card_manual_image = nil
+                    assign card_image_url = ''
+                  elsif block_col_handle != blank
+                    capture brand_rail_logo_url
+                      render 'brand-menu-logo-url', handle: block_col_handle
+                    endcapture
+                    assign brand_rail_logo_url = brand_rail_logo_url | strip
+                    if brand_rail_logo_url != blank
+                      assign card_image_url = brand_rail_logo_url
+                      assign card_manual_image = nil
+                    endif
+                  endif
+                endif
+
+                assign card_img_eager = false
+                if brand_rail and forloop.index <= desktop_cols
+                  assign card_img_eager = true
+                endif
+              -%}
+              <li class="rl-image-tag-slider__item" {{ block.shopify_attributes }}>
+                {% render 'rl-image-tag-slider-card',
+                  title: block.settings.title,
+                  image: card_manual_image,
+                  image_url: card_image_url,
+                  product_image: block_product_image,
+                  collection_image: block_col_image,
+                  link: card_link,
+                  compact: home_strip,
+                  eager: card_img_eager
+                %}
+              </li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if show_rail_arrows %}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+      var scroller = root.querySelector('[data-rl-rail-scroller]');
+      var prev = root.querySelector('[data-rl-rail-prev]');
+      var next = root.querySelector('[data-rl-rail-next]');
+      if (!scroller || !prev || !next) return;
+
+      var rafScheduled = false;
+      var lastClientWidth = 0;
+
+      function readAndApply() {
+        rafScheduled = false;
+        // Reads grouped — single layout pass
+        var scrollLeft = scroller.scrollLeft;
+        var scrollWidth = scroller.scrollWidth;
+        var clientWidth = scroller.clientWidth;
+        lastClientWidth = clientWidth;
+        var max = scrollWidth - clientWidth - 1;
+        if (max < 0) max = 0;
+        var atStart = scrollLeft <= 1;
+        var atEnd = scrollLeft >= max - 1;
+        // Writes after reads
+        if (prev.disabled !== atStart) {
+          prev.disabled = atStart;
+          prev.setAttribute('aria-disabled', atStart ? 'true' : 'false');
+        }
+        if (next.disabled !== atEnd) {
+          next.disabled = atEnd;
+          next.setAttribute('aria-disabled', atEnd ? 'true' : 'false');
+        }
+      }
+
+      function syncArrows() {
+        if (rafScheduled) return;
+        rafScheduled = true;
+        requestAnimationFrame(readAndApply);
+      }
+
+      function pageStep() {
+        return Math.max(1, lastClientWidth || scroller.clientWidth);
+      }
+
+      prev.addEventListener('click', function () {
+        if (prev.disabled) return;
+        scroller.scrollBy({ left: -pageStep(), behavior: 'smooth' });
+      });
+      next.addEventListener('click', function () {
+        if (next.disabled) return;
+        scroller.scrollBy({ left: pageStep(), behavior: 'smooth' });
+      });
+      scroller.addEventListener('scroll', syncArrows, { passive: true });
+      if ('onscrollend' in window) {
+        scroller.addEventListener('scrollend', syncArrows);
+      }
+      window.addEventListener('resize', syncArrows, { passive: true });
+
+      // Defer initial measurement until after first paint
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(syncArrows, { timeout: 1500 });
+      } else {
+        setTimeout(syncArrows, 200);
+      }
+    })();
+  </script>
+{% endif %}
+
+{% if home_strip %}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+      var el = root.querySelector('[data-rl-home-scroller]');
+      if (!el || el.dataset.rlHomeInit) return;
+      el.dataset.rlHomeInit = '1';
+
+      function overflows() {
+        return el.scrollWidth > el.clientWidth + 2;
+      }
+
+      el.addEventListener(
+        'wheel',
+        function (e) {
+          if (!overflows()) return;
+          var dx = e.deltaX;
+          var dy = e.deltaY;
+          if (Math.abs(dx) < Math.abs(dy) && !e.shiftKey) return;
+          e.preventDefault();
+          el.scrollLeft += dx || dy;
+        },
+        { passive: false }
+      );
+
+      var pid;
+      var down;
+      var sx;
+      var ss;
+      var moved;
+
+      el.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        if (!overflows()) return;
+        if (e.target.closest('a.rl-image-tag-slider__card')) return;
+        down = true;
+        moved = false;
+        sx = e.clientX;
+        ss = el.scrollLeft;
+        pid = e.pointerId;
+        el.setPointerCapture(pid);
+      });
+
+      el.addEventListener('pointermove', function (e) {
+        if (!down || e.pointerId !== pid) return;
+        var dx = e.clientX - sx;
+        if (Math.abs(dx) > 8) {
+          moved = true;
+          el.scrollLeft = ss - dx;
+        }
+      });
+
+      function end(e) {
+        if (!down || e.pointerId !== pid) return;
+        down = false;
+        try {
+          el.releasePointerCapture(pid);
+        } catch (_) {}
+        if (moved) {
+          var eat = function (ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            el.removeEventListener('click', eat, true);
+          };
+          el.addEventListener('click', eat, true);
+        }
+      }
+
+      el.addEventListener('pointerup', end);
+      el.addEventListener('pointercancel', end);
+    })();
+  </script>
+{% endif %}
+
+{% stylesheet %}
+  .rl-image-tag-slider {
+    overflow-x: hidden;
+    overflow-y: visible;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  /* Block layout: avoid CSS Grid “first column only” when inner is sole child (was ~1/12 width). */
+  .rl-image-tag-slider__base {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .rl-image-tag-slider__inner {
+    display: grid;
+    gap: 0.65rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .rl-image-tag-slider__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .rl-image-tag-slider__head--premium {
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+
+  .rl-image-tag-slider__head--premium .rl-image-tag-slider__heading {
+    flex: 1;
+    min-width: 0;
+    font-size: clamp(1.65rem, 4vw, 2.15rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+
+  .rl-image-tag-slider__headActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .rl-image-tag-slider__railArrows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rl-image-tag-slider__railBtn {
+    box-sizing: border-box;
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    min-height: 45px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #080808;
+    cursor: pointer;
+  }
+
+  .rl-image-tag-slider__railBtn .icon {
+    font-size: 20px;
+    font-weight: 300;
+    color: #080808;
+  }
+
+  .rl-image-tag-slider__railBtn:disabled {
+    cursor: default;
+    opacity: 1;
+  }
+
+  .rl-image-tag-slider__railBtn:disabled .icon {
+    color: #666;
+  }
+
+  .rl-image-tag-slider__heading {
+    margin: 0;
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+
+  .rl-image-tag-slider__voir-plus {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    font-size: 0.92rem;
+    font-weight: 500;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .rl-image-tag-slider__scroller {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Grid/flex child: without this, min-width:auto grows to track width → no horizontal scroll */
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    overscroll-behavior-x: contain;
+  }
+
+  .rl-image-tag-slider__scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rl-image-tag-slider__track {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.6rem;
+    min-width: 100%;
+  }
+
+  .rl-image-tag-slider__item {
+    flex: 0 0 clamp(120px, 28vw, 200px);
+    min-width: 0;
+  }
+
+  .rl-image-tag-slider__card {
+    display: grid;
+    gap: 0.45rem;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .rl-image-tag-slider__card--static {
+    cursor: default;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    text-align: inherit;
+    width: 100%;
+  }
+
+  /* premium reference strip: 32px under ticker; scroller contained (chips extend right, clip — not full-viewport row) */
+  .rl-image-tag-slider--home-strip {
+    margin-top: 32px;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__base {
+    padding-left: max(var(--page-x), env(safe-area-inset-left, 0px));
+    padding-right: var(--page-x);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__inner {
+    gap: 0;
+    max-width: 100%;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__scroller {
+    cursor: grab;
+    touch-action: pan-x;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    padding-left: 0;
+    padding-right: 0;
+    box-sizing: border-box;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__scroller:active {
+    cursor: grabbing;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__track {
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--grid-gap);
+    width: max-content;
+    min-width: min-content;
+    flex-wrap: nowrap;
+    padding-right: 0;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__item {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__card,
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__card--static {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 10px;
+    box-sizing: border-box;
+    width: auto;
+    min-width: max-content;
+    max-width: none;
+    min-height: 44px;
+    padding: 1px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #080808;
+    text-decoration: none;
+    transition: border-color 0.4s linear;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__card:hover,
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__card--static:hover {
+    border-color: #999;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__card:focus-visible,
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__card--static:focus-visible {
+    outline: 2px solid #080808;
+    outline-offset: 2px;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__media {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    aspect-ratio: unset;
+    overflow: hidden;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__media img.rl-deferred-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .rl-image-tag-slider--home-strip .rl-image-tag-slider__label {
+    flex: 0 0 auto;
+    text-align: left;
+    color: #080808;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  @media screen and (min-width: 768px) {
+    .rl-image-tag-slider--home-strip .rl-image-tag-slider__base {
+      padding-left: max(var(--page-x), env(safe-area-inset-left, 0px));
+      padding-right: var(--page-x);
+    }
+  }
+
+  .rl-image-tag-slider__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dcdcdc;
+    border-radius: 2px;
+    background: #fff;
+    aspect-ratio: 5 / 3;
+    overflow: hidden;
+    padding: 0.22rem 0.35rem;
+  }
+
+  .rl-image-tag-slider__media .product-card-promotional-pictos-stack {
+    z-index: 2;
+  }
+
+  .rl-image-tag-slider__media img.rl-deferred-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .rl-image-tag-slider__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(140deg, #f2f2f2 0%, #e7e7e7 100%);
+  }
+
+  .rl-image-tag-slider__label {
+    display: block;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rl-image-tag-slider__price {
+    display: block;
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 600;
+    color: #080808;
+  }
+
+  /* Brand rail: exactly N tiles visible (desktop), rest horizontal scroll */
+  .rl-image-tag-slider--brand-rail {
+    margin-block: 80px;
+  }
+
+  .rl-image-tag-slider--brand-rail.rl-home-slider-nouveautes {
+    margin-top: 44px;
+    margin-bottom: 24px;
+  }
+
+  .rl-image-tag-slider--brand-rail.rl-home-slider-livraison-48h {
+    margin-top: 24px;
+    margin-bottom: 56px;
+  }
+
+  @media screen and (max-width: 767.98px) {
+    .rl-image-tag-slider--brand-rail.rl-home-slider-nouveautes {
+      margin-top: 28px;
+      margin-bottom: 16px;
+    }
+
+    .rl-image-tag-slider--brand-rail.rl-home-slider-livraison-48h {
+      margin-top: 16px;
+      margin-bottom: 36px;
+    }
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__base {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding-left: clamp(24px, 6vw, 128px);
+    padding-right: clamp(24px, 6vw, 128px);
+  }
+
+  @media screen and (min-width: 768px) {
+    .rl-image-tag-slider--brand-rail .rl-image-tag-slider__base {
+      padding-left: clamp(48px, 8vw, 128px);
+      padding-right: clamp(48px, 8vw, 128px);
+    }
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__inner {
+    gap: 24px;
+    row-gap: 24px;
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__scroller {
+    container-type: inline-size;
+    container-name: rl-brand-rail;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__track {
+    gap: var(--rl-rail-gap, 16px);
+    min-width: unset;
+    width: max-content;
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__item {
+    flex: 0 0 calc((100cqi - var(--rl-rail-gap, 16px)) * 0.66);
+    max-width: calc((100cqi - var(--rl-rail-gap, 16px)) * 0.66);
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+    box-sizing: border-box;
+  }
+
+  @media screen and (min-width: 750px) {
+    .rl-image-tag-slider--brand-rail .rl-image-tag-slider__item {
+      flex: 0 0
+        calc(
+          (100cqi - (var(--rl-desktop-cols, 4) - 1) * var(--rl-rail-gap, 16px)) /
+            var(--rl-desktop-cols, 4)
+        );
+      max-width: calc(
+        (100cqi - (var(--rl-desktop-cols, 4) - 1) * var(--rl-rail-gap, 16px)) /
+          var(--rl-desktop-cols, 4)
+      );
+    }
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__media {
+    aspect-ratio: 4 / 5;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: linear-gradient(180deg, #d8dde4 0%, #9aa3ad 100%);
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__media img.rl-deferred-img {
+    object-fit: contain;
+    width: 92%;
+    height: 92%;
+    max-width: 92%;
+    max-height: 92%;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.12));
+  }
+
+  .rl-image-tag-slider--brand-rail .rl-image-tag-slider__label {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .rl-image-tag-slider--collection.rl-image-tag-slider--brand-rail .rl-image-tag-slider__media {
+    background: #f5f5f5;
+    border-radius: 0;
+    padding: 8%;
+  }
+
+  .rl-image-tag-slider--collection.rl-image-tag-slider--brand-rail .rl-image-tag-slider__media img.rl-deferred-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: none;
+  }
+
+  .rl-image-tag-slider--collection .rl-image-tag-slider__card {
+    gap: 0.55rem;
+  }
+
+  .rl-image-tag-slider--collection .rl-image-tag-slider__label {
+    text-align: left;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .rl-image-tag-slider--collection .rl-image-tag-slider__price {
+    text-align: left;
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider {
+    margin-block: 0 56px;
+  }
+
+  @media screen and (max-width: 767.98px) {
+    .rl-image-tag-slider.rl-pdp-product-slider--first {
+      padding-top: 24px;
+    }
+
+    .rl-image-tag-slider.rl-pdp-product-slider:not(.rl-pdp-product-slider--first) {
+      margin-block: 0 16px;
+    }
+
+    .shopify-section.section-image-tag-slider.rl-pdp-product-slider:not(.rl-pdp-product-slider--first) + .shopify-section.section-custom-section:has(.rl-pdp-see-also) {
+      margin-top: 0 !important;
+    }
+
+    .shopify-section.section-custom-section:has(.rl-pdp-see-also) > .custom-section > .page-width {
+      padding-inline: 0 !important;
+      max-width: none !important;
+    }
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider--first {
+    padding-top: 60px;
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider .rl-image-tag-slider__base {
+    padding-left: var(--page-x);
+    padding-right: var(--page-x);
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider .rl-image-tag-slider__inner {
+    gap: 16px;
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider .rl-image-tag-slider__head--premium .rl-image-tag-slider__heading {
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider .rl-image-tag-slider__label {
+    font-size: 13px;
+    line-height: 17px;
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider .rl-image-tag-slider__price {
+    font-size: 13px;
+    line-height: 17px;
+    font-weight: 400;
+    color: #4956ed;
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .rl-image-tag-slider.rl-pdp-product-slider .rl-image-tag-slider__price-from {
+    font-size: 13px;
+    line-height: 17px;
+    font-weight: 400;
+    color: #4d4d4d;
+  }
+
+  /* Portrait variant (4/5 ratio, like product cards) */
+  .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) {
+    margin-top: 80px;
+    margin-bottom: 0;
+  }
+
+  .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) .rl-image-tag-slider__inner {
+    gap: 1rem;
+  }
+
+  .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) .rl-image-tag-slider__item {
+    flex: 0 0 clamp(140px, 20vw, 200px);
+  }
+
+  .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) .rl-image-tag-slider__media {
+    aspect-ratio: 4 / 5;
+    padding: 0;
+    border: none;
+    background: #f5f5f5;
+    border-radius: 0;
+  }
+
+  .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) .rl-image-tag-slider__media img.rl-deferred-img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+  }
+
+  .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) .rl-image-tag-slider__placeholder {
+    background: linear-gradient(150deg, #e8e8e8 0%, #d8d8d8 100%);
+  }
+
+  .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) .rl-image-tag-slider__label {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  @media screen and (min-width: 768px) {
+    .rl-image-tag-slider:not(.rl-image-tag-slider--brand-rail):not(.rl-image-tag-slider--home-strip)
+      .rl-image-tag-slider__base {
+      padding-left: 48px;
+      padding-right: 48px;
+    }
+
+    .rl-image-tag-slider:not(.rl-image-tag-slider--home-strip):not(.rl-image-tag-slider--brand-rail)
+      .rl-image-tag-slider__track {
+      gap: 0.5rem;
+    }
+
+    .rl-image-tag-slider:not(.rl-image-tag-slider--home-strip):not(.rl-image-tag-slider--brand-rail)
+      .rl-image-tag-slider__item {
+      flex-basis: clamp(132px, 14vw, 200px);
+    }
+
+    .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail):not(.rl-image-tag-slider--home-strip)
+      .rl-image-tag-slider__item {
+      flex-basis: clamp(150px, 14vw, 196px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Image tag slider",
+  "tag": "section",
+  "class": "section-image-tag-slider",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.cart_drawer", "custom.breadcrumbs"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Layout style",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default (horizontal scroll)" },
+        { "value": "home_strip", "label": "Home hero strip (under hero, 32px top)" },
+        { "value": "brand_rail", "label": "Brand rail (portrait tiles, arrows)" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "slider_aria_label",
+      "label": "Region label (accessibility, if no heading)",
+      "default": "Featured picks",
+      "info": "Shown as aria-label when Heading is empty."
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "label": "Desktop visible columns (home strip layout)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "visible_if": "{{ section.settings.layout_style == 'brand_rail' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading_link",
+      "label": "Show “Voir plus” in header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rail_arrows",
+      "label": "Show scroll arrows",
+      "default": false,
+      "visible_if": "{{ section.settings.layout_style == 'default' }}"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "url",
+      "id": "heading_link",
+      "label": "Heading link (Voir plus)"
+    },
+    {
+      "type": "text",
+      "id": "heading_link_label",
+      "label": "Heading link label",
+      "default": "Voir plus"
+    },
+    {
+      "type": "select",
+      "id": "card_ratio",
+      "label": "Card ratio",
+      "default": "landscape",
+      "options": [
+        { "value": "landscape", "label": "Landscape (5:3)" },
+        { "value": "portrait", "label": "Portrait (4:5)" }
+      ],
+      "visible_if": "{{ section.settings.layout_style == 'default' }}"
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Data source",
+      "default": "manual",
+      "options": [
+        { "value": "manual", "label": "Manual (blocks)" },
+        { "value": "collection", "label": "Collection (products)" }
+      ]
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Max products",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "select",
+      "id": "rl_pdp_placement",
+      "label": "Resell PDP placement",
+      "info": "Use this instead of CSS classes in Additional class — Translate & Adapt can break translated class names.",
+      "default": "default",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "pdp", "label": "PDP product slider" },
+        { "value": "pdp_first", "label": "PDP product slider (first block)" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "additional_class",
+      "label": "Additional CSS class",
+      "info": "Optional. Prefer Resell PDP placement above for layout hooks."
+    }
+  ],
+  "max_blocks": 24,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Air Jordan 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Theme asset filename (optional)",
+          "info": "Used when Image is empty, e.g. home-strip-air-jordan-4.png. Served from theme assets (Shopify CDN after push)."
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Remote image URL (optional)",
+          "info": "Used when Image and Theme asset are empty. Prefer theme asset or collection auto image over external URLs."
+        },
+        {
+          "type": "text",
+          "id": "collection_handle",
+          "label": "Collection handle (for auto image)",
+          "info": "If set, uses the collection image when Image and Remote URL are empty. Brand rail also falls back to the handle parsed from Link. In Translate & Adapt, mark this field as non-translatable."
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": "Link",
+          "info": "Collection path (e.g. /collections/air-jordan-4). If empty, falls back to Collection handle when set."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image tag slider",
+      "blocks": [
+        { "type": "item", "settings": { "title": "Air Jordan 4" } },
+        { "type": "item", "settings": { "title": "Gel-Kayano 14" } },
+        { "type": "item", "settings": { "title": "Air Jordan 1" } },
+        { "type": "item", "settings": { "title": "Nike Mind 001" } },
+        { "type": "item", "settings": { "title": "Gel-NYC" } },
+        { "type": "item", "settings": { "title": "Nike Dunk" } },
+        { "type": "item", "settings": { "title": "Adidas Samba" } },
+        { "type": "item", "settings": { "title": "Nike Air Force 1" } }
+      ]
+    },
+    {
+      "name": "Home hero strip",
+      "settings": {
+        "layout_style": "home_strip",
+        "heading": "",
+        "slider_aria_label": "Les sélections sneakers",
+        "show_heading_link": false,
+        "show_rail_arrows": false,
+        "card_ratio": "landscape"
+      },
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "title": "Air Jordan 4",
+            "image_asset": "home-strip-air-jordan-4.png",
+            "collection_handle": "air-jordan-4",
+            "link": "/collections/air-jordan-4"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Air Jordan 1",
+            "image_asset": "home-strip-air-jordan-1.png",
+            "collection_handle": "air-jordan-1",
+            "link": "/collections/air-jordan-1"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Gel-Kayano 14",
+            "image_asset": "home-strip-asics-gel-kayano-14.webp",
+            "collection_handle": "asics-gel-kayano-14",
+            "link": "/collections/asics-gel-kayano-14"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Gel-NYC",
+            "image_asset": "home-strip-gel-nyc.webp",
+            "collection_handle": "gel-nyc",
+            "link": "/collections/gel-nyc"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Nike Dunk Low",
+            "image_asset": "home-strip-dunk-low.webp",
+            "collection_handle": "dunk-low",
+            "link": "/collections/dunk-low"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Nike Mind",
+            "image_asset": "home-strip-nike-mind.webp",
+            "collection_handle": "nike-mind",
+            "link": "/collections/nike-mind"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Adidas Samba",
+            "image_asset": "home-strip-adidas-samba.png",
+            "collection_handle": "adidas-samba",
+            "link": "/collections/adidas-samba"
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "title": "Nike Air Force 1",
+            "image_asset": "home-strip-air-force-1.png",
+            "collection_handle": "air-force-1",
+            "link": "/collections/air-force-1"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
