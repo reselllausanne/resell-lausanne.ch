@@ -1,0 +1,100 @@
+/* Trustpilot-style rating badge (snippets/rs-trust-badge.liquid)
+ *
+ * .rs-trust-badge            root, <a> or <span>
+ * ├ .rs-trust-badge__row       tiles + wordmark on one line
+ * │  ├ .rs-trust-badge__tiles    5 tiles, green fill width per tile
+ * │  └ .rs-trust-badge__wordmark green star + "Trustpilot"
+ * └ .rs-trust-badge__sub       "4.8 sur 5 · Basé sur plus de 380 avis"
+ *
+ * --rs-tp-tile sizes everything; .rs-trust-badge--sm shrinks it.
+ */
+
+.rs-trust-badge {
+  --rs-tp-tile: 22px;
+  --rs-tp-green: #00b67a;
+  --rs-tp-empty: #dcdce6;
+
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: rgb(8 8 8);
+}
+
+.rs-trust-badge--sm {
+  --rs-tp-tile: 14px;
+
+  gap: 3px;
+}
+
+.rs-trust-badge__row {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--rs-tp-tile) * 0.36);
+}
+
+.rs-trust-badge__tiles {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.rs-trust-badge__tile {
+  position: relative;
+  width: var(--rs-tp-tile);
+  height: var(--rs-tp-tile);
+  background: var(--rs-tp-empty);
+  overflow: hidden;
+}
+
+.rs-trust-badge__tile-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--rs-tp-green);
+}
+
+.rs-trust-badge__tile-star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 84%;
+  height: 84%;
+  transform: translate(-50%, -50%);
+  fill: #fff;
+}
+
+.rs-trust-badge__wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--rs-tp-tile) * 0.1);
+}
+
+.rs-trust-badge__wordmark-star {
+  width: calc(var(--rs-tp-tile) * 0.86);
+  height: calc(var(--rs-tp-tile) * 0.86);
+  fill: var(--rs-tp-green);
+}
+
+.rs-trust-badge__wordmark-text {
+  font-size: calc(var(--rs-tp-tile) * 0.82);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.rs-trust-badge__sub {
+  font-size: calc(var(--rs-tp-tile) * 0.6);
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  color: rgb(8 8 8);
+}
+
+.rs-trust-badge--sm .rs-trust-badge__sub {
+  font-weight: 400;
+  color: rgb(75 82 90);
+}
+
+a.rs-trust-badge:hover .rs-trust-badge__wordmark-text {
+  text-decoration: underline;
+}

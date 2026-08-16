@@ -94,7 +94,25 @@
     "product_added_to_cart": "Produkt zum Warenkorb hinzugefügt",
     "remove": "Entfernen",
     "title": "Warenkorb",
-    "update": "Aktualisieren"
+    "update": "Aktualisieren",
+    "ultimate_bundle": {
+      "badge": "ANGEBOT FREIGESCHALTET",
+      "title": "Ultimate Bundle",
+      "subtitle": "Essentials Tee + komplettes Pflegepaket",
+      "savings": "Spare {{ savings }}",
+      "item_tee": "Essentials Tee",
+      "item_kit": "Reinigungsset",
+      "item_wipes": "Wipes",
+      "select_size": "Wähle deine Grösse",
+      "cta": "Mein Ultimate Bundle hinzufügen",
+      "microcopy": "Exklusives Warenkorb-Angebot · maximal 1 pro Bestellung",
+      "added": "Ultimate Bundle hinzugefügt!",
+      "select_size_error": "Wähle eine Grösse, um fortzufahren.",
+      "out_of_stock_error": "Grösse nicht verfügbar. Bitte andere Grösse wählen.",
+      "generic_add_error": "Bundle kann aktuell nicht hinzugefügt werden.",
+      "bundle_removed_for_threshold": "Ultimate Bundle entfernt: Berechtigter Zwischensumme unter Schwelle.",
+      "bundle_threshold_confirm": "Berechtigte Zwischensumme unter Schwelle. Ultimate Bundle aus Warenkorb entfernen?"
+    }
   },
   "collections": {
     "collections_empty": "Keine Kollektionen gefunden",
@@ -554,7 +572,9 @@
   "store_trust": {
     "rated_by": "Unsere Kunden bewerten uns",
     "over": "aus über",
-    "reviews": "Bewertungen"
+    "reviews": "Bewertungen",
+    "out_of": "von 5",
+    "based_on": "Basierend auf über"
   },
   "faq_page": {
     "label": "FAQ",

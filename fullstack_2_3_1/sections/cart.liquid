@@ -1,5 +1,6 @@
 <script src="{{ 'cart.js' | asset_url }}" type="module"></script>
 <script src="{{ 'cart-upsell.js' | asset_url }}" type="module"></script>
+<script src="{{ 'ultimate-bundle-cart.js' | asset_url }}" type="module"></script>
 
 {%- liquid
   assign upsell_product = section.settings.upsell_product
@@ -21,6 +22,21 @@
 
   assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
   assign locale_base = locale_iso | split: '-' | first
+  assign ultimate_bundle_product_4990 = section.settings.ultimate_bundle_product_4990
+  assign ultimate_bundle_product_5990 = section.settings.ultimate_bundle_product_5990
+  assign ultimate_bundle_enabled = section.settings.ultimate_bundle_enabled
+  assign cart_query_string = request.query_string | default: '' | downcase
+  assign ultimate_bundle_preview_forced = false
+  if cart_query_string contains 'ultimate_bundle_preview='
+    assign ultimate_bundle_preview_forced = true
+    assign ultimate_bundle_enabled = true
+  endif
+  if ultimate_bundle_product_4990 == blank
+    assign ultimate_bundle_product_4990 = all_products['ultimate-bundle']
+  endif
+  if ultimate_bundle_product_5990 == blank
+    assign ultimate_bundle_product_5990 = all_products['ultimate-bundle-5990']
+  endif
 
   assign cart_step_aria_label = 'Checkout steps'
   assign cart_step_cart = 'Cart'
@@ -222,6 +238,21 @@
                   if item.variant.inventory_policy == 'continue'
                     assign max_quantity = 0
                   endif
+
+                  assign item_is_ultimate_bundle = false
+                  assign item_has_ultimate_bundle_property = false
+                  for prop in item.properties
+                    if prop.first == '_ultimate_bundle' and prop.last != blank
+                      assign item_has_ultimate_bundle_property = true
+                    endif
+                  endfor
+                  if item_has_ultimate_bundle_property
+                    assign item_is_ultimate_bundle = true
+                  elsif ultimate_bundle_product_4990 != blank and item.product_id == ultimate_bundle_product_4990.id
+                    assign item_is_ultimate_bundle = true
+                  elsif ultimate_bundle_product_5990 != blank and item.product_id == ultimate_bundle_product_5990.id
+                    assign item_is_ultimate_bundle = true
+                  endif
                 -%}
                 <cart-item
                   data-index="{{ item.index | plus: 1 }}"
@@ -229,6 +260,8 @@
                   data-ref="cart-item"
                   data-product-handle="{{ item.product.handle }}"
                   data-product-url="{{ item.url }}"
+                  data-line-key="{{ item.key }}"
+                  data-is-ultimate-bundle="{% if item_is_ultimate_bundle %}true{% else %}false{% endif %}"
                 >
                   <a href="{{ item.url }}" class="rs-cart__item-media">
                     {%- if is_express_shipping -%}
@@ -316,10 +349,15 @@
                             name="updates[]"
                             data-ref="quantity-selector-input"
                             aria-label="{{ cart_qty_aria_prefix }} {{ item.product.title | escape }}"
+                            {% if item_is_ultimate_bundle %}disabled{% endif %}
                           >
-                            {%- for i in (1..10) -%}
-                              <option value="{{ i }}"{% if item.quantity == i %} selected{% endif %}>{{ i }}</option>
-                            {%- endfor -%}
+                            {%- if item_is_ultimate_bundle -%}
+                              <option value="1" selected>1</option>
+                            {%- else -%}
+                              {%- for i in (1..10) -%}
+                                <option value="{{ i }}"{% if item.quantity == i %} selected{% endif %}>{{ i }}</option>
+                              {%- endfor -%}
+                            {%- endif -%}
                           </select>
                           <svg class="rs-cart__qty-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <polyline points="6 9 12 15 18 9"/>
@@ -339,6 +377,133 @@
           <div class="rs-cart__summary">
 
             {% content_for 'block', type: '_cart-header-blocks', id: 'cart_header_blocks' %}
+
+            {%- if ultimate_bundle_enabled -%}
+              <div
+                class="rs-cart__ultimate-bundle hidden"
+                data-rs-ultimate-bundle
+                data-enabled="{{ ultimate_bundle_enabled }}"
+                data-preview-forced="{{ ultimate_bundle_preview_forced }}"
+                data-threshold-cents="{{ section.settings.ultimate_bundle_threshold | times: 100 | round }}"
+                data-test-name="{{ section.settings.ultimate_bundle_test_name | escape }}"
+                data-control-percent="{{ section.settings.ultimate_bundle_control_percent }}"
+                data-bundle-4990-percent="{{ section.settings.ultimate_bundle_4990_percent }}"
+                data-bundle-5990-percent="{{ section.settings.ultimate_bundle_5990_percent }}"
+                data-persistence-days="{{ section.settings.ultimate_bundle_persistence_days }}"
+                data-tracking-enabled="{{ section.settings.ultimate_bundle_tracking_enabled }}"
+                data-force-preview="{{ section.settings.ultimate_bundle_force_preview_mode | escape }}"
+                data-estimated-cogs="{{ section.settings.ultimate_bundle_estimated_cogs }}"
+                data-estimated-shipping="{{ section.settings.ultimate_bundle_estimated_shipping }}"
+                data-estimated-vat-percent="{{ section.settings.ultimate_bundle_estimated_vat_percent }}"
+                data-estimated-fees-percent="{{ section.settings.ultimate_bundle_estimated_fees_percent }}"
+                data-compare-at-cents="{{ section.settings.ultimate_bundle_compare_at_price | times: 100 | round }}"
+                data-savings-cents="{{ section.settings.ultimate_bundle_savings_price | times: 100 | round }}"
+                data-protection-product-id="{% if upsell_product != blank %}{{ upsell_product.id }}{% endif %}"
+                data-bundle-product-id-4990="{% if ultimate_bundle_product_4990 != blank %}{{ ultimate_bundle_product_4990.id }}{% endif %}"
+                data-bundle-product-id-5990="{% if ultimate_bundle_product_5990 != blank %}{{ ultimate_bundle_product_5990.id }}{% endif %}"
+              >
+                <div class="rs-cart__ultimate-bundle-badge">{{ 'cart.ultimate_bundle.badge' | t }}</div>
+                <div class="rs-cart__ultimate-bundle-body">
+                  <div class="rs-cart__ultimate-bundle-media">
+                    {%- assign ultimate_bundle_image = section.settings.ultimate_bundle_image -%}
+                    {%- if ultimate_bundle_image == blank and ultimate_bundle_product_4990 != blank and ultimate_bundle_product_4990.featured_image != blank -%}
+                      {%- assign ultimate_bundle_image = ultimate_bundle_product_4990.featured_image -%}
+                    {%- endif -%}
+                    {%- if ultimate_bundle_image == blank and ultimate_bundle_product_5990 != blank and ultimate_bundle_product_5990.featured_image != blank -%}
+                      {%- assign ultimate_bundle_image = ultimate_bundle_product_5990.featured_image -%}
+                    {%- endif -%}
+                    {%- if ultimate_bundle_image != blank -%}
+                      {{ ultimate_bundle_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120,180,240', sizes: '(max-width: 767px) 96px, 120px', alt: 'Ultimate Bundle' }}
+                    {%- endif -%}
+                  </div>
+                  <div class="rs-cart__ultimate-bundle-content">
+                    <h3 class="rs-cart__ultimate-bundle-title">{{ 'cart.ultimate_bundle.title' | t }}</h3>
+                    <p class="rs-cart__ultimate-bundle-subtitle">{{ 'cart.ultimate_bundle.subtitle' | t }}</p>
+                    <div class="rs-cart__ultimate-bundle-prices">
+                      <span class="rs-cart__ultimate-bundle-price" data-rs-ub-price>{{ section.settings.ultimate_bundle_compare_at_price | times: 0 | plus: 4990 | money }}</span>
+                      <span class="rs-cart__ultimate-bundle-compare" data-rs-ub-compare>{{ section.settings.ultimate_bundle_compare_at_price | money }}</span>
+                    </div>
+                    <p class="rs-cart__ultimate-bundle-savings" data-rs-ub-savings>{{ 'cart.ultimate_bundle.savings' | t: savings: section.settings.ultimate_bundle_savings_price | money }}</p>
+                    <ul class="rs-cart__ultimate-bundle-list" role="list">
+                      <li>{{ 'cart.ultimate_bundle.item_tee' | t }}</li>
+                      <li>{{ 'cart.ultimate_bundle.item_kit' | t }}</li>
+                      <li>{{ 'cart.ultimate_bundle.item_wipes' | t }}</li>
+                    </ul>
+                    <div class="rs-cart__ultimate-bundle-size">
+                      <p class="rs-cart__ultimate-bundle-size-label">{{ 'cart.ultimate_bundle.select_size' | t }}</p>
+                      <div class="rs-cart__ultimate-bundle-size-options" data-rs-ub-size-options></div>
+                    </div>
+                    <button type="button" class="button button--primary button--full-width rs-cart__ultimate-bundle-cta" data-rs-ub-cta>
+                      {{ 'cart.ultimate_bundle.cta' | t }}
+                    </button>
+                    <p class="rs-cart__ultimate-bundle-microcopy">{{ 'cart.ultimate_bundle.microcopy' | t }}</p>
+                    <p class="rs-cart__ultimate-bundle-feedback hidden" data-rs-ub-feedback role="status" aria-live="polite"></p>
+                  </div>
+                </div>
+                <script type="application/json" data-rs-ub-product-4990>
+                  {%- if ultimate_bundle_product_4990 != blank -%}
+                    {
+                      "id": {{ ultimate_bundle_product_4990.id | json }},
+                      "title": {{ ultimate_bundle_product_4990.title | json }},
+                      "handle": {{ ultimate_bundle_product_4990.handle | json }},
+                      "url": {{ ultimate_bundle_product_4990.url | json }},
+                      "variants": [
+                        {%- for variant in ultimate_bundle_product_4990.variants -%}
+                          {
+                            "id": {{ variant.id | json }},
+                            "title": {{ variant.title | json }},
+                            "available": {{ variant.available | json }},
+                            "price": {{ variant.price | json }},
+                            "compare_at_price": {{ variant.compare_at_price | default: 0 | json }},
+                            "option1": {{ variant.option1 | json }},
+                            "option2": {{ variant.option2 | json }},
+                            "option3": {{ variant.option3 | json }}
+                          }{% unless forloop.last %},{% endunless %}
+                        {%- endfor -%}
+                      ]
+                    }
+                  {%- else -%}
+                    null
+                  {%- endif -%}
+                </script>
+                <script type="application/json" data-rs-ub-product-5990>
+                  {%- if ultimate_bundle_product_5990 != blank -%}
+                    {
+                      "id": {{ ultimate_bundle_product_5990.id | json }},
+                      "title": {{ ultimate_bundle_product_5990.title | json }},
+                      "handle": {{ ultimate_bundle_product_5990.handle | json }},
+                      "url": {{ ultimate_bundle_product_5990.url | json }},
+                      "variants": [
+                        {%- for variant in ultimate_bundle_product_5990.variants -%}
+                          {
+                            "id": {{ variant.id | json }},
+                            "title": {{ variant.title | json }},
+                            "available": {{ variant.available | json }},
+                            "price": {{ variant.price | json }},
+                            "compare_at_price": {{ variant.compare_at_price | default: 0 | json }},
+                            "option1": {{ variant.option1 | json }},
+                            "option2": {{ variant.option2 | json }},
+                            "option3": {{ variant.option3 | json }}
+                          }{% unless forloop.last %},{% endunless %}
+                        {%- endfor -%}
+                      ]
+                    }
+                  {%- else -%}
+                    null
+                  {%- endif -%}
+                </script>
+                <script type="application/json" data-rs-ub-translations>
+                  {
+                    "added": {{ 'cart.ultimate_bundle.added' | t | json }},
+                    "select_size_error": {{ 'cart.ultimate_bundle.select_size_error' | t | json }},
+                    "out_of_stock_error": {{ 'cart.ultimate_bundle.out_of_stock_error' | t | json }},
+                    "generic_add_error": {{ 'cart.ultimate_bundle.generic_add_error' | t | json }},
+                    "bundle_removed_for_threshold": {{ 'cart.ultimate_bundle.bundle_removed_for_threshold' | t | json }},
+                    "bundle_threshold_confirm": {{ 'cart.ultimate_bundle.bundle_threshold_confirm' | t | json }}
+                  }
+                </script>
+              </div>
+            {%- endif -%}
 
             {%- if upsell_product != blank and upsell_variant != blank -%}
               <div
@@ -482,6 +647,137 @@
       "id": "upsell_subtitle",
       "label": "Sous-titre upsell",
       "default": "Livraison premium avec assurance incluse"
+    },
+    {
+      "type": "header",
+      "content": "Ultimate Bundle"
+    },
+    {
+      "type": "checkbox",
+      "id": "ultimate_bundle_enabled",
+      "label": "Activer Ultimate Bundle",
+      "default": false
+    },
+    {
+      "type": "product",
+      "id": "ultimate_bundle_product_4990",
+      "label": "Produit bundle CHF 49.90"
+    },
+    {
+      "type": "product",
+      "id": "ultimate_bundle_product_5990",
+      "label": "Produit bundle CHF 59.90 (préparation)"
+    },
+    {
+      "type": "range",
+      "id": "ultimate_bundle_threshold",
+      "label": "Seuil sous-total éligible (CHF)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "CHF",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "ultimate_bundle_control_percent",
+      "label": "Allocation contrôle (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "ultimate_bundle_4990_percent",
+      "label": "Allocation bundle CHF 49.90 (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "ultimate_bundle_5990_percent",
+      "label": "Allocation bundle CHF 59.90 (%)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "ultimate_bundle_persistence_days",
+      "label": "Persistance attribution (jours)",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "ultimate_bundle_force_preview_mode",
+      "label": "Mode preview forcé",
+      "options": [
+        { "value": "", "label": "Auto (URL ou allocation)" },
+        { "value": "control", "label": "Forcer contrôle" },
+        { "value": "4990", "label": "Forcer CHF 49.90" },
+        { "value": "5990", "label": "Forcer CHF 59.90" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "checkbox",
+      "id": "ultimate_bundle_tracking_enabled",
+      "label": "Activer tracking Ultimate Bundle",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ultimate_bundle_test_name",
+      "label": "Nom test analytics",
+      "default": "ultimate_bundle_v1"
+    },
+    {
+      "type": "image_picker",
+      "id": "ultimate_bundle_image",
+      "label": "Image composite Ultimate Bundle"
+    },
+    {
+      "type": "number",
+      "id": "ultimate_bundle_compare_at_price",
+      "label": "Valeur barrée (CHF)",
+      "default": 88.8
+    },
+    {
+      "type": "number",
+      "id": "ultimate_bundle_savings_price",
+      "label": "Économie affichée (CHF)",
+      "default": 38.9
+    },
+    {
+      "type": "number",
+      "id": "ultimate_bundle_estimated_cogs",
+      "label": "COGS estimé (CHF)",
+      "default": 29
+    },
+    {
+      "type": "number",
+      "id": "ultimate_bundle_estimated_shipping",
+      "label": "Livraison additionnelle estimée (CHF)",
+      "default": 7
+    },
+    {
+      "type": "number",
+      "id": "ultimate_bundle_estimated_vat_percent",
+      "label": "TVA effective estimée (%)",
+      "default": 2.3
+    },
+    {
+      "type": "number",
+      "id": "ultimate_bundle_estimated_fees_percent",
+      "label": "Fees variables Shopify estimés (%)",
+      "default": 2
     },
     {
       "type": "header",

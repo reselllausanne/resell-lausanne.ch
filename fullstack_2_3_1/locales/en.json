@@ -94,7 +94,25 @@
     "product_added_to_cart": "Product added to cart",
     "remove": "Remove",
     "title": "Cart",
-    "update": "Update"
+    "update": "Update",
+    "ultimate_bundle": {
+      "badge": "OFFER UNLOCKED",
+      "title": "Ultimate Bundle",
+      "subtitle": "Essentials Tee + complete care pack",
+      "savings": "Save {{ savings }}",
+      "item_tee": "Essentials Tee",
+      "item_kit": "Cleaning kit",
+      "item_wipes": "Wipes",
+      "select_size": "Choose your size",
+      "cta": "Add my Ultimate Bundle",
+      "microcopy": "Cart-exclusive offer · max 1 per order",
+      "added": "Ultimate Bundle added!",
+      "select_size_error": "Select a size to continue.",
+      "out_of_stock_error": "Size unavailable. Pick another size.",
+      "generic_add_error": "Unable to add bundle right now.",
+      "bundle_removed_for_threshold": "Ultimate Bundle removed: eligible subtotal fell below threshold.",
+      "bundle_threshold_confirm": "Eligible subtotal dropped below threshold. Remove Ultimate Bundle from cart?"
+    }
   },
   "collections": {
     "collections_empty": "No collections found",
@@ -554,7 +572,9 @@
   "store_trust": {
     "rated_by": "Our customers rate us",
     "over": "from over",
-    "reviews": "reviews"
+    "reviews": "reviews",
+    "out_of": "out of 5",
+    "based_on": "Based on more than"
   },
   "faq_page": {
     "label": "FAQ",

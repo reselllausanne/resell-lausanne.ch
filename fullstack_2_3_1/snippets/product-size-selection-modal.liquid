@@ -59,7 +59,6 @@
   endcapture
   assign fit_note = fit_note | strip
 
-  assign sm_free_shipping = 'products.pdp.size_modal.free_shipping_ch' | t
   assign sm_size_guide = 'products.pdp.size_modal.size_guide' | t
   assign sm_sizes_aria = 'products.pdp.size_modal.sizes_aria' | t
   assign sm_unit_aria = 'products.pdp.size_modal.unit_aria' | t
@@ -169,7 +168,7 @@
   endif
 
   assign socks_product = all_products['nike-everyday-plus-cushioned-crew-socks-6-pairs-white']
-  assign socks_upsell_handles = 'nike-everyday-plus-cushioned-crew-socks-6-pairs-white,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,alo-unisex-half-crew-throwback-sock-black-white,alo-unisex-half-crew-throwback-sock-white-black,fluffy-laces' | split: ','
+  assign cart_upsell_handles = 'cleaning-kit-by-sole-savaz,nike-everyday-plus-cushioned-crew-socks-6-pairs-white,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,alo-unisex-half-crew-throwback-sock-black-white,alo-unisex-half-crew-throwback-sock-white-black,fluffy-laces' | split: ','
   assign apparel_upsell_product = blank
   if product.metafields.custom.size_modal_upsell_product.value != blank
     assign apparel_upsell_product = product.metafields.custom.size_modal_upsell_product.value
@@ -232,6 +231,7 @@
 
 {% if has_size_option and product.has_only_default_variant == false %}
   {{ 'product-size-selection-modal.css' | asset_url | stylesheet_tag }}
+  {{ 'rs-trust-badge.css' | asset_url | stylesheet_tag }}
 
   {% comment %}
     Variant delivery contract:
@@ -314,7 +314,7 @@
             >
               {{ sm_show_all_sizes | escape }}
             </button>
-            {% render 'rs-free-shipping-note', class: 'rs-size-modal__free-shipping-note', text: sm_free_shipping %}
+            {% render 'rs-trust-badge', size: 'small', sub_format: 'compact', class: 'rs-size-modal__trust-banner' %}
             <div class="rs-size-modal__shipping" data-rs-shipping-section>
               <p class="rs-size-modal__shipping-title">{{ shipping_method_label }}</p>
               <div class="rs-size-modal__shipping-cards">
@@ -432,7 +432,7 @@
               </div>
             </div>
 
-            {% render 'rs-free-shipping-note', class: 'rs-size-modal__free-shipping-note rs-size-modal__free-shipping-note--cart', text: sm_free_shipping %}
+            {% render 'rs-trust-badge', size: 'small', sub_format: 'compact', link: false, class: 'rs-size-modal__trust-banner' %}
 
             {%- if signature_product != blank and signature_variant != blank -%}
               <div class="rs-size-modal__cart-delivery-options" data-rs-modal-cart-delivery-options>
@@ -586,7 +586,7 @@
       }{% else %}null{% endif %},
       "cartUpsells": [
         {%- assign cart_upsell_first = true -%}
-        {%- for cart_upsell_handle in socks_upsell_handles -%}
+        {%- for cart_upsell_handle in cart_upsell_handles -%}
           {%- assign cart_upsell_product = all_products[cart_upsell_handle] -%}
           {%- if cart_upsell_product != blank and cart_upsell_product.variants.size > 0 -%}
             {%- unless cart_upsell_first -%},{%- endunless -%}

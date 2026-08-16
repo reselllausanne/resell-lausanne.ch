@@ -1,0 +1,118 @@
+{% doc %}
+  Trustpilot-style rating badge: star tiles, wordmark, review subline.
+
+  @param {number} [rating] - Score out of 5. Defaults to 4.5.
+  @param {number} [count] - Review count. Defaults to 1200.
+  @param {string} [size] - 'default' or 'small'.
+  @param {string} [link] - Profile URL. Pass false / 'none' for a non-clickable badge.
+  @param {boolean} [show_subline] - Set false to keep only stars + wordmark.
+  @param {string} [sub_format] - 'long' (default) or 'compact' for tight rows.
+  @param {string} [class] - Extra classes on the root element.
+
+  @example
+  {% render 'rs-trust-badge', size: 'small', rating: 4.5, count: 1200 %}
+{% enddoc %}
+
+{%- liquid
+  assign badge_rating = rating | default: 4.5
+  assign badge_count = count | default: 1200
+  assign badge_size = size | default: 'default'
+  if link == false or link == 'false' or link == 'none'
+    assign badge_link = ''
+  elsif link != blank
+    assign badge_link = link
+  else
+    assign badge_link = 'https://fr.trustpilot.com/review/resell-lausanne.ch'
+  endif
+
+  assign show_sub = true
+  if show_subline == false
+    assign show_sub = false
+  endif
+
+  assign half_steps = badge_rating | times: 2 | round
+  assign full_tiles = half_steps | divided_by: 2
+  assign half_tile = half_steps | modulo: 2
+
+  assign rating_display = badge_rating | round: 1
+
+  assign count_str = badge_count | append: ''
+  assign count_len = count_str | size
+  assign count_display = count_str
+  if count_len > 3
+    assign head_len = count_len | minus: 3
+    assign count_head = count_str | slice: 0, head_len
+    assign count_tail = count_str | slice: head_len, 3
+    assign count_display = count_head | append: '&rsquo;' | append: count_tail
+  endif
+
+  assign half_index = full_tiles | plus: 1
+  assign star_path = 'M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'
+  assign reviews_word = 'store_trust.reviews' | t
+  assign aria = rating_display | append: '/5 Trustpilot — ' | append: badge_count | append: ' ' | append: reviews_word
+-%}
+
+{%- capture badge_body -%}
+  <span class="rs-trust-badge__row">
+    <span class="rs-trust-badge__tiles" aria-hidden="true">
+      {%- for i in (1..5) -%}
+        {%- liquid
+          assign fill_width = 0
+          if i <= full_tiles
+            assign fill_width = 100
+          elsif half_tile == 1 and i == half_index
+            assign fill_width = 50
+          endif
+        -%}
+        <span class="rs-trust-badge__tile">
+          <span class="rs-trust-badge__tile-fill" style="width: {{ fill_width }}%"></span>
+          <svg class="rs-trust-badge__tile-star" viewBox="0 0 24 24" focusable="false">
+            <path d="{{ star_path }}"/>
+          </svg>
+        </span>
+      {%- endfor -%}
+    </span>
+
+    <span class="rs-trust-badge__wordmark">
+      <svg class="rs-trust-badge__wordmark-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="{{ star_path }}"/>
+      </svg>
+      <span class="rs-trust-badge__wordmark-text">Trustpilot</span>
+    </span>
+  </span>
+
+  {%- if show_sub -%}
+    <span class="rs-trust-badge__sub">
+      {%- if sub_format == 'compact' -%}
+        {{- rating_display }}/5 &middot; {{ count_display }} {{ reviews_word -}}
+      {%- else -%}
+        {{- rating_display }} {{ 'store_trust.out_of' | t }} &middot;
+        {{ 'store_trust.based_on' | t }} {{ count_display }} {{ reviews_word -}}
+      {%- endif -%}
+    </span>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign root_class = 'rs-trust-badge' -%}
+{%- if badge_size == 'small' -%}
+  {%- assign root_class = root_class | append: ' rs-trust-badge--sm' -%}
+{%- endif -%}
+{%- if class != blank -%}
+  {%- assign root_class = root_class | append: ' ' | append: class -%}
+{%- endif -%}
+
+{%- if badge_link != blank -%}
+  <a
+    class="{{ root_class }}"
+    href="{{ badge_link }}"
+    target="_blank"
+    rel="noopener nofollow"
+    aria-label="{{ aria | escape }}"
+  >
+    {{ badge_body }}
+  </a>
+{%- else -%}
+  <span class="{{ root_class }}" aria-label="{{ aria | escape }}">
+    {{ badge_body }}
+  </span>
+{%- endif -%}

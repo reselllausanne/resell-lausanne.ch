@@ -94,7 +94,25 @@
     "product_added_to_cart": "Produit ajouté au panier",
     "remove": "Supprimer",
     "title": "Panier",
-    "update": "Mettre à jour"
+    "update": "Mettre à jour",
+    "ultimate_bundle": {
+      "badge": "OFFRE DÉBLOQUÉE",
+      "title": "Ultimate Bundle",
+      "subtitle": "Essentials Tee + pack d’entretien complet",
+      "savings": "Économisez {{ savings }}",
+      "item_tee": "Essentials Tee",
+      "item_kit": "Kit de nettoyage",
+      "item_wipes": "Wipes",
+      "select_size": "Choisissez votre taille",
+      "cta": "Ajouter mon Ultimate Bundle",
+      "microcopy": "Offre exclusive au panier · maximum 1 par commande",
+      "added": "Ultimate Bundle ajouté !",
+      "select_size_error": "Sélectionnez une taille pour continuer.",
+      "out_of_stock_error": "Taille indisponible. Choisissez une autre taille.",
+      "generic_add_error": "Impossible d’ajouter le bundle pour le moment.",
+      "bundle_removed_for_threshold": "Ultimate Bundle retiré: sous-total éligible inférieur au seuil.",
+      "bundle_threshold_confirm": "Le sous-total éligible est passé sous le seuil. Retirer Ultimate Bundle du panier?"
+    }
   },
   "collections": {
     "collections_empty": "Aucune collection trouvée",
@@ -554,7 +572,9 @@
   "store_trust": {
     "rated_by": "Nos clients nous notent",
     "over": "sur plus de",
-    "reviews": "avis"
+    "reviews": "avis",
+    "out_of": "sur 5",
+    "based_on": "Basé sur plus de"
   },
   "faq_page": {
     "label": "FAQ",

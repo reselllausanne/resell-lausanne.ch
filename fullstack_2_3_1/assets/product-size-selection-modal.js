@@ -279,6 +279,20 @@
     return idInput?.value ? String(idInput.value) : '';
   };
 
+  // The modal lets people submit before the theme's variant round-trip lands,
+  // so the id has to be written from the clicked card, not read from the form.
+  const setFormVariantId = (form, variantId) => {
+    if (!form || !variantId) return;
+    let idInput = form.querySelector('input[name="id"]');
+    if (!idInput) {
+      idInput = document.createElement('input');
+      idInput.type = 'hidden';
+      idInput.name = 'id';
+      form.appendChild(idInput);
+    }
+    idInput.value = String(variantId);
+  };
+
   const setHiddenProp = (form, key, value) => {
     if (!form) return;
     const nameAttr = `properties[${key}]`;
@@ -898,8 +912,9 @@
     };
 
     const updateModalAtcState = () => {
-      const mainDisabled = mainAtcBtn?.disabled;
-      const ok = selectedVariant && selectedVariant.available && !mainDisabled && !pendingVariantSync;
+      // Availability comes from the payload, so the button unlocks on the size
+      // click instead of waiting for the theme's section render.
+      const ok = selectedVariant && selectedVariant.available;
       if (btnAtc) btnAtc.disabled = !ok;
       if (dockPrimaryButtons) {
         dockPrimaryButtons.forEach((btn) => {
@@ -1069,6 +1084,7 @@
           selectedVariant = v;
           highlightSelectedCard();
           updateShippingCards();
+          updateModalAtcState();
           refreshGridPrices();
           updateMobileDock();
           const onUpdated = () => {
@@ -1124,6 +1140,7 @@
 
     btnAtc?.addEventListener('click', () => {
       if (!selectedVariant || btnAtc.disabled) return;
+      setFormVariantId(form, selectedVariant.id);
       const selectedLayout = shippingLayout(selectedVariant);
       const isExpressSelection = shipMode === 'express' && selectedLayout.showExpress;
       const expressLine =
@@ -1176,7 +1193,7 @@
       }, 6000);
 
       const mainBtn = productForm.querySelector('[data-ref="add-to-cart-button"]');
-      if (mainBtn instanceof HTMLButtonElement) {
+      if (mainBtn instanceof HTMLButtonElement && !mainBtn.disabled) {
         form.requestSubmit(mainBtn);
       } else {
         form.requestSubmit();
@@ -1319,7 +1336,7 @@
       return [bestFit.entry.variant];
     };
 
-    const CART_UPSELL_MAX_ROWS = 3;
+    const CART_UPSELL_MAX_ROWS = 6;
     // Survives the re-render triggered by every add/remove so the row keeps
     // showing the option the shopper picked.
     const cartUpsellSelection = new Map();
@@ -1376,7 +1393,7 @@
 
         const variantSublabel = (entry) => {
           const label = String(entry?.sizeLabel || '').trim();
-          if (!label || /^default title$/i.test(label)) return '';
+          if (!label || /^default(\s+(title|size))?$/i.test(label)) return '';
           return parseEuSizeRange(label) ? `Taille ${label}` : label;
         };
 
