@@ -1,0 +1,57 @@
+{%- doc -%}
+  PDP callout for older sneaker releases.
+
+  @param {product} product
+{%- enddoc -%}
+
+{%- liquid
+  capture rs_aged_pair_flags
+    render 'rs-product-aged-pair-warning-signals', product: product
+  endcapture
+  assign rs_aged_pair_parts = rs_aged_pair_flags | strip | split: '|'
+  assign rs_aged_pair_active = rs_aged_pair_parts[0]
+  assign rs_aged_pair_release_date = rs_aged_pair_parts[1]
+-%}
+
+{%- if rs_aged_pair_active == '1' -%}
+  <aside
+    class="rs-aged-pair-warning"
+    role="note"
+    aria-label="{{ 'products.pdp.wear_at_own_risk_title' | t }}"
+  >
+    <p class="rs-aged-pair-warning__title">{{ 'products.pdp.wear_at_own_risk_title' | t }}</p>
+    <p class="rs-aged-pair-warning__body">
+      {%- if rs_aged_pair_release_date != blank -%}
+        {{ 'products.pdp.wear_at_own_risk_body_with_date' | t: release_date: rs_aged_pair_release_date }}
+      {%- else -%}
+        {{ 'products.pdp.wear_at_own_risk_body' | t }}
+      {%- endif -%}
+    </p>
+  </aside>
+{%- endif -%}
+
+{% stylesheet %}
+  .rs-aged-pair-warning {
+    margin: 0 0 var(--gap-md);
+    padding: var(--padding-sm) var(--padding-md);
+    border: 1px solid rgb(8 8 8 / 12%);
+    border-radius: 4px;
+    background: rgb(255 248 235);
+    color: rgb(8 8 8);
+  }
+
+  .rs-aged-pair-warning__title {
+    margin: 0 0 4px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .rs-aged-pair-warning__body {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+{% endstylesheet %}
