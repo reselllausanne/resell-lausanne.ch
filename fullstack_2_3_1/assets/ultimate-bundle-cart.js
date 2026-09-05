@@ -187,9 +187,18 @@
   const buildSizeMap = (product) => {
     const map = [];
     if (!product || !Array.isArray(product.variants)) return map;
+    const preferredSizes = new Set(['XS', 'S', 'M', 'L']);
     const seen = new Set();
-    product.variants.forEach((variant) => {
-      const label = (variant.option1 || variant.title || '').trim();
+
+    const pushVariant = (variant) => {
+      const color = String(variant.option1 || '').trim();
+      const size = String(variant.option2 || '').trim();
+      // Color then Size → flat "Color · Size" (same as modal select).
+      const label = size
+        ? color
+          ? `${color} · ${size}`
+          : size
+        : color || String(variant.title || '').trim();
       if (!label || seen.has(label)) return;
       seen.add(label);
       map.push({
@@ -198,8 +207,21 @@
         available: Boolean(variant.available),
         price: toNumber(variant.price, 0),
         compareAtPrice: toNumber(variant.compare_at_price, 0),
+        colorLabel: color,
+        sizeLabel: size || label,
       });
-    });
+    };
+
+    const hasOption2 = product.variants.some((variant) => String(variant.option2 || '').trim());
+    if (hasOption2) {
+      const preferred = product.variants.filter((variant) =>
+        preferredSizes.has(String(variant.option2 || '').trim().toUpperCase()),
+      );
+      (preferred.length ? preferred : product.variants).forEach(pushVariant);
+      return map;
+    }
+
+    product.variants.forEach(pushVariant);
     return map;
   };
 
@@ -391,19 +413,29 @@
     const compareEl = root.querySelector('[data-rs-ub-compare]');
     const savingsEl = root.querySelector('[data-rs-ub-savings]');
     if (!sizeContainer || !cta || !priceEl || !compareEl || !savingsEl) return;
+    if (root.dataset.rsUbBound === '1') return;
+    root.dataset.rsUbBound = '1';
 
     const renderPrice = (variantData) => {
       const activePrice = toNumber(variantData?.price, 0);
+      const savingsMoney = formatMoney(toNumber(root.dataset.savingsCents));
       root.dataset.activePriceCents = String(activePrice);
       root.dataset.estimatedContribution = String(computeEstimatedContribution(root));
       priceEl.textContent = formatMoney(activePrice);
       compareEl.textContent = formatMoney(toNumber(root.dataset.compareAtCents));
-      savingsEl.textContent = (translations.savings || '').replace('{{ savings }}', formatMoney(toNumber(root.dataset.savingsCents)));
+      savingsEl.textContent = (translations.savings || 'Économisez {{ savings }}').replace(
+        '{{ savings }}',
+        savingsMoney,
+      );
+      if (translations.cta) {
+        cta.textContent = translations.cta.replace('{{ savings }}', savingsMoney);
+      }
     };
 
     let selectedSize = '';
     let selectedVariant = null;
 
+    sizeContainer.replaceChildren();
     sizeMap.forEach((entry) => {
       const button = document.createElement('button');
       button.type = 'button';
@@ -482,7 +514,8 @@
                   _ultimate_bundle: true,
                   _ultimate_bundle_test: root.dataset.testName || 'ultimate_bundle_v1',
                   _ultimate_bundle_variant: root.dataset.assignedVariant || 'bundle_4990',
-                  _ultimate_bundle_size: selectedSize,
+                  _ultimate_bundle_size: selectedVariant.sizeLabel || selectedSize,
+                  _ultimate_bundle_color: selectedVariant.colorLabel || '',
                 },
               },
             ],
@@ -535,4 +568,6 @@
   }
 
   document.addEventListener('shopify:section:load', boot);
+  // refreshCartSection() replaces <cart-component>; re-bind on the new root.
+  document.addEventListener('cart:updated', boot);
 })();

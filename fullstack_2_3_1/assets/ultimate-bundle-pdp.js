@@ -20,13 +20,14 @@
   const cartAddUrl = () => withJs(window.Theme?.routes?.cart_add_url, '/cart/add.js');
   const cartJsonUrl = () => withJs(window.Theme?.routes?.cart_url, '/cart.js');
 
-  const findBundleLine = (cart) => {
+  const findBundleLine = (cart, productId) => {
     if (!cart || !Array.isArray(cart.items)) return null;
+    const wantedId = productId != null && productId !== '' ? String(productId) : '';
     return (
       cart.items.find((item) => {
         if (item.properties && item.properties._ultimate_bundle) return true;
-        const title = String(item.product_title || item.title || '').toLowerCase();
-        return title.includes('ultimate bundle');
+        if (wantedId && String(item.product_id) === wantedId) return true;
+        return false;
       }) || null
     );
   };
@@ -89,13 +90,17 @@
     if (!card || !select || !addBtn) return;
 
     const variants = flatVariants(colors);
-    if (!variants.length) return;
+    const availableVariants = variants.filter((entry) => entry.available);
+    if (!availableVariants.length) {
+      card.hidden = true;
+      return;
+    }
 
     const preferColorwaysFirst = payload?.upsellContext?.isStreetwearProduct === true
       && Array.isArray(payload?.essentialsColorwayUpsells?.colorways)
       && payload.essentialsColorwayUpsells.colorways.length > 0;
 
-    let selectedVariant = variants.find((entry) => entry.available) || variants[0];
+    let selectedVariant = availableVariants[0];
     let busy = false;
     let shown = false;
 
@@ -172,7 +177,7 @@
         });
         if (cartResponse.ok) {
           const cart = await cartResponse.json();
-          line = findBundleLine(cart);
+          line = findBundleLine(cart, bundle.productId);
         }
       } catch (error) {
         line = null;
@@ -201,7 +206,7 @@
 
     addBtn.addEventListener('click', async () => {
       if (busy) return;
-      if (!selectedVariant?.id) return;
+      if (!selectedVariant?.id || !selectedVariant.available) return;
 
       busy = true;
       addBtn.disabled = true;

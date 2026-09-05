@@ -443,8 +443,11 @@
                       <p class="rs-cart__ultimate-bundle-size-label">{{ 'cart.ultimate_bundle.select_size' | t }}</p>
                       <div class="rs-cart__ultimate-bundle-size-options" data-rs-ub-size-options></div>
                     </div>
+                    {%- liquid
+                      assign ultimate_bundle_savings_money = section.settings.ultimate_bundle_savings_price | money
+                    -%}
                     <button type="button" class="button button--primary button--full-width rs-cart__ultimate-bundle-cta" data-rs-ub-cta>
-                      {{ 'cart.ultimate_bundle.cta' | t }}
+                      {{ 'cart.ultimate_bundle.cta' | t: savings: ultimate_bundle_savings_money }}
                     </button>
                     <p class="rs-cart__ultimate-bundle-microcopy">{{ 'cart.ultimate_bundle.microcopy' | t }}</p>
                     <p class="rs-cart__ultimate-bundle-feedback hidden" data-rs-ub-feedback role="status" aria-live="polite"></p>
@@ -509,7 +512,9 @@
                     "out_of_stock_error": {{ 'cart.ultimate_bundle.out_of_stock_error' | t | json }},
                     "generic_add_error": {{ 'cart.ultimate_bundle.generic_add_error' | t | json }},
                     "bundle_removed_for_threshold": {{ 'cart.ultimate_bundle.bundle_removed_for_threshold' | t | json }},
-                    "bundle_threshold_confirm": {{ 'cart.ultimate_bundle.bundle_threshold_confirm' | t | json }}
+                    "bundle_threshold_confirm": {{ 'cart.ultimate_bundle.bundle_threshold_confirm' | t | json }},
+                    "savings": {{ 'cart.ultimate_bundle.savings' | t | json }},
+                    "cta": {{ 'cart.ultimate_bundle.cta' | t | json }}
                   }
                 </script>
               </div>
