@@ -420,6 +420,8 @@
       "spec_gender": "Gender",
       "spec_category": "Category",
       "spec_sku": "SKU",
+      "old_pair_label": "Older pair (2016 or earlier)",
+      "old_pair_notice_html": "Given this pair’s release date, materials (midsole, glue, foam) may have weakened with age — even when new / deadstock. Wear may involve risk (sole separation, midsole crumbling, cracking). Like specialised marketplaces (e.g. GOAT vintage), this pair may not be suitable for regular wear. By buying, you accept that risk: age-related issues or faults that appear after wear are not eligible for refund, exchange or store credit. A defect already present on delivery and reported immediately remains covered under our <a href=\"/pages/faq?category=echanges-et-retours\">FAQ terms</a>.",
       "accordion_description": "DESCRIPTION",
       "accordion_authenticity": "AUTHENTICITY",
       "accordion_delivery": "SHIPPING",

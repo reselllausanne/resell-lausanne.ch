@@ -420,6 +420,8 @@
       "spec_gender": "Geschlecht",
       "spec_category": "Kategorie",
       "spec_sku": "SKU",
+      "old_pair_label": "Älteres Paar (2016 oder früher)",
+      "old_pair_notice_html": "Angesichts des Erscheinungsjahres können Materialien (Sohle, Klebstoff, Schaum) mit der Zeit brüchig geworden sein — auch im Neu-/Deadstock-Zustand. Das Tragen birgt Risiken (Ablösung, Sohlenbröseln, Risse). Wie bei spezialisierten Marktplätzen (z.&nbsp;B. GOAT Vintage) eignet sich dieses Paar möglicherweise nicht für regelmässigen Gebrauch. Mit dem Kauf akzeptieren Sie dieses Risiko: altersbedingte Mängel oder Schäden nach dem Tragen berechtigen nicht zu Rückerstattung, Umtausch oder Shop-Guthaben. Ein bereits bei Erhalt vorhandener und sofort gemeldeter Mangel bleibt gemäss unseren <a href=\"/pages/faq?category=echanges-et-retours\">FAQ-Bedingungen</a> abgedeckt.",
       "accordion_description": "BESCHREIBUNG",
       "accordion_authenticity": "AUTHENTIZITÄT",
       "accordion_delivery": "LIEFERUNG",

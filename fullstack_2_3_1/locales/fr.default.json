@@ -420,6 +420,8 @@
       "spec_gender": "Genre",
       "spec_category": "Catégorie",
       "spec_sku": "SKU",
+      "old_pair_label": "Paire ancienne (2016 ou avant)",
+      "old_pair_notice_html": "Compte tenu de la date de création de cette paire, les matériaux (semelle, colle, mousse) peuvent s’être fragilisés avec le temps — même en état neuf / deadstock. Le port peut présenter un risque (décollement, crumbage de semelle, craquelures). Comme sur les plateformes spécialisées (ex. articles vintage GOAT), cette paire peut ne pas être adaptée à un usage régulier. En achetant, vous acceptez ce risque&nbsp;: les défauts liés à l’âge ou apparaissant après port ne donnent pas lieu à remboursement, échange ou crédit boutique. Un défaut déjà présent à réception et signalé immédiatement reste couvert selon nos <a href=\"/pages/faq?category=echanges-et-retours\">conditions FAQ</a>.",
       "accordion_description": "DESCRIPTION",
       "accordion_authenticity": "AUTHENTICITÉ",
       "accordion_delivery": "LIVRAISON",

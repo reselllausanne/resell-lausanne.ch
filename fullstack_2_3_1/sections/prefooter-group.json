@@ -93,7 +93,7 @@
                   "name": "t:text",
                   "settings": {
                     "show_on_display": "desktop_and_mobile",
-                    "text": "<p>Paiement en plusieurs fois ou sur facture — Powerpay (CH), Alma (EU)</p>",
+                    "text": "<p>Paiement en plusieurs fois par facture</p>",
                     "text_style": "paragraph",
                     "paragraph_font_size": "normal",
                     "font_weight": 400,

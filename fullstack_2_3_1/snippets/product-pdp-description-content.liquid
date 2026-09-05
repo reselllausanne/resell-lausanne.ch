@@ -52,6 +52,7 @@
 {% assign sanitized_description = sanitized_description | strip %}
 
 <div class="product-pdp-description">
+  {% render 'rs-old-pair-notice', product: pdp_product %}
   {% render 'product-pdp-seo-boost', product: pdp_product %}
   {% if sanitized_description != blank %}
     <div class="product-pdp-description__body rte">

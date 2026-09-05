@@ -1,0 +1,80 @@
+{% doc %}
+  Age / vintage wear disclaimer for pairs released in 2016 or earlier (GOAT-style).
+
+  Shown when:
+  - product tag `old-pair` / `old_pair` / `paire-ancienne`, OR
+  - metafield custom.release_year <= 2016, OR
+  - metafield custom.release_date year <= 2016
+
+  @param {product} product - Product object
+{% enddoc %}
+
+{% liquid
+  assign pdp_product = product | default: closest.product
+  assign old_pair_cutoff_year = 2016
+  assign show_old_pair_notice = false
+  assign release_year = blank
+
+  if pdp_product != blank
+    assign tags_down = pdp_product.tags | join: ',' | downcase
+    if tags_down contains 'old-pair' or tags_down contains 'old_pair' or tags_down contains 'paire-ancienne'
+      assign show_old_pair_notice = true
+    endif
+
+    if pdp_product.metafields.custom.release_year != blank
+      assign release_year = pdp_product.metafields.custom.release_year.value | default: pdp_product.metafields.custom.release_year | plus: 0
+    endif
+
+    if release_year == blank and pdp_product.metafields.custom.release_date != blank
+      assign release_date_raw = pdp_product.metafields.custom.release_date.value | default: pdp_product.metafields.custom.release_date
+      assign release_year = release_date_raw | date: '%Y' | plus: 0
+    endif
+
+    if release_year != blank and release_year > 0 and release_year <= old_pair_cutoff_year
+      assign show_old_pair_notice = true
+    endif
+  endif
+%}
+
+{% if show_old_pair_notice %}
+  <aside class="rs-old-pair-notice" role="note" data-rs-old-pair-notice>
+    <p class="rs-old-pair-notice__label">{{ 'products.pdp.old_pair_label' | t }}</p>
+    <p class="rs-old-pair-notice__text">
+      {{ 'products.pdp.old_pair_notice_html' | t }}
+    </p>
+  </aside>
+{% endif %}
+
+{% stylesheet %}
+  .rs-old-pair-notice {
+    margin: 0 0 14px;
+    padding: 10px 12px;
+    border: 1px solid rgb(8 8 8 / 12%);
+    border-left: 3px solid rgb(8 8 8);
+    background: rgb(250 250 250);
+    color: rgb(55 55 55);
+  }
+
+  .rs-old-pair-notice__label {
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(8 8 8);
+    line-height: 1.3;
+  }
+
+  .rs-old-pair-notice__text {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    font-weight: 400;
+  }
+
+  .rs-old-pair-notice__text a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+{% endstylesheet %}
