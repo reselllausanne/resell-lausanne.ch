@@ -1,9 +1,10 @@
 {%- doc -%}
-  Promotional pictos on product card image (top-right).
+  Promotional pictos on product media.
 
-  soldes_48h → SOLDES picto only.
-  48h picto → only when an in-stock variant has custom.delivery_48h.
-  express-delivery collection / StockX express → no picto.
+  SALE → top-right.
+  48h / express → top-left (never together; 48h wins).
+  Always uses theme SVG assets (no metafield image override — those blew up on rails).
+  PLP / home rails use a compact scale.
 {%- enddoc -%}
 
 {%- liquid
@@ -11,56 +12,45 @@
   assign skip_sale_picto = skip_sale_picto | default: false
   assign show_sale = false
   assign show_48h = false
+  assign show_express = false
 
   capture rs_picto_flags
     render 'rs-promotional-picto-signals', product: product
   endcapture
   assign rs_picto_parts = rs_picto_flags | strip | split: '|'
-  assign rs_soldes_48h_active = false
-  assign rs_48h_delivery_active = false
   if rs_picto_parts[0] == '1'
-    assign rs_soldes_48h_active = true
+    assign show_sale = true
   endif
   if rs_picto_parts[1] == '1'
-    assign rs_48h_delivery_active = true
-  endif
-
-  if rs_48h_delivery_active
     assign show_48h = true
+  elsif rs_picto_parts[2] == '1'
+    assign show_express = true
   endif
 
-  unless skip_sale_picto
-    if rs_soldes_48h_active
-      assign show_sale = true
-    endif
-    if product.metafields.custom.show_sale_picto.value == false
-      assign show_sale = false
-    endif
-  endunless
+  if skip_sale_picto
+    assign show_sale = false
+  endif
+  if product.metafields.custom.show_sale_picto.value == false
+    assign show_sale = false
+  endif
 
   assign sale_picto_src = 'rl-picto-sales.svg' | asset_url
-  if product.metafields.custom.sale_picto.value != blank
-    assign sale_picto_src = product.metafields.custom.sale_picto.value | image_url: width: 100
-  endif
-
   assign rs_48h_src = 'rl-picto-48h.svg' | asset_url
-  if product.metafields.custom.delivery_48h_picto.value != blank
-    assign rs_48h_src = product.metafields.custom.delivery_48h_picto.value | image_url: width: 100
-  endif
+  assign rs_express_src = 'rl-picto-express.svg' | asset_url
 -%}
 
-{%- if show_sale or show_48h -%}
-  {%- if picto_stacked -%}
-    <div class="product-card-promotional-pictos-stack" aria-hidden="true">
-  {%- endif -%}
-  <div class="product-card-promotional-pictos{% if picto_stacked %} product-card-promotional-pictos--stacked{% endif %}" aria-hidden="true">
+{%- if show_sale or show_48h or show_express -%}
+  <div
+    class="product-card-promotional-pictos{% if picto_stacked %} product-card-promotional-pictos--stacked{% endif %}"
+    aria-hidden="true"
+  >
     {%- if show_sale -%}
       <img
         class="product-card-promotional-pictos__picto product-card-promotional-pictos__picto--sales"
         src="{{ sale_picto_src }}"
         alt=""
-        width="50"
-        height="26"
+        width="56"
+        height="24"
         loading="lazy"
         decoding="async"
       >
@@ -71,56 +61,122 @@
         class="product-card-promotional-pictos__picto product-card-promotional-pictos__picto--48h"
         src="{{ rs_48h_src }}"
         alt=""
-        width="50"
-        height="26"
+        width="56"
+        height="24"
+        loading="lazy"
+        decoding="async"
+      >
+    {%- elsif show_express -%}
+      <img
+        class="product-card-promotional-pictos__picto product-card-promotional-pictos__picto--express"
+        src="{{ rs_express_src }}"
+        alt=""
+        width="72"
+        height="24"
         loading="lazy"
         decoding="async"
       >
     {%- endif -%}
   </div>
-  {%- if picto_stacked -%}
-    </div>
-  {%- endif -%}
 {%- endif -%}
 
 {% stylesheet %}
-  .product-card-promotional-pictos-stack {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 3;
-    pointer-events: none;
-  }
-
   .product-card-promotional-pictos {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    pointer-events: none;
-  }
-
-  .product-card-promotional-pictos:not(.product-card-promotional-pictos--stacked) {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    inset: 0;
     z-index: 3;
-  }
-
-  .product-card-promotional-pictos--stacked {
-    position: static;
-    top: auto;
-    right: auto;
+    pointer-events: none;
   }
 
   .product-card-promotional-pictos__picto {
+    position: absolute;
+    top: 8px;
     display: block;
-    width: 50px;
-    height: 26px;
-    max-width: 50px;
-    max-height: 26px;
+    width: 56px !important;
+    height: 24px !important;
+    max-width: 56px !important;
+    max-height: 24px !important;
     object-fit: contain;
     object-position: center;
     flex-shrink: 0;
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 12%));
+  }
+
+  .product-card-promotional-pictos__picto--express {
+    width: 72px !important;
+    max-width: 72px !important;
+  }
+
+  .product-card-promotional-pictos__picto--sales {
+    right: 8px;
+    left: auto;
+  }
+
+  .product-card-promotional-pictos__picto--48h,
+  .product-card-promotional-pictos__picto--express {
+    left: 8px;
+    right: auto;
+  }
+
+  /* Rails / PLP / search — keep readable (was squashed to ~28px) */
+  .main-collection__products-grid .product-card-promotional-pictos__picto,
+  .main-search__products-grid .product-card-promotional-pictos__picto,
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto,
+  .collection-plp-featured-rail__pictos .product-card-promotional-pictos__picto,
+  .predictive-search__product-media .product-card-promotional-pictos__picto,
+  .landing-product-card__media .product-card-promotional-pictos__picto,
+  .product-card .product-card-promotional-pictos__picto {
+    top: 6px !important;
+    width: 52px !important;
+    height: 22px !important;
+    max-width: 52px !important;
+    max-height: 22px !important;
+  }
+
+  .main-collection__products-grid .product-card-promotional-pictos__picto--express,
+  .main-search__products-grid .product-card-promotional-pictos__picto--express,
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--express,
+  .collection-plp-featured-rail__pictos .product-card-promotional-pictos__picto--express,
+  .predictive-search__product-media .product-card-promotional-pictos__picto--express,
+  .landing-product-card__media .product-card-promotional-pictos__picto--express,
+  .product-card .product-card-promotional-pictos__picto--express {
+    width: 66px !important;
+    max-width: 66px !important;
+  }
+
+  .main-collection__products-grid .product-card-promotional-pictos__picto--sales,
+  .main-search__products-grid .product-card-promotional-pictos__picto--sales,
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--sales,
+  .collection-plp-featured-rail__pictos .product-card-promotional-pictos__picto--sales,
+  .predictive-search__product-media .product-card-promotional-pictos__picto--sales,
+  .landing-product-card__media .product-card-promotional-pictos__picto--sales,
+  .product-card .product-card-promotional-pictos__picto--sales {
+    right: 6px !important;
+    left: auto !important;
+  }
+
+  .main-collection__products-grid .product-card-promotional-pictos__picto--48h,
+  .main-collection__products-grid .product-card-promotional-pictos__picto--express,
+  .main-search__products-grid .product-card-promotional-pictos__picto--48h,
+  .main-search__products-grid .product-card-promotional-pictos__picto--express,
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--48h,
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--express,
+  .collection-plp-featured-rail__pictos .product-card-promotional-pictos__picto--48h,
+  .collection-plp-featured-rail__pictos .product-card-promotional-pictos__picto--express,
+  .predictive-search__product-media .product-card-promotional-pictos__picto--48h,
+  .predictive-search__product-media .product-card-promotional-pictos__picto--express,
+  .landing-product-card__media .product-card-promotional-pictos__picto--48h,
+  .landing-product-card__media .product-card-promotional-pictos__picto--express,
+  .product-card .product-card-promotional-pictos__picto--48h,
+  .product-card .product-card-promotional-pictos__picto--express {
+    left: 6px !important;
+    right: auto !important;
+  }
+
+  .product-card-promotional-pictos-stack {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
   }
 {% endstylesheet %}

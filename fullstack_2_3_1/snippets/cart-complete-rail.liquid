@@ -1,0 +1,322 @@
+{%- doc -%}
+  Cart “Complétez votre panier” horizontal upsell rail.
+  Reuses the curated accessory handles from the size-selection modal.
+  Filters products already in cart; JS adds via Ajax then reloads (same as cart-upsell).
+{%- enddoc -%}
+
+{%- liquid
+  # Essentials tees first: 48h stock + −10% via cart property _essentials_colorway_upsell
+  # (same automatic discount as PDP size-modal colorway upsell).
+  assign essentials_tee_handles = 'essentials-tee-light-oatmeal-ss22,essentials-tees-stretch-limo-ss22,essentials-tees-dark-oatmeal-ss22' | split: ','
+  assign rail_handles = 'essentials-tee-light-oatmeal-ss22,essentials-tees-stretch-limo-ss22,essentials-tees-dark-oatmeal-ss22,nike-everyday-plus-cushioned-crew-socks-6-pairs-white,supreme-hanes-boxer-briefs-black,supreme-hanes-boxer-briefs-white,cleaning-kit-by-sole-savaz,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,alo-unisex-half-crew-throwback-sock-black-white,alo-unisex-half-crew-throwback-sock-white-black,fluffy-laces' | split: ','
+  assign rail_visible_max = 11
+  assign rail_count = 0
+  assign price_from_label = 'collections.filters.from' | t
+  assign essentials_discount_label = 'cart.essentials_colorway.discount_badge' | t
+-%}
+
+{%- capture rail_cards -%}
+  {%- for handle in rail_handles -%}
+    {%- if rail_count >= rail_visible_max -%}{%- break -%}{%- endif -%}
+    {%- assign rail_product = all_products[handle] -%}
+    {%- if rail_product == blank or rail_product.available == false -%}{%- continue -%}{%- endif -%}
+
+    {%- assign rail_in_cart = false -%}
+    {%- for item in cart.items -%}
+      {%- if item.product_id == rail_product.id -%}
+        {%- assign rail_in_cart = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if rail_in_cart -%}{%- continue -%}{%- endif -%}
+
+    {%- liquid
+      assign rail_is_essentials_tee = false
+      for essentials_handle in essentials_tee_handles
+        if essentials_handle == handle
+          assign rail_is_essentials_tee = true
+          break
+        endif
+      endfor
+
+      assign rail_needs_size = false
+      assign available_variant_count = 0
+      assign first_available_variant = blank
+      for variant in rail_product.variants
+        if variant.available
+          assign available_variant_count = available_variant_count | plus: 1
+          if first_available_variant == blank
+            assign first_available_variant = variant
+          endif
+        endif
+      endfor
+      if rail_product.has_only_default_variant == false and available_variant_count > 1
+        assign rail_needs_size = true
+      endif
+
+      assign size_option_index = 0
+      for opt in rail_product.options_with_values
+        assign opt_name_down = opt.name | downcase
+        if opt_name_down == 'size' or opt_name_down == 'taille' or opt_name_down == 'größe' or opt_name_down == 'groesse'
+          assign size_option_index = forloop.index0
+          break
+        endif
+      endfor
+
+      assign rail_price = rail_product.price
+      assign rail_compare = rail_product.compare_at_price
+      assign rail_has_from = false
+      if rail_product.price_varies
+        assign rail_has_from = true
+      endif
+      assign rail_on_sale = false
+      if rail_compare > rail_price
+        assign rail_on_sale = true
+      endif
+
+      # Cart-only −10% for Essentials tee colorways (Shopify auto discount on line property).
+      if rail_is_essentials_tee
+        assign rail_compare = rail_price
+        assign rail_price = rail_price | times: 90 | divided_by: 100
+        assign rail_on_sale = true
+        assign rail_has_from = true
+      endif
+
+      capture rs_picto_flags
+        render 'rs-promotional-picto-signals', product: rail_product
+      endcapture
+      assign rs_picto_parts = rs_picto_flags | strip | split: '|'
+      assign show_48h = false
+      if rs_picto_parts[1] == '1'
+        assign show_48h = true
+      endif
+      # Essentials tee rail: always show 48h (warehouse promo SKUs).
+      if rail_is_essentials_tee
+        assign show_48h = true
+      endif
+    -%}
+
+    {%- capture rail_variants_json -%}
+      [
+      {%- assign rail_vj_first = true -%}
+      {%- for variant in rail_product.variants -%}
+        {%- unless variant.available -%}{%- continue -%}{%- endunless -%}
+        {%- unless rail_vj_first -%},{%- endunless -%}
+        {%- assign rail_vj_first = false -%}
+        {%- assign size_label = variant.options[size_option_index] | default: variant.title -%}
+        {%- liquid
+          assign v_price = variant.price
+          assign v_compare = variant.compare_at_price
+          if rail_is_essentials_tee
+            assign v_compare = variant.price
+            assign v_price = variant.price | times: 90 | divided_by: 100
+          endif
+        -%}
+        {
+          "id": {{ variant.id | json }},
+          "label": {{ size_label | json }},
+          "price": {{ v_price | money_without_trailing_zeros | json }},
+          "compare": {% if v_compare > v_price %}{{ v_compare | money_without_trailing_zeros | json }}{% else %}null{% endif %}
+        }
+      {%- endfor -%}
+      ]
+    {%- endcapture -%}
+
+    <li
+      class="rs-cart-complete__item"
+      data-rs-complete-card
+      data-product-id="{{ rail_product.id }}"
+      data-needs-size="{{ rail_needs_size }}"
+      data-product-title="{{ rail_product.title | escape }}"
+      {% if rail_is_essentials_tee %}data-essentials-colorway="10"{% endif %}
+      {% if rail_product.featured_media %}
+        data-product-image="{{ rail_product.featured_media | image_url: width: 240 }}"
+      {% endif %}
+      {% unless rail_needs_size %}
+        data-variant-id="{{ first_available_variant.id }}"
+      {% endunless %}
+    >
+      {%- if rail_needs_size -%}
+        <script type="application/json" data-rs-complete-variants>
+          {{ rail_variants_json }}
+        </script>
+      {%- endif -%}
+      <article class="rs-cart-complete__card">
+        <a class="rs-cart-complete__media" href="{{ rail_product.url }}">
+          {%- if rail_product.featured_media -%}
+            {%- assign rail_alt = rail_product.featured_media.alt | default: rail_product.title -%}
+            {{
+              rail_product.featured_media
+              | image_url: width: 240
+              | image_tag:
+                loading: 'lazy',
+                widths: '105,140,210,240',
+                sizes: '148px',
+                alt: rail_alt
+            }}
+          {%- else -%}
+            <span class="rs-cart-complete__media-placeholder" aria-hidden="true"></span>
+          {%- endif -%}
+          {%- if show_48h -%}
+            <span class="rs-cart-complete__badge" aria-hidden="true">
+              <img
+                src="{{ 'rl-picto-48h.svg' | asset_url }}"
+                width="52"
+                height="20"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              >
+            </span>
+          {%- endif -%}
+        </a>
+
+        <div class="rs-cart-complete__body">
+          <a class="rs-cart-complete__title" href="{{ rail_product.url }}">{{ rail_product.title | escape }}</a>
+          <p class="rs-cart-complete__price">
+            {%- if rail_has_from or rail_on_sale -%}
+              <span class="rs-cart-complete__price-from">{{ price_from_label }}</span>
+            {%- endif -%}
+            {%- if rail_on_sale -%}
+              <s class="rs-cart-complete__price-compare">{{ rail_compare | money_without_trailing_zeros }}</s>
+              <span class="rs-cart-complete__price-sale">{{ rail_price | money_without_trailing_zeros }}</span>
+            {%- else -%}
+              <span class="rs-cart-complete__price-final">{{ rail_price | money_without_trailing_zeros }}</span>
+            {%- endif -%}
+            {%- if rail_is_essentials_tee -%}
+              <span class="rs-cart-complete__discount">{{ essentials_discount_label }}</span>
+            {%- endif -%}
+          </p>
+
+          {%- if rail_needs_size -%}
+            <button
+              type="button"
+              class="rs-cart-complete__cta"
+              data-rs-complete-cta
+              data-mode="size"
+            >
+              {{ 'cart.complete_rail.select_size' | t }}
+            </button>
+          {%- else -%}
+            <button
+              type="button"
+              class="rs-cart-complete__cta"
+              data-rs-complete-cta
+              data-mode="add"
+              {% unless first_available_variant %}disabled{% endunless %}
+            >
+              {{ 'cart.complete_rail.add' | t }}
+            </button>
+          {%- endif -%}
+        </div>
+      </article>
+    </li>
+
+    {%- assign rail_count = rail_count | plus: 1 -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if rail_count > 0 -%}
+  {{ 'product-size-selection-modal.css' | asset_url | stylesheet_tag }}
+  <section
+    class="rs-cart-complete"
+    id="completez-votre-panier"
+    data-rs-cart-complete
+    aria-labelledby="rs-cart-complete-title"
+    data-i18n-add="{{ 'products.add_to_cart' | t | escape }}"
+    data-i18n-close="{{ 'products.pdp.size_modal.close_aria' | t | escape }}"
+  >
+    <div class="rs-cart-complete__head">
+      <h2 class="rs-cart-complete__heading" id="rs-cart-complete-title">
+        {{ 'cart.complete_rail.title' | t }}
+      </h2>
+      <div class="rs-cart-complete__nav" data-rs-complete-nav hidden>
+        <button
+          type="button"
+          class="rs-cart-complete__arrow"
+          data-rs-complete-prev
+          aria-label="{{ 'cart.complete_rail.prev' | t }}"
+          disabled
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="rs-cart-complete__arrow"
+          data-rs-complete-next
+          aria-label="{{ 'cart.complete_rail.next' | t }}"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="rs-cart-complete__scroller" data-rs-complete-scroller tabindex="0">
+      <ul class="rs-cart-complete__track" role="list">
+        {{ rail_cards }}
+      </ul>
+    </div>
+
+    {%- comment -%} Lean PDP size modal: title + size cards + ATC (no shipping / trust / upsell). {%- endcomment -%}
+    <div
+      class="rs-size-modal rs-cart-complete-size-modal"
+      id="rs-cart-complete-size-modal"
+      data-rs-cart-complete-size-modal
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="rs-cart-complete-size-modal-title"
+    >
+      <div class="rs-size-modal__overlay" data-rs-cart-complete-size-overlay tabindex="-1"></div>
+      <div class="rs-size-modal__content">
+        <div class="rs-size-modal__background" aria-hidden="true"></div>
+        <div class="rs-size-modal__panel" data-rs-cart-complete-size-panel>
+          <div class="rs-size-modal__main">
+            <div class="rs-size-modal__inner-top">
+              <div class="rs-size-modal__hero">
+                <h2 id="rs-cart-complete-size-modal-title" class="rs-size-modal__hero-title" data-rs-cart-complete-size-title></h2>
+              </div>
+              <div class="rs-size-modal__toolbar">
+                <div class="rs-size-modal__unit-toggle" role="group" aria-label="{{ 'products.pdp.size_modal.unit_aria' | t | escape }}">
+                  <button type="button" class="rs-size-modal__unit is-active" aria-pressed="true" tabindex="-1">
+                    EU
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="rs-size-modal__grid-scroller">
+              <div
+                class="rs-size-modal__grid"
+                data-rs-cart-complete-size-grid
+                role="listbox"
+                aria-label="{{ 'products.pdp.size_modal.sizes_aria' | t | escape }}"
+              ></div>
+            </div>
+            <div class="rs-size-modal__inner-bottom">
+              <button
+                type="button"
+                class="rs-size-modal__atc button button--primary button--full-width"
+                data-rs-cart-complete-size-atc
+                disabled
+              >
+                {{ 'products.add_to_cart' | t }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="rs-size-modal__close-fab"
+          data-rs-cart-complete-size-close
+          aria-label="{{ 'products.pdp.size_modal.close_aria' | t | escape }}"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </section>
+{%- endif -%}

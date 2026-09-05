@@ -12,6 +12,23 @@
     elsif locale_base == 'de'
       assign cart_totals_sub = '(Ohne Versandkosten)'
     endif
+
+    assign real_cart_original_total_price = 0
+    for item in cart.items
+      assign compare_price = item.original_line_price
+      if item.variant.compare_at_price > item.original_price
+        assign compare_price = item.variant.compare_at_price | times: item.quantity
+      endif
+      assign real_cart_original_total_price = real_cart_original_total_price | plus: compare_price
+    endfor
+
+    assign cart_savings = 0
+    if real_cart_original_total_price > cart.total_price
+      assign cart_savings = real_cart_original_total_price | minus: cart.total_price
+    elsif cart.original_total_price > cart.total_price
+      assign cart_savings = cart.original_total_price | minus: cart.total_price
+      assign real_cart_original_total_price = cart.original_total_price
+    endif
   -%}
 
   {% content_for 'blocks' %}
@@ -21,18 +38,18 @@
       {%- for discount in cart.cart_level_discount_applications -%}
         <div class="cart__discount">
           {% render 'icon', icon: 'shoppingmode' %}
-          <span>{{ discount.title }} (-{{ discount.total_allocated_amount | money }})</span>
+          <span>{{ discount.title }} (−{{ discount.total_allocated_amount | money }})</span>
         </div>
       {%- endfor -%}
     </div>
   {%- endif -%}
 
-  {%- if cart.original_total_price != cart.total_price -%}
-    <div class="cart__reductions">
-      <p>{{ 'cart.discount' | t }}</p>
-      <div class="cart__reductions-value">
-        {% assign reduction = cart.original_total_price | minus: cart.total_price %}
-        {% render 'price', price: reduction, sales_badge: 'none' %}
+  {%- if cart_savings > 0 -%}
+    <div class="cart__reductions rs-cart__reductions">
+      <p class="rs-cart__reductions-label">{{ 'cart.discount' | t }}</p>
+      <div class="cart__reductions-value rs-cart__reductions-value">
+        <span class="rs-cart__reductions-minus" aria-hidden="true">−&nbsp;</span>
+        {% render 'price', price: cart_savings, sales_badge: 'none' %}
       </div>
     </div>
   {%- endif -%}
@@ -43,23 +60,7 @@
       <span class="rs-cart__totals-sub">{{ cart_totals_sub }}</span>
     </div>
     <div class="cart__totals-value rs-cart__totals-value">
-      {% assign real_cart_original_total_price = 0 %}
-
-      {% for item in cart.items %}
-        {% assign compare_price = item.original_price %}
-        {% if item.variant.compare_at_price > item.original_price %}
-          {% assign compare_price = item.variant.compare_at_price | times: item.quantity %}
-        {% else %}
-          {% assign compare_price = item.original_price | times: item.quantity %}
-        {% endif %}
-        {% assign real_cart_original_total_price = real_cart_original_total_price | plus: compare_price %}
-      {% endfor %}
-
-      {%- if real_cart_original_total_price > cart.total_price -%}
-        {% render 'price', price: cart.total_price, compare_price: real_cart_original_total_price, sales_badge: 'none' %}
-      {%- else -%}
-        {% render 'price', price: cart.total_price, sales_badge: 'none' %}
-      {%- endif -%}
+      {% render 'price', price: cart.total_price, sales_badge: 'none' %}
     </div>
   </div>
 </div>

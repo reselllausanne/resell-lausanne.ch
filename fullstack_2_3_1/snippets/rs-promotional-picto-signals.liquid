@@ -1,7 +1,7 @@
 {%- doc -%}
   Promotional picto flags for capture in parent scope.
 
-  Output: "{soldes}|{delivery}" where each part is 1 or 0.
+  Output: "{soldes}|{delivery_48h}|{express}" where each part is 1 or 0.
 
   Soldes (SOLDES picto only — bit 0):
   - product.metafields.custom.soldes_48h == true
@@ -12,8 +12,9 @@
   carries custom.delivery_48h. Sold-out warehouse sizes hide the product-level
   48h badge. Product tags / show_48h_picto alone are not enough.
 
-  Does NOT trigger on express-delivery collection, StockX express_price,
-  express_available, or generic delivery text metafields.
+  Express picto (bit 2) — when at least one IN-STOCK variant has a usable
+  express option (express_price or express_available). Display layer must
+  prefer 48h over express so they never stack.
 
   @param {product} product
 
@@ -25,6 +26,7 @@
 {%- liquid
   assign rs_soldes_48h_active = false
   assign rs_48h_delivery_active = false
+  assign rs_express_active = false
 
   if product.metafields.custom.soldes_48h.value == true
     assign rs_soldes_48h_active = true
@@ -60,5 +62,52 @@
       break
     endif
   endfor
+
+  comment
+    Express: live stock with express_price or express_available.
+    48h-only sizes also flip express_available in the size modal — those stay
+    under the 48h badge via display priority (bit 1 wins over bit 2).
+  endcomment
+  for variant in product.variants
+    unless variant.available
+      continue
+    endunless
+
+    if variant.metafields.custom.express_available.value == true
+      assign rs_express_active = true
+      break
+    endif
+
+    if variant.metafields.custom.express_price == blank
+      continue
+    endif
+
+    assign exp_mv = variant.metafields.custom.express_price.value
+    assign express_price_cents = 0
+    assign express_price_defined = false
+
+    if exp_mv.amount != blank
+      assign express_price_cents = exp_mv.amount | times: 100 | round
+      assign express_price_defined = true
+    else
+      assign exp_mv_str = exp_mv | append: '' | strip
+      if exp_mv_str == blank
+        continue
+      endif
+      if exp_mv_str contains '.'
+        assign express_price_cents = exp_mv_str | times: 100 | round
+      else
+        assign express_price_cents = exp_mv_str | plus: 0
+      endif
+      if express_price_cents > 0
+        assign express_price_defined = true
+      endif
+    endif
+
+    if express_price_defined and express_price_cents > 0
+      assign rs_express_active = true
+      break
+    endif
+  endfor
 -%}
-{%- if rs_soldes_48h_active -%}1{%- else -%}0{%- endif -%}|{%- if rs_48h_delivery_active -%}1{%- else -%}0{%- endif -%}
+{%- if rs_soldes_48h_active -%}1{%- else -%}0{%- endif -%}|{%- if rs_48h_delivery_active -%}1{%- else -%}0{%- endif -%}|{%- if rs_express_active -%}1{%- else -%}0{%- endif -%}

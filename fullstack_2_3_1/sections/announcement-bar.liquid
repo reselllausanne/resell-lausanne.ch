@@ -3,17 +3,18 @@
   if section.settings.use_launch_promo or section.settings.additional_class contains 'rl-promo-strip'
     assign use_launch_promo_strip = true
   endif
+
+  assign announcement_extra_class = section.settings.additional_class | strip
+  if use_launch_promo_strip and announcement_extra_class contains 'rl-promo-strip'
+    assign announcement_extra_class = announcement_extra_class | replace: 'rl-promo-strip', '' | strip
+  endif
+
+  assign announcement_scheme = section.settings.color_scheme | default: 'scheme-1'
 %}
 
 {% if use_launch_promo_strip or section.blocks.size > 0 %}
   <div
-    class="
-      announcement-bar color-{{ section.settings.color_scheme }}
-      {%- if section.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
-      {%- if section.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
-      {%- if use_launch_promo_strip %} rl-promo-strip{% endif -%}
-      {{ section.settings.additional_class }}
-    "
+    class="announcement-bar color-{{ announcement_scheme }}{% if section.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif %}{% if section.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif %}{% if use_launch_promo_strip %} rl-promo-strip{% endif %}{% if announcement_extra_class != blank %} {{ announcement_extra_class }}{% endif %}"
     style="
       --padding-top: {{ section.settings.padding_top }}px;
       --padding-bottom: {{ section.settings.padding_bottom }}px;

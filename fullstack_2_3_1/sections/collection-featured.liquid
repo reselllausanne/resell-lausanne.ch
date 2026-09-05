@@ -96,13 +96,35 @@
             --grid-columns-mobile: {{ section.settings.grid_columns_mobile }};
           "
         >
-          {% for product in collection_products limit: section.settings.max_products %}
+          {% assign featured_grid_shown = 0 %}
+          {% for product in collection_products %}
+            {% if featured_grid_shown >= section.settings.max_products %}
+              {% break %}
+            {% endif %}
+            {% capture rs_has_real_media %}
+              {% render 'rs-product-has-real-media', product: product %}
+            {% endcapture %}
+            {% if rs_has_real_media == blank %}
+              {% continue %}
+            {% endif %}
+            {% assign featured_grid_shown = featured_grid_shown | plus: 1 %}
             {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
           {% endfor %}
         </div>
       {% elsif section.settings.layout_type == 'slider' %}
         {% capture slides %}
-        {% for product in collection_products limit: section.settings.max_products %}
+        {% assign featured_slider_shown = 0 %}
+        {% for product in collection_products %}
+          {% if featured_slider_shown >= section.settings.max_products %}
+            {% break %}
+          {% endif %}
+          {% capture rs_has_real_media %}
+            {% render 'rs-product-has-real-media', product: product %}
+          {% endcapture %}
+          {% if rs_has_real_media == blank %}
+            {% continue %}
+          {% endif %}
+          {% assign featured_slider_shown = featured_slider_shown | plus: 1 %}
           <li class="splide__slide">
             <div class="slide" style="--gap: 0px; --margin-top: 0px; --margin-bottom: 0px;">
               {% # theme-check-disable %}
@@ -476,7 +498,8 @@
     max-height: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    background: #f5f5f5;
+    background: #fff;
+    border: 1px solid rgb(0 0 0 / 8%);
     border-radius: 0;
     overflow: hidden;
     display: flex;
@@ -515,6 +538,7 @@
     font-size: 13px !important;
     line-height: 17px !important;
     font-weight: 500 !important;
+    color: #080808 !important;
     letter-spacing: normal !important;
   }
 
@@ -524,6 +548,8 @@
   .collection-featured.rl-home-collection-rail .product-card .price-container .compare-at-price {
     font-size: 13px !important;
     line-height: 17px !important;
+    font-weight: 400 !important;
+    color: #737373 !important;
   }
 
   .collection-featured.rl-home-collection-rail .product-card-group {

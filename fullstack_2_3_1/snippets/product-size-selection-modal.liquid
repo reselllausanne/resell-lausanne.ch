@@ -168,7 +168,64 @@
   endif
 
   assign socks_product = all_products['nike-everyday-plus-cushioned-crew-socks-6-pairs-white']
-  assign cart_upsell_handles = 'cleaning-kit-by-sole-savaz,nike-everyday-plus-cushioned-crew-socks-6-pairs-white,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,alo-unisex-half-crew-throwback-sock-black-white,alo-unisex-half-crew-throwback-sock-white-black,fluffy-laces' | split: ','
+  assign product_handle_down = product.handle | default: '' | downcase
+  assign product_title_down = product.title | default: '' | downcase
+  assign product_type_down = product.type | default: '' | downcase
+  assign product_tags_down = ''
+  for product_tag in product.tags
+    assign product_tags_down = product_tags_down | append: '|' | append: product_tag | downcase
+  endfor
+  assign collection_handles_down = ''
+  for product_collection in product.collections
+    assign collection_handles_down = collection_handles_down | append: '|' | append: product_collection.handle | downcase
+  endfor
+
+  assign is_streetwear_product = false
+  if product_handle_down contains 'essentials'
+    assign is_streetwear_product = true
+  elsif product_type_down contains 'streetwear' or product_type_down contains 'vetement' or product_type_down contains 'clothing' or product_type_down contains 'apparel'
+    assign is_streetwear_product = true
+  elsif product_title_down contains 'tee' or product_title_down contains 't-shirt' or product_title_down contains 'short' or product_title_down contains 'hoodie' or product_title_down contains 'crewneck'
+    assign is_streetwear_product = true
+  elsif product_tags_down contains '|streetwear' or product_tags_down contains '|vetement' or product_tags_down contains '|apparel' or product_tags_down contains '|tee' or product_tags_down contains '|t-shirt' or product_tags_down contains '|short' or product_tags_down contains '|shorts'
+    assign is_streetwear_product = true
+  elsif collection_handles_down contains '|streetwear' or collection_handles_down contains '|vetements'
+    assign is_streetwear_product = true
+  endif
+
+  assign has_numeric_size_values = false
+  if has_size_option and size_option_index >= 0
+    assign source_size_values = product.options_with_values[size_option_index].values
+    for source_size in source_size_values
+      assign source_size_token = source_size | append: '' | strip
+      assign source_size_clean = source_size_token | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' | remove: ' ' | remove: '.' | remove: ',' | remove: '/' | remove: '-'
+      if source_size_token != blank and source_size_clean == blank
+        assign has_numeric_size_values = true
+        break
+      endif
+    endfor
+  endif
+
+  assign is_footwear_product = false
+  if product_handle_down contains 'sneaker' or product_handle_down contains 'jordan' or product_handle_down contains 'dunk' or product_handle_down contains 'yeezy' or product_handle_down contains 'air-max' or product_handle_down contains 'new-balance' or product_handle_down contains 'asics'
+    assign is_footwear_product = true
+  elsif product_type_down contains 'sneaker' or product_type_down contains 'shoe' or product_type_down contains 'chaussure'
+    assign is_footwear_product = true
+  elsif product_title_down contains 'sneaker' or product_title_down contains 'jordan' or product_title_down contains 'dunk' or product_title_down contains 'yeezy' or product_title_down contains 'air max' or product_title_down contains 'new balance'
+    assign is_footwear_product = true
+  elsif collection_handles_down contains '|sneakers' or collection_handles_down contains '|chaussures' or collection_handles_down contains '|running'
+    assign is_footwear_product = true
+  elsif has_numeric_size_values and is_streetwear_product == false
+    assign is_footwear_product = true
+  endif
+
+  if is_footwear_product
+    assign cart_upsell_handles = 'nike-everyday-plus-cushioned-crew-socks-6-pairs-white,supreme-hanes-boxer-briefs-black,supreme-hanes-boxer-briefs-white,cleaning-kit-by-sole-savaz,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,alo-unisex-half-crew-throwback-sock-black-white,alo-unisex-half-crew-throwback-sock-white-black,fluffy-laces' | split: ','
+  elsif is_streetwear_product
+    assign cart_upsell_handles = 'supreme-hanes-boxer-briefs-black,supreme-hanes-boxer-briefs-white,cleaning-kit-by-sole-savaz,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,fluffy-laces' | split: ','
+  else
+    assign cart_upsell_handles = 'cleaning-kit-by-sole-savaz,supreme-hanes-boxer-briefs-black,supreme-hanes-boxer-briefs-white,nike-everyday-plus-cushioned-crew-socks-6-pairs-white,supreme-hanes-socks-4-pack-black,supreme-hanes-crew-socks-4-pack-heather-grey,alo-unisex-half-crew-throwback-sock-black-white,alo-unisex-half-crew-throwback-sock-white-black,fluffy-laces' | split: ','
+  endif
   assign apparel_upsell_product = blank
   if product.metafields.custom.size_modal_upsell_product.value != blank
     assign apparel_upsell_product = product.metafields.custom.size_modal_upsell_product.value
@@ -214,6 +271,42 @@
       endif
     endfor
   endif
+
+  comment
+    Essentials classic tee colorways: when buying one, upsell the others
+    at the same size with −10% written on the card.
+  endcomment
+  assign essentials_tee_handles = 'essentials-tee-light-oatmeal-ss22,essentials-tees-stretch-limo-ss22,essentials-tees-dark-oatmeal-ss22' | split: ','
+  assign essentials_tee_labels = 'Light Oatmeal,Stretch Limo,Dark Oatmeal' | split: ','
+  assign essentials_short_handles = 'essentials-shorts-light-oatmeal-ss22,essentials-shorts-stretch-limo-ss22,essentials-shorts-dark-oatmeal-ss22' | split: ','
+  assign essentials_short_labels = 'Light Oatmeal,Stretch Limo,Dark Oatmeal' | split: ','
+  assign is_essentials_tee = false
+  assign is_essentials_short = false
+  assign current_essentials_color_index = -1
+  for essentials_handle in essentials_tee_handles
+    if product.handle == essentials_handle
+      assign is_essentials_tee = true
+      assign current_essentials_color_index = forloop.index0
+      break
+    endif
+  endfor
+  if current_essentials_color_index < 0
+    for essentials_short_handle in essentials_short_handles
+      if product.handle == essentials_short_handle
+        assign is_essentials_short = true
+        assign current_essentials_color_index = forloop.index0
+        break
+      endif
+    endfor
+  endif
+  assign show_essentials_reco = false
+  if is_streetwear_product or is_footwear_product
+    assign show_essentials_reco = true
+  endif
+  assign show_ultimate_bundle_in_modal = true
+  if is_streetwear_product
+    assign show_ultimate_bundle_in_modal = false
+  endif
   assign initial_cart_upsell_product = apparel_upsell_product
   if initial_cart_upsell_product == blank
     assign initial_cart_upsell_product = socks_product
@@ -227,6 +320,45 @@
     assign signature_product = all_products['sous-signature']
   endif
   assign signature_variant = signature_product.selected_or_first_available_variant
+  comment
+    Offer adds one Shopify product: Ultimate Bundle.
+    Same pattern as express: different catalog ID, real price, no JS price rewrite.
+    Do not add tee + kit + wipes as separate lines.
+  endcomment
+  assign ultimate_bundle_pdp_product = all_products['ultimate-bundle']
+  if ultimate_bundle_pdp_product == blank
+    assign ultimate_bundle_pdp_product = all_products['ultimate-bundle-4990']
+  endif
+  assign ultimate_bundle_color_handles = 'ultimate-bundle-light-oatmeal,ultimate-bundle-stretch-limo' | split: ','
+  assign ultimate_bundle_tee_oatmeal = all_products['essentials-tee-light-oatmeal-ss22']
+  assign ultimate_bundle_tee_limo = all_products['essentials-tees-stretch-limo-ss22']
+  assign ultimate_bundle_color_option_index = -1
+  assign ultimate_bundle_size_option_index = 0
+  if ultimate_bundle_pdp_product != blank
+    for ub_opt in ultimate_bundle_pdp_product.options_with_values
+      assign ub_opt_name = ub_opt.name | downcase
+      if ub_opt_name contains 'couleur' or ub_opt_name contains 'color'
+        assign ultimate_bundle_color_option_index = forloop.index0
+      elsif ub_opt_name contains 'taille' or ub_opt_name contains 'size'
+        assign ultimate_bundle_size_option_index = forloop.index0
+      endif
+    endfor
+  endif
+
+  assign ultimate_bundle_has_offer = false
+  if show_ultimate_bundle_in_modal
+    if ultimate_bundle_pdp_product != blank and ultimate_bundle_pdp_product.variants.size > 0
+      assign ultimate_bundle_has_offer = true
+    else
+      for ub_handle in ultimate_bundle_color_handles
+        assign ub_color_product = all_products[ub_handle]
+        if ub_color_product != blank and ub_color_product.variants.size > 0
+          assign ultimate_bundle_has_offer = true
+          break
+        endif
+      endfor
+    endif
+  endif
 %}
 
 {% if has_size_option and product.has_only_default_variant == false %}
@@ -417,11 +549,22 @@
                 <p class="rs-size-modal__cart-delivery">
                   <span class="rs-size-modal__cart-delivery-label" data-rs-modal-cart-delivery-label>{{ shipping_method_label | escape }}</span>
                   <img
-                    class="rs-size-modal__cart-delivery-picto"
-                    data-rs-modal-cart-delivery-picto
+                    class="rs-size-modal__cart-delivery-picto rs-size-modal__cart-delivery-picto--48h"
+                    data-rs-modal-cart-delivery-picto-48h
                     src="{{ modal_48h_picto_src }}"
                     alt=""
                     width="50"
+                    height="26"
+                    loading="lazy"
+                    decoding="async"
+                    hidden
+                  >
+                  <img
+                    class="rs-size-modal__cart-delivery-picto rs-size-modal__cart-delivery-picto--express"
+                    data-rs-modal-cart-delivery-picto-express
+                    src="{{ 'rl-picto-express.svg' | asset_url }}"
+                    alt=""
+                    width="76"
                     height="26"
                     loading="lazy"
                     decoding="async"
@@ -469,7 +612,61 @@
             <div class="rs-size-modal__cart-upsell-list">
               <p class="rs-size-modal__cart-upsell-heading">Complétez votre panier</p>
 
-              <div data-rs-modal-cart-upsells></div>
+              <div data-rs-modal-cart-upsells>
+                {%- if ultimate_bundle_has_offer -%}
+                  <div
+                    class="rs-size-modal__cart-upsell rs-size-modal__cart-upsell--ultimate-bundle"
+                    data-rs-modal-ultimate-bundle
+                  >
+                    <div class="rs-size-modal__cart-upsell-row" data-rs-modal-ultimate-bundle-row>
+                      <span class="rs-size-modal__cart-upsell-media" aria-hidden="true">
+                        <img
+                          data-rs-modal-ultimate-bundle-image
+                          src=""
+                          alt=""
+                          width="88"
+                          height="88"
+                          loading="lazy"
+                          decoding="async"
+                        >
+                      </span>
+                      <span class="rs-size-modal__cart-upsell-info">
+                        <span class="rs-size-modal__cart-upsell-title">{{ 'cart.ultimate_bundle.title' | t }}</span>
+                        <span class="rs-size-modal__cart-upsell-price">
+                          <span data-rs-modal-ultimate-bundle-price></span>
+                          <span
+                            class="rs-size-modal__ultimate-bundle-compare"
+                            data-rs-modal-ultimate-bundle-compare
+                            hidden
+                          ></span>
+                        </span>
+                        <span
+                          class="rs-size-modal__cart-upsell-sub"
+                          data-rs-modal-ultimate-bundle-savings
+                        ></span>
+                        <select
+                          class="rs-size-modal__cart-upsell-select"
+                          data-rs-modal-ultimate-bundle-select
+                          aria-label="{{ 'cart.ultimate_bundle.select_size' | t | escape }}"
+                        ></select>
+                        <p class="rs-size-modal__ultimate-bundle-limited" data-rs-modal-ultimate-bundle-limited>
+                          {{ 'cart.ultimate_bundle.limited_offer' | t }}
+                          <span data-rs-modal-ultimate-bundle-limited-count class="rs-size-modal__ultimate-bundle-limited-count"></span>
+                        </p>
+                      </span>
+                      <button
+                        type="button"
+                        class="rs-size-modal__cart-upsell-add"
+                        data-rs-modal-ultimate-bundle-add
+                        aria-pressed="false"
+                        aria-label="{{ 'cart.ultimate_bundle.title' | t | escape }}"
+                      >
+                        <span class="rs-size-modal__cart-upsell-add-icon" data-rs-modal-ultimate-bundle-add-icon aria-hidden="true">+</span>
+                      </button>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
 
             {%- if protection_product != blank and protection_variant != blank -%}
               <div class="rs-size-modal__cart-upsell rs-size-modal__cart-upsell--protection" data-rs-modal-protection-upsell>
@@ -537,6 +734,11 @@
       "productHandle": {{ product.handle | json }},
       "productTitle": {{ product.title | json }},
       "productImage": {{ product.featured_image | image_url: width: 200 | json }},
+      "upsellContext": {
+        "isStreetwearProduct": {{ is_streetwear_product | json }},
+        "isFootwearProduct": {{ is_footwear_product | json }},
+        "showUltimateBundle": {{ show_ultimate_bundle_in_modal | json }}
+      },
       "expressDeliveryPromiseDefault": {{ express_delivery_promise_default | json }},
       "i18n": {
         "addToCart": {{ sm_add_to_cart | json }},
@@ -584,6 +786,103 @@
           {%- endfor -%}
         ]
       }{% else %}null{% endif %},
+      "essentialsColorwayUpsells": {% if show_essentials_reco %}{
+        "discountPercent": 10,
+        "discountLabel": {{ 'cart.essentials_colorway.discount_badge' | t | json }},
+        "colorways": [
+          {%- assign cw_first = true -%}
+          {%- assign essentials_seen_handles = ',' -%}
+          {%- assign essentials_reco_handles = '' -%}
+          {%- if is_essentials_short and current_essentials_color_index >= 0 -%}
+            {%- assign same_color_tee = essentials_tee_handles[current_essentials_color_index] -%}
+            {%- if same_color_tee != blank -%}{%- assign essentials_reco_handles = essentials_reco_handles | append: same_color_tee | append: ',' -%}{%- endif -%}
+            {%- for tee_handle in essentials_tee_handles -%}
+              {%- if forloop.index0 == current_essentials_color_index -%}{%- continue -%}{%- endif -%}
+              {%- assign essentials_reco_handles = essentials_reco_handles | append: tee_handle | append: ',' -%}
+            {%- endfor -%}
+            {%- for short_handle in essentials_short_handles -%}
+              {%- if short_handle == product.handle -%}{%- continue -%}{%- endif -%}
+              {%- assign essentials_reco_handles = essentials_reco_handles | append: short_handle | append: ',' -%}
+            {%- endfor -%}
+          {%- elsif is_essentials_tee and current_essentials_color_index >= 0 -%}
+            {%- for tee_handle in essentials_tee_handles -%}
+              {%- if tee_handle == product.handle -%}{%- continue -%}{%- endif -%}
+              {%- assign essentials_reco_handles = essentials_reco_handles | append: tee_handle | append: ',' -%}
+            {%- endfor -%}
+            {%- assign same_color_short = essentials_short_handles[current_essentials_color_index] -%}
+            {%- if same_color_short != blank -%}{%- assign essentials_reco_handles = essentials_reco_handles | append: same_color_short | append: ',' -%}{%- endif -%}
+            {%- for short_handle in essentials_short_handles -%}
+              {%- if forloop.index0 == current_essentials_color_index -%}{%- continue -%}{%- endif -%}
+              {%- assign essentials_reco_handles = essentials_reco_handles | append: short_handle | append: ',' -%}
+            {%- endfor -%}
+          {%- elsif is_footwear_product -%}
+            {%- assign essentials_reco_handles = 'essentials-tee-light-oatmeal-ss22,essentials-tees-stretch-limo-ss22,' -%}
+          {%- else -%}
+            {%- assign essentials_reco_handles = 'essentials-tee-light-oatmeal-ss22,essentials-tees-stretch-limo-ss22,essentials-tees-dark-oatmeal-ss22,essentials-shorts-light-oatmeal-ss22,essentials-shorts-stretch-limo-ss22,' -%}
+          {%- endif -%}
+          {%- assign essentials_reco_handles_list = essentials_reco_handles | split: ',' -%}
+          {%- for essentials_handle in essentials_reco_handles_list -%}
+            {%- assign essentials_handle = essentials_handle | strip -%}
+            {%- if essentials_handle == blank or essentials_handle == product.handle -%}{%- continue -%}{%- endif -%}
+            {%- assign essentials_seen_key = ',' | append: essentials_handle | append: ',' -%}
+            {%- if essentials_seen_handles contains essentials_seen_key -%}{%- continue -%}{%- endif -%}
+            {%- assign essentials_seen_handles = essentials_seen_handles | append: essentials_handle | append: ',' -%}
+            {%- assign cw_product = all_products[essentials_handle] -%}
+            {%- if cw_product == blank or cw_product.variants.size == 0 -%}{%- continue -%}{%- endif -%}
+            {%- assign cw_label = cw_product.title -%}
+            {%- for tee_handle in essentials_tee_handles -%}
+              {%- if tee_handle == essentials_handle -%}
+                {%- assign cw_label = essentials_tee_labels[forloop.index0] | append: ' Tee' -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- for short_handle in essentials_short_handles -%}
+              {%- if short_handle == essentials_handle -%}
+                {%- assign cw_label = essentials_short_labels[forloop.index0] | append: ' Short' -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- assign cw_size_option_index = 0 -%}
+            {%- for cw_opt in cw_product.options_with_values -%}
+              {%- assign cw_opt_down = cw_opt.name | downcase -%}
+              {%- if cw_opt_down == 'size' or cw_opt_down == 'taille' -%}
+                {%- assign cw_size_option_index = forloop.index0 -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- unless cw_first -%},{%- endunless -%}
+            {
+              "productId": {{ cw_product.id | json }},
+              "handle": {{ cw_product.handle | json }},
+              "label": {{ cw_label | json }},
+              "title": {{ cw_product.title | json }},
+              "image": {% if cw_product.featured_image != blank %}{{ cw_product.featured_image | image_url: width: 160 | json }}{% else %}null{% endif %},
+              "variants": [
+                {%- for cw_variant in cw_product.variants -%}
+                  {%- liquid
+                    assign cw_size_label = cw_variant.title
+                    if cw_product.options.size > 0
+                      assign cw_size_label = cw_variant.options[cw_size_option_index]
+                    endif
+                    assign cw_sale_cents = cw_variant.price | times: 90 | divided_by: 100
+                  -%}
+                  {
+                    "id": {{ cw_variant.id | json }},
+                    "sizeLabel": {{ cw_size_label | json }},
+                    "image": {% if cw_variant.featured_image != blank %}{{ cw_variant.featured_image | image_url: width: 160 | json }}{% elsif cw_variant.image != blank %}{{ cw_variant.image | image_url: width: 160 | json }}{% else %}null{% endif %},
+                    "priceCents": {{ cw_variant.price | json }},
+                    "priceFormatted": {{ cw_variant.price | money_without_trailing_zeros | json }},
+                    "salePriceCents": {{ cw_sale_cents | json }},
+                    "salePriceFormatted": {{ cw_sale_cents | money_without_trailing_zeros | json }},
+                    "available": {{ cw_variant.available | json }}
+                  }{%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+              ]
+            }
+            {%- assign cw_first = false -%}
+          {%- endfor -%}
+        ]
+      }{% else %}null{% endif %},
       "cartUpsells": [
         {%- assign cart_upsell_first = true -%}
         {%- for cart_upsell_handle in cart_upsell_handles -%}
@@ -622,6 +921,170 @@
         "title": {{ signature_product.title | json }},
         "priceFormatted": {{ signature_variant.price | money_without_trailing_zeros | json }},
         "available": {{ signature_variant.available | json }}
+      }{% else %}null{% endif %},
+      "ultimateBundle": {% if ultimate_bundle_has_offer %}{
+        "productId": {% if ultimate_bundle_pdp_product != blank %}{{ ultimate_bundle_pdp_product.id | json }}{% else %}null{% endif %},
+        "title": {% if ultimate_bundle_pdp_product != blank %}{{ ultimate_bundle_pdp_product.title | json }}{% else %}{{ 'cart.ultimate_bundle.title' | t | json }}{% endif %},
+        "colors": [
+          {%- if ultimate_bundle_pdp_product != blank and ultimate_bundle_pdp_product.variants.size > 0 -%}
+            {%- if ultimate_bundle_color_option_index >= 0 -%}
+              {%- assign ub_color_option = ultimate_bundle_pdp_product.options_with_values[ultimate_bundle_color_option_index] -%}
+              {%- for ub_color_value in ub_color_option.values -%}
+                {%- liquid
+                  assign ub_color_image = blank
+                  assign ub_color_down = ub_color_value | downcase
+                  comment
+                    Use Ultimate Bundle SKU media (tee + kit + wipes collage).
+                    Tee model shots only as fallback if color media missing.
+                  endcomment
+                  for ub_probe in ultimate_bundle_pdp_product.variants
+                    if ub_probe.options[ultimate_bundle_color_option_index] == ub_color_value
+                      if ub_probe.featured_image != blank
+                        assign ub_color_image = ub_probe.featured_image
+                        break
+                      elsif ub_probe.image != blank
+                        assign ub_color_image = ub_probe.image
+                        break
+                      endif
+                    endif
+                  endfor
+                  if ub_color_image == blank
+                    if ub_color_down contains 'oatmeal' and ultimate_bundle_tee_oatmeal.featured_image != blank
+                      assign ub_color_image = ultimate_bundle_tee_oatmeal.featured_image
+                    elsif ub_color_down contains 'limo' and ultimate_bundle_tee_limo.featured_image != blank
+                      assign ub_color_image = ultimate_bundle_tee_limo.featured_image
+                    endif
+                  endif
+                -%}
+                {
+                  "label": {{ ub_color_value | json }},
+                  "image": {% if ub_color_image != blank %}{{ ub_color_image | image_url: width: 288 | json }}{% else %}null{% endif %},
+                  "variants": [
+                    {%- assign ub_variant_first = true -%}
+                    {%- for ub_variant in ultimate_bundle_pdp_product.variants -%}
+                      {%- if ub_variant.options[ultimate_bundle_color_option_index] == ub_color_value -%}
+                        {%- liquid
+                          assign ub_variant_image = ub_variant.featured_image | default: ub_variant.image | default: ub_color_image
+                          assign ub_variant_compare = ub_variant.compare_at_price
+                          if ub_variant_compare <= ub_variant.price
+                            assign ub_variant_compare = 9900
+                          endif
+                          assign ub_variant_savings = ub_variant_compare | minus: ub_variant.price
+                        -%}
+                        {%- unless ub_variant_first -%},{%- endunless -%}
+                        {
+                          "id": {{ ub_variant.id | json }},
+                          "sizeLabel": {{ ub_variant.options[ultimate_bundle_size_option_index] | default: ub_variant.title | json }},
+                          "image": {% if ub_variant_image != blank %}{{ ub_variant_image | image_url: width: 288 | json }}{% else %}null{% endif %},
+                          "available": {{ ub_variant.available | json }},
+                          "priceCents": {{ ub_variant.price | json }},
+                          "priceFormatted": {{ ub_variant.price | money_without_trailing_zeros | json }},
+                          "compareAtCents": {{ ub_variant_compare | json }},
+                          "compareAtFormatted": {{ ub_variant_compare | money_without_trailing_zeros | json }},
+                          "savingsCents": {{ ub_variant_savings | json }},
+                          "savingsFormatted": {{ ub_variant_savings | money_without_trailing_zeros | json }}
+                        }
+                        {%- assign ub_variant_first = false -%}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  ]
+                }{%- unless forloop.last -%},{%- endunless -%}
+              {%- endfor -%}
+            {%- else -%}
+              {
+                "label": {{ ultimate_bundle_pdp_product.title | json }},
+                "image": {% if ultimate_bundle_pdp_product.featured_image != blank %}{{ ultimate_bundle_pdp_product.featured_image | image_url: width: 288 | json }}{% else %}null{% endif %},
+                "variants": [
+                  {%- for ub_variant in ultimate_bundle_pdp_product.variants -%}
+                    {%- liquid
+                      assign ub_variant_compare = ub_variant.compare_at_price
+                      if ub_variant_compare <= ub_variant.price
+                        assign ub_variant_compare = 9900
+                      endif
+                      assign ub_variant_savings = ub_variant_compare | minus: ub_variant.price
+                    -%}
+                    {
+                      "id": {{ ub_variant.id | json }},
+                      "sizeLabel": {{ ub_variant.options[ultimate_bundle_size_option_index] | default: ub_variant.title | json }},
+                      "available": {{ ub_variant.available | json }},
+                      "priceCents": {{ ub_variant.price | json }},
+                      "priceFormatted": {{ ub_variant.price | money_without_trailing_zeros | json }},
+                      "compareAtCents": {{ ub_variant_compare | json }},
+                      "compareAtFormatted": {{ ub_variant_compare | money_without_trailing_zeros | json }},
+                      "savingsCents": {{ ub_variant_savings | json }},
+                      "savingsFormatted": {{ ub_variant_savings | money_without_trailing_zeros | json }}
+                    }{%- unless forloop.last -%},{%- endunless -%}
+                  {%- endfor -%}
+                ]
+              }
+            {%- endif -%}
+          {%- else -%}
+            {%- assign ub_color_first = true -%}
+            {%- for ub_handle in ultimate_bundle_color_handles -%}
+              {%- assign ub_color_product = all_products[ub_handle] -%}
+              {%- if ub_color_product != blank and ub_color_product.variants.size > 0 -%}
+                {%- unless ub_color_first -%},{%- endunless -%}
+                {%- liquid
+                  assign ub_color_label = ub_color_product.title
+                  assign ub_color_image = ub_color_product.featured_image
+                  if ub_handle == 'ultimate-bundle-light-oatmeal'
+                    assign ub_color_label = 'Light Oatmeal'
+                    if ub_color_image == blank and ultimate_bundle_tee_oatmeal.featured_image != blank
+                      assign ub_color_image = ultimate_bundle_tee_oatmeal.featured_image
+                    endif
+                  elsif ub_handle == 'ultimate-bundle-stretch-limo'
+                    assign ub_color_label = 'Stretch Limo'
+                    if ub_color_image == blank and ultimate_bundle_tee_limo.featured_image != blank
+                      assign ub_color_image = ultimate_bundle_tee_limo.featured_image
+                    endif
+                  endif
+                -%}
+                {
+                  "label": {{ ub_color_label | json }},
+                  "image": {% if ub_color_image != blank %}{{ ub_color_image | image_url: width: 288 | json }}{% else %}null{% endif %},
+                  "variants": [
+                    {%- for ub_variant in ub_color_product.variants -%}
+                      {%- liquid
+                        assign ub_variant_compare = ub_variant.compare_at_price
+                        if ub_variant_compare <= ub_variant.price
+                          assign ub_variant_compare = 9900
+                        endif
+                        assign ub_variant_savings = ub_variant_compare | minus: ub_variant.price
+                      -%}
+                      {
+                        "id": {{ ub_variant.id | json }},
+                        "sizeLabel": {{ ub_variant.option1 | default: ub_variant.title | json }},
+                        "available": {{ ub_variant.available | json }},
+                        "priceCents": {{ ub_variant.price | json }},
+                        "priceFormatted": {{ ub_variant.price | money_without_trailing_zeros | json }},
+                        "compareAtCents": {{ ub_variant_compare | json }},
+                        "compareAtFormatted": {{ ub_variant_compare | money_without_trailing_zeros | json }},
+                        "savingsCents": {{ ub_variant_savings | json }},
+                        "savingsFormatted": {{ ub_variant_savings | money_without_trailing_zeros | json }}
+                      }{%- unless forloop.last -%},{%- endunless -%}
+                    {%- endfor -%}
+                  ]
+                }
+                {%- assign ub_color_first = false -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        ],
+        "properties": {
+          "_ultimate_bundle": "true",
+          "_ultimate_bundle_test": "ultimate_bundle_v1",
+          "_ultimate_bundle_variant": "bundle_4990"
+        },
+        "messages": {
+          "added": {{ 'cart.ultimate_bundle.added' | t | json }},
+          "selectSizeError": {{ 'cart.ultimate_bundle.select_size_error' | t | json }},
+          "selectColorError": {{ 'cart.ultimate_bundle.select_color_error' | t | json }},
+          "addError": {{ 'cart.ultimate_bundle.generic_add_error' | t | json }},
+          "networkError": {{ 'cart.ultimate_bundle.network_error' | t | json }},
+          "cta": {% capture ub_cta_tpl %}{{ 'cart.ultimate_bundle.cta' | t: savings: 'SAVINGS_PLACEHOLDER' }}{% endcapture %}{{ ub_cta_tpl | json }},
+          "limitedOffer": {{ 'cart.ultimate_bundle.limited_offer' | t | json }},
+          "limitedLeft": {% capture ub_limited_left %}{{ 'cart.ultimate_bundle.limited_left' | t: count: 'COUNT_PLACEHOLDER' }}{% endcapture %}{{ ub_limited_left | json }}
+        }
       }{% else %}null{% endif %},
       "variants": [
         {% for variant in product.variants %}

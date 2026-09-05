@@ -81,7 +81,8 @@
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 4px;
-  background: rgb(0 0 0 / 4%);
+  background: #fff;
+  border: 1px solid rgb(0 0 0 / 8%);
 }
 
 .collection-plp-featured-rail__media img {
@@ -104,14 +105,8 @@
   pointer-events: none;
 }
 
-.collection-plp-featured-rail__pictos .product-card-promotional-pictos-stack,
 .collection-plp-featured-rail__pictos .product-card-promotional-pictos {
-  top: 8px;
-  right: 8px;
-}
-
-.collection-plp-featured-rail__pictos .product-card-promotional-pictos-stack {
-  position: absolute;
+  inset: 0;
 }
 
 .collection-plp-featured-rail__label {

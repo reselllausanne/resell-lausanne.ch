@@ -4,25 +4,26 @@
   @param {product} product - Product object
 {% enddoc %}
 
-{% if product != blank %}
+{% capture rs_has_real_media %}
+  {% render 'rs-product-has-real-media', product: product %}
+{% endcapture %}
+{% if product != blank and rs_has_real_media != blank %}
   <article class="landing-product-card">
     <a class="landing-product-card__link" href="{{ product.url }}">
       <div class="landing-product-card__media">
         {% render 'product-card-promotional-pictos', product: product, stacked: true %}
-        {% if product.featured_media != blank %}
-          {% capture card_srcset %}
-            {{ product.featured_media | image_url: width: 240 }} 240w, {{ product.featured_media | image_url: width: 360 }} 360w, {{ product.featured_media | image_url: width: 500 }} 500w, {{ product.featured_media | image_url: width: 700 }} 700w
-          {% endcapture %}
-          {% assign rl_card_img_src = product.featured_media | image_url: width: 700 %}
-          {% render 'rl-deferred-img',
-            lazy_src: rl_card_img_src,
-            lazy_srcset: card_srcset,
-            sizes: '(min-width: 1000px) 20vw, (min-width: 750px) 30vw, 52vw',
-            alt: product.title,
-            width: 500,
-            height: 625
-          %}
-        {% endif %}
+        {% capture card_srcset %}
+          {{ product.featured_media | image_url: width: 240 }} 240w, {{ product.featured_media | image_url: width: 360 }} 360w, {{ product.featured_media | image_url: width: 500 }} 500w, {{ product.featured_media | image_url: width: 700 }} 700w
+        {% endcapture %}
+        {% assign rl_card_img_src = product.featured_media | image_url: width: 700 %}
+        {% render 'rl-deferred-img',
+          lazy_src: rl_card_img_src,
+          lazy_srcset: card_srcset,
+          sizes: '(min-width: 1000px) 20vw, (min-width: 750px) 30vw, 52vw',
+          alt: product.title,
+          width: 500,
+          height: 625
+        %}
       </div>
       <div class="landing-product-card__content">
         <h3 class="landing-product-card__title">{{ product.title }}</h3>

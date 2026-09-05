@@ -38,15 +38,17 @@
                 "step2_label": "",
                 "step3_text": "",
                 "step3_label": "",
-                "step_completed_text": "Félicitations, vous bénéficiez de la livraison gratuite en Suisse !",
+                "step_completed_text": "Vous bénéficiez de la livraison gratuite !",
                 "margin_top": 0,
                 "margin_bottom": 0,
-                "additional_class": ""
+                "additional_class": "rs-cart-shipping-progress"
               },
               "blocks": {}
             }
           },
-          "block_order": ["cart_progress_bar_kkwckk"]
+          "block_order": [
+            "cart_progress_bar_kkwckk"
+          ]
         },
         "cart_footer_resume_blocks": {
           "type": "_cart-footer-resume-blocks",
@@ -73,7 +75,9 @@
               "blocks": {}
             }
           },
-          "block_order": ["discount_code_3WJdxK"]
+          "block_order": [
+            "discount_code_3WJdxK"
+          ]
         },
         "cart_footer_blocks": {
           "type": "_cart-footer-blocks",
@@ -84,8 +88,7 @@
             "margin_top": 0,
             "margin_bottom": 0
           },
-          "blocks": {},
-          "block_order": []
+          "blocks": {}
         }
       },
       "settings": {
@@ -93,5 +96,7 @@
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

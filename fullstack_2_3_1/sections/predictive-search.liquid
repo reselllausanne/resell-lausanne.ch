@@ -35,31 +35,29 @@
 
         <ul class="predictive-search__product-grid">
           {%- for product in predictive_search.resources.products -%}
+            {%- capture rs_has_real_media -%}
+              {%- render 'rs-product-has-real-media', product: product -%}
+            {%- endcapture -%}
+            {%- if rs_has_real_media == blank -%}
+              {%- continue -%}
+            {%- endif -%}
             <li class="predictive-search__product-card">
               {%- liquid
-                if product.featured_image
-                  assign pred_img_alt = product.featured_image.alt | default: product.title
-                else
-                  assign pred_img_alt = product.title
-                endif
+                assign pred_img_alt = product.featured_image.alt | default: product.title
               -%}
-              <a class="predictive-search__product-card-link" href="{{ product.url }}"{% if product.featured_image %} data-pdp-preload="{{ product.featured_image | image_url: width: 1400 }}"{% endif %}>
+              <a class="predictive-search__product-card-link" href="{{ product.url }}" data-pdp-preload="{{ product.featured_image | image_url: width: 1400 }}">
                 <div class="predictive-search__product-media">
                   {% render 'product-card-promotional-pictos', product: product, stacked: true %}
-                  {%- if product.featured_image -%}
-                    {{
-                      product.featured_image
-                      | image_url: width: 720
-                      | image_tag:
-                        loading: 'lazy',
-                        class: 'predictive-search__product-img',
-                        widths: '180,360,540,720',
-                        sizes: '(min-width: 750px) 22vw, 50vw',
-                        alt: pred_img_alt
-                    }}
-                  {%- else -%}
-                    {{ 'product-1' | placeholder_svg_tag: class: 'predictive-search__product-img predictive-search__product-img--placeholder' }}
-                  {%- endif -%}
+                  {{
+                    product.featured_image
+                    | image_url: width: 720
+                    | image_tag:
+                      loading: 'lazy',
+                      class: 'predictive-search__product-img',
+                      widths: '180,360,540,720',
+                      sizes: '(min-width: 750px) 22vw, 50vw',
+                      alt: pred_img_alt
+                  }}
                 </div>
                 <p class="predictive-search__product-title">
                   {%- if predictive_search.terms != blank -%}

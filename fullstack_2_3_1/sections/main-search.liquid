@@ -187,6 +187,12 @@
                     {%- unless result.available -%}
                       {%- continue -%}
                     {%- endunless -%}
+                    {%- capture rs_has_real_media -%}
+                      {%- render 'rs-product-has-real-media', product: result -%}
+                    {%- endcapture -%}
+                    {%- if rs_has_real_media == blank -%}
+                      {%- continue -%}
+                    {%- endif -%}
                     {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: result %}
                   {%- elsif result.object_type == 'article' -%}
                     {% content_for 'block', type: '_article-card', id: 'article-card', closest.article: result %}

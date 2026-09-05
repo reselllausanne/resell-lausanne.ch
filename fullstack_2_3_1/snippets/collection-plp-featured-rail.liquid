@@ -61,7 +61,12 @@
   if show_featured_rail and featured_source != blank
     for product in featured_source.products
       if product.available
-        assign featured_available_count = featured_available_count | plus: 1
+        capture rs_has_real_media
+          render 'rs-product-has-real-media', product: product
+        endcapture
+        if rs_has_real_media != blank
+          assign featured_available_count = featured_available_count | plus: 1
+        endif
       endif
     endfor
     if featured_available_count == 0
@@ -114,6 +119,12 @@
             {%- unless product.available -%}
               {%- continue -%}
             {%- endunless -%}
+            {%- capture rs_has_real_media -%}
+              {%- render 'rs-product-has-real-media', product: product -%}
+            {%- endcapture -%}
+            {%- if rs_has_real_media == blank -%}
+              {%- continue -%}
+            {%- endif -%}
             {%- if featured_rendered >= featured_max -%}
               {%- break -%}
             {%- endif -%}
@@ -125,27 +136,23 @@
               {%- assign rail_price_parts = rail_price_snapshot | strip | split: '|' -%}
               <a class="collection-plp-featured-rail__card" href="{{ product.url }}">
                 <span class="collection-plp-featured-rail__media">
-                  {%- if product.featured_media != blank -%}
-                    {%- capture rail_srcset -%}
-                      {{ product.featured_media | image_url: width: 240 }} 240w, {{ product.featured_media | image_url: width: 360 }} 360w, {{ product.featured_media | image_url: width: 480 }} 480w, {{ product.featured_media | image_url: width: 640 }} 640w
-                    {%- endcapture -%}
-                    {%- assign rail_img_src = product.featured_media | image_url: width: 640 -%}
-                    {%- assign rail_img_eager = false -%}
-                    {%- if featured_rendered <= 4 -%}
-                      {%- assign rail_img_eager = true -%}
-                    {%- endif -%}
-                    {% render 'rl-deferred-img',
-                      lazy_src: rail_img_src,
-                      lazy_srcset: rail_srcset,
-                      sizes: '(max-width: 749px) 44vw, (max-width: 1100px) 26vw, clamp(140px, 16vw, 220px)',
-                      alt: product.title,
-                      width: 320,
-                      height: 400,
-                      eager: rail_img_eager
-                    %}
-                  {%- else -%}
-                    <span class="collection-plp-featured-rail__placeholder" aria-hidden="true"></span>
+                  {%- capture rail_srcset -%}
+                    {{ product.featured_media | image_url: width: 240 }} 240w, {{ product.featured_media | image_url: width: 360 }} 360w, {{ product.featured_media | image_url: width: 480 }} 480w, {{ product.featured_media | image_url: width: 640 }} 640w
+                  {%- endcapture -%}
+                  {%- assign rail_img_src = product.featured_media | image_url: width: 640 -%}
+                  {%- assign rail_img_eager = false -%}
+                  {%- if featured_rendered <= 4 -%}
+                    {%- assign rail_img_eager = true -%}
                   {%- endif -%}
+                  {% render 'rl-deferred-img',
+                    lazy_src: rail_img_src,
+                    lazy_srcset: rail_srcset,
+                    sizes: '(max-width: 749px) 44vw, (max-width: 1100px) 26vw, clamp(140px, 16vw, 220px)',
+                    alt: product.title,
+                    width: 320,
+                    height: 400,
+                    eager: rail_img_eager
+                  %}
                   <span class="collection-plp-featured-rail__pictos">
                     {% render 'product-card-promotional-pictos', product: product %}
                   </span>

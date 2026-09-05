@@ -269,16 +269,29 @@ class FilterAndSortComponent extends HTMLElement {
   }
 
   getCurrentSortingParams() {
-    this.#refreshSortingRef();
+    // Sheet overlay is portaled to <body> on open — sort UI leaves this subtree.
+    const sheetOverlay = document.querySelector('.filters-sheet__overlay:not([hidden])');
+    const sheetRoot = sheetOverlay || document.querySelector('filters-sheet-component') || this;
+
+    this.sorting =
+      sheetRoot.querySelector('sort-component') ||
+      sheetRoot.querySelector('sort-inline-component') ||
+      this.querySelector('sort-component') ||
+      this.querySelector('sort-inline-component');
 
     if (typeof this.sorting?.getSortingParams === 'function') {
-      return this.sorting.getSortingParams();
+      const params = this.sorting.getSortingParams();
+      if (params) return params;
     }
 
-    const select = this.querySelector('[data-ref="sorting-select"]');
+    const select =
+      sheetRoot.querySelector('[data-ref="sorting-select"]') ||
+      this.querySelector('[data-ref="sorting-select"]');
     if (select?.value) return `sort_by=${select.value}`;
 
-    const input = this.querySelector('input[name="sort-by"]');
+    const input =
+      sheetRoot.querySelector('input[name="sort-by"]') ||
+      this.querySelector('input[name="sort-by"]');
     if (input?.value) return `sort_by=${input.value}`;
 
     return '';

@@ -22,9 +22,7 @@
         "aria_label": "Filtrer par marque",
         "padding_top": 24,
         "padding_bottom": 12
-      },
-      "blocks": {},
-      "block_order": []
+      }
     },
     "main": {
       "type": "main-collection",
@@ -61,7 +59,7 @@
                 "show_slider": true,
                 "media_rounded": true,
                 "show_badges": true,
-                "media_ratio": "adapt",
+                "media_ratio": "1 / 1",
                 "additional_class": ""
               },
               "blocks": {}
@@ -111,10 +109,16 @@
                   "blocks": {}
                 }
               },
-              "block_order": ["product_card_plp_brand", "product_price_jg9zQp"]
+              "block_order": [
+                "product_card_plp_brand",
+                "product_price_jg9zQp"
+              ]
             }
           },
-          "block_order": ["product_card_gallery_6qMVW4", "product_card_group_rUyxyU"]
+          "block_order": [
+            "product_card_gallery_6qMVW4",
+            "product_card_group_rUyxyU"
+          ]
         }
       },
       "settings": {
@@ -132,8 +136,8 @@
     "collection_plp_seo_readmore": {
       "type": "collection-plp-seo-readmore",
       "settings": {
-        "color_scheme": "scheme-1",
         "use_resell_default_copy": true,
+        "color_scheme": "scheme-1",
         "heading": "",
         "subheading": "",
         "body": "",
@@ -145,5 +149,9 @@
       }
     }
   },
-  "order": ["collection_plp_header", "main", "collection_plp_seo_readmore"]
+  "order": [
+    "collection_plp_header",
+    "main",
+    "collection_plp_seo_readmore"
+  ]
 }

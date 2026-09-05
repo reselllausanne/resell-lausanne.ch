@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "t:footer",
@@ -124,8 +133,7 @@
               "name": "t:footer_copyright",
               "settings": {
                 "alignment_desktop": "center",
-                "alignment_mobile": "flex-start",
-                "additional_class": "rl-footer__col rl-footer__col--copyright"
+                "alignment_mobile": "flex-start"
               },
               "blocks": {}
             }
@@ -150,5 +158,7 @@
       }
     }
   },
-  "order": ["footer"]
+  "order": [
+    "footer"
+  ]
 }

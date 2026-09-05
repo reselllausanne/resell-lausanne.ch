@@ -97,21 +97,45 @@
     "update": "Update",
     "ultimate_bundle": {
       "badge": "OFFER UNLOCKED",
-      "title": "Ultimate Bundle",
-      "subtitle": "Essentials Tee + complete care pack",
+      "title": "Essentials Tee + cleaning kit + wipes",
+      "subtitle": "Pick your tee colour",
       "savings": "Save {{ savings }}",
       "item_tee": "Essentials Tee",
       "item_kit": "Cleaning kit",
       "item_wipes": "Wipes",
       "select_size": "Choose your size",
-      "cta": "Add my Ultimate Bundle",
+      "cta": "Save {{ savings }}",
+      "limited_offer": "Limited offer ·",
+      "limited_left": "{{ count }} left",
       "microcopy": "Cart-exclusive offer · max 1 per order",
-      "added": "Ultimate Bundle added!",
+      "added": "Pack added!",
       "select_size_error": "Select a size to continue.",
+      "select_color_error": "Select a colour to continue.",
+      "select_color": "Colour",
       "out_of_stock_error": "Size unavailable. Pick another size.",
       "generic_add_error": "Unable to add bundle right now.",
+      "network_error": "Cart connection dropped. Try again.",
       "bundle_removed_for_threshold": "Ultimate Bundle removed: eligible subtotal fell below threshold.",
       "bundle_threshold_confirm": "Eligible subtotal dropped below threshold. Remove Ultimate Bundle from cart?"
+    },
+    "essentials_colorway": {
+      "discount_badge": "−10%"
+    },
+    "complete_rail": {
+      "title": "Complete your cart",
+      "select_size": "Select your size",
+      "add": "Add to cart",
+      "prev": "Previous products",
+      "next": "Next products"
+    },
+    "protection_tip": "Get refunded if your package gets lost — take no risk.",
+    "protection_learn_more": "Learn more about package protection"
+  },
+  "home": {
+    "rails": {
+      "bape_tees": "Bape Tee",
+      "soldes": "Sale",
+      "express_48h": "Express 48H"
     }
   },
   "collections": {

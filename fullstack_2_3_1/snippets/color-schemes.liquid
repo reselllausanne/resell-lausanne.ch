@@ -1,6 +1,11 @@
 {% style %}
+  {% liquid
+    assign scheme_classes = ''
+    assign scheme_count = 0
+  %}
   {% for scheme in settings.color_schemes -%}
     {% assign scheme_classes = scheme_classes | append: ', .color-' | append: scheme.id %}
+    {% assign scheme_count = scheme_count | plus: 1 %}
     {% if forloop.index == 1 %}
       :root,
     {% endif %}
@@ -59,6 +64,57 @@
         --color-error: rgba(239, 68, 68, 1);
       }
   {% endfor %}
+
+  {%- comment -%}
+    Fallback when settings.color_schemes is empty (broken draft / CLI sync).
+    Matches scheme-1 defaults so PLP titles stay readable.
+  {%- endcomment -%}
+  {% if scheme_count == 0 %}
+    :root,
+    .color-scheme-1,
+    .color-scheme-2,
+    .color-scheme-3 {
+      --color-background: #ffffff;
+      --color-foreground: #252525;
+      --color-border: #e5e5e5;
+      --color-stars-icons: #252525;
+      --color-primary-button-text: #ffffff;
+      --color-primary-button-background: #080808;
+      --color-primary-button-border: #080808;
+      --color-secondary-button-text: #080808;
+      --color-secondary-button-background: #ffffff;
+      --color-secondary-button-border: #080808;
+      --color-primary-badge-text: #ffffff;
+      --color-primary-badge-background: #080808;
+      --color-primary-badge-border: #080808;
+      --color-secondary-badge-text: #080808;
+      --color-secondary-badge-background: #ffffff;
+      --color-secondary-badge-border: #080808;
+      --color-input-text: #080808;
+      --color-input-border: #cccccc;
+      --color-input-border-low-opacity: rgb(0 0 0 / 0.08);
+      --color-input-background: #ffffff;
+      --color-selected-input-text: #080808;
+      --color-selected-input-border: #080808;
+      --color-selected-input-border-low-opacity: rgb(0 0 0 / 0.08);
+      --color-selected-input-background: #ffffff;
+      --color-variant-background: #ffffff;
+      --color-variant-border: #cccccc;
+      --color-variant-text: #080808;
+      --color-selected-variant-background: #080808;
+      --color-selected-variant-border: #080808;
+      --color-selected-variant-text: #ffffff;
+      --color-tab-background: #ffffff;
+      --color-tab-border: #cccccc;
+      --color-tab-text: #080808;
+      --color-selected-tab-background: #080808;
+      --color-selected-tab-border: #080808;
+      --color-selected-tab-text: #ffffff;
+      --color-shadow: rgba(0, 0, 0, 0.25);
+      --color-success: rgba(25, 135, 84, 1);
+      --color-error: rgba(239, 68, 68, 1);
+    }
+  {% endif %}
 
   {{ scheme_classes | prepend: 'body' }} {
     color: var(--color-foreground);

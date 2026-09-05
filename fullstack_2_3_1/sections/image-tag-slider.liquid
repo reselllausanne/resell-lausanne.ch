@@ -44,11 +44,13 @@
   assign rail_heading = section.settings.heading
   assign rail_collection = section.settings.collection
   assign rail_heading_link = section.settings.heading_link
-
-  if section.id contains 'home_slider_nouveautes'
-    assign rail_heading = 'Back to School 2026'
-    assign rail_collection = collections['back-to-school-2026']
-    assign rail_heading_link = '/collections/back-to-school-2026'
+  assign rail_additional_class = section.settings.additional_class | default: ''
+  if rail_additional_class contains 'rl-home-slider-bape-tees'
+    assign rail_heading = 'home.rails.bape_tees' | t
+  elsif rail_additional_class contains 'rl-home-slider-soldes'
+    assign rail_heading = 'home.rails.soldes' | t
+  elsif rail_additional_class contains 'rl-home-slider-express-48h'
+    assign rail_heading = 'home.rails.express_48h' | t
   endif
 
   assign heading_link_href = rail_heading_link | strip
@@ -143,6 +145,18 @@
         assign data_source = section.settings.source | default: 'manual'
         assign col_obj = rail_collection
         assign max_prod = section.settings.max_products | default: 10
+        assign exclude_handle = section.settings.exclude_collection | strip | handleize
+        assign rotate_days = section.settings.rotate_every_days | default: 0 | plus: 0
+        assign skip_before = 0
+        if rotate_days > 0
+          assign day_of_year = 'now' | date: '%j' | plus: 0
+          assign rotate_bucket = day_of_year | divided_by: rotate_days
+          assign rotate_window = 50 | minus: max_prod
+          if rotate_window < 1
+            assign rotate_window = 1
+          endif
+          assign skip_before = rotate_bucket | modulo: rotate_window
+        endif
       %}
       <div
         class="rl-image-tag-slider__scroller"
@@ -158,43 +172,70 @@
         <ul class="rl-image-tag-slider__track" role="list">
           {% if data_source == 'collection' and col_obj != blank %}
             {% assign col = col_obj %}
-            {% for product in col.products limit: max_prod %}
+            {% assign rail_shown = 0 %}
+            {% assign rail_skipped = 0 %}
+            {% for product in col.products %}
+              {% if rail_shown >= max_prod %}
+                {% break %}
+              {% endif %}
+              {% unless product.available %}
+                {% continue %}
+              {% endunless %}
+              {% if exclude_handle != blank %}
+                {% assign rail_excluded = false %}
+                {% for product_collection in product.collections %}
+                  {% if product_collection.handle == exclude_handle %}
+                    {% assign rail_excluded = true %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+                {% if rail_excluded %}
+                  {% continue %}
+                {% endif %}
+              {% endif %}
+              {% capture rs_has_real_media %}
+                {% render 'rs-product-has-real-media', product: product %}
+              {% endcapture %}
+              {% if rs_has_real_media == blank %}
+                {% continue %}
+              {% endif %}
+              {% if rail_skipped < skip_before %}
+                {% assign rail_skipped = rail_skipped | plus: 1 %}
+                {% continue %}
+              {% endif %}
+              {% assign rail_shown = rail_shown | plus: 1 %}
               <li class="rl-image-tag-slider__item">
                 <a class="rl-image-tag-slider__card" href="{{ product.url }}">
                   <span class="rl-image-tag-slider__media">
                     {% render 'product-card-promotional-pictos', product: product, stacked: true %}
-                    {% if product.featured_image != blank %}
-                      {% capture product_srcset %}
-                        {{ product.featured_image | image_url: width: 180 }} 180w, {{ product.featured_image | image_url: width: 260 }} 260w, {{ product.featured_image | image_url: width: 360 }} 360w, {{ product.featured_image | image_url: width: 480 }} 480w, {{ product.featured_image | image_url: width: 640 }} 640w
-                      {% endcapture %}
-                      {% liquid
-                        # Only the first visible column of cards loads eagerly; the rest stay
-                        # data-lazy deferred (rl-deferred-img) so deeper rails (e.g. 10) don't hurt LCP.
-                        assign rl_eager_cap = desktop_cols | default: 4
-                        if rl_eager_cap < 2
-                          assign rl_eager_cap = 2
-                        endif
-                        if rl_eager_cap > 4
-                          assign rl_eager_cap = 4
-                        endif
-                        assign rl_img_eager = false
-                        if forloop.index <= rl_eager_cap
-                          assign rl_img_eager = true
-                        endif
-                        assign rl_product_img_src = product.featured_image | image_url: width: 640
-                      %}
-                      {% render 'rl-deferred-img',
-                        lazy_src: rl_product_img_src,
-                        lazy_srcset: product_srcset,
-                        sizes: '(max-width: 749px) 44vw, (max-width: 1100px) 26vw, clamp(120px, 16vw, 220px)',
-                        alt: product.title,
-                        width: 320,
-                        height: 400,
-                        eager: rl_img_eager
-                      %}
-                    {% else %}
-                      <span class="rl-image-tag-slider__placeholder" aria-hidden="true"></span>
-                    {% endif %}
+                    {% capture product_srcset %}
+                      {{ product.featured_image | image_url: width: 180 }} 180w, {{ product.featured_image | image_url: width: 260 }} 260w, {{ product.featured_image | image_url: width: 360 }} 360w, {{ product.featured_image | image_url: width: 480 }} 480w, {{ product.featured_image | image_url: width: 640 }} 640w
+                    {% endcapture %}
+                    {% liquid
+                      # Only the first visible column of cards loads eagerly; the rest stay
+                      # data-lazy deferred (rl-deferred-img) so deeper rails (e.g. 10) don't hurt LCP.
+                      assign rl_eager_cap = desktop_cols | default: 4
+                      if rl_eager_cap < 2
+                        assign rl_eager_cap = 2
+                      endif
+                      if rl_eager_cap > 4
+                        assign rl_eager_cap = 4
+                      endif
+                      assign rl_img_eager = false
+                      if rail_shown <= rl_eager_cap
+                        assign rl_img_eager = true
+                      endif
+                      assign rl_product_img_src = product.featured_image | image_url: width: 640
+                    %}
+                    {% render 'rl-deferred-img',
+                      lazy_src: rl_product_img_src,
+                      lazy_srcset: product_srcset,
+                      sizes: '(max-width: 749px) 44vw, (max-width: 1100px) 26vw, clamp(120px, 16vw, 220px)',
+                      alt: product.title,
+                      width: 320,
+                      height: 400,
+                      eager: rl_img_eager
+                    %}
                   </span>
                   {%- capture slider_price_snapshot -%}
                     {% render 'rs-product-price-snapshot', product: product %}
@@ -608,6 +649,8 @@
 
   .rl-image-tag-slider__card {
     display: grid;
+    grid-template-rows: auto minmax(2.4em, auto) auto;
+    align-content: start;
     gap: 0.45rem;
     text-decoration: none;
     color: inherit;
@@ -776,8 +819,38 @@
     padding: 0.22rem 0.35rem;
   }
 
+  .rl-image-tag-slider__media .product-card-promotional-pictos,
   .rl-image-tag-slider__media .product-card-promotional-pictos-stack {
-    z-index: 2;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto {
+    position: absolute !important;
+    top: 6px !important;
+    width: 52px !important;
+    height: 22px !important;
+    max-width: 52px !important;
+    max-height: 22px !important;
+    object-fit: contain !important;
+  }
+
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--express {
+    width: 66px !important;
+    max-width: 66px !important;
+  }
+
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--sales {
+    right: 5px !important;
+    left: auto !important;
+  }
+
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--48h,
+  .rl-image-tag-slider__media .product-card-promotional-pictos__picto--express {
+    left: 5px !important;
+    right: auto !important;
   }
 
   .rl-image-tag-slider__media img.rl-deferred-img {
@@ -795,47 +868,56 @@
   }
 
   .rl-image-tag-slider__label {
-    display: block;
+    display: -webkit-box;
     font-size: 14px;
     line-height: 1.2;
-    font-weight: 400;
-    white-space: nowrap;
+    font-weight: 500;
+    color: #080808;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: calc(1.2em * 2);
   }
 
   .rl-image-tag-slider__price {
     display: block;
     font-size: 13px;
     line-height: 1.3;
-    font-weight: 600;
-    color: #080808;
+    font-weight: 400;
+    color: #737373;
+    margin-top: 0;
   }
 
   /* Brand rail: exactly N tiles visible (desktop), rest horizontal scroll */
   .rl-image-tag-slider--brand-rail {
-    margin-block: 80px;
+    margin-block: 28px;
   }
 
+  .rl-image-tag-slider--brand-rail.rl-home-slider-soldes,
   .rl-image-tag-slider--brand-rail.rl-home-slider-nouveautes {
     margin-top: 44px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
   }
 
+  .rl-image-tag-slider--brand-rail.rl-home-slider-express-48h,
   .rl-image-tag-slider--brand-rail.rl-home-slider-livraison-48h {
-    margin-top: 24px;
-    margin-bottom: 56px;
+    margin-top: 16px;
+    margin-bottom: 28px;
   }
 
   @media screen and (max-width: 767.98px) {
+    .rl-image-tag-slider--brand-rail.rl-home-slider-soldes,
     .rl-image-tag-slider--brand-rail.rl-home-slider-nouveautes {
-      margin-top: 28px;
-      margin-bottom: 16px;
+      margin-top: 32px;
+      margin-bottom: 12px;
     }
 
+    .rl-image-tag-slider--brand-rail.rl-home-slider-express-48h,
     .rl-image-tag-slider--brand-rail.rl-home-slider-livraison-48h {
-      margin-top: 16px;
-      margin-bottom: 36px;
+      margin-top: 12px;
+      margin-bottom: 20px;
     }
   }
 
@@ -923,7 +1005,8 @@
   }
 
   .rl-image-tag-slider--collection.rl-image-tag-slider--brand-rail .rl-image-tag-slider__media {
-    background: #f5f5f5;
+    background: #fff;
+    border: 1px solid rgb(0 0 0 / 8%);
     border-radius: 0;
     padding: 8%;
   }
@@ -938,22 +1021,29 @@
   }
 
   .rl-image-tag-slider--collection .rl-image-tag-slider__card {
-    gap: 0.55rem;
+    gap: 0.4rem;
+    grid-template-rows: auto minmax(calc(13px * 1.25 * 2), auto) auto;
   }
 
   .rl-image-tag-slider--collection .rl-image-tag-slider__label {
     text-align: left;
     font-size: 13px;
+    line-height: 1.25;
     font-weight: 500;
+    color: #080808;
     white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    min-height: calc(13px * 1.25 * 2);
   }
 
   .rl-image-tag-slider--collection .rl-image-tag-slider__price {
     text-align: left;
+    font-weight: 400;
+    color: #737373;
+    align-self: start;
   }
 
   .rl-image-tag-slider.rl-pdp-product-slider {
@@ -1039,8 +1129,8 @@
   .rl-image-tag-slider--portrait:not(.rl-image-tag-slider--brand-rail) .rl-image-tag-slider__media {
     aspect-ratio: 4 / 5;
     padding: 0;
-    border: none;
-    background: #f5f5f5;
+    border: 1px solid rgb(0 0 0 / 8%);
+    background: #fff;
     border-radius: 0;
   }
 
@@ -1189,6 +1279,22 @@
       "max": 24,
       "step": 1,
       "default": 10
+    },
+    {
+      "type": "collection",
+      "id": "exclude_collection",
+      "label": "Exclude products from collection",
+      "info": "Skip products that also belong to this collection (avoids duplicate shoes across home rails)."
+    },
+    {
+      "type": "range",
+      "id": "rotate_every_days",
+      "label": "Auto-rotate every N days",
+      "info": "0 = off. Shifts which products appear so rails don’t stay frozen for months.",
+      "min": 0,
+      "max": 14,
+      "step": 1,
+      "default": 0
     },
     {
       "type": "select",

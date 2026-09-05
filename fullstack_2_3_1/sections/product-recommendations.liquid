@@ -35,7 +35,18 @@
           --grid-columns-mobile: {{ section.settings.grid_columns_mobile }};
         "
       >
-        {% for product in recommendations.products limit: section.settings.max_products %}
+        {% assign rec_shown = 0 %}
+        {% for product in recommendations.products %}
+          {% if rec_shown >= section.settings.max_products %}
+            {% break %}
+          {% endif %}
+          {% capture rs_has_real_media %}
+            {% render 'rs-product-has-real-media', product: product %}
+          {% endcapture %}
+          {% if rs_has_real_media == blank %}
+            {% continue %}
+          {% endif %}
+          {% assign rec_shown = rec_shown | plus: 1 %}
           {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
         {% endfor %}
       </div>

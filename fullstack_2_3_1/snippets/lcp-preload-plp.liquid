@@ -1,6 +1,7 @@
 {%- comment -%}
   Collection/search LCP preload for the first visible product card image.
   Mirrors _product-card-media-gallery.liquid widths/sizes and adds fetchpriority.
+  Skips Product-Placeholder-Default assets (same rule as PLP card filter).
 {%- endcomment -%}
 {%- liquid
   assign lcp_product = blank
@@ -10,15 +11,34 @@
 
   if request.page_type == 'collection'
     assign lcp_target_width = 420
-    assign lcp_product = collection.products.first
+    for product in collection.products
+      unless product.available
+        continue
+      endunless
+      capture rs_has_real_media
+        render 'rs-product-has-real-media', product: product
+      endcapture
+      if rs_has_real_media != blank
+        assign lcp_product = product
+        break
+      endif
+    endfor
   elsif request.page_type == 'search'
     assign lcp_target_width = 260
     assign lcp_widths = '180, 260, 360'
     assign lcp_sizes = '(min-width: 750px) 25vw, 50vw'
     for result in search.results
       if result.object_type == 'product'
-        assign lcp_product = result
-        break
+        unless result.available
+          continue
+        endunless
+        capture rs_has_real_media
+          render 'rs-product-has-real-media', product: result
+        endcapture
+        if rs_has_real_media != blank
+          assign lcp_product = result
+          break
+        endif
       endif
     endfor
   endif

@@ -104,46 +104,58 @@ class FiltersSheetComponent extends HTMLElement {
     if (event.key === 'Escape' && this.classList.contains('is-open')) this.#close();
   };
 
-  #onApply = () => {
-    this.#applyFiltersAndSort();
-    this.#close();
-  };
-
-  #onReset = (event) => {
-    event.preventDefault();
-    this.filterEl?.reset?.();
-    this.#resetSort();
-    this.#applyFiltersAndSort();
-    this.#close();
-  };
-
   #resetSort() {
-    const sortSelect = this.querySelector('[data-ref="sorting-select"]');
-    const defaultSort = this.querySelector('sort-component')?.dataset.defaultSort;
+    const root = this.overlay || this;
+    const sortSelect = root.querySelector('[data-ref="sorting-select"]');
+    const defaultSort = root.querySelector('sort-component')?.dataset.defaultSort;
     if (sortSelect && defaultSort) {
       sortSelect.value = defaultSort;
     }
 
-    const sortInput = this.querySelector('sort-inline-component input[name="sort-by"]');
+    const sortInput = root.querySelector('sort-inline-component input[name="sort-by"]');
     if (sortInput && defaultSort) {
       sortInput.value = defaultSort;
     }
 
-    this.querySelectorAll('.sorting__select--selected').forEach((item) => {
+    root.querySelectorAll('.sorting__select--selected').forEach((item) => {
       item.classList.remove('sorting__select--selected');
     });
 
-    const defaultItem = this.querySelector(`.sorting__select[data-value="${defaultSort}"]`);
+    const defaultItem = root.querySelector(`.sorting__select[data-value="${defaultSort}"]`);
     defaultItem?.classList.add('sorting__select--selected');
   }
+
+  async #ensureFilterModules() {
+    if (typeof window.__rlLoadFilterModules === 'function') {
+      await window.__rlLoadFilterModules();
+    }
+  }
+
+  #onApply = async () => {
+    await this.#ensureFilterModules();
+    this.#applyFiltersAndSort();
+    this.#close();
+  };
+
+  #onReset = async (event) => {
+    event.preventDefault();
+    await this.#ensureFilterModules();
+    const filterEl = this.filterEl || this.overlay?.querySelector('filter-component');
+    filterEl?.reset?.();
+    this.#resetSort();
+    this.#applyFiltersAndSort();
+    this.#close();
+  };
 
   #applyFiltersAndSort() {
     const wrapper =
       this.closest('filter-and-sort-component') ||
       document.querySelector('filter-and-sort-component');
 
-    if (this.filterEl?.apply) {
-      this.filterEl.apply();
+    const filterEl = this.filterEl || this.overlay?.querySelector('filter-component');
+
+    if (filterEl?.apply) {
+      filterEl.apply();
       return;
     }
 
@@ -156,7 +168,7 @@ class FiltersSheetComponent extends HTMLElement {
       new CustomEvent('filters:changed', {
         bubbles: true,
         detail: {
-          filter_params: '',
+          filter_params: filterEl?.getFiltersParams?.() || '',
           sorting_params: sortingParams,
         },
       })

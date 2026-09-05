@@ -39,13 +39,35 @@
             --grid-columns-mobile: {{ block.settings.grid_columns_mobile }};
           "
         >
-          {% for product in collection_products limit: block.settings.max_products %}
+          {% assign block_featured_shown = 0 %}
+          {% for product in collection_products %}
+            {% if block_featured_shown >= block.settings.max_products %}
+              {% break %}
+            {% endif %}
+            {% capture rs_has_real_media %}
+              {% render 'rs-product-has-real-media', product: product %}
+            {% endcapture %}
+            {% if rs_has_real_media == blank %}
+              {% continue %}
+            {% endif %}
+            {% assign block_featured_shown = block_featured_shown | plus: 1 %}
             {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
           {% endfor %}
         </div>
       {% elsif block.settings.layout_type == 'slider' %}
         {% capture slides %}
-        {% for product in collection_products limit: block.settings.max_products %}
+        {% assign block_slider_shown = 0 %}
+        {% for product in collection_products %}
+          {% if block_slider_shown >= block.settings.max_products %}
+            {% break %}
+          {% endif %}
+          {% capture rs_has_real_media %}
+            {% render 'rs-product-has-real-media', product: product %}
+          {% endcapture %}
+          {% if rs_has_real_media == blank %}
+            {% continue %}
+          {% endif %}
+          {% assign block_slider_shown = block_slider_shown | plus: 1 %}
           <li class="splide__slide">
             <div class="slide" style="--gap: 0px; --margin-top: 0px; --margin-bottom: 0px;">
               {% # theme-check-disable %}

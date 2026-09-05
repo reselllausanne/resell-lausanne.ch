@@ -149,6 +149,11 @@ svg {
   overflow-x: hidden;
 }
 
+/* PLP brand chips need horizontal scroll — section overflow clips them */
+.shopify-section.section-collection-plp-header {
+  overflow: visible;
+}
+
 @media (width > 750px) {
   .page-width {
     padding: 0 var(--page-margin-desktop);

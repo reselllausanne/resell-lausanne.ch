@@ -16,5 +16,6 @@
 # Stops app embeds from being reset every deploy.
 fullstack_2_3_1/config/settings_data.json
 
-# Homepage hero images + section config — edit in theme editor, not via push.
-fullstack_2_3_1/templates/index.json
+# Homepage hero images + section config — prefer theme editor for live edits.
+# Do NOT ignore during local `theme dev`: missing remote index.json → homepage 404.
+# fullstack_2_3_1/templates/index.json

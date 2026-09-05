@@ -360,21 +360,33 @@
 
     const labelEl = modal.querySelector('[data-rs-modal-cart-delivery-label]');
     const badgeEl = modal.querySelector('[data-rs-modal-cart-delivery-badge]');
-    const pictoEl = modal.querySelector('[data-rs-modal-cart-delivery-picto]');
+    const picto48hEl =
+      modal.querySelector('[data-rs-modal-cart-delivery-picto-48h]')
+      || modal.querySelector('[data-rs-modal-cart-delivery-picto]');
+    const pictoExpressEl = modal.querySelector('[data-rs-modal-cart-delivery-picto-express]');
 
     if (labelEl) {
       labelEl.textContent = deliveryLabel;
     }
 
-    if (badgeEl) {
-      badgeEl.textContent = expressSelected ? expressShippingName : standardShippingName;
-      badgeEl.hidden = false;
-      badgeEl.classList.remove('is-48h');
-      badgeEl.classList.toggle('is-express', expressSelected);
-    }
+    // Mutual exclusivity: 48H picto XOR EXPRESS picto XOR text badge.
+    const show48hPicto = expressSelected && is48h;
+    const showExpressPicto = expressSelected && !is48h && Boolean(pictoExpressEl);
+    const showTextBadge = !show48hPicto && !showExpressPicto;
 
-    if (pictoEl) {
-      pictoEl.hidden = !(expressSelected && is48h);
+    if (picto48hEl) picto48hEl.hidden = !show48hPicto;
+    if (pictoExpressEl) pictoExpressEl.hidden = !showExpressPicto;
+
+    if (badgeEl) {
+      badgeEl.classList.toggle('is-48h', show48hPicto);
+      badgeEl.classList.toggle('is-express', expressSelected && !show48hPicto);
+      if (showTextBadge) {
+        badgeEl.textContent = expressSelected ? expressShippingName : standardShippingName;
+        badgeEl.hidden = false;
+      } else {
+        badgeEl.textContent = '';
+        badgeEl.hidden = true;
+      }
     }
   };
 
@@ -1336,7 +1348,24 @@
       return [bestFit.entry.variant];
     };
 
-    const CART_UPSELL_MAX_ROWS = 6;
+    const normalizeApparelSize = (value) =>
+      String(value || '')
+        .trim()
+        .toUpperCase()
+        .replace(/\s+/g, '');
+
+    const matchingColorwayVariant = (colorway, sizeValue) => {
+      const variants = (colorway?.variants || []).filter((entry) => entry.available !== false);
+      if (!variants.length) return null;
+      const wanted = normalizeApparelSize(sizeValue);
+      if (!wanted) return variants[0];
+      return (
+        variants.find((entry) => normalizeApparelSize(entry.sizeLabel) === wanted)
+        || variants[0]
+      );
+    };
+
+    const CART_UPSELL_MAX_ROWS = 24;
     // Survives the re-render triggered by every add/remove so the row keeps
     // showing the option the shopper picked.
     const cartUpsellSelection = new Map();
@@ -1344,20 +1373,43 @@
     const renderCartUpsells = (cart) => {
       if (!cartUpsellsEl) return;
       const shoeSize = getCurrentUpsellSizeValue();
+      const upsellContext = payload?.upsellContext || {};
+      const isStreetwearProduct = upsellContext.isStreetwearProduct === true;
+      const isFootwearProduct = upsellContext.isFootwearProduct === true;
       const seenProductIds = new Set();
+      const colorwayConfig = payload.essentialsColorwayUpsells;
+      const colorwayEntries = [];
+      if (colorwayConfig && Array.isArray(colorwayConfig.colorways)) {
+        for (const colorway of colorwayConfig.colorways) {
+          const preferred = matchingColorwayVariant(colorway, shoeSize);
+          if (!preferred) continue;
+          colorwayEntries.push({ offer: colorway, variant: preferred, kind: 'colorway' });
+        }
+      }
+
       const entries = (payload.cartUpsells || [])
-        .flatMap((offer) => matchingCartUpsellVariants(offer, shoeSize).map((variant) => ({ offer, variant })))
+        .flatMap((offer) => matchingCartUpsellVariants(offer, shoeSize).map((variant) => ({ offer, variant, kind: 'cart' })))
         .filter(({ offer }) => {
           const key = String(offer.productId || offer.title);
           if (seenProductIds.has(key)) return false;
           seenProductIds.add(key);
           return true;
         })
-        .slice(0, CART_UPSELL_MAX_ROWS);
-      cartUpsellsEl.replaceChildren();
-      cartUpsellsEl.hidden = entries.length === 0;
+        .slice(0, Math.max(0, CART_UPSELL_MAX_ROWS - colorwayEntries.length));
 
-      for (const { offer, variant } of entries) {
+      let allEntries = [];
+      if (isFootwearProduct) {
+        allEntries = [...entries, ...colorwayEntries];
+      } else if (isStreetwearProduct) {
+        allEntries = [...colorwayEntries, ...entries];
+      } else {
+        allEntries = [...colorwayEntries, ...entries];
+      }
+      const bundleCard = cartUpsellsEl.querySelector('[data-rs-modal-ultimate-bundle]');
+      if (bundleCard) bundleCard.remove();
+      cartUpsellsEl.replaceChildren();
+
+      for (const { offer, variant, kind } of allEntries) {
         const offerKey = String(offer.productId || offer.title);
         const selectableVariants = (offer.variants || []).filter((entry) => entry.available !== false);
         const inCartVariant = selectableVariants.find((entry) => findCartLine(cart, String(entry.id)));
@@ -1367,6 +1419,7 @@
         let activeVariant = inCartVariant || rememberedVariant || variant;
         const row = document.createElement('div');
         row.className = 'rs-size-modal__cart-upsell';
+        if (kind === 'colorway') row.classList.add('rs-size-modal__cart-upsell--colorway');
 
         const action = document.createElement('div');
         action.className = 'rs-size-modal__cart-upsell-row';
@@ -1385,7 +1438,9 @@
         info.className = 'rs-size-modal__cart-upsell-info';
         const title = document.createElement('span');
         title.className = 'rs-size-modal__cart-upsell-title';
-        title.textContent = offer.title;
+        title.textContent = kind === 'colorway'
+          ? (offer.label || offer.title)
+          : offer.title;
         const price = document.createElement('span');
         price.className = 'rs-size-modal__cart-upsell-price';
         const size = document.createElement('span');
@@ -1394,6 +1449,7 @@
         const variantSublabel = (entry) => {
           const label = String(entry?.sizeLabel || '').trim();
           if (!label || /^default(\s+(title|size))?$/i.test(label)) return '';
+          if (kind === 'colorway') return `Taille ${label}`;
           return parseEuSizeRange(label) ? `Taille ${label}` : label;
         };
 
@@ -1401,7 +1457,12 @@
         if (selectableVariants.length > 1) {
           select = document.createElement('select');
           select.className = 'rs-size-modal__cart-upsell-select';
-          select.setAttribute('aria-label', `Choisir une option pour ${offer.title}`);
+          select.setAttribute(
+            'aria-label',
+            kind === 'colorway'
+              ? `Choisir la taille · ${offer.label || offer.title}`
+              : `Choisir une option pour ${offer.title}`,
+          );
           for (const entry of selectableVariants) {
             const option = document.createElement('option');
             option.value = String(entry.id);
@@ -1423,13 +1484,37 @@
         const paintRow = () => {
           line = findCartLine(cart, String(activeVariant.id));
           image.src = activeVariant.image || offer.image || '';
-          price.textContent = activeVariant.priceFormatted || '';
-          const sublabel = variantSublabel(activeVariant);
-          size.textContent = select ? '' : sublabel;
-          size.hidden = !size.textContent;
+          if (kind === 'colorway') {
+            price.replaceChildren();
+            const sale = document.createElement('span');
+            sale.textContent = activeVariant.salePriceFormatted || activeVariant.priceFormatted || '';
+            price.appendChild(sale);
+            if (activeVariant.priceFormatted && activeVariant.salePriceFormatted) {
+              const compare = document.createElement('span');
+              compare.className = 'rs-size-modal__cart-upsell-compare';
+              compare.textContent = activeVariant.priceFormatted;
+              price.appendChild(compare);
+            }
+            const badge = document.createElement('span');
+            badge.className = 'rs-size-modal__cart-upsell-discount';
+            badge.textContent = colorwayConfig?.discountLabel || '−10%';
+            price.appendChild(badge);
+            size.textContent = '';
+            size.hidden = true;
+          } else {
+            price.textContent = activeVariant.priceFormatted || '';
+            const sublabel = variantSublabel(activeVariant);
+            size.textContent = select ? '' : sublabel;
+            size.hidden = !size.textContent;
+          }
           icon.textContent = line ? '✓' : '+';
           action.classList.toggle('is-added', Boolean(line));
-          addBtn.setAttribute('aria-label', line ? `Retirer ${offer.title}` : `Ajouter ${offer.title}`);
+          addBtn.setAttribute(
+            'aria-label',
+            line
+              ? `Retirer ${offer.label || offer.title}`
+              : `Ajouter ${offer.label || offer.title}`,
+          );
         };
 
         info.append(title, price, size);
@@ -1459,10 +1544,16 @@
               });
               await parseCartJson(res);
             } else {
+              const item = { id: activeVariant.id, quantity: 1 };
+              if (kind === 'colorway') {
+                item.properties = {
+                  _essentials_colorway_upsell: String(colorwayConfig?.discountPercent || 10),
+                };
+              }
               const res = await fetch(cartAddUrl(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify({ items: [{ id: activeVariant.id, quantity: 1 }] }),
+                body: JSON.stringify({ items: [item] }),
               });
               await parseCartJson(res);
             }
@@ -1483,6 +1574,15 @@
           }
         });
       }
+
+      if (bundleCard) {
+        if (isFootwearProduct) cartUpsellsEl.prepend(bundleCard);
+        else if (colorwayEntries.length) cartUpsellsEl.appendChild(bundleCard);
+        else cartUpsellsEl.prepend(bundleCard);
+      }
+      const bundleVisible = Boolean(bundleCard && !bundleCard.hidden);
+      cartUpsellsEl.hidden = allEntries.length === 0 && !bundleVisible;
+      if (bundleVisible || colorwayEntries.length) cartUpsellsEl.scrollLeft = 0;
     };
 
     const setSocksAddedState = (added, lineVariantId = '', { refreshPresentation = true } = {}) => {

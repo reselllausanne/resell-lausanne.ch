@@ -35,6 +35,7 @@
     {%- if template.name == 'product' -%}
       {{ 'pdp.css' | asset_url | stylesheet_tag: preload: true }}
       <script src="{{ 'product-size-selection-modal.js' | asset_url }}" defer></script>
+      <script src="{{ 'ultimate-bundle-pdp.js' | asset_url }}" defer></script>
     {%- endif -%}
     {%- if template.name == 'cart' -%}
       {{ 'cart.css' | asset_url | stylesheet_tag: preload: true }}

@@ -80,7 +80,7 @@
 {%- endunless -%}
 
 <div
-  class="collection-plp-header color-{{ section.settings.color_scheme }}{% if section.settings.additional_class != blank %} {{ section.settings.additional_class }}{% endif %}"
+  class="collection-plp-header color-{{ section.settings.color_scheme | default: 'scheme-1' }}{% if section.settings.additional_class != blank %} {{ section.settings.additional_class }}{% endif %}"
   style="
     --padding-top: {{ section.settings.padding_top }}px;
     --padding-bottom: {{ section.settings.padding_bottom }}px;
@@ -132,6 +132,95 @@
     {% endif %}
   </div>
 </div>
+
+{% stylesheet %}
+  /* PLP header must not clip brand chips */
+  .shopify-section.section-collection-plp-header,
+  .collection-plp-header {
+    overflow: visible !important;
+  }
+
+  .collection-plp-header {
+    padding-bottom: max(var(--padding-bottom, 12px), 20px) !important;
+  }
+
+  /* Align header + chips with product grid / Filtrer & Trier */
+  .collection-plp-header .collection-plp-header__inner.page-width {
+    max-width: none !important;
+    margin-inline: 0 !important;
+    padding-inline: var(--page-x, 24px) !important;
+  }
+
+  .collection-plp-header .collection-plp-brand-chips {
+    overflow: visible !important;
+    min-height: 64px !important;
+    z-index: 1;
+  }
+
+  .collection-plp-header .collection-plp-brand-chips__scroller {
+    margin: 0 !important;
+    padding: 6px 0 10px !important;
+    min-height: 64px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    scrollbar-width: thin;
+  }
+
+  .collection-plp-header .collection-plp-brand-chips__track {
+    padding-right: 48px !important;
+  }
+
+  /* Force marketplace chip look — compiled after base-plp, beats leftovers */
+  .collection-plp-header .collection-plp-brand-chips__chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    min-height: 48px !important;
+    padding: 10px 16px 10px 12px !important;
+    border: 1px solid #c8c8c8 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    color: #080808 !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    box-shadow: 0 1px 0 rgb(0 0 0 / 4%) !important;
+  }
+
+  .collection-plp-header .collection-plp-brand-chips__media {
+    flex: 0 0 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    margin: 0 !important;
+  }
+
+  .collection-plp-header .collection-plp-brand-chips__label {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    margin-inline: 0 !important;
+    padding: 0 !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #080808 !important;
+    text-align: left !important;
+  }
+
+  .collection-plp-header .collection-plp-header__title {
+    font-size: clamp(1.75rem, 2.4vw, 2.25rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.025em !important;
+    color: #080808 !important;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {

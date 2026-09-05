@@ -97,21 +97,45 @@
     "update": "Aktualisieren",
     "ultimate_bundle": {
       "badge": "ANGEBOT FREIGESCHALTET",
-      "title": "Ultimate Bundle",
-      "subtitle": "Essentials Tee + komplettes Pflegepaket",
+      "title": "Essentials Tee + Reinigungsset + Wipes",
+      "subtitle": "Farbe des Tees wählen",
       "savings": "Spare {{ savings }}",
       "item_tee": "Essentials Tee",
       "item_kit": "Reinigungsset",
       "item_wipes": "Wipes",
       "select_size": "Wähle deine Grösse",
-      "cta": "Mein Ultimate Bundle hinzufügen",
+      "cta": "Spare {{ savings }}",
+      "limited_offer": "Limitiertes Angebot ·",
+      "limited_left": "noch {{ count }}",
       "microcopy": "Exklusives Warenkorb-Angebot · maximal 1 pro Bestellung",
-      "added": "Ultimate Bundle hinzugefügt!",
+      "added": "Pack hinzugefügt!",
       "select_size_error": "Wähle eine Grösse, um fortzufahren.",
+      "select_color_error": "Wähle eine Farbe, um fortzufahren.",
+      "select_color": "Farbe",
       "out_of_stock_error": "Grösse nicht verfügbar. Bitte andere Grösse wählen.",
       "generic_add_error": "Bundle kann aktuell nicht hinzugefügt werden.",
+      "network_error": "Warenkorb-Verbindung unterbrochen. Bitte erneut versuchen.",
       "bundle_removed_for_threshold": "Ultimate Bundle entfernt: Berechtigter Zwischensumme unter Schwelle.",
       "bundle_threshold_confirm": "Berechtigte Zwischensumme unter Schwelle. Ultimate Bundle aus Warenkorb entfernen?"
+    },
+    "essentials_colorway": {
+      "discount_badge": "−10%"
+    },
+    "complete_rail": {
+      "title": "Vervollständige deinen Warenkorb",
+      "select_size": "Grösse wählen",
+      "add": "In den Warenkorb",
+      "prev": "Vorherige Produkte",
+      "next": "Nächste Produkte"
+    },
+    "protection_tip": "Erstattung bei Verlust des Pakets — kein Risiko.",
+    "protection_learn_more": "Mehr zur Paketversicherung"
+  },
+  "home": {
+    "rails": {
+      "bape_tees": "Bape Tee",
+      "soldes": "Sale",
+      "express_48h": "Express 48H"
     }
   },
   "collections": {

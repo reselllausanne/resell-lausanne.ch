@@ -1,0 +1,25 @@
+{%- doc -%}
+  Outputs "1" when product has a real storefront image (not blank, not Shopify
+  Product-Placeholder-Default assets used as fake media).
+
+  @param {product} product
+{%- enddoc -%}
+{%- liquid
+  assign rs_has_real_media = false
+
+  if product != blank and product.featured_media != blank and product.media.size > 0
+    assign media_src = product.featured_image.src | default: '' | append: '' | downcase
+    if media_src == blank and product.featured_media.preview_image != blank
+      assign media_src = product.featured_media.preview_image.src | default: '' | append: '' | downcase
+    endif
+
+    unless media_src contains 'product-placeholder'
+      unless media_src contains 'placeholder-default'
+        unless media_src contains 'placeholder_default'
+          assign rs_has_real_media = true
+        endunless
+      endunless
+    endunless
+  endif
+-%}
+{%- if rs_has_real_media -%}1{%- endif -%}

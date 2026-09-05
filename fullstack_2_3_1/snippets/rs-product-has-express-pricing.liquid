@@ -1,5 +1,5 @@
 {% comment %}
-  True when any variant has custom.express_price (standard vs express choice in size modal).
+  True when any available variant has custom.express_price (standard vs express choice in size modal).
 
   @param product {product}
 {% endcomment %}
@@ -7,6 +7,10 @@
   assign rs_has_express_pricing = false
 
   for variant in product.variants
+    unless variant.available
+      continue
+    endunless
+
     if variant.metafields.custom.express_price == blank
       continue
     endif
@@ -30,7 +34,7 @@
       endif
     endif
 
-    if express_price_defined
+    if express_price_defined and express_price_cents > 0
       assign rs_has_express_pricing = true
       break
     endif

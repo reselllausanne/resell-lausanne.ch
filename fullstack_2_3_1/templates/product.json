@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -6,6 +15,7 @@
         "rating_stars_Krck47": {
           "type": "rating-stars",
           "name": "t:rating_stars",
+          "disabled": true,
           "settings": {
             "show_on_display": "desktop_and_mobile",
             "product": "{{ closest.product }}",
@@ -19,8 +29,7 @@
             "margin_bottom": 0,
             "additional_class": ""
           },
-          "blocks": {},
-          "disabled": true
+          "blocks": {}
         },
         "text_zLqMQw": {
           "type": "text",
@@ -73,13 +82,14 @@
         "pdp_see_also": {
           "type": "resell-pdp-see-also",
           "name": "À voir aussi",
+          "disabled": true,
           "settings": {},
-          "blocks": {},
-          "disabled": true
+          "blocks": {}
         },
         "text_yQdqF8": {
           "type": "text",
           "name": "t:text",
+          "disabled": true,
           "settings": {
             "show_on_display": "desktop_and_mobile",
             "text": "{{ closest.product.description }}",
@@ -98,12 +108,12 @@
             "margin_bottom": 0,
             "additional_class": ""
           },
-          "blocks": {},
-          "disabled": true
+          "blocks": {}
         },
         "group_QH4Wig": {
           "type": "group",
           "name": "t:icons_and_text_inline",
+          "disabled": true,
           "settings": {
             "show_on_display": "desktop_and_mobile",
             "wrap_in_card": false,
@@ -211,8 +221,7 @@
             "icon_with_text_pmdG6L",
             "icon_with_text_VcUzPL",
             "icon_with_text_Bq7mMB"
-          ],
-          "disabled": true
+          ]
         },
         "product_form_grYQk6": {
           "type": "_product-form",
@@ -308,6 +317,7 @@
             "quantity_breaks_9fPAXa": {
               "type": "_quantity-breaks",
               "name": "t:quantity_breaks_columns",
+              "disabled": true,
               "settings": {
                 "show_on_display": "desktop_and_mobile",
                 "applies_to": "both",
@@ -377,11 +387,11 @@
               "block_order": [
                 "quantity_breaks_item_PcgMBN",
                 "quantity_breaks_item_7NbgdG"
-              ],
-              "disabled": true
+              ]
             },
             "product-add-to-cart-button": {
               "type": "_product-add-to-cart-button",
+              "disabled": true,
               "static": true,
               "settings": {
                 "enable_sticky_add_to_cart": true,
@@ -414,8 +424,7 @@
                   "blocks": {}
                 }
               },
-              "block_order": [],
-              "disabled": true
+              "block_order": []
             }
           },
           "block_order": [
@@ -457,6 +466,7 @@
         "delivery_estimation_A43yiG": {
           "type": "delivery-estimation",
           "name": "t:delivery_estimation",
+          "disabled": true,
           "settings": {
             "show_on_display": "desktop_and_mobile",
             "icon": "moped_package",
@@ -476,12 +486,12 @@
             "margin_bottom": 0,
             "additional_class": ""
           },
-          "blocks": {},
-          "disabled": true
+          "blocks": {}
         },
         "payment_methods_khjTAV": {
           "type": "payment-methods",
           "name": "t:payment_methods",
+          "disabled": true,
           "settings": {
             "show_on_display": "desktop_and_mobile",
             "alignment_desktop": "center",
@@ -491,8 +501,7 @@
             "margin_bottom": 0,
             "additional_class": ""
           },
-          "blocks": {},
-          "disabled": true
+          "blocks": {}
         },
         "accordions_KKUaHK": {
           "type": "resell-product-pdp-accordions",
@@ -576,9 +585,7 @@
         "max_products": 10,
         "rl_pdp_placement": "pdp_first",
         "additional_class": ""
-      },
-      "blocks": {},
-      "block_order": []
+      }
     },
     "collection_featured_top_sales": {
       "type": "image-tag-slider",
@@ -598,19 +605,28 @@
         "max_products": 6,
         "rl_pdp_placement": "pdp",
         "additional_class": ""
-      },
-      "blocks": {},
-      "block_order": []
+      }
     },
     "pdp_see_also": {
       "type": "custom-section",
+      "blocks": {
+        "see_also_block": {
+          "type": "resell-pdp-see-also",
+          "name": "À voir aussi",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "see_also_block"
+      ],
       "name": "À voir aussi",
       "settings": {
         "show_on_display": "desktop_and_mobile",
-        "section_width": "normal",
         "color_scheme": "scheme-1",
         "wrap_in_card": false,
         "color_scheme_card": "",
+        "section_width": "normal",
         "layout_type": "flex",
         "layout_flex_direction_desktop": "column",
         "layout_gap_desktop": 0,
@@ -622,26 +638,60 @@
         "padding_bottom": 0,
         "margin_top": 0,
         "margin_bottom": 0
-      },
-      "blocks": {
-        "see_also_block": {
-          "type": "resell-pdp-see-also",
-          "name": "À voir aussi",
-          "settings": {},
-          "blocks": {}
-        }
-      },
-      "block_order": ["see_also_block"]
+      }
     },
     "pdp_newsletter": {
       "type": "custom-section",
+      "blocks": {
+        "pdp_nl_title": {
+          "type": "text",
+          "settings": {
+            "show_on_display": "desktop_and_mobile",
+            "text": "<h3>Inscris-toi à la newsletter Resell Lausanne</h3>",
+            "text_style": "h3",
+            "font_weight": 400,
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "margin_top": 0,
+            "margin_bottom": 0
+          }
+        },
+        "pdp_nl_desc": {
+          "type": "text",
+          "settings": {
+            "show_on_display": "desktop_and_mobile",
+            "text": "<p>Et obtiens 10 CHF sur ta première commande.</p>",
+            "text_style": "paragraph",
+            "font_weight": 400,
+            "alignment": "center",
+            "alignment_mobile": "center",
+            "margin_top": 0,
+            "margin_bottom": 0
+          }
+        },
+        "pdp_nl_form": {
+          "type": "newsletter-signup",
+          "settings": {
+            "show_on_display": "desktop_and_mobile",
+            "newsletter_label": "Votre adresse e-mail",
+            "tag": "newsletter",
+            "margin_top": 10,
+            "margin_bottom": 10
+          }
+        }
+      },
+      "block_order": [
+        "pdp_nl_title",
+        "pdp_nl_desc",
+        "pdp_nl_form"
+      ],
       "name": "PDP — Newsletter",
       "settings": {
         "show_on_display": "desktop_and_mobile",
-        "section_width": "normal",
         "color_scheme": "scheme-1",
         "wrap_in_card": true,
         "color_scheme_card": "scheme-2",
+        "section_width": "normal",
         "layout_type": "flex",
         "layout_flex_direction_desktop": "column",
         "layout_gap_desktop": 20,
@@ -653,13 +703,7 @@
         "padding_bottom": 60,
         "margin_top": 50,
         "margin_bottom": 0
-      },
-      "blocks": {
-        "pdp_nl_title": { "type": "text", "settings": { "show_on_display": "desktop_and_mobile", "text": "<h3>Inscris-toi à la newsletter Resell Lausanne<\/h3>", "text_style": "h3", "font_weight": 400, "alignment": "center", "alignment_mobile": "center", "margin_top": 0, "margin_bottom": 0 } },
-        "pdp_nl_desc": { "type": "text", "settings": { "show_on_display": "desktop_and_mobile", "text": "<p>Et obtiens 10 CHF sur ta première commande.<\/p>", "text_style": "paragraph", "font_weight": 400, "alignment": "center", "alignment_mobile": "center", "margin_top": 0, "margin_bottom": 0 } },
-        "pdp_nl_form": { "type": "newsletter-signup", "settings": { "show_on_display": "desktop_and_mobile", "newsletter_label": "Votre adresse e-mail", "tag": "newsletter", "margin_top": 10, "margin_bottom": 10 } }
-      },
-      "block_order": ["pdp_nl_title", "pdp_nl_desc", "pdp_nl_form"]
+      }
     },
     "pdp_related_ssr": {
       "type": "product-recommendations",
@@ -676,9 +720,7 @@
         "margin_bottom": 0,
         "anchor_id": "selectionne-pour-toi",
         "additional_class": "rl-pdp-recommendations"
-      },
-      "blocks": {},
-      "block_order": []
+      }
     }
   },
   "order": [

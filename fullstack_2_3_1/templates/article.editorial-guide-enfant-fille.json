@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -23,10 +32,10 @@
             "rank_label": "01 · La paire facile",
             "title": "Nike Air Force 1 GS",
             "description": "Stable, facile à nettoyer et familière. Blanc-rose pour une touche douce, noir-blanc pour moins de stress au quotidien.",
+            "product": "gid://shopify/product/9464055267617",
+            "collection": "gid://shopify/collection/647318503810",
             "score_label": "Entretien",
-            "score": 94,
-            "product": "gid://shopify/Product/9464055267617",
-            "collection": "gid://shopify/Collection/647318503810"
+            "score": 94
           }
         },
         "pick-2": {
@@ -35,10 +44,10 @@
             "rank_label": "02 · La légère",
             "title": "Nike P-6000 GS",
             "description": "Respirante, confortable et actuelle. Une version argentée ou pastel donne le signal tendance sans devenir difficile à assortir.",
+            "product": "gid://shopify/product/15373895303554",
+            "collection": "gid://shopify/collection/647273644418",
             "score_label": "Confort",
-            "score": 95,
-            "product": "gid://shopify/Product/15373895303554",
-            "collection": "gid://shopify/Collection/647273644418"
+            "score": 95
           }
         },
         "pick-3": {
@@ -47,10 +56,10 @@
             "rank_label": "03 · La fine",
             "title": "adidas Samba OG GS",
             "description": "Très jolie avec jean, legging ou jupe. À choisir si l’enfant aime une sensation proche du sol et n’a pas besoin d’un amorti moelleux.",
+            "product": "gid://shopify/product/15198341104002",
+            "collection": "gid://shopify/collection/481546338593",
             "score_label": "Style",
-            "score": 95,
-            "product": "gid://shopify/Product/15198341104002",
-            "collection": "gid://shopify/Collection/481546338593"
+            "score": 95
           }
         },
         "pick-4": {
@@ -59,10 +68,10 @@
             "rank_label": "04 · La skate",
             "title": "adidas Campus 00s GS",
             "description": "Plus rembourrée, en daim et très cohérente avec les looks amples. Attention aux coloris très clairs les jours de pluie.",
+            "product": "gid://shopify/product/14908116730242",
+            "collection": "gid://shopify/collection/668026438018",
             "score_label": "Maintien",
-            "score": 90,
-            "product": "gid://shopify/Product/14908116730242",
-            "collection": "gid://shopify/Collection/668026438018"
+            "score": 90
           }
         },
         "pick-5": {
@@ -71,10 +80,10 @@
             "rank_label": "05 · La colorée",
             "title": "Jordan 1 Mid GS",
             "description": "Un bon compromis pour celle qui veut de la couleur et une silhouette iconique, avec plus de structure autour de la cheville.",
+            "product": "gid://shopify/product/15307194106242",
+            "collection": "gid://shopify/collection/687874179458",
             "score_label": "Personnalité",
-            "score": 94,
-            "product": "gid://shopify/Product/15307194106242",
-            "collection": "gid://shopify/Collection/687874179458"
+            "score": 94
           }
         },
         "pick-6": {
@@ -83,10 +92,10 @@
             "rank_label": "La confortable",
             "title": "New Balance 530 GS",
             "description": "Souple, rétro et légère. Elle accompagne bien les longues journées, tout en ressemblant aux modèles portés par les ados.",
+            "product": "gid://shopify/product/14908127478146",
+            "collection": "gid://shopify/collection/668028043650",
             "score_label": "Confort",
-            "score": 96,
-            "product": "gid://shopify/Product/14908127478146",
-            "collection": "gid://shopify/Collection/668028043650"
+            "score": 96
           }
         },
         "row-1": {
@@ -161,26 +170,26 @@
         "intro": "Pour une fille de 6 à 12 ans, on achète d'abord pour l'usage : est-ce qu'elle l'enfile seule, court et joue sans se plaindre, et garde les pieds stables toute la journée ? Le style compte dès qu'elle a un avis — mais une paire jolie qu'elle refuse de mettre ne sert à rien.",
         "chips": "Facile à enfiler\nLavable\nSemelle stable\nVraie pointure",
         "hero_overlay": 66,
+        "how_to_heading": "Pointure : laisser grandir sans laisser flotter",
+        "how_to_body": "<p>Mesurer les deux pieds debout. Garder environ 10 mm de marge est généralement raisonnable, mais une grande pointure « pour faire toute l'année » n'est pas une économie si le talon flotte dès le premier mois.</p>",
         "table_col_1": "Modèle",
         "table_col_2": "Atout principal",
         "table_col_3": "Attention",
-        "how_to_heading": "Pointure : laisser grandir sans laisser flotter",
-        "how_to_body": "<p>Mesurer les deux pieds debout. Garder environ 10 mm de marge est généralement raisonnable, mais une grande pointure « pour faire toute l'année » n'est pas une économie si le talon flotte dès le premier mois.</p>",
         "checklist_parent": true,
         "checklist": "Mesurer les deux pieds\nTester escaliers et petit sprint\nVérifier l’autonomie\nRegarder la matière, pas seulement la couleur\nÉcrire la date d’achat pour recontrôler",
         "verdict": "<p>Pour jouer sans y penser : P-6000 ou NB 530. Pour nettoyer facilement : Air Force 1. Pour un look plus “grande” : Samba ou Campus 00s.</p>",
         "hub_article_handle": "chaussures-sneakers-rentree-2026",
         "show_promo": true,
-        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
         "promo_primary_label": "Acheter la carte cadeau",
+        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
         "padding_bottom": 60
       }
     },
     "related": {
       "type": "resell-blog-related",
       "settings": {
-        "color_scheme": "scheme-1",
         "max_articles": 3,
+        "color_scheme": "scheme-1",
         "padding_top": 48,
         "padding_bottom": 72
       }

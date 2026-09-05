@@ -28,6 +28,12 @@
           {%- unless product.available -%}
             {%- continue -%}
           {%- endunless -%}
+          {%- capture rs_has_real_media -%}
+            {%- render 'rs-product-has-real-media', product: product -%}
+          {%- endcapture -%}
+          {%- if rs_has_real_media == blank -%}
+            {%- continue -%}
+          {%- endif -%}
           {%- liquid
             capture list_price_snapshot
               render 'rs-product-price-snapshot', product: product

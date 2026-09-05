@@ -813,8 +813,8 @@
     height: 33px;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    background: #080808;
-    color: #fff;
+    background: #080808 !important;
+    color: #fff !important;
     border-bottom: none;
     box-sizing: border-box;
   }
@@ -827,18 +827,25 @@
     justify-content: center;
   }
 
-  .announcement-bar.rl-promo-strip p {
+  .announcement-bar.rl-promo-strip p,
+  .announcement-bar.rl-promo-strip .slide,
+  .announcement-bar.rl-promo-strip .resell-launch-promo--strip {
     margin: 0;
     padding: 0;
     font-size: 13px;
     line-height: 1.27;
     font-weight: 400;
-    color: #fff;
+    color: #fff !important;
     text-align: center;
   }
 
+  .announcement-bar.rl-promo-strip p strong {
+    color: #fff !important;
+    font-weight: 600;
+  }
+
   .announcement-bar.rl-promo-strip a {
-    color: #fff;
+    color: #fff !important;
     text-decoration: underline;
   }
 

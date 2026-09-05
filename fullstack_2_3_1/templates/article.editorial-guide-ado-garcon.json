@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -23,10 +32,10 @@
             "rank_label": "01 · Le meilleur all-rounder",
             "title": "ASICS GEL-NYC",
             "description": "Look technique, bon amorti, suffisamment de volume avec un jean baggy sans paraître énorme. Gris, noir ou silver fonctionnent presque toujours.",
+            "product": "gid://shopify/product/14963521323394",
+            "collection": "gid://shopify/collection/666330825090",
             "score_label": "Équilibre",
-            "score": 97,
-            "product": "gid://shopify/Product/14963521323394",
-            "collection": "gid://shopify/Collection/666330825090"
+            "score": 97
           }
         },
         "pick-2": {
@@ -35,10 +44,10 @@
             "rank_label": "02 · La runner qui monte",
             "title": "Saucony",
             "description": "ProGrid, Shadow ou Triumph : le mesh structuré et le confort quotidien séduisent de plus en plus en cour d'école. Silver, gris ou navy passent partout.",
+            "product": "gid://shopify/product/15118796718466",
+            "collection": "gid://shopify/collection/676877533570",
             "score_label": "Tendance",
-            "score": 96,
-            "product": "gid://shopify/Product/15118796718466",
-            "collection": "gid://shopify/Collection/676877533570"
+            "score": 96
           }
         },
         "pick-3": {
@@ -47,10 +56,10 @@
             "rank_label": "03 · Le mesh fiable",
             "title": "ASICS GEL-1130",
             "description": "Légère, amortie et très présente sur les réseaux. Idéale en deuxième paire ou pour un ado qui marche beaucoup. Silver ou gris = safe.",
+            "product": "gid://shopify/product/14963521651074",
+            "collection": "gid://shopify/collection/666330694018",
             "score_label": "Confort",
-            "score": 95,
-            "product": "gid://shopify/Product/14963521651074",
-            "collection": "gid://shopify/Collection/666330694018"
+            "score": 95
           }
         },
         "pick-4": {
@@ -59,10 +68,10 @@
             "rank_label": "04 · Le classique propre",
             "title": "Nike Air Force 1",
             "description": "Blanche pour le look net, noire pour le côté pratique, color-block pour sortir du lot. Lourde, mais robuste et simple à associer.",
+            "product": "gid://shopify/product/9464055267617",
+            "collection": "gid://shopify/collection/647318503810",
             "score_label": "Polyvalence",
-            "score": 92,
-            "product": "gid://shopify/Product/9464055267617",
-            "collection": "gid://shopify/Collection/647318503810"
+            "score": 92
           }
         },
         "pick-5": {
@@ -71,10 +80,10 @@
             "rank_label": "05 · Le choix sneakerhead",
             "title": "Air Jordan 4",
             "description": "La paire statement du guide. Elle fonctionne mieux avec des volumes amples et mérite un coloris portable si elle doit être souvent portée.",
+            "product": "gid://shopify/product/15107002794370",
+            "collection": "gid://shopify/collection/666573865346",
             "score_label": "Impact",
-            "score": 99,
-            "product": "gid://shopify/Product/15107002794370",
-            "collection": "gid://shopify/Collection/666573865346"
+            "score": 99
           }
         },
         "pick-6": {
@@ -83,10 +92,10 @@
             "rank_label": "06 · Le skate crédible",
             "title": "Nike Dunk SB",
             "description": "Plus crédible que le Campus pour un style skate ou streetwear. Fonctionne avec jean large, cargo et hoodie — surtout en coloris sombre ou neutre.",
+            "product": "gid://shopify/product/14896790995330",
+            "collection": "gid://shopify/collection/647273546114",
             "score_label": "Style",
-            "score": 94,
-            "product": "gid://shopify/Product/14896790995330",
-            "collection": "gid://shopify/Collection/647273546114"
+            "score": 94
           }
         },
         "row-1": {
@@ -161,26 +170,26 @@
         "intro": "À 15-16 ans, le choix se joue d'abord sur TikTok, Instagram et dans la cour : ce qui a des vues, ce que portent les copains, ce qui colle au style qu'on veut montrer. Saucony, GEL-NYC, Dunk SB et Air Force 1 remplacent de plus en plus les TN — pas un discours parent sur le chaussant.",
         "chips": "ASICS / Saucony\nDunk SB\nCourt classic\nRéseaux sociaux",
         "hero_overlay": 66,
+        "how_to_heading": "Une paire, deux paires ou une rotation ?",
+        "how_to_body": "<p>Avec une seule paire, évitez le mesh : privilégiez cuir, daim ou synthétique facile à nettoyer (Air Force 1, Dunk classique, Saucony structurée). Avec deux paires, le duo le plus malin : une mesh confortable type ASICS GEL-1130 + une Dunk classique ou SB pour le style.</p><p>Mesure les deux pieds debout, en fin de journée. Garde environ 8 à 12 mm devant les orteils. Marche plusieurs minutes en magasin : le pied gonfle, surtout avec une runner.</p>",
         "table_col_1": "Profil",
         "table_col_2": "Premier choix",
         "table_col_3": "Deuxième paire",
-        "how_to_heading": "Une paire, deux paires ou une rotation ?",
-        "how_to_body": "<p>Avec une seule paire, évitez le mesh : privilégiez cuir, daim ou synthétique facile à nettoyer (Air Force 1, Dunk classique, Saucony structurée). Avec deux paires, le duo le plus malin : une mesh confortable type ASICS GEL-1130 + une Dunk classique ou SB pour le style.</p><p>Mesure les deux pieds debout, en fin de journée. Garde environ 8 à 12 mm devant les orteils. Marche plusieurs minutes en magasin : le pied gonfle, surtout avec une runner.</p>",
         "checklist_parent": false,
         "checklist": "Choisir la silhouette avant le coloris\nTester avec le pantalon le plus porté\nMarcher 10 minutes à l’intérieur\nPrévoir pluie et transports\nNe pas surpayer une tendance de 3 semaines",
         "verdict": "<p>Une seule paire : Air Force 1 ou Saucony structurée, sans mesh. Deux paires : GEL-1130 confort + Dunk SB ou Jordan 4 pour le style. Le safe absolu : GEL-NYC gris/silver.</p>",
         "hub_article_handle": "chaussures-sneakers-rentree-2026",
         "show_promo": true,
-        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
         "promo_primary_label": "Acheter la carte cadeau",
+        "promo_primary_url": "/products/carte-cadeau-resell-lausanne",
         "padding_bottom": 60
       }
     },
     "related": {
       "type": "resell-blog-related",
       "settings": {
-        "color_scheme": "scheme-1",
         "max_articles": 3,
+        "color_scheme": "scheme-1",
         "padding_top": 48,
         "padding_bottom": 72
       }

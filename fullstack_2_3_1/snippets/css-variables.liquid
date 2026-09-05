@@ -1,94 +1,21 @@
-{%- liquid
-  if settings.font_from == 'shopify'
-    assign heading_font_url = settings.type_heading_font | font_url
-    assign subheading_font_url = settings.type_subheading_font | font_url
-    assign body_font_url = settings.type_body_font | font_url
-  endif
-%}
+{%- comment -%}
+  Fonts: Inter only. Skip Shopify Instrument @font-face so it never wins.
+{%- endcomment -%}
 
 {% style %}
-  /* Polices */
-  {% if settings.font_from == 'shopify' %}
-    /* Polices Shopify (manual single-face declarations) */
-    @font-face {
-      font-family: {{ settings.type_heading_font.family | json }};
-      font-weight: {{ settings.type_heading_font.weight }};
-      font-style: {{ settings.type_heading_font.style }};
-      font-display: swap;
-      src: url("{{ heading_font_url }}") format("woff2");
-    }
-    {% if subheading_font_url != heading_font_url and subheading_font_url != blank %}
-      @font-face {
-        font-family: {{ settings.type_subheading_font.family | json }};
-        font-weight: {{ settings.type_subheading_font.weight }};
-        font-style: {{ settings.type_subheading_font.style }};
-        font-display: swap;
-        src: url("{{ subheading_font_url }}") format("woff2");
-      }
-    {% endif %}
-    {% if body_font_url != heading_font_url and body_font_url != subheading_font_url and body_font_url != blank %}
-      @font-face {
-        font-family: {{ settings.type_body_font.family | json }};
-        font-weight: {{ settings.type_body_font.weight }};
-        font-style: {{ settings.type_body_font.style }};
-        font-display: swap;
-        src: url("{{ body_font_url }}") format("woff2");
-      }
-    {% endif %}
-  {% else %}
-    /* Polices personnalisées */
-      {% if settings.custom_type_heading_font != blank %}
-        @font-face {
-          font-family: "custom_heading";
-          src: url("{{ settings.custom_type_heading_font }}") format("{{ settings.custom_type_heading_font_format }}");
-          font-display: swap;
-        }
-      {% endif %}
-      {% if settings.custom_type_subheading_font != blank %}
-        @font-face {
-          font-family: "custom_subheading";
-          src: url("{{ settings.custom_type_subheading_font }}") format("{{ settings.custom_type_subheading_font_format }}");
-          font-display: swap;
-        }
-      {% endif %}
-      {% if settings.custom_type_body_font != blank %}
-        @font-face {
-          font-family: "custom_body";
-          src: url("{{ settings.custom_type_body_font }}") format("{{ settings.custom_type_body_font_format }}");
-          font-display: swap;
-        }
-      {% endif %}
-  {% endif %}
-
     :root {
-      /* Polices */
-      {% if settings.font_from == 'shopify' %}
-        /* Polices Shopify */
-        --font-heading--family: {{ settings.type_heading_font.family }}, {{ settings.type_heading_font.fallback_families }};
-        --font-heading--style: {{ settings.type_heading_font.style }};
-        --font-heading--weight: {{ settings.type_heading_font.weight }};
+      /* Resell typeface — Inter */
+      --font-heading--family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-heading--style: normal;
+      --font-heading--weight: 500;
 
-        --font-subheading--family: {{ settings.type_subheading_font.family }}, {{ settings.type_subheading_font.fallback_families }};
-        --font-subheading--style: {{ settings.type_subheading_font.style }};
-        --font-subheading--weight: {{ settings.type_subheading_font.weight }};
+      --font-subheading--family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-subheading--style: normal;
+      --font-subheading--weight: 500;
 
-        --font-body--family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
-        --font-body--style: {{ settings.type_body_font.style }};
-        --font-body--weight: {{ settings.type_body_font.weight }};
-      {% else %}
-        /* Polices personnalisées */
-        --font-heading--family: "custom_heading";
-        --font-heading--style: normal;
-        --font-heading--weight: {{ settings.custom_type_heading_font_weight }};
-
-        --font-subheading--family: "custom_subheading";
-        --font-subheading--style: normal;
-        --font-subheading--weight: {{ settings.custom_type_subheading_font_weight }};
-
-        --font-body--family: "custom_body";
-        --font-body--style: normal;
-        --font-body--weight: {{ settings.custom_type_body_font_weight }};
-      {% endif %}
+      --font-body--family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-body--style: normal;
+      --font-body--weight: 400;
 
       /* Typographies */
       --font-h1--family: var(--font-heading--family);
@@ -454,5 +381,14 @@
       --toast-notification-background-color--info: #e6f7ff;
       --toast-notification-color--info: #1890ff;
       --toast-notification-transition-duration: 500ms;
+    }
+
+    html,
+    body,
+    button,
+    input,
+    select,
+    textarea {
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
 {% endstyle %}

@@ -18,11 +18,13 @@
       await Promise.all(modules.map((src) => import(src)));
     }
 
+    window.__rlLoadFilterModules = loadFilterModules;
+
     function onIntent(event) {
       if (!(event.target instanceof Element)) return;
       if (
         event.target.closest(
-          '[data-ref="sheet-toggle"], .pagination a[href], filter-and-sort-component, filter-component'
+          '[data-ref="sheet-toggle"], [data-ref="sheet-apply"], [data-ref="sheet-reset"], .pagination a[href], filter-and-sort-component, filter-component'
         )
       ) {
         loadFilterModules();

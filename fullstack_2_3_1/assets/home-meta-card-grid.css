@@ -1,0 +1,131 @@
+/* Home meta card grid — asymmetric discover tiles (draft) */
+
+.rl-meta-grid {
+  padding-top: var(--rl-meta-pad-top, 40px);
+  padding-bottom: var(--rl-meta-pad-bottom, 40px);
+  background: transparent;
+  color: #080808;
+}
+
+.rl-meta-grid__inner {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.rl-meta-grid__heading {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #080808;
+}
+
+.rl-meta-grid__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.rl-meta-grid__card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  isolation: isolate;
+  min-height: 220px;
+}
+
+.rl-meta-grid__card--featured {
+  min-height: 320px;
+}
+
+.rl-meta-grid__media,
+.rl-meta-grid__media img,
+.rl-meta-grid__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.rl-meta-grid__media img {
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transform: scale(1);
+  transition: transform 0.45s ease;
+}
+
+.rl-meta-grid__placeholder {
+  background: linear-gradient(145deg, #3a3a3a 0%, #151515 100%);
+}
+
+.rl-meta-grid__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.2rem;
+  padding: 1.1rem 1.15rem;
+  background: linear-gradient(to top, rgb(0 0 0 / 62%) 0%, rgb(0 0 0 / 0%) 55%);
+  pointer-events: none;
+}
+
+.rl-meta-grid__title {
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.rl-meta-grid__cta {
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  opacity: 0.95;
+}
+
+.rl-meta-grid__card:hover .rl-meta-grid__media img,
+.rl-meta-grid__card:focus-visible .rl-meta-grid__media img {
+  transform: scale(1.04);
+}
+
+.rl-meta-grid__card:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+@media (width >= 750px) {
+  .rl-meta-grid__grid {
+    grid-template-columns: 1.05fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    /* WeTheNew-style: tall block that fills the slot */
+    min-height: min(72vh, 640px);
+    height: min(72vh, 640px);
+  }
+
+  .rl-meta-grid__card {
+    min-height: 0;
+    height: 100%;
+  }
+
+  .rl-meta-grid__card--featured {
+    grid-row: 1 / -1;
+    min-height: 0;
+    height: 100%;
+  }
+}
+
+@media (width >= 1100px) {
+  .rl-meta-grid__grid {
+    min-height: min(78vh, 720px);
+    height: min(78vh, 720px);
+  }
+}

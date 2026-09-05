@@ -1,6 +1,8 @@
 <script src="{{ 'cart.js' | asset_url }}" type="module"></script>
 <script src="{{ 'cart-upsell.js' | asset_url }}" type="module"></script>
+<script src="{{ 'cart-complete-rail.js' | asset_url }}" type="module"></script>
 <script src="{{ 'ultimate-bundle-cart.js' | asset_url }}" type="module"></script>
+{{ 'rs-trust-badge.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
   assign upsell_product = section.settings.upsell_product
@@ -26,7 +28,12 @@
   assign ultimate_bundle_product_5990 = section.settings.ultimate_bundle_product_5990
   assign ultimate_bundle_enabled = section.settings.ultimate_bundle_enabled
   assign cart_query_string = request.query_string | default: '' | downcase
+  assign request_host = request.host | default: ''
   assign ultimate_bundle_preview_forced = false
+  if request_host contains '127.0.0.1' or request_host contains 'localhost'
+    assign ultimate_bundle_preview_forced = true
+    assign ultimate_bundle_enabled = true
+  endif
   if cart_query_string contains 'ultimate_bundle_preview='
     assign ultimate_bundle_preview_forced = true
     assign ultimate_bundle_enabled = true
@@ -145,8 +152,9 @@
             method="post"
             id="cart_form"
           >
-            <div class="rs-cart__list">
-              {% for item in cart.items %}
+            <div class="rs-cart__list" data-rs-cart-lines>
+              {% comment %} Newest line at bottom so rail ATC grows list downward (Shopify default = newest first). {% endcomment %}
+              {% for item in cart.items reversed %}
                 {%- if upsell_product != blank and item.product_id == upsell_product.id -%}{% continue %}{%- endif -%}
                 {%- liquid
                   assign compare_price = item.original_price
@@ -370,6 +378,8 @@
               {% endfor %}
             </div>
           </form>
+
+          {% render 'cart-complete-rail' %}
         </div>
 
         {%- comment -%} ── RIGHT: sticky summary ── {%- endcomment -%}
@@ -506,6 +516,10 @@
             {%- endif -%}
 
             {%- if upsell_product != blank and upsell_variant != blank -%}
+              {%- liquid
+                assign upsell_tip = 'cart.protection_tip' | t
+                assign upsell_info_url = section.settings.upsell_info_url | strip
+              -%}
               <div
                 class="rs-cart__upsell"
                 data-rs-cart-upsell
@@ -521,14 +535,27 @@
                     </svg>
                   </span>
 
-                  <span class="rs-cart__upsell-info">
+                  <span class="rs-cart__upsell-info has-tip">
                     <span class="rs-cart__upsell-head">
-                      <span class="rs-cart__upsell-title">{{ upsell_product.title }}</span>
+                      <span class="rs-cart__upsell-title-wrap">
+                        <span class="rs-cart__upsell-title">{{ upsell_product.title }}</span>
+                        {%- if upsell_info_url != blank -%}
+                          <a
+                            class="rs-cart__upsell-info-link"
+                            href="{{ upsell_info_url }}"
+                            target="_blank"
+                            rel="noopener"
+                            aria-label="{{ 'cart.protection_learn_more' | t | escape }}"
+                            onclick="event.preventDefault(); event.stopPropagation(); window.open(this.href, '_blank', 'noopener');"
+                          >i</a>
+                        {%- endif -%}
+                      </span>
                       <span class="rs-cart__upsell-price">{{ upsell_variant.price | money_without_trailing_zeros }}</span>
                     </span>
                     {%- if section.settings.upsell_subtitle != blank -%}
                       <span class="rs-cart__upsell-sub">{{ section.settings.upsell_subtitle }}</span>
                     {%- endif -%}
+                    <span class="rs-cart__upsell-tip" role="tooltip">{{ upsell_tip }}</span>
                   </span>
 
                   <span class="rs-cart__upsell-toggle">
@@ -592,6 +619,7 @@
                   {{ cart_reassurance_authentic }}
                 </li>
               </ul>
+              {% render 'rs-trust-badge', size: 'small', sub_format: 'compact', link: false, class: 'rs-cart__trust-badge' %}
             </div>
 
             {% content_for 'block', type: '_cart-footer-blocks', id: 'cart_footer_blocks' %}
@@ -647,6 +675,12 @@
       "id": "upsell_subtitle",
       "label": "Sous-titre upsell",
       "default": "Livraison premium avec assurance incluse"
+    },
+    {
+      "type": "url",
+      "id": "upsell_info_url",
+      "label": "Lien info Protection (optionnel)",
+      "info": "Si rempli : bouton « i » vers la page. Sinon : tooltip au survol uniquement."
     },
     {
       "type": "header",
@@ -747,13 +781,13 @@
       "type": "number",
       "id": "ultimate_bundle_compare_at_price",
       "label": "Valeur barrée (CHF)",
-      "default": 88.8
+      "default": 99
     },
     {
       "type": "number",
       "id": "ultimate_bundle_savings_price",
       "label": "Économie affichée (CHF)",
-      "default": 38.9
+      "default": 49.1
     },
     {
       "type": "number",

@@ -97,21 +97,45 @@
     "update": "Mettre à jour",
     "ultimate_bundle": {
       "badge": "OFFRE DÉBLOQUÉE",
-      "title": "Ultimate Bundle",
-      "subtitle": "Essentials Tee + pack d’entretien complet",
+      "title": "Essentials Tee + kit + lingettes",
+      "subtitle": "Choisissez la couleur du tee",
       "savings": "Économisez {{ savings }}",
       "item_tee": "Essentials Tee",
       "item_kit": "Kit de nettoyage",
-      "item_wipes": "Wipes",
+      "item_wipes": "Lingettes",
       "select_size": "Choisissez votre taille",
-      "cta": "Ajouter mon Ultimate Bundle",
+      "cta": "Économisez {{ savings }}",
+      "limited_offer": "Offre limitée ·",
+      "limited_left": "{{ count }} restants",
       "microcopy": "Offre exclusive au panier · maximum 1 par commande",
-      "added": "Ultimate Bundle ajouté !",
+      "added": "Pack ajouté !",
       "select_size_error": "Sélectionnez une taille pour continuer.",
+      "select_color_error": "Sélectionnez une couleur pour continuer.",
+      "select_color": "Couleur",
       "out_of_stock_error": "Taille indisponible. Choisissez une autre taille.",
       "generic_add_error": "Impossible d’ajouter le bundle pour le moment.",
+      "network_error": "Connexion panier coupée. Réessaie.",
       "bundle_removed_for_threshold": "Ultimate Bundle retiré: sous-total éligible inférieur au seuil.",
       "bundle_threshold_confirm": "Le sous-total éligible est passé sous le seuil. Retirer Ultimate Bundle du panier?"
+    },
+    "essentials_colorway": {
+      "discount_badge": "−10%"
+    },
+    "complete_rail": {
+      "title": "Complétez votre panier",
+      "select_size": "Sélectionner votre taille",
+      "add": "Ajouter au panier",
+      "prev": "Produits précédents",
+      "next": "Produits suivants"
+    },
+    "protection_tip": "Remboursé si votre colis est perdu — zéro risque.",
+    "protection_learn_more": "En savoir plus sur la protection du colis"
+  },
+  "home": {
+    "rails": {
+      "bape_tees": "Tee Bape",
+      "soldes": "Soldes",
+      "express_48h": "Express 48H"
     }
   },
   "collections": {
