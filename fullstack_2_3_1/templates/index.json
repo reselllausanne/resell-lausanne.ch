@@ -110,21 +110,21 @@
     },
     "home_slider_bape_tees": {
       "type": "image-tag-slider",
-      "name": "Accueil — Tee Bape",
+      "name": "Accueil — Bape",
       "settings": {
         "color_scheme": "scheme-1",
         "layout_style": "brand_rail",
         "desktop_columns": 4,
         "show_heading_link": true,
         "show_rail_arrows": false,
-        "heading": "Tee Bape",
+        "heading": "Bape",
         "heading_link": "/collections/bape",
         "heading_link_label": "Voir plus",
         "card_ratio": "portrait",
         "source": "collection",
         "collection": "bape",
-        "max_products": 12,
-        "rotate_every_days": 2,
+        "max_products": 24,
+        "rotate_every_days": 0,
         "exclude_collection": "",
         "additional_class": "rl-home-slider-bape-tees"
       },
@@ -167,9 +167,9 @@
           "type": "card",
           "settings": {
             "layout": "stack",
-            "title": "Bape Tee",
+            "title": "Bape",
             "cta": "Découvrir",
-            "link": "/products/bape-college-tee-black",
+            "link": "/collections/bape",
             "image_asset": "rl-meta-bape-tees.jpg",
             "product": "bape-college-tee-black"
           }
@@ -609,8 +609,8 @@
   "order": [
     "home_hero_premium",
     "home_image_tag_slider",
-    "home_slider_nouveautes",
     "home_slider_bape_tees",
+    "home_slider_nouveautes",
     "home_slider_livraison_48h",
     "home_partner_trust",
     "home_slider_air_jordan",

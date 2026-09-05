@@ -181,6 +181,22 @@
               {% unless product.available %}
                 {% continue %}
               {% endunless %}
+              {% if rail_additional_class contains 'rl-home-slider-bape-tees' %}
+                {% liquid
+                  assign bape_title_down = product.title | downcase
+                  assign bape_type_down = product.type | downcase
+                  assign bape_is_tee = false
+                  if bape_title_down contains 'tee' or bape_title_down contains 't-shirt' or bape_title_down contains 'tshirt'
+                    assign bape_is_tee = true
+                  endif
+                  if bape_type_down contains 'tee' or bape_type_down contains 't-shirt' or bape_type_down contains 'tshirt'
+                    assign bape_is_tee = true
+                  endif
+                %}
+                {% unless bape_is_tee %}
+                  {% continue %}
+                {% endunless %}
+              {% endif %}
               {% if exclude_handle != blank %}
                 {% assign rail_excluded = false %}
                 {% for product_collection in product.collections %}
