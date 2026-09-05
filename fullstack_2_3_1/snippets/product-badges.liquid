@@ -9,6 +9,11 @@
 {%- enddoc -%}
 
 {%- liquid
+  capture rs_aged_pair_flags
+    render 'rs-product-aged-pair-warning-signals', product: product
+  endcapture
+  assign rs_aged_pair_active = rs_aged_pair_flags | strip | split: '|' | first
+
   capture price_snapshot
     render 'rs-product-price-snapshot', product: product
   endcapture
@@ -28,6 +33,12 @@
   {%- if product.metafields.custom.badge -%}
     <div class="badge color-{{ settings.badge_color_scheme_custom }}">
       {{ product.metafields.custom.badge }}
+    </div>
+  {%- endif -%}
+
+  {%- if rs_aged_pair_active == '1' -%}
+    <div class="badge rs-aged-pair-warning-badge">
+      {{ 'products.pdp.wear_at_own_risk_badge' | t }}
     </div>
   {%- endif -%}
 
@@ -70,5 +81,15 @@
     top: var(--padding-sm);
     right: var(--padding-sm);
     justify-content: flex-end;
+  }
+
+  .rs-aged-pair-warning-badge {
+    background: rgb(255 248 235);
+    color: rgb(8 8 8);
+    border: 1px solid rgb(8 8 8 / 12%);
+    font-size: 11px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
   }
 {% endstylesheet %}
