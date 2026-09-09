@@ -5,6 +5,10 @@
       "name": "Home hero premium",
       "settings": {
         "color_scheme": "scheme-1",
+        "hide_bundle_offer_slide": false,
+        "bundle_offer_cta_link": "/collections/nouveautes",
+        "bundle_offer_cta_label": "J'en profite",
+        "campaign_slide_enabled": false,
         "default_desktop_hero_filename": "header-essential-laptop.avif",
         "default_mobile_hero_filename": "Header-essential-phone.avif",
         "show_hero_arrows": true,
@@ -23,7 +27,7 @@
             "text": "Ton meilleur ensemble pour la rentrée",
             "button_label": "Acheter",
             "button_link": "/collections/back-to-school-2026",
-            "hide_cta_card": false
+            "hide_cta_card": true
           }
         },
         "slide_1": {

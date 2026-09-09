@@ -1,0 +1,63 @@
+{%- comment -%}
+  Bundle offer hero slide — designed banner only (no HTML clone).
+  Whole slide is clickable like cover-only hero slides.
+  @param {string} [cta_link]
+  @param {string} [cta_label]
+  @param {number} [slide_idx]
+  @param {boolean} [is_active]
+{%- endcomment -%}
+
+{% liquid
+  assign cta_url = cta_link | default: '/collections/nouveautes'
+  if cta_url == blank
+    assign cta_url = '/collections/nouveautes'
+  endif
+  assign btn_label = cta_label | default: "J'en profite"
+  assign idx = slide_idx | default: 0
+  assign desktop_asset = 'rl-home-bundle-offer-desktop.png' | asset_url
+  assign mobile_asset = 'rl-home-bundle-offer-mobile.png' | asset_url
+%}
+
+<div
+  class="rl-home__hero-slide rl-home__hero-slide--bundle rl-home__hero-slide--cover-only{% if is_active %} is-active{% endif %}"
+  data-slide="{{ idx }}"
+  data-rl-bundle-hero-slide
+  {% unless is_active %}aria-hidden="true"{% endunless %}
+>
+  <a class="rl-home__hero-cover-link" href="{{ cta_url }}" aria-label="{{ btn_label | escape }}">
+    <div class="rl-home__hero-media rl-ub-hero-media">
+      <picture>
+        <source media="(max-width: 749px)" srcset="{{ mobile_asset }}" width="941" height="1672">
+        <img
+          class="rl-home__hero-image rl-ub-hero-media__img"
+          src="{{ desktop_asset }}"
+          alt="{{ btn_label | escape }} — bundle Essentials + Sneaker Care −40%"
+          width="2048"
+          height="880"
+          loading="{% if is_active %}eager{% else %}lazy{% endif %}"
+          {% if is_active %}fetchpriority="high"{% endif %}
+          decoding="async"
+        >
+      </picture>
+    </div>
+  </a>
+</div>
+
+{% stylesheet %}
+  .rl-home__hero-slide--bundle .rl-ub-hero-media {
+    background: #f5f8fb !important;
+  }
+
+  .rl-home__hero-slide--bundle .rl-ub-hero-media__img {
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+
+  /* Phone: edge-to-edge (contain left white gutters). Prefer headline. */
+  @media (max-width: 749px) {
+    .rl-home__hero-slide--bundle .rl-ub-hero-media__img {
+      object-fit: cover !important;
+      object-position: center top !important;
+    }
+  }
+{% endstylesheet %}

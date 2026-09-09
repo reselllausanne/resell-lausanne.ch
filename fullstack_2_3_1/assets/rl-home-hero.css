@@ -21,18 +21,22 @@
   }
 
   @media (max-width: 749px) {
-    /* Small, safe WTN-like geometry: fixed visual frame on homepage mobile. */
+    /* Portrait heroes (BTS + bundle ~941×1672). Full width, no side gutters. */
     body.template-index .section-home-hero-premium .rl-home__hero {
-      height: clamp(540px, 70svh, 592px);
-      min-height: 540px;
-      max-height: 592px;
+      width: 100%;
+      height: min(78svh, calc(100vw * 1672 / 941));
+      aspect-ratio: auto;
+      min-height: 0;
+      max-height: none;
     }
   }
 
   @media (width > 750px) {
+    /* Match BTS Files desktop: 2000×800. Never cap height alone — that
+       stretched ratio (e.g. 1920×720) and broke cover/contain crops. */
     .section-home-hero-premium .rl-home__hero {
-      height: auto;
-      aspect-ratio: 1916 / 821;
+      height: min(720px, calc(100vw * 800 / 2000));
+      aspect-ratio: auto;
       min-height: 360px;
       max-height: 720px;
     }

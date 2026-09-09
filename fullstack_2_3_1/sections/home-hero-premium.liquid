@@ -6,8 +6,33 @@
   assign rl_default_mobile_file = section.settings.default_mobile_hero_filename | default: 'Header-essential-phone.avif' | strip
 
   assign campaign_enabled = section.settings.campaign_slide_enabled
+  assign bundle_slide_enabled = true
+  if section.settings.hide_bundle_offer_slide
+    assign bundle_slide_enabled = false
+  endif
+
+  # Skip campaign slot when a slide block already uses BTS Files (theme-editor dup).
+  if campaign_enabled
+    for block in slide_blocks
+      assign _desk = block.settings.desktop_filename | default: '' | downcase
+      assign _mob = block.settings.mobile_filename | default: '' | downcase
+      if _desk contains 'back-to-school' or _mob contains 'back-to-school'
+        assign campaign_enabled = false
+        break
+      endif
+      assign _camp_desk = section.settings.campaign_desktop_filename | default: 'resell-lausanne-back-to-school-desktop-v2.webp' | strip | downcase
+      if _desk != blank and _desk == _camp_desk
+        assign campaign_enabled = false
+        break
+      endif
+    endfor
+  endif
+
   assign total_slides = slide_blocks.size
   if campaign_enabled
+    assign total_slides = total_slides | plus: 1
+  endif
+  if bundle_slide_enabled
     assign total_slides = total_slides | plus: 1
   endif
 
@@ -25,7 +50,7 @@
 
 <section
   id="RlHome-{{ section.id }}"
-  class="rl-home color-{{ section.settings.color_scheme }}"
+  class="rl-home color-{{ section.settings.color_scheme }}{% if bundle_slide_enabled %} rl-home--has-bundle-slide{% endif %}"
   style="
     --rl-padding-top: {{ section.settings.section_padding_top }}px;
     --rl-padding-bottom: {{ section.settings.section_padding_bottom }}px;
@@ -43,7 +68,20 @@
   <div class="rl-home__hero" id="RlHero-{{ section.id }}">
 
     {% comment %}——— SLIDES ———{% endcomment %}
-    {% if use_blocks %}
+    {% if use_blocks or bundle_slide_enabled %}
+      {% liquid
+        assign slide_offset = 0
+      %}
+
+      {% if bundle_slide_enabled %}
+        {% render 'rl-home-bundle-offer-banner',
+          slide_idx: 0,
+          is_active: true,
+          cta_link: section.settings.bundle_offer_cta_link,
+          cta_label: section.settings.bundle_offer_cta_label
+        %}
+        {% assign slide_offset = 1 %}
+      {% endif %}
 
       {% if campaign_enabled %}
         {% liquid
@@ -51,11 +89,16 @@
           if campaign_link == blank
             assign campaign_link = '/collections/back-to-school-2026'
           endif
+          assign campaign_idx = slide_offset
+          assign campaign_active = false
+          unless bundle_slide_enabled
+            assign campaign_active = true
+          endunless
         %}
         {% render 'rl-home-hero-slide',
-          slide_idx: 0,
-          is_active: true,
-          is_lcp: true,
+          slide_idx: campaign_idx,
+          is_active: campaign_active,
+          is_lcp: false,
           desktop_image: section.settings.campaign_desktop_image,
           mobile_image: section.settings.campaign_mobile_image,
           desktop_filename: section.settings.campaign_desktop_filename,
@@ -67,33 +110,25 @@
           text: section.settings.campaign_text,
           button_label: section.settings.campaign_button_label,
           button_link: campaign_link,
-          hide_cta_card: false
+          hide_cta_card: true
         %}
+        {% assign slide_offset = slide_offset | plus: 1 %}
       {% endif %}
 
       {% for block in slide_blocks %}
         {% liquid
-          assign slide_idx = forloop.index0
-          if campaign_enabled
-            assign slide_idx = slide_idx | plus: 1
-          endif
+          assign slide_idx = forloop.index0 | plus: slide_offset
           assign is_active = false
-          unless campaign_enabled
+          unless bundle_slide_enabled or campaign_enabled
             if forloop.first
               assign is_active = true
-            endif
-          endunless
-          assign is_lcp = false
-          unless campaign_enabled
-            if forloop.first
-              assign is_lcp = true
             endif
           endunless
         %}
         {% render 'rl-home-hero-slide',
           slide_idx: slide_idx,
           is_active: is_active,
-          is_lcp: is_lcp,
+          is_lcp: false,
           desktop_image: block.settings.image,
           mobile_image: block.settings.image_mobile,
           desktop_filename: block.settings.desktop_filename,
@@ -129,25 +164,40 @@
     {% comment %}——— DOTS (only when multiple slides) ———{% endcomment %}
     {% if section.settings.show_hero_dots and total_slides > 1 %}
       <div class="rl-home__hero-dots" aria-hidden="true" id="RlDots-{{ section.id }}">
-        {% if use_blocks %}
-          {% if campaign_enabled %}
-            <button type="button" class="rl-home__hero-dot is-active" data-dot="0" aria-label="Slide 1"></button>
-          {% endif %}
-          {% for block in slide_blocks %}
-            {% liquid
-              assign dot_idx = forloop.index0
-              if campaign_enabled
-                assign dot_idx = dot_idx | plus: 1
-              endif
-            %}
-            <button
-              type="button"
-              class="rl-home__hero-dot{% if campaign_enabled == false and forloop.first %} is-active{% endif %}"
-              data-dot="{{ dot_idx }}"
-              aria-label="Slide {{ forloop.index }}"
-            ></button>
-          {% endfor %}
+        {% if bundle_slide_enabled %}
+          <button type="button" class="rl-home__hero-dot is-active" data-dot="0" aria-label="Slide 1"></button>
         {% endif %}
+        {% if campaign_enabled %}
+          <button
+            type="button"
+            class="rl-home__hero-dot{% unless bundle_slide_enabled %} is-active{% endunless %}"
+            data-dot="{% if bundle_slide_enabled %}1{% else %}0{% endif %}"
+            aria-label="Slide {% if bundle_slide_enabled %}2{% else %}1{% endif %}"
+          ></button>
+        {% endif %}
+        {% for block in slide_blocks %}
+          {% liquid
+            assign dot_idx = forloop.index0
+            if campaign_enabled
+              assign dot_idx = dot_idx | plus: 1
+            endif
+            if bundle_slide_enabled
+              assign dot_idx = dot_idx | plus: 1
+            endif
+            assign dot_active = false
+            unless bundle_slide_enabled or campaign_enabled
+              if forloop.first
+                assign dot_active = true
+              endif
+            endunless
+          %}
+          <button
+            type="button"
+            class="rl-home__hero-dot{% if dot_active %} is-active{% endif %}"
+            data-dot="{{ dot_idx }}"
+            aria-label="Slide {{ forloop.index }}"
+          ></button>
+        {% endfor %}
       </div>
     {% endif %}
 
@@ -248,13 +298,37 @@
     },
     {
       "type": "header",
+      "content": "Bundle offer slide"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_bundle_offer_slide",
+      "label": "Hide Essentials + Care bundle slide",
+      "default": false
+    },
+    {
+      "type": "url",
+      "id": "bundle_offer_cta_link",
+      "label": "Bundle slide CTA link",
+      "visible_if": "{{ section.settings.hide_bundle_offer_slide == false }}"
+    },
+    {
+      "type": "text",
+      "id": "bundle_offer_cta_label",
+      "label": "Bundle slide CTA label",
+      "default": "J'en profite",
+      "visible_if": "{{ section.settings.hide_bundle_offer_slide == false }}"
+    },
+    {
+      "type": "header",
       "content": "Campaign slide"
     },
     {
       "type": "checkbox",
       "id": "campaign_slide_enabled",
       "label": "Show campaign hero slide first",
-      "default": true
+      "default": false,
+      "info": "Leave off if a Hero slide block already uses the Back to School Files — otherwise BTS duplicates."
     },
     {
       "type": "text",
