@@ -14,8 +14,9 @@
   endif
   assign btn_label = cta_label | default: "J'en profite"
   assign idx = slide_idx | default: 0
-  assign desktop_asset = 'rl-home-bundle-offer-desktop.png' | asset_url
-  assign mobile_asset = 'rl-home-bundle-offer-mobile.png' | asset_url
+  assign desktop_asset = 'rl-home-bundle-offer-desktop.jpg' | asset_url
+  assign mobile_asset = 'rl-home-bundle-offer-mobile.jpg' | asset_url
+  assign offer_seo = 'Offre exclusive : pack Essentials + Sneaker Care à 49 CHF au lieu de 89 CHF (−40%). 1 tee Essentials au choix (gris ou noir) + Cleaning Kit + Shoe Towel. Valable à l’achat de n’importe quel produit.'
 %}
 
 <div
@@ -24,16 +25,17 @@
   data-rl-bundle-hero-slide
   {% unless is_active %}aria-hidden="true"{% endunless %}
 >
-  <a class="rl-home__hero-cover-link" href="{{ cta_url }}" aria-label="{{ btn_label | escape }}">
+  <a class="rl-home__hero-cover-link" href="{{ cta_url }}" aria-label="{{ btn_label | escape }} — {{ offer_seo | escape }}">
+    <p class="visually-hidden">{{ offer_seo }}</p>
     <div class="rl-home__hero-media rl-ub-hero-media">
       <picture>
         <source media="(max-width: 749px)" srcset="{{ mobile_asset }}" width="941" height="1672">
         <img
           class="rl-home__hero-image rl-ub-hero-media__img"
           src="{{ desktop_asset }}"
-          alt="{{ btn_label | escape }} — bundle Essentials + Sneaker Care −40%"
-          width="2048"
-          height="880"
+          alt="{{ offer_seo | escape }}"
+          width="1672"
+          height="941"
           loading="{% if is_active %}eager{% else %}lazy{% endif %}"
           {% if is_active %}fetchpriority="high"{% endif %}
           decoding="async"
@@ -53,7 +55,6 @@
     object-position: center center !important;
   }
 
-  /* Phone: edge-to-edge (contain left white gutters). Prefer headline. */
   @media (max-width: 749px) {
     .rl-home__hero-slide--bundle .rl-ub-hero-media__img {
       object-fit: cover !important;

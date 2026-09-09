@@ -32,10 +32,9 @@
   }
 
   @media (width > 750px) {
-    /* Match BTS Files desktop: 2000×800. Never cap height alone — that
-       stretched ratio (e.g. 1920×720) and broke cover/contain crops. */
+    /* Match new desk banner 1672×941; BTS 2000×800 still covers fine. */
     .section-home-hero-premium .rl-home__hero {
-      height: min(720px, calc(100vw * 800 / 2000));
+      height: min(720px, calc(100vw * 941 / 1672));
       aspect-ratio: auto;
       min-height: 360px;
       max-height: 720px;
