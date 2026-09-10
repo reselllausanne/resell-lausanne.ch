@@ -235,6 +235,9 @@
     if is_fr_locale
       assign seo_heading = "Les sneakers : une sélection premium au cœur de la culture streetwear"
       assign seo_subheading = "Sneakers authentiques, silhouettes iconiques et expérience pensée pour le marché suisse."
+    elsif locale_base == 'de'
+      assign seo_heading = "Sneakers: eine Premium-Auswahl im Herzen der Streetwear-Kultur"
+      assign seo_subheading = "Authentische Sneakers, ikonische Silhouetten und ein Einkaufserlebnis, das auf den Schweizer Markt zugeschnitten ist."
     else
       assign seo_heading = collection.title
       assign seo_subheading = ''
@@ -243,14 +246,19 @@
   endif
 
   comment
-    Dynamic fallback: every FR collection without a hand-written brand story still
+    Dynamic fallback: every FR/DE collection without a hand-written brand story still
     gets a substantial, collection-specific on-page block (no more empty PLPs).
   endcomment
   assign use_dynamic_seo = false
+  assign use_dynamic_seo_de = false
   if disable_seo_section == false and brand_seo_snippet == blank and use_default and seo_heading == blank and seo_subheading == blank and seo_body == blank and is_fr_locale and allow_generic_seo == false and collection.products_count > 0
     assign use_dynamic_seo = true
     assign seo_heading = collection.title | append: ' — authentiques en Suisse'
     assign seo_subheading = 'Notre sélection ' | append: collection.title | append: ', vérifiée pièce par pièce et livrée en Suisse et en Europe avec certificat d’authenticité.'
+  elsif disable_seo_section == false and brand_seo_snippet == blank and use_default and seo_heading == blank and seo_subheading == blank and seo_body == blank and locale_base == 'de' and allow_generic_seo == false and collection.products_count > 0
+    assign use_dynamic_seo_de = true
+    assign seo_heading = collection.title | append: ' — authentisch kaufen in der Schweiz'
+    assign seo_subheading = 'Unsere Auswahl an ' | append: collection.title | append: ', Stück für Stück geprüft und mit Echtheitszertifikat in die Schweiz und nach Europa geliefert.'
   endif
 %}
 {% if brand_seo_snippet != blank %}
@@ -266,6 +274,16 @@
     <p>Commandez vos {{ collection.title | escape }} en toute confiance depuis Lausanne : livraison rapide et suivie en Suisse et en Europe, paiement sécurisé (carte, TWINT, PostFinance, Apple&nbsp;Pay) et paiement en plusieurs fois ou sur facture. Une question sur une taille ou un modèle ? Notre équipe vous répond sous 24&nbsp;à&nbsp;48&nbsp;h.</p>
     <h3>Pourquoi acheter {{ collection.title | escape }} chez Resell Lausanne</h3>
     <p>Boutique suisse indépendante spécialisée dans la revente de sneakers et de streetwear, Resell Lausanne sélectionne les modèles les plus recherchés du marché. Chaque pièce {{ collection.title | escape }} est authentifiée, photographiée et expédiée avec soin, pour une expérience d’achat premium de bout en bout.</p>
+  {%- endcapture -%}
+{% elsif use_dynamic_seo_de %}
+  {%- capture seo_body -%}
+    <p>Entdecken Sie unsere Auswahl an {{ collection.title | escape }} bei Resell Lausanne, Ihrem Schweizer Spezialisten für authentische Sneakers und Streetwear{% if collection.products_count > 20 %} — mehr als {{ collection.products_count }} Modelle sofort verfügbar{% endif %}. Jedes Paar wird von unserem Team vor dem Versand geprüft, damit Sie zu 100 % authentische Produkte erhalten.</p>
+    <h3>{{ collection.title | escape }}: geprüfte Echtheit</h3>
+    <p>Jedes Modell aus {{ collection.title | escape }} durchläuft unseren mehrstufigen Echtheitsprozess, bevor es in den Verkauf geht. Sie erhalten mit Ihrer Bestellung ein Echtheitszertifikat — keine Fälschungen, jedes Detail geprüft (Materialien, Nähte, Etiketten, Karton).</p>
+    <h3>Lieferung in die Schweiz &amp; flexible Bezahlung</h3>
+    <p>Bestellen Sie Ihre {{ collection.title | escape }} bequem aus Lausanne: schneller, nachverfolgbarer Versand in die Schweiz und nach Europa, sichere Zahlung (Kreditkarte, TWINT, PostFinance, Apple&nbsp;Pay) sowie Ratenzahlung oder Kauf auf Rechnung. Fragen zur Grösse oder zum Modell? Unser Team antwortet innerhalb von 24 bis 48&nbsp;Stunden.</p>
+    <h3>Warum {{ collection.title | escape }} bei Resell Lausanne kaufen</h3>
+    <p>Unabhängige Schweizer Boutique mit Fokus auf Resell von Sneakers und Streetwear: Resell Lausanne kuratiert die gefragtesten Modelle des Marktes. Jedes Paar {{ collection.title | escape }} wird geprüft, sorgfältig fotografiert und mit Sorgfalt verschickt — für ein Premium-Einkaufserlebnis von A bis Z.</p>
   {%- endcapture -%}
 {% endif %}
 {% liquid
