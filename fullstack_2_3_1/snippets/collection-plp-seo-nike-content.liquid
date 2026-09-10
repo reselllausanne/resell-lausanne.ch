@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+-%}
+{%- if locale_base == 'de' -%}
+  {%- render 'collection-plp-seo-nike-content-de' -%}
+{%- else -%}
 <p>
   Nike est la marque de sneakers la plus influente au monde. Fondée en 1964 par Bill Bowerman et Philip Knight sous le nom
   Blue Ribbon Sports, puis renommée Nike en 1971, la firme d'Oregon a redéfini le footwear en plaçant l'athlète, l'innovation
@@ -192,3 +199,4 @@
   Notre rôle est de suivre ces sorties au plus près et de proposer rapidement les modèles les plus pertinents pour le
   marché suisse — sans saturer le catalogue avec des paires hors tendance ou hors authentification.
 </p>
+{%- endif -%}

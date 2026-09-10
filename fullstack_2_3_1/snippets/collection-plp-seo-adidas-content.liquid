@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+-%}
+{%- if locale_base == 'de' -%}
+  {%- render 'collection-plp-seo-adidas-content-de' -%}
+{%- else -%}
 <p>
   Fondé en 1949 à Herzogenaurach par Adolf Dassler, Adidas est l'une des marques de sport les plus influentes au monde. Des parquets NBA aux podiums de la mode, la marque aux trois bandes n'a cessé de se réinventer en plaçant la créativité et le sport au cœur de chaque silhouette.
 </p>
@@ -19,3 +26,4 @@
 <p>
   La collaboration entre Adidas et Kanye West a redéfini les règles du marché sneaker. Du Yeezy 350 V2 au Yeezy 500 en passant par le Yeezy Slide, chaque modèle a généré des files d'attente mondiales et des records sur le marché secondaire. Retrouvez les Yeezy authentiques sur Resell Lausanne.
 </p>
+{%- endif -%}

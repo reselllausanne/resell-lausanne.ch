@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+-%}
+{%- if locale_base == 'de' -%}
+  {%- render 'collection-plp-seo-asics-content-de' -%}
+{%- else -%}
 <p>
   Fondée en 1949 au Japon par Kihachiro Onitsuka, ASICS — Anima Sana In Corpore Sano — a construit son identité autour d'un principe simple : un esprit sain dans un corps sain. De la performance sportive au lifestyle premium, la marque japonaise est aujourd'hui au cœur des tendances sneaker mondiales.
 </p>
@@ -19,3 +26,4 @@
 <p>
   Avant de devenir ASICS, la marque japonaise existait sous le nom Onitsuka Tiger. Ses silhouettes historiques — Mexico 66, Mexico 66 SD, Ultimate 81 — bénéficient aujourd'hui d'un regain d'intérêt majeur, notamment grâce à leurs collaborations avec des créateurs du monde entier.
 </p>
+{%- endif -%}

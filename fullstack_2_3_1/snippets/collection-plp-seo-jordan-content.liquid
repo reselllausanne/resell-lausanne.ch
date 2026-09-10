@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+-%}
+{%- if locale_base == 'de' -%}
+  {%- render 'collection-plp-seo-jordan-content-de' -%}
+{%- else -%}
 <p>
   La gamme Air Jordan est née en 1985 d'un accord entre Nike et un jeune rookie des Chicago Bulls : Michael Jordan. Depuis lors, chaque silhouette signature de « His Airness » est devenue une pièce de collection, un objet de désir porté aussi bien sur les parquets que dans les rues du monde entier.
 </p>
@@ -24,3 +31,4 @@
 <p>
   Les collaborations Air Jordan comptent parmi les plus recherchées au monde. Travis Scott avec son swoosh inversé, Virgil Abloh et Off-White avec ses œillets surdimensionnés, ou encore Union LA — chaque drop redéfinit les codes du sneaker et fait exploser la demande sur le marché secondaire.
 </p>
+{%- endif -%}
