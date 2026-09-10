@@ -79,6 +79,57 @@
           assign seo_subheading = 'White Black Midnight, Cream Black, Pink Glo, JJJJound, Kiko Kostadinov, Awake NY — verified and delivered.'
         endif
       endif
+
+      comment
+        DE branch: assign brand_seo_snippet for handles that have a DE
+        sub-snippet via the router pattern (collection-plp-seo-{brand}-content
+        with locale case inside). Without this the FR-only branch below
+        (is_fr_locale) never assigns the snippet on DE and the DE visitor gets
+        the generic dynamic fallback instead of the hand-written German story.
+      endcomment
+      if locale_base == 'de'
+        if _handle == 'nike' or _handle contains 'nike'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-nike-content'
+            if seo_heading == blank
+              assign seo_heading = 'Nike — Die einflussreichste Sneaker-Marke der Welt'
+              assign seo_subheading = 'Nike Dunk, Air Force 1, Air Max, Mind 001 und Kollaborationen — geprüft und in der Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'jordan' or _handle == 'air-jordan' or _handle contains 'jordan'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-jordan-content'
+            if seo_heading == blank
+              assign seo_heading = 'Air Jordan — Die Ikone von Basketball und Sneaker-Kultur'
+              assign seo_subheading = 'Air Jordan 1, 3, 4, 11 und Kollaborationen Travis Scott, Off-White — authentifiziert in der Schweiz.'
+            endif
+          endif
+        elsif _handle == 'adidas' or _handle contains 'adidas'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-adidas-content'
+            if seo_heading == blank
+              assign seo_heading = 'Adidas — Samba, Campus, Yeezy und die Klassiker mit den drei Streifen'
+              assign seo_subheading = 'Samba, Campus, Gazelle, Forum und Yeezy authentisch in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'new-balance' or _handle contains 'new-balance'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-new-balance-content'
+            if seo_heading == blank
+              assign seo_heading = 'New Balance — Die Exzellenz des Made in USA'
+              assign seo_subheading = 'New Balance 990, 550, 2002R und 9060 — Premium-Qualität, garantierte Echtheit, Lieferung in die Schweiz.'
+            endif
+          endif
+        elsif _handle == 'asics' or _handle contains 'asics'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-asics-content'
+            if seo_heading == blank
+              assign seo_heading = 'ASICS — Gel-Kayano, Gel-NYC und das japanische Sneaker-Erbe'
+              assign seo_subheading = 'ASICS Gel-Kayano 14, Gel-NYC, GT-2160 und Onitsuka Tiger — authentifiziert, in die Schweiz geliefert.'
+            endif
+          endif
+        endif
+      endif
     endif
   endif
 
