@@ -59,11 +59,25 @@
 >
   {%- comment -%}
     SEO H1: page-level heading required for ranking. Hidden visually, full keyword target
-    for "sneakers suisse" / brand. Visible card text (h2) remains unchanged.
+    per locale (FR "sneakers suisse", DE "sneakers schweiz", EN "sneakers switzerland").
+    Merchant-set section.settings.seo_h1 wins for all locales when non-blank.
+    Visible card text (h2) remains unchanged.
   {%- endcomment -%}
-  <h1 class="visually-hidden">
-    {{- section.settings.seo_h1 | default: 'Resell Lausanne — Sneakers et streetwear authentiques en Suisse' -}}
-  </h1>
+  {%- liquid
+    assign _rl_home_locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+    assign _rl_home_locale_base = _rl_home_locale_iso | split: '-' | first
+    assign _rl_home_seo_h1 = section.settings.seo_h1
+    if _rl_home_seo_h1 == blank
+      if _rl_home_locale_base == 'de'
+        assign _rl_home_seo_h1 = 'Resell Lausanne — Authentische Sneakers und Streetwear in der Schweiz'
+      elsif _rl_home_locale_base == 'en'
+        assign _rl_home_seo_h1 = 'Resell Lausanne — Authentic sneakers and streetwear in Switzerland'
+      else
+        assign _rl_home_seo_h1 = 'Resell Lausanne — Sneakers et streetwear authentiques en Suisse'
+      endif
+    endif
+  -%}
+  <h1 class="visually-hidden">{{ _rl_home_seo_h1 }}</h1>
 
   <div class="rl-home__hero" id="RlHero-{{ section.id }}">
 
