@@ -5,10 +5,18 @@
   if filter.true_value.count == 0 and filter.true_value.active == false
     assign disabled = true
   endif
+
+  # Shopify boolean filters often label the value "Oui" / "Yes" — useless next
+  # to a group titled "Livraison express". Prefer the filter title as the row label.
+  assign bool_label = filter.true_value.label | strip
+  assign bool_label_down = bool_label | downcase
+  if bool_label_down == 'oui' or bool_label_down == 'yes' or bool_label_down == 'true' or bool_label_down == '1'
+    assign bool_label = filter.label
+  endif
 -%}
 
 {% render 'checkbox',
-  label: filter.true_value.label,
+  label: bool_label,
   name: filter.param_name,
   value: filter.true_value.value,
   id: id,

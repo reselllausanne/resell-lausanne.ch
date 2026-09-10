@@ -1,9 +1,34 @@
 <script src="{{ 'filter.js' | asset_url }}" type="module"></script>
 
+{%- liquid
+  assign plp_skip_vendor = false
+  assign plp_skip_category = false
+  assign plp_handle = collection.handle | default: '' | downcase | strip
+  assign plp_is_broad = false
+  if plp_handle == blank
+    assign plp_is_broad = true
+  elsif plp_handle == 'all' or plp_handle == 'toutes-nos-paires' or plp_handle == 'nouveautes' or plp_handle == 'soldes' or plp_handle == 'soldes-48h' or plp_handle == 'express-delivery' or plp_handle == 'back-to-school-2026'
+    assign plp_is_broad = true
+  endif
+  unless plp_is_broad
+    assign plp_skip_vendor = true
+    assign plp_skip_category = true
+  endunless
+-%}
 <filter-component data-ref="filters-inline">
   <form class="filters__container" data-ref="filters-form">
     <dropdown-group-component class="filters__list">
       {%- for filter in collection.filters -%}
+        {%- liquid
+          assign plp_hide_this = false
+          if plp_skip_vendor and filter.param_name == 'filter.p.vendor'
+            assign plp_hide_this = true
+          endif
+          if plp_skip_category and filter.param_name == 'filter.p.t.category'
+            assign plp_hide_this = true
+          endif
+        -%}
+        {%- unless plp_hide_this -%}
         <dropdown-component data-ref="filter-dropdown">
           <button type="button" class="dropdown-toggle filter-dropdown-toggle" data-ref="dropdown-toggle">
             <span class="filter-dropdown-toggle__label">
@@ -39,6 +64,7 @@
             </div>
           </div>
         </dropdown-component>
+        {%- endunless -%}
       {%- endfor -%}
     </dropdown-group-component>
 

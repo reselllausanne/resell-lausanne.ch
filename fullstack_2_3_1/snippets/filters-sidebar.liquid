@@ -1,4 +1,19 @@
 <div class="filters-sidebar">
+    {%- liquid
+      assign plp_skip_vendor = false
+      assign plp_skip_category = false
+      assign plp_handle = collection.handle | default: '' | downcase | strip
+      assign plp_is_broad = false
+      if plp_handle == blank
+        assign plp_is_broad = true
+      elsif plp_handle == 'all' or plp_handle == 'toutes-nos-paires' or plp_handle == 'nouveautes' or plp_handle == 'soldes' or plp_handle == 'soldes-48h' or plp_handle == 'express-delivery' or plp_handle == 'back-to-school-2026'
+        assign plp_is_broad = true
+      endif
+      unless plp_is_broad
+        assign plp_skip_vendor = true
+        assign plp_skip_category = true
+      endunless
+    -%}
     {% if show_sorting %}
       <p class="filters-sidebar__filter-label">{{ 'collections.sorting.sort_by' | t }}</p>
 
@@ -14,6 +29,16 @@
         <form class="filters" data-ref="filters-form">
           <div class="filters-sidebar__list">
             {%- for filter in collection.filters -%}
+              {%- liquid
+                assign plp_hide_this = false
+                if plp_skip_vendor and filter.param_name == 'filter.p.vendor'
+                  assign plp_hide_this = true
+                endif
+                if plp_skip_category and filter.param_name == 'filter.p.t.category'
+                  assign plp_hide_this = true
+                endif
+              -%}
+              {%- unless plp_hide_this -%}
               <p class="filters-sidebar__filter-label">{{ filter.label }}</p>
               {%- case filter.type -%}
                 {%- when 'boolean' -%}
@@ -35,6 +60,7 @@
               {% if forloop.last == false %}
                 {% render 'separator', margin_bottom: 20, margin_top: 20 %}
               {% endif %}
+              {%- endunless -%}
             {%- endfor -%}
           </div>
         </form>

@@ -1,0 +1,42 @@
+{%- comment -%}
+  Decide which storefront filters to hide on this PLP.
+  Sets:
+    plp_skip_vendor   — Marque (already implied by brand/model collection)
+    plp_skip_category — Catégorie (Running/Basketball… noise on Dunk etc.)
+
+  Override: collection.metafields.custom.plp_hide_filters
+    comma/space list, e.g. "vendor,category" or "filter.p.vendor,filter.p.t.category"
+{%- endcomment -%}
+{%- liquid
+  assign plp_skip_vendor = false
+  assign plp_skip_category = false
+  assign plp_handle = collection.handle | default: '' | downcase | strip
+
+  assign plp_hide_raw = ''
+  if collection.metafields.custom.plp_hide_filters != blank
+    assign plp_hide_raw = collection.metafields.custom.plp_hide_filters.value | default: collection.metafields.custom.plp_hide_filters | append: '' | downcase
+  endif
+
+  if plp_hide_raw contains 'vendor' or plp_hide_raw contains 'marque' or plp_hide_raw contains 'filter.p.vendor'
+    assign plp_skip_vendor = true
+  endif
+  if plp_hide_raw contains 'category' or plp_hide_raw contains 'categorie' or plp_hide_raw contains 'catégorie' or plp_hide_raw contains 'filter.p.t.category'
+    assign plp_skip_category = true
+  endif
+
+  assign plp_is_broad = false
+  if plp_handle == blank
+    assign plp_is_broad = true
+  elsif plp_handle == 'all' or plp_handle == 'toutes-nos-paires' or plp_handle == 'nouveautes' or plp_handle == 'soldes' or plp_handle == 'soldes-48h' or plp_handle == 'express-delivery' or plp_handle == 'back-to-school-2026'
+    assign plp_is_broad = true
+  endif
+
+  unless plp_is_broad
+    comment
+      Brand / model PLPs already scope the catalog via chips + collection rules.
+      Marque + Catégorie just add noise (Nike-only vendor, Running/Basketball…).
+    endcomment
+    assign plp_skip_vendor = true
+    assign plp_skip_category = true
+  endunless
+-%}

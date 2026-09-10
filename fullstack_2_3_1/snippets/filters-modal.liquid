@@ -17,6 +17,30 @@
       assign active_filter_total = active_filter_total | plus: filter.active_values.size
     endif
   endfor
+
+  assign plp_skip_vendor = false
+  assign plp_skip_category = false
+  assign plp_handle = collection.handle | default: '' | downcase | strip
+  assign plp_hide_raw = ''
+  if collection.metafields.custom.plp_hide_filters != blank
+    assign plp_hide_raw = collection.metafields.custom.plp_hide_filters.value | default: collection.metafields.custom.plp_hide_filters | append: '' | downcase
+  endif
+  if plp_hide_raw contains 'vendor' or plp_hide_raw contains 'marque' or plp_hide_raw contains 'filter.p.vendor'
+    assign plp_skip_vendor = true
+  endif
+  if plp_hide_raw contains 'category' or plp_hide_raw contains 'categorie' or plp_hide_raw contains 'catégorie' or plp_hide_raw contains 'filter.p.t.category'
+    assign plp_skip_category = true
+  endif
+  assign plp_is_broad = false
+  if plp_handle == blank
+    assign plp_is_broad = true
+  elsif plp_handle == 'all' or plp_handle == 'toutes-nos-paires' or plp_handle == 'nouveautes' or plp_handle == 'soldes' or plp_handle == 'soldes-48h' or plp_handle == 'express-delivery' or plp_handle == 'back-to-school-2026'
+    assign plp_is_broad = true
+  endif
+  unless plp_is_broad
+    assign plp_skip_vendor = true
+    assign plp_skip_category = true
+  endunless
 -%}
 
 <filters-sheet-component class="filters-sheet">
@@ -127,7 +151,17 @@
           <filter-component data-ref="filters-sheet-host" data-staged="true">
             <form class="filters" data-ref="filters-form">
               {%- for filter in collection.filters -%}
-                <details class="filters-sheet__group">
+                {%- liquid
+                  assign plp_hide_this = false
+                  if plp_skip_vendor and filter.param_name == 'filter.p.vendor'
+                    assign plp_hide_this = true
+                  endif
+                  if plp_skip_category and filter.param_name == 'filter.p.t.category'
+                    assign plp_hide_this = true
+                  endif
+                -%}
+                {%- unless plp_hide_this -%}
+                <details class="filters-sheet__group"{% if filter.type == 'boolean' %} open{% endif %}>
                   <summary class="filters-sheet__group-summary">
                     <span class="filters-sheet__group-label">
                       {{ filter.label }}
@@ -150,6 +184,7 @@
                     {%- endcase -%}
                   </div>
                 </details>
+                {%- endunless -%}
               {%- endfor -%}
             </form>
           </filter-component>
@@ -475,6 +510,48 @@
 
   .filters-sheet__group-content .checkbox > span {
     min-height: 44px;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.3;
+    color: #080808;
+  }
+
+  /*
+    Theme setting inputs_border_width can be 0 — checkbox box then vanishes and
+    only the ✓ remains (Livraison express "Oui"). Force a real square here.
+  */
+  .filters-sheet__group-content .checkbox > span::before {
+    content: '';
+    box-sizing: border-box;
+    margin-right: 0;
+    border: 1.5px solid #080808;
+    border-radius: 3px;
+    min-width: 18px;
+    width: 18px;
+    height: 18px;
+    background-color: #fff;
+    flex-shrink: 0;
+  }
+
+  .filters-sheet__group-content .checkbox > span::after {
+    top: 50%;
+    left: 1px;
+    width: 10px;
+    height: 5px;
+    margin-top: -6px;
+    border: solid 1.5px transparent;
+    border-right: none;
+    border-top: none;
+    transform: translate(4px, 0) rotate(-45deg);
+  }
+
+  .filters-sheet__group-content .checkbox > input:checked + span::before {
+    border-color: #080808;
+    background-color: #080808;
+  }
+
+  .filters-sheet__group-content .checkbox > input:checked + span::after {
+    border-color: #fff;
   }
 
   .filters-sheet__btn {
