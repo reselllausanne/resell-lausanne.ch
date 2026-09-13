@@ -153,11 +153,17 @@
               {%- for filter in collection.filters -%}
                 {%- liquid
                   assign plp_hide_this = false
-                  if plp_skip_vendor and filter.param_name == 'filter.p.vendor'
-                    assign plp_hide_this = true
+                  assign plp_pn = filter.param_name | default: '' | downcase
+                  assign plp_lbl = filter.label | default: '' | downcase
+                  if plp_skip_vendor
+                    if plp_pn contains 'vendor' or plp_lbl == 'marque' or plp_lbl == 'brand' or plp_lbl == 'vendor' or plp_lbl == 'marke' or plp_lbl == 'marca'
+                      assign plp_hide_this = true
+                    endif
                   endif
-                  if plp_skip_category and filter.param_name == 'filter.p.t.category'
-                    assign plp_hide_this = true
+                  if plp_skip_category
+                    if plp_pn contains 'category' or plp_pn contains 'catégorie' or plp_lbl == 'catégorie' or plp_lbl == 'categorie' or plp_lbl == 'category' or plp_lbl == 'kategorie'
+                      assign plp_hide_this = true
+                    endif
                   endif
                 -%}
                 {%- unless plp_hide_this -%}
