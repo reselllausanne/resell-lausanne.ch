@@ -1,0 +1,36 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die bei Resell Lausanne verkauften Supreme authentisch?</summary>
+  <div class="rte">
+    <p>Ja. Jedes Supreme-Stück wird von unserem Team geprüft (Regelmässigkeit der Box-Logo-Stickerei, Innenetikett Saison/Jahr, Baumwollqualität, Ausrichtung der Siebdrucke) und mit Echtheitszertifikat geliefert.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Grösse für einen Supreme Box Logo Hoodie?</summary>
+  <div class="rte">
+    <p>Der Box Logo Hoodie hat einen relativ standardmässigen bis leicht boxy Schnitt. Ihre gewohnte Grösse für einen modernen Oversize-Fit, eine Grösse kleiner für einen körperbetonten Fit.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Supreme-Kollaborationen haben Sie am Lager?</summary>
+  <div class="rte">
+    <p>Supreme × Nike (Air Force 1, SB Dunk, Shox Ride 2), Supreme × The North Face, Supreme × Stone Island, Supreme × Levi's sowie vertrauliche Accessoires (Skate Decks Damien Hirst, KAWS, Murakami).</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung einer Supreme-Bestellung?</summary>
+  <div class="rte">
+    <p>Standardlieferung 5 bis 10 Werktage in der Schweiz und in Europa, oder 2 bis 5 Werktage im Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich ein Supreme-Stück zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>

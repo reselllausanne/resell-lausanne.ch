@@ -1,4 +1,11 @@
 {%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-faq-off-white-content-de' -%}
+{%- else -%}
+{%- liquid
   assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
   if pages.faq != blank
     assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
@@ -34,3 +41,4 @@
     <p>Retours sous 14 jours en échange ou crédit boutique (frais de 10 %). Retrouvez les modalités dans notre <a href="{{ faq_returns_url }}">FAQ Échanges et retours</a>.</p>
   </div>
 </details>
+{%- endif -%}

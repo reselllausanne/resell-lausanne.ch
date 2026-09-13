@@ -1,0 +1,42 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die New Balance 204L bei Resell Lausanne authentisch?</summary>
+  <div class="rte">
+    <p>Ja. Jedes New-Balance-204L-Paar wird von unserem Team geprüft (Style-Etikett, Mesh, Wildleder, ABZORB-Sohle, Karton) und mit Echtheitszertifikat geliefert.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Grösse für eine New Balance 204L?</summary>
+  <div class="rte">
+    <p>Die 204L fällt in der Regel normal aus. Nehmen Sie Ihre gewohnte EU-Grösse. Bei halben Grössen die halbe Grösse grösser, wenn Sie mehr Platz im Zehenbereich bevorzugen.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Unterschied zwischen New Balance 204 und 204L?</summary>
+  <div class="rte">
+    <p>204L ist die offizielle Bezeichnung des New-Balance-Lifestyle-Modells (L = Lifestyle). Die Suchanfragen „New Balance 204“ und „New Balance 204L“ bezeichnen dieselbe Silhouette.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche New-Balance-204L-Colorways haben Sie am Lager?</summary>
+  <div class="rte">
+    <p>Mushroom Arid Stone, Silver Metallic Black, Black Timberwolf, Timberwolf und Kith-Kollaborationen je nach Verfügbarkeit. Verfügbare EU-Grössen auf der Produktseite prüfen.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung einer New-Balance-204L-Bestellung?</summary>
+  <div class="rte">
+    <p>Standardlieferung 5 bis 10 Werktage in der Schweiz und in Europa, oder 2 bis 5 Werktage im Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich ein New-Balance-204L-Paar zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>

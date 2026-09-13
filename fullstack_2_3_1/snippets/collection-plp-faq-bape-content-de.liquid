@@ -1,0 +1,42 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die bei Resell Lausanne verkauften BAPE authentisch?</summary>
+  <div class="rte">
+    <p>Ja. Jedes BAPE-Stück (Shark Hoodie, BAPE STA, ABC Camo, Tiger Hoodie) wird von unserem Team geprüft (Regelmässigkeit des ABC Camo, Baumwollqualität 350–400 gsm, Innenetikett, YKK-Zip-Qualität) und mit Echtheitszertifikat geliefert.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Grösse für einen BAPE Shark Hoodie?</summary>
+  <div class="rte">
+    <p>Der BAPE Shark Hoodie fällt klein bis standard aus. In der Regel eine Grösse grösser für einen bequemen Fit, zwei Grössen grösser für einen japanischen Oversize-Fit.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Unterschied zwischen BAPE STA und Air Force 1?</summary>
+  <div class="rte">
+    <p>Die BAPE STA ist von der Air Force 1 inspiriert, verwendet aber ein anderes Premium-Leder, eine BAPE-Sohle und trägt den seitlichen Bapesta-Stern. Der „A Bathing Ape“-Stempel auf der Innensohle und das BAPE-Etikett garantieren die Echtheit.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche BAPE-Kollaborationen haben Sie am Lager?</summary>
+  <div class="rte">
+    <p>BAPE × Nike (Air Force 1, Dunk Low), BAPE × Adidas (Stan Smith, Superstar, Forum Low, Yeezy 350), BAPE × Louis Vuitton (Capsule Nigo 2008), BAPE × Coachtopia, BAPE × Karl Lagerfeld.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung einer BAPE-Bestellung?</summary>
+  <div class="rte">
+    <p>Standardlieferung 5 bis 10 Werktage in der Schweiz und in Europa, oder 2 bis 5 Werktage im Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich ein BAPE-Stück zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>

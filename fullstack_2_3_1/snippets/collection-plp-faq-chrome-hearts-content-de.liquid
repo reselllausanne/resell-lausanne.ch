@@ -1,0 +1,36 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die bei Resell Lausanne verkauften Chrome Hearts authentisch?</summary>
+  <div class="rte">
+    <p>Ja. Jedes Chrome-Hearts-Stück (Hoodie, T-Shirt, Jeans, Silberschmuck 925, optische Brillen) wird von unserem Team geprüft (Stickerei, Innenetikett, Baumwollqualität, CH-Stempel auf dem Silber) und mit Echtheitszertifikat geliefert.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welchen Chrome Hearts Hoodie wählen und welche Grösse nehmen?</summary>
+  <div class="rte">
+    <p>Der Chrome Hearts Hoodie ist oversize: für einen Standard-Fit Ihre gewohnte Grösse; für einen entspannten Fit eine Grösse grösser. Die Colorways Black, Heather Grey, White, Navy, Forest Green sind die stabilsten saisonalen Referenzen.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Chrome-Hearts-Kollaborationen sind verfügbar?</summary>
+  <div class="rte">
+    <p>Wir sourcen regelmässig Chrome Hearts × Comme des Garçons, Bella Hadid, Matty Boy sowie einige vertrauliche Kollaborationen mit Drake und Travis Scott.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung einer Chrome-Hearts-Bestellung?</summary>
+  <div class="rte">
+    <p>Standardlieferung 5 bis 10 Werktage in der Schweiz und in Europa, oder 2 bis 5 Werktage im Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich ein Chrome-Hearts-Stück zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>

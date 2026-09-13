@@ -1,0 +1,24 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die Adidas-Sneakers bei Resell Lausanne authentisch?</summary>
+  <div class="rte">
+    <p>Ja. Jedes Adidas-Paar wird von unseren Expert:innen geprüft und mit Echtheitszertifikat versandt.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung einer Adidas-Bestellung?</summary>
+  <div class="rte">
+    <p>Rechnen Sie mit 5 bis 10 Werktagen im Standardversand in der Schweiz und in Europa, oder 2 bis 5 Werktagen im Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich ein Adidas-Paar zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>

@@ -1,0 +1,42 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die ASICS Gel-NYC Double Laces bei Resell Lausanne authentisch?</summary>
+  <div class="rte">
+    <p>Ja. Jedes ASICS-Gel-NYC-Double-Laces-Paar wird von unserem Team geprüft (Mesh, Overlays, Gel-Sohle, Style-Etikett, Schnürsenkel) und mit Echtheitszertifikat geliefert.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Unterschied zwischen ASICS Double Laces und Gel-NYC Standard?</summary>
+  <div class="rte">
+    <p>Die Double-Laces-Editionen enthalten zwei Schnürsenkel-Sätze (oft kontrastierend) auf derselben Gel-NYC-Silhouette. Die technische Basis (Gel-Sohle, Mesh, Overlays) ist identisch mit der klassischen Gel-NYC.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Grösse für eine ASICS Gel-NYC Double Laces?</summary>
+  <div class="rte">
+    <p>Die Gel-NYC fällt in der Regel normal bis leicht gross aus. Nehmen Sie Ihre gewohnte EU-Grösse; bei halben Grössen kann die halbe Grösse kleiner bequemer sein.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche ASICS-Rosa-Double-Laces-Colorways haben Sie am Lager?</summary>
+  <div class="rte">
+    <p>Wir sourcen regelmässig Cream Rose Water, Cream Sweet Pink, Mineral Beige Pink und weitere Rosa-/Pink-Colorways je nach Verfügbarkeit. Verfügbare EU-Grössen auf der Produktseite prüfen.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung einer ASICS-Double-Laces-Bestellung?</summary>
+  <div class="rte">
+    <p>Standardlieferung 5 bis 10 Werktage in der Schweiz und in Europa, oder 2 bis 5 Werktage im Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich ein ASICS-Gel-NYC-Double-Laces-Paar zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>

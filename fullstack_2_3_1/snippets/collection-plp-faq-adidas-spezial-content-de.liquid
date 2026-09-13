@@ -1,0 +1,36 @@
+{%- liquid
+  assign faq_returns_url = routes.root_url | append: '/pages/faq?category=echanges-et-retours'
+  if pages.faq != blank
+    assign faq_returns_url = pages.faq.url | append: '?category=echanges-et-retours'
+  endif
+-%}
+<details class="main-collection__faq-item">
+  <summary>Sind die bei Resell Lausanne verkauften Adidas Spezial authentisch?</summary>
+  <div class="rte">
+    <p>Ja. Jedes Adidas-Spezial-Paar (Handball Spezial, Trimm Trab, Wensley, Munchen, Adimatic, Albrecht) wird von unserem Team geprüft (Nubuk-Qualität, Regelmässigkeit der drei Streifen, Spezial-Etikett, Saisonstempel) und mit Echtheitszertifikat geliefert.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Grösse für eine Handball Spezial?</summary>
+  <div class="rte">
+    <p>Die Handball Spezial fällt nahe an einer Samba OG aus. Nehmen Sie Ihre gewohnte Grösse; bei breitem Fuss halbe Grösse grösser.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Welche Adidas-Spezial-Colorways sind am gefragtesten?</summary>
+  <div class="rte">
+    <p>Bliss Blue, Light Blue, Sail/Red, Green, Brown, Cream, Aluminium bei der Handball Spezial. Trimm Trab und Wensley in Premium-Nubuk-Varianten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Wie lange dauert die Lieferung einer Adidas-Spezial-Bestellung?</summary>
+  <div class="rte">
+    <p>Standardlieferung 5 bis 10 Werktage in der Schweiz und in Europa, oder 2 bis 5 Werktage im Express bei berechtigten Produkten.</p>
+  </div>
+</details>
+<details class="main-collection__faq-item">
+  <summary>Kann ich ein Adidas-Spezial-Paar zurückgeben?</summary>
+  <div class="rte">
+    <p>Rückgabe innerhalb von 14 Tagen als Umtausch oder Shop-Guthaben (10 % Gebühr). Details in unserer <a href="{{ faq_returns_url }}">FAQ Umtausch &amp; Retouren</a>.</p>
+  </div>
+</details>
