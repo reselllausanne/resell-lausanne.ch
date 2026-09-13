@@ -52,6 +52,7 @@
       >
         {% if request.page_type == 'product' %}
           {% render 'product-breadcrumb', product: product %}
+          {% render 'rs-product-aged-pair-warning-banner', product: product %}
         {% endif %}
         {{ blocks }}
         {% if request.page_type == 'product' %}
