@@ -3,6 +3,20 @@
   assign subtext = section.settings.subtext
   assign galaxus_url = section.settings.galaxus_url | default: 'https://www.galaxus.ch/fr/search?q=Sneakers%20nike'
   assign decathlon_url = section.settings.decathlon_url | default: 'https://www.decathlon.ch/en/search?Ntt=resell+lausanne'
+
+  comment
+    DE fallback for merchant free-text (heading + subtext). Pass-through
+    on FR/EN — snippet only rewrites when locale_base == 'de' and the
+    source matches a known FR key.
+  endcomment
+  capture heading
+    render 'rl-locale-copy-de', text: heading
+  endcapture
+  assign heading = heading | strip
+  capture subtext
+    render 'rl-locale-copy-de', text: subtext
+  endcapture
+  assign subtext = subtext | strip
 %}
 
 <section

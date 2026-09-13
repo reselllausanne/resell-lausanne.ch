@@ -53,6 +53,17 @@
     assign rail_heading = 'home.rails.express_48h' | t
   endif
 
+  comment
+    DE fallback for merchant-set headings that aren't backed by a
+    translation key (e.g. free-text 'Nouveautés', 'Sale'). Never
+    mutates FR/EN output — the snippet is pass-through unless
+    locale_base == 'de' AND the string matches a known FR key.
+  endcomment
+  capture rail_heading
+    render 'rl-locale-copy-de', text: rail_heading
+  endcapture
+  assign rail_heading = rail_heading | strip
+
   assign heading_link_href = rail_heading_link | strip
   if heading_link_href contains '/collections/'
     assign heading_link_handle = heading_link_href | split: '/collections/' | last | split: '?' | first | split: '#' | first | strip | handleize

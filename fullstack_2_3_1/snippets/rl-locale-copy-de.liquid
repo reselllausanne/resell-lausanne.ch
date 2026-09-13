@@ -1,0 +1,94 @@
+{%- comment -%}
+  rl-locale-copy-de
+  -----------------
+  Purpose: translate common FR homepage/section merchant settings text
+  into DE at render time, without requiring the merchant to duplicate
+  every block per locale in the theme editor.
+
+  Usage:
+    {%- capture translated -%}
+      {%- render 'rl-locale-copy-de', text: section.settings.heading -%}
+    {%- endcapture -%}
+    {{ translated }}
+
+  Contract:
+    - Callers pass `text` (String). This snippet outputs the DE
+      equivalent when locale_base == 'de' AND `text` matches a known
+      FR key; otherwise outputs the input unchanged.
+    - Matching is exact (case-sensitive, trimmed). Extend `map` below
+      when new FR merchant copy appears on localized surfaces.
+    - Safe on FR/EN: pass-through — never mutates non-DE output.
+{%- endcomment -%}
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: '-' | first
+  assign input = text | default: '' | strip
+  assign output = input
+  if locale_base == 'de' and input != blank
+    case input
+      when 'Voir plus'
+        assign output = 'Mehr sehen'
+      when 'Découvrir'
+        assign output = 'Entdecken'
+      when 'Acheter'
+        assign output = 'Kaufen'
+      when 'Acheter maintenant'
+        assign output = 'Jetzt kaufen'
+      when "J'en profite"
+        assign output = 'Jetzt zugreifen'
+      when 'En savoir plus'
+        assign output = 'Mehr erfahren'
+      when 'Voir tout'
+        assign output = 'Alles ansehen'
+      when 'Voir la collection'
+        assign output = 'Zur Kollektion'
+      when 'Voir le produit'
+        assign output = 'Zum Produkt'
+      when 'Ajouter au panier'
+        assign output = 'In den Warenkorb'
+      when 'Ils nous font confiances', 'Ils nous font confiance'
+        assign output = 'Sie vertrauen uns'
+      when 'Retrouvez les produits Resell Lausanne sur les plus grandes marketplaces, de Suisse et d''Europe'
+        assign output = 'Finden Sie die Produkte von Resell Lausanne auf den grössten Marktplätzen in der Schweiz und Europa.'
+      when 'Summer Selection'
+        assign output = 'Sommer-Auswahl'
+      when 'Soldes'
+        assign output = 'Sale'
+      when 'Sale'
+        assign output = 'Sale'
+      when 'Express 48H'
+        assign output = 'Express 48h'
+      when 'Nouveautés'
+        assign output = 'Neuheiten'
+      when 'Bape'
+        assign output = 'Bape'
+      when 'Air Jordan'
+        assign output = 'Air Jordan'
+      when 'Essentials'
+        assign output = 'Essentials'
+      when 'Produits authentiques et jamais portés'
+        assign output = 'Authentische, nie getragene Produkte'
+      when 'Paiement en 2, 3 ou 4 fois avec Alma'
+        assign output = 'Zahlung in 2, 3 oder 4 Raten mit Alma'
+      when 'Service client dédié et disponible'
+        assign output = 'Persönlicher, verfügbarer Kundenservice'
+      when 'Back to School 2026'
+        assign output = 'Back to School 2026'
+      when 'Ton meilleur ensemble pour la rentrée'
+        assign output = 'Dein bestes Outfit zum Schulstart'
+      when 'Essentials Summer Sets'
+        assign output = 'Essentials Sommer-Sets'
+      when 'L''uniforme de l''été, version Essentials.'
+        assign output = 'Die Sommer-Uniform, Essentials-Edition.'
+      when 'Supreme Boxers'
+        assign output = 'Supreme Boxershorts'
+      when 'Livraison offerte dès 50 CHF'
+        assign output = 'Gratisversand ab 50 CHF'
+      when 'Retours 14 jours'
+        assign output = 'Rückgabe innert 14 Tagen'
+      when 'Authenticité garantie'
+        assign output = 'Garantierte Echtheit'
+    endcase
+  endif
+-%}
+{{- output -}}

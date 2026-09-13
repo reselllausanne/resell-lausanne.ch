@@ -7,6 +7,19 @@
   assign heading = section.settings.heading | default: 'Summer Selection'
   assign cta_default = section.settings.cta_label | default: 'Découvrir'
   assign card_blocks = section.blocks | where: 'type', 'card'
+
+  comment
+    DE fallback for merchant free-text settings without translation keys.
+    Pass-through on FR/EN.
+  endcomment
+  capture heading
+    render 'rl-locale-copy-de', text: heading
+  endcapture
+  assign heading = heading | strip
+  capture cta_default
+    render 'rl-locale-copy-de', text: cta_default
+  endcapture
+  assign cta_default = cta_default | strip
 -%}
 
 {%- if card_blocks.size > 0 -%}
@@ -31,6 +44,14 @@
             if card_cta == blank
               assign card_cta = cta_default
             endif
+            capture card_title
+              render 'rl-locale-copy-de', text: card_title
+            endcapture
+            assign card_title = card_title | strip
+            capture card_cta
+              render 'rl-locale-copy-de', text: card_cta
+            endcapture
+            assign card_cta = card_cta | strip
             assign card_link = block.settings.link | strip
             assign card_image = block.settings.image
             assign card_asset = block.settings.image_asset | strip

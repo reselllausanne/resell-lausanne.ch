@@ -88,11 +88,14 @@
       %}
 
       {% if bundle_slide_enabled %}
+        {%- capture _rl_bundle_cta_label -%}
+          {%- render 'rl-locale-copy-de', text: section.settings.bundle_offer_cta_label -%}
+        {%- endcapture -%}
         {% render 'rl-home-bundle-offer-banner',
           slide_idx: 0,
           is_active: true,
           cta_link: section.settings.bundle_offer_cta_link,
-          cta_label: section.settings.bundle_offer_cta_label
+          cta_label: _rl_bundle_cta_label
         %}
         {% assign slide_offset = 1 %}
       {% endif %}
@@ -139,6 +142,15 @@
             endif
           endunless
         %}
+        {%- capture _rl_slide_title -%}
+          {%- render 'rl-locale-copy-de', text: block.settings.title -%}
+        {%- endcapture -%}
+        {%- capture _rl_slide_text -%}
+          {%- render 'rl-locale-copy-de', text: block.settings.text -%}
+        {%- endcapture -%}
+        {%- capture _rl_slide_button_label -%}
+          {%- render 'rl-locale-copy-de', text: block.settings.button_label -%}
+        {%- endcapture -%}
         {% render 'rl-home-hero-slide',
           slide_idx: slide_idx,
           is_active: is_active,
@@ -150,9 +162,9 @@
           default_desktop_filename: rl_default_desktop_file,
           default_mobile_filename: rl_default_mobile_file,
           alt: block.settings.title,
-          title: block.settings.title,
-          text: block.settings.text,
-          button_label: block.settings.button_label,
+          title: _rl_slide_title,
+          text: _rl_slide_text,
+          button_label: _rl_slide_button_label,
           button_link: block.settings.button_link,
           hide_cta_card: block.settings.hide_cta_card,
           shopify_attributes: block.shopify_attributes
@@ -224,7 +236,7 @@
         {% for _ in (1..2) %}
           <div class="rl-home__ticker-segment"{% if forloop.index > 1 %} aria-hidden="true"{% endif %}>
             {% for block in marquee_blocks %}
-              <span class="rl-home__ticker-item">{{ block.settings.text }}</span>
+              <span class="rl-home__ticker-item">{%- render 'rl-locale-copy-de', text: block.settings.text -%}</span>
             {% endfor %}
           </div>
         {% endfor %}
