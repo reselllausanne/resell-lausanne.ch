@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-on-running-content-de' -%}
+{%- else -%}
 <p>
   Fondée en 2010 à Zurich par Olivier Bernhard, David Allemann et Caspar Coppetti, On Running est la marque suisse de performance qui a conquis le monde. Reconnue pour sa technologie CloudTec® et son design épuré, On est aujourd'hui l'une des marques de running premium les plus portées dans le lifestyle comme dans le sport.
 </p>
@@ -19,3 +26,4 @@
 <p>
   En tant que boutique basée à Lausanne, nous sommes fiers de mettre en avant On Running, une success-story helvétique. De Roger Federer — investisseur et ambassadeur de la marque — aux collaborations avec Loewe ou Post Malone, On s'est imposé comme une marque de référence mondiale née en Suisse.
 </p>
+{%- endif -%}

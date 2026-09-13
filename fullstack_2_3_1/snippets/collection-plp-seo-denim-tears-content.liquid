@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-denim-tears-content-de' -%}
+{%- else -%}
 <p>
   <strong>Denim Tears</strong> est la maison fondée à New York en 2019 par Tremaine Emory, directeur artistique reconnu pour son travail avec Supreme, Stüssy, Kanye West et Off-White. Chaque collection Denim Tears est un manifeste : le motif fleur de coton imprimé sur jean rend hommage à l'histoire afro-américaine et aux racines du coton dans le Sud des États-Unis.
 </p>
@@ -29,3 +36,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

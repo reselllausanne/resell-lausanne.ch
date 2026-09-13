@@ -112,6 +112,14 @@
           if brand_seo_snippet == blank
             assign brand_seo_snippet = 'collection-plp-seo-nike-air-max-95-content'
           endif
+        elsif _handle == 'air-jordan-1-low' or _handle == 'jordan-1-low' or _handle == 'aj1-low' or _handle contains 'jordan-1-low'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-air-jordan-1-low-content'
+            if seo_heading == blank
+              assign seo_heading = 'Air Jordan 1 Low — Die ikonische Silhouette in der flachen Version'
+              assign seo_subheading = 'Jordan 1 Low Panda, UNC, Wolf Grey, Travis Scott Reverse Mocha, Damen- und GS-Editionen — geprüft und in die Schweiz geliefert.'
+            endif
+          endif
         elsif _handle == 'air-jordan-4' or _handle == 'jordan-4' or _handle contains 'air-jordan-4' or _handle contains 'jordan-4'
           if brand_seo_snippet == blank
             assign brand_seo_snippet = 'collection-plp-seo-air-jordan-4-content'
@@ -119,6 +127,14 @@
         elsif _handle == 'asics-gel-kayano-14' or _handle == 'gel-kayano-14' or _handle == 'kayano-14' or _handle contains 'kayano'
           if brand_seo_snippet == blank
             assign brand_seo_snippet = 'collection-plp-seo-asics-gel-kayano-14-content'
+          endif
+        elsif _handle == 'asics-double-laces' or _handle == 'double-laces' or _handle contains 'double-lace'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-asics-double-laces-content'
+            if seo_heading == blank
+              assign seo_heading = 'ASICS Gel-NYC Double Laces — Rosa, Cloud Grey &amp; Pink Glo authentisch'
+              assign seo_subheading = 'ASICS Gel-NYC Double Laces Cream Rose Water, Sweet Pink, Cloud Grey — geprüft und in die Schweiz geliefert.'
+            endif
           endif
         elsif _handle == 'gel-nyc' or _handle == 'asics-gel-nyc' or _handle contains 'gel-nyc'
           if brand_seo_snippet == blank
@@ -136,6 +152,22 @@
               assign seo_subheading = 'Dunk Low Panda, SB Dunk Low Travis Scott, Chunky Dunky, Lobster, Pigeon, Off-White, Supreme — authentifiziert und in die Schweiz geliefert.'
             endif
           endif
+        elsif _handle == 'nike-x-sacai' or _handle == 'nike-sacai' or _handle == 'sacai' or _handle contains 'sacai'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-nike-sacai-content'
+            if seo_heading == blank
+              assign seo_heading = 'Nike x Sacai — Der Hybrid-Sneaker von Chitose Abe'
+              assign seo_subheading = 'LDWaffle, VaporWaffle, Blazer, Cortez und Kollaborationen CLOT, Fragment, JPG — geprüft und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'nike-x-nocta' or _handle == 'nike-nocta' or _handle == 'nocta'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-nocta-content'
+            if seo_heading == blank
+              assign seo_heading = 'Nike x NOCTA — Die Drake-Linie zwischen Performance und Streetwear'
+              assign seo_subheading = 'Hot Step Air Terra, Glide, Air Force 1 NOCTA und technische Drake-Apparel — geprüft und in die Schweiz geliefert.'
+            endif
+          endif
         elsif _handle == 'adidas-spezial' or _handle == 'handball-spezial' or _handle == 'trimm-trab' or _handle == 'spezial' or _handle contains 'spezial'
           if brand_seo_snippet == blank
             assign brand_seo_snippet = 'collection-plp-seo-adidas-spezial-content'
@@ -144,12 +176,132 @@
               assign seo_subheading = 'Handball Spezial, Trimm Trab, Wensley, Munchen, Adimatic, Albrecht — authentifiziert und in die Schweiz geliefert.'
             endif
           endif
+        elsif _handle == 'new-balance-204' or _handle == 'new-balance-204l' or _handle == 'nb-204l'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-new-balance-204-content'
+            if seo_heading == blank
+              assign seo_heading = 'New Balance 204L — Lifestyle-Sneakers authentisch in der Schweiz'
+              assign seo_subheading = 'New Balance 204L Mushroom Arid Stone, Silver Metallic, Kith — authentifiziert und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'foam-rnr' or _handle == 'yeezy-foam-rnnr' or _handle == 'yeezy-foam-runner' or _handle contains 'foam-rnr' or _handle contains 'foam-runner'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-foam-rnr-content'
+            if seo_heading == blank
+              assign seo_heading = 'Yeezy Foam Runner — Der futuristische, umweltbewusste Monolith'
+              assign seo_subheading = 'Foam Runner Onyx, MX, Sand, Ochre, Stone Sage, Carbon — authentifiziert und in die Schweiz geliefert.'
+            endif
+          endif
         elsif _handle == 'yeezy' or _handle contains 'yeezy'
           if brand_seo_snippet == blank
             assign brand_seo_snippet = 'collection-plp-seo-yeezy-content'
             if seo_heading == blank
               assign seo_heading = 'Yeezy — Authentische Auswahl bei Resell Lausanne'
               assign seo_subheading = 'Yeezy 350, 500, Slide und Foam RNNR geprüft und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'off-white' or _handle == 'nike-x-off-white' or _handle contains 'off-white'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-off-white-content'
+            if seo_heading == blank
+              assign seo_heading = 'Off-White — Virgil Abloh, The Ten Nike und Premium-Streetwear'
+              assign seo_subheading = 'Off-White × Nike The Ten, Arrows-Hoodies, Caravaggio-Tees, Out of Office, Industrial Belt — in der Schweiz authentifiziert.'
+            endif
+          endif
+        elsif _handle == 'supreme' or _handle contains 'supreme'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-supreme-content'
+            if seo_heading == blank
+              assign seo_heading = 'Supreme — Box Logo, Kollaborationen Nike, The North Face und Stone Island'
+              assign seo_subheading = 'Supreme Box Logo Hoodie, T-Shirts, Accessoires und Kollaborationen Nike, The North Face, Stone Island, Levi&#39;s — in der Schweiz authentifiziert.'
+            endif
+          endif
+        elsif _handle == 'bape' or _handle == 'a-bathing-ape' or _handle contains 'bape'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-bape-content'
+            if seo_heading == blank
+              assign seo_heading = 'BAPE A Bathing Ape — Shark Hoodie, ABC Camo, BAPE STA'
+              assign seo_subheading = 'Shark Hoodie, ABC Camo, BAPE STA, Tiger Hoodie, Kollaborationen Nike, Adidas, Louis Vuitton — in der Schweiz authentifiziert.'
+            endif
+          endif
+        elsif _handle == 'chrome-hearts' or _handle contains 'chrome-hearts'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-chrome-hearts-content'
+            if seo_heading == blank
+              assign seo_heading = 'Chrome Hearts — Hoodies, T-Shirts, Silberschmuck und Brillen authentisch in der Schweiz'
+              assign seo_subheading = 'Chrome Hearts CH, gotisches Kreuz, Silberschmuck 925, optische Brillen — authentifiziert und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'denim-tears' or _handle contains 'denim-tears'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-denim-tears-content'
+            if seo_heading == blank
+              assign seo_heading = 'Denim Tears — Tremaine Emory, Cotton Wreath und Kollaborationen Levi&#39;s, Stüssy, Dior'
+              assign seo_subheading = 'Cotton-Wreath-Jeans, Hoodies, T-Shirts Denim Tears — authentifiziert und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'labubu' or _handle == 'pop-mart' or _handle == 'the-monsters' or _handle contains 'labubu' or _handle contains 'pop-mart'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-labubu-content'
+            if seo_heading == blank
+              assign seo_heading = 'Labubu × Pop Mart — Plüsch, Vinyl und The-Monsters-Secrets'
+              assign seo_subheading = 'Labubu Plush, Macaron, Big Into Energy, Have a Seat, Vinyl-Secrets — authentifiziert und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'golden-goose' or _handle contains 'golden-goose'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-golden-goose-content'
+            if seo_heading == blank
+              assign seo_heading = 'Golden Goose — Der italienische Luxus-Sneaker mit Vintage-Finish'
+              assign seo_subheading = 'Super-Star, Ball Star, Mid Star und Purestar Golden Goose authentisch — Herren, Damen, geprüft und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'jacquemus' or _handle contains 'jacquemus'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-jacquemus-content'
+            if seo_heading == blank
+              assign seo_heading = 'Jacquemus — Der französische Luxus von Simon Porte Jacquemus'
+              assign seo_subheading = 'Nike x Jacquemus Air Humara &amp; J Force 1, Taschen Le Bambino, Le Chiquito und Prêt-à-porter — in der Schweiz authentifiziert.'
+            endif
+          endif
+        elsif _handle == 'salomon' or _handle contains 'salomon'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-salomon-content'
+            if seo_heading == blank
+              assign seo_heading = 'Salomon — Vom alpinen Trail zum weltweiten Streetwear'
+              assign seo_subheading = 'Salomon XT-6, Speedcross und Premium-Outdoor-Modelle — authentifiziert und ab Lausanne geliefert.'
+            endif
+          endif
+        elsif _handle == 'on-running' or _handle == 'on' or _handle contains 'on-running'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-on-running-content'
+            if seo_heading == blank
+              assign seo_heading = 'On Running — Schweizer Performance auf Weltniveau'
+              assign seo_subheading = 'Cloudsurfer, Cloudmonster und die gesamte On-Running-Reihe — eine Schweizer Marke, eine Lausanner Boutique.'
+            endif
+          endif
+        elsif _handle == 'puma' or _handle contains 'puma'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-puma-content'
+            if seo_heading == blank
+              assign seo_heading = 'Puma — Authentische Sneakers in der Schweiz'
+              assign seo_subheading = 'Speedcat, Suede und Puma-Silhouetten vor dem Versand geprüft.'
+            endif
+          endif
+        elsif _handle == 'converse' or _handle contains 'converse'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-converse-content'
+            if seo_heading == blank
+              assign seo_heading = 'Converse — Authentische Chuck Taylor und Klassiker'
+              assign seo_subheading = 'Authentische Converse, Lieferung in die Schweiz und nach Europa.'
+            endif
+          endif
+        elsif _handle == 'crampons-de-foot' or _handle == 'football' or _handle == 'crampons' or _handle contains 'crampons'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-crampons-foot-content'
+            if seo_heading == blank
+              assign seo_heading = 'Fussballschuhe — Nike, Adidas und limitierte Editionen'
+              assign seo_subheading = 'Nike Mercurial, Tiempo, Phantom, Adidas Predator, F50 und Copa — authentisch, FG/SG/AG/TF, in die Schweiz geliefert.'
             endif
           endif
         elsif _handle == 'jordan' or _handle == 'air-jordan' or _handle contains 'jordan'

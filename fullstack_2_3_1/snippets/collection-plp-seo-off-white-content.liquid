@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-off-white-content-de' -%}
+{%- else -%}
 <p>
   Fondée en 2013 à Milan par <strong>Virgil Abloh</strong>, <strong>Off-White</strong> est devenue la maison de luxe streetwear la plus influente des années 2010. Virgule créative (« quotation marks »), zip-tie orange, motifs industriels et collaborations Nike The Ten (Air Jordan 1, Air Force 1, Dunk Low, Air Max 90, Air Presto, Vapormax, Air Max 97, React Hyperdunk) ont redéfini l'esthétique sneaker moderne.
 </p>
@@ -29,3 +36,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-bape-content-de' -%}
+{%- else -%}
 <p>
   Fondée en 1993 à Tokyo par <strong>Nigo</strong>, <strong>A Bathing Ape (BAPE)</strong> est l'une des maisons streetwear japonaises les plus influentes de tous les temps. Camouflage Ape (ABC Camo), tête de singe iconique, hoodies Shark, BAPE STA et collaborations Nike, Adidas, Comme des Garçons, Louis Vuitton, Stüssy, Undefeated ont marqué trois décennies de culture urbaine.
 </p>
@@ -34,3 +41,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

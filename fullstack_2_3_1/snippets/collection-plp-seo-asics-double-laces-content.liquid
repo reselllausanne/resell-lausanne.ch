@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-asics-double-laces-content-de' -%}
+{%- else -%}
 <p>
   Les éditions <strong>ASICS Gel-NYC double lacets</strong> sont devenues l'une des sous-catégories les plus recherchées du marché lifestyle suisse : deux jeux de lacets contrastés sur une silhouette hybride (Gel-Nimbus 9, Gel-MC Plus V, Gel-Cumulus 16), semelle Gel ASICS visible et mesh respirant. Les coloris <strong>rose</strong>, cloud grey et pink glo dominent les recherches « ASICS rose » et « Gel-NYC double laces ».
 </p>
@@ -34,3 +41,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

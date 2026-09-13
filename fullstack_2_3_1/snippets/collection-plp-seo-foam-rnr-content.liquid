@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-foam-rnr-content-de' -%}
+{%- else -%}
 <p>
   Le <strong>Yeezy Foam Runner</strong> est l'une des silhouettes les plus reconnaissables du catalogue Yeezy : une chaussure monobloc moulée, allégée par des perforations organiques et pensée pour un confort décontracté. Conçue avec une part de mousse issue d'algues, elle a imposé un design futuriste et éco-conscient devenu culte.
 </p>
@@ -29,3 +36,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

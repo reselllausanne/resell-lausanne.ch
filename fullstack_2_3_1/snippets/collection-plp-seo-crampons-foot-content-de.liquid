@@ -1,0 +1,65 @@
+{% liquid
+  assign url_catalog = collections.all.url | default: '/collections/all'
+  capture url_guide
+    render 'rl-resolved-page-url', handle: 'guide-des-tailles'
+  endcapture
+  assign url_guide = url_guide | strip
+  capture url_livraison
+    render 'rl-resolved-page-url', handle: 'livraison'
+  endcapture
+  assign url_livraison = url_livraison | strip
+  capture url_faq
+    render 'rl-resolved-page-url', handle: 'faq'
+  endcapture
+  assign url_faq = url_faq | strip
+%}
+<p>
+  Die richtigen Fussballschuhe in der Schweiz zu finden, ist nicht immer einfach: es braucht das passende Paar, für den richtigen Untergrund, in der richtigen Grösse, ohne zu viel zu bezahlen. Bei Resell Lausanne führen wir eine gezielte Auswahl authentischer Fussballschuhe — Nike Mercurial, Tiempo, Phantom, Adidas Predator, F50, Copa — sowie limitierte Editionen und Kollaborationen, die in klassischen Geschäften selten verfügbar sind.
+</p>
+<p>
+  Unser Ansatz unterscheidet sich von den grossen Ketten: wir führen nicht alles auf Lager, sondern das, was zählt. Signature-Modelle (Mbappé, Bellingham), Cryoshot-Editionen, Nike-x-Künstler-Serien und von Enthusiast:innen gesuchte Silhouetten. Jedes Paar wird authentifiziert und schnell in die gesamte Schweiz versandt.
+</p>
+
+<h3>Nike Mercurial, Tiempo, Phantom — Die Nike-Fussball-Reihe</h3>
+<p>
+  Die Nike-Reihe deckt alle Profile ab: Mercurial für Geschwindigkeit, Tiempo für Lederhaptik, Phantom für Präzision und Kontrolle. Wir führen die Saisonmodelle sowie die limitierten Editionen (Cryoshot, Signature-Spieler, Künstler-Kollaborationen).
+</p>
+
+<h3>Adidas Predator, F50, Copa — Die Klassiker mit den drei Streifen</h3>
+<p>
+  Adidas bleibt eine Referenz im Weltfussball mit der Predator (Kraft und Schuss), der F50 (Leichtigkeit und Geschwindigkeit) und der Copa (traditionelle Lederhaptik). Unsere Adidas-Fussballschuhe sind authentisch und für jeden Untergrund geeignet.
+</p>
+
+<h3>Wie wählt man Fussballschuhe je nach Untergrund?</h3>
+<p>
+  Die Wahl der Sohle ist entscheidend: FG (Firm Ground) für trockenen Rasen, SG (Soft Ground) für nassen Boden, AG (Artificial Ground) für langes Kunstrasen, TF (Turf) für kurzen oder stabilisierten Turf. Die richtige Sohle beugt Verletzungen vor und verbessert die Leistung.
+</p>
+
+<h3>Fussballschuhe in der Schweiz kaufen — Authentisch, schnell geliefert</h3>
+<p>
+  Alle Bestellungen profitieren von einer schnellen Lieferung in die gesamte Schweiz (Romandie und Deutschschweiz), mehreren Zahlungslösungen (Twint, Karte, Ratenzahlung) und einem reaktiven Kundenservice. Retouren werden einfach abgewickelt, und wir bieten eine persönliche Begleitung bei jeder Bestellung.
+</p>
+<p>
+  Beratung vor dem Kauf gewünscht? Konsultieren Sie unseren
+  <a href="{{ url_guide }}">Grössenberater</a>,
+  die <a href="{{ url_livraison }}">Lieferdetails</a>,
+  die <a href="{{ url_faq }}">FAQ</a>
+  und unseren <a href="{{ url_catalog }}">vollständigen Katalog</a>.
+</p>
+
+<h3>Häufig gestellte Fragen — Fussballschuhe</h3>
+<p><strong>Welche Fussballschuhe je nach Untergrund (FG, SG, AG, TF)?</strong><br>
+  FG = trockener Boden, SG = nasser und fetter Boden (Stollen zum Einschrauben), AG = langes Kunstrasen, TF = kurzer oder stabilisierter Turf. Wählen Sie nach der Mehrheit Ihrer Spiele.
+</p>
+<p><strong>Welche Grösse für Fussballschuhe wählen?</strong><br>
+  Fussballschuhe fallen oft eng aus. Nehmen Sie Ihre gewohnte EU-Grösse, ggf. +0.5 wenn Sie dicke Socken tragen oder einen breiten Fuss haben.
+</p>
+<p><strong>Unterschied zwischen Nike Mercurial, Tiempo, Phantom und Predator?</strong><br>
+  Mercurial = Geschwindigkeit, Tiempo = Lederhaptik, Phantom = Präzision und Kontrolle, Predator = Kraft und Schuss. Die Wahl hängt von Ihrer Position und Ihrem Spielstil ab.
+</p>
+<p><strong>Nocken (moulded) oder Stollen (screw-in)?</strong><br>
+  Nocken = vielseitig für trockenen Rasen und Kunstrasen. Stollen = fetter und tiefer Boden, für besseren Grip. Viele Amateurspieler:innen in der Schweiz brauchen nur Nocken (FG oder AG).
+</p>
+<p><strong>Haben Sie Fussballschuhe in limitierten Editionen oder Kollaborationen?</strong><br>
+  Ja, wir sourcen regelmässig Nike-Limited-Editionen (Cryoshot, Signature-Spieler, Künstler-Kollaborationen) und Adidas-Sondereditionen. Folgen Sie der Kollektion, um informiert zu bleiben.
+</p>
