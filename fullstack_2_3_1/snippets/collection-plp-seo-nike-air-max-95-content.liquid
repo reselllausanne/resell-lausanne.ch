@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-nike-air-max-95-content-de' -%}
+{%- else -%}
 <p>
   Conçue par <strong>Sergio Lozano</strong> et lancée en <strong>1995</strong>, la <strong>Nike Air Max 95</strong> a bouleversé la famille Air Max en introduisant la première unité Air visible à l'avant-pied — un double amorti talon + forefoot inédit pour l'époque. Lozano, alors designer ACG, s'est inspiré de l'anatomie humaine : le laçage évoque les côtes, la semelle extérieure la colonne vertébrale, et les panneaux superposés en mesh et daim les fibres musculaires. Le dégradé de gris, pensé pour masquer la boue des trails oregonien, et le jaune néon hérité du kit de course Nike ont fait de la <strong>Neon OG</strong> l'un des coloris les plus iconiques de l'histoire sneaker.
 </p>
@@ -39,3 +46,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles. Expédition depuis Lausanne, avec suivi et emballage soigné pour protéger boîte et sneakers.
 </p>
+{%- endif -%}

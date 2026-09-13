@@ -87,13 +87,69 @@
         (is_fr_locale) never assigns the snippet on DE and the DE visitor gets
         the generic dynamic fallback instead of the hand-written German story.
       endcomment
+      comment
+        DE brand_seo_snippet assignment. Order matters: specific model handles
+        MUST come before generic brand handles (e.g. dunk / air-jordan-4 /
+        nike-air-max-95 / nike-tn are all matched by `contains 'nike'` or
+        `contains 'jordan'` — put them first so their DE story wins).
+        Every assignment guarded by `brand_seo_snippet == blank` to avoid
+        overriding an earlier assignment (Onitsuka).
+      endcomment
       if locale_base == 'de'
-        if _handle == 'nike' or _handle contains 'nike'
+        if _handle == 'air-jordan-x-travis-scott' or _handle == 'travis-scott' or _handle == 'vetement-travis' or _handle contains 'travis-scott' or _handle contains 'travis'
           if brand_seo_snippet == blank
-            assign brand_seo_snippet = 'collection-plp-seo-nike-content'
+            assign brand_seo_snippet = 'collection-plp-seo-travis-scott-content'
+          endif
+        elsif _handle == 'essentials' or _handle == 'fear-of-god-essentials'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-essentials-content'
+          endif
+        elsif _handle == 'nike-air-max-plus-tn' or _handle == 'air-max-plus' or _handle == 'tn' or _handle == 'nike-tn' or _handle contains 'air-max-plus' or _handle contains 'nike-tn'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-nike-tn-content'
+          endif
+        elsif _handle == 'nike-air-max-95' or _handle == 'air-max-95' or _handle contains 'air-max-95'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-nike-air-max-95-content'
+          endif
+        elsif _handle == 'air-jordan-4' or _handle == 'jordan-4' or _handle contains 'air-jordan-4' or _handle contains 'jordan-4'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-air-jordan-4-content'
+          endif
+        elsif _handle == 'asics-gel-kayano-14' or _handle == 'gel-kayano-14' or _handle == 'kayano-14' or _handle contains 'kayano'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-asics-gel-kayano-14-content'
+          endif
+        elsif _handle == 'gel-nyc' or _handle == 'asics-gel-nyc' or _handle contains 'gel-nyc'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-asics-gel-nyc-content'
             if seo_heading == blank
-              assign seo_heading = 'Nike — Die einflussreichste Sneaker-Marke der Welt'
-              assign seo_subheading = 'Nike Dunk, Air Force 1, Air Max, Mind 001 und Kollaborationen — geprüft und in der Schweiz geliefert.'
+              assign seo_heading = 'ASICS Gel-NYC — Der Lifestyle-Hybrid Gel-Nimbus 9, MC Plus V, Cumulus 16'
+              assign seo_subheading = 'ASICS Gel-NYC Graphite Grey Black, Cream Rose Water, Sweet Pink, Pure Silver — geprüft und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'dunk' or _handle == 'dunk-low' or _handle == 'dunk-sb' or _handle == 'nike-sb-dunk' or _handle == 'nike-dunk' or _handle contains 'dunk'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-dunk-content'
+            if seo_heading == blank
+              assign seo_heading = 'Nike Dunk und SB Dunk — Die absolute Streetwear-Silhouette'
+              assign seo_subheading = 'Dunk Low Panda, SB Dunk Low Travis Scott, Chunky Dunky, Lobster, Pigeon, Off-White, Supreme — authentifiziert und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'adidas-spezial' or _handle == 'handball-spezial' or _handle == 'trimm-trab' or _handle == 'spezial' or _handle contains 'spezial'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-adidas-spezial-content'
+            if seo_heading == blank
+              assign seo_heading = 'Adidas Spezial — Handball Spezial, Trimm Trab und das Premium-Archiv Gary Aspden'
+              assign seo_subheading = 'Handball Spezial, Trimm Trab, Wensley, Munchen, Adimatic, Albrecht — authentifiziert und in die Schweiz geliefert.'
+            endif
+          endif
+        elsif _handle == 'yeezy' or _handle contains 'yeezy'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-yeezy-content'
+            if seo_heading == blank
+              assign seo_heading = 'Yeezy — Authentische Auswahl bei Resell Lausanne'
+              assign seo_subheading = 'Yeezy 350, 500, Slide und Foam RNNR geprüft und in die Schweiz geliefert.'
             endif
           endif
         elsif _handle == 'jordan' or _handle == 'air-jordan' or _handle contains 'jordan'
@@ -102,6 +158,14 @@
             if seo_heading == blank
               assign seo_heading = 'Air Jordan — Die Ikone von Basketball und Sneaker-Kultur'
               assign seo_subheading = 'Air Jordan 1, 3, 4, 11 und Kollaborationen Travis Scott, Off-White — authentifiziert in der Schweiz.'
+            endif
+          endif
+        elsif _handle == 'nike' or _handle contains 'nike'
+          if brand_seo_snippet == blank
+            assign brand_seo_snippet = 'collection-plp-seo-nike-content'
+            if seo_heading == blank
+              assign seo_heading = 'Nike — Die einflussreichste Sneaker-Marke der Welt'
+              assign seo_subheading = 'Nike Dunk, Air Force 1, Air Max, Mind 001 und Kollaborationen — geprüft und in der Schweiz geliefert.'
             endif
           endif
         elsif _handle == 'adidas' or _handle contains 'adidas'

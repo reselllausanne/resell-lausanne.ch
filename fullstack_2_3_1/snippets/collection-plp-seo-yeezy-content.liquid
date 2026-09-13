@@ -1,3 +1,11 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-yeezy-content-de' -%}
+{%- else -%}
 <p>Retrouvez une sélection Yeezy authentique sur Resell Lausanne : 350 V2, 500, Slide et Foam RNNR. Chaque paire est contrôlée avant expédition.</p>
 <h3>Yeezy authentiques en Suisse</h3>
 <p>Resell Lausanne vérifie chaque article et joint un certificat d'authenticité. Livraison en Suisse et en Europe, délais habituels 5 à 10 jours ouvrés en standard et 2 à 5 jours ouvrés en express sur produits éligibles.</p>
+{%- endif -%}

@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-adidas-spezial-content-de' -%}
+{%- else -%}
 <p>
   <strong>Adidas Spezial</strong> est l'archive prémium d'Adidas Originals, dirigée depuis 2014 par Gary Aspden, ancien directeur créatif d'Adidas et collectionneur compulsif. Le programme Spezial recrée d'anciens modèles d'archives (Handball Spezial, Trimm Trab, Wensley, Munchen, Liverpool) en cuir et nubuck premium, en petites séries et coloris confidentiels.
 </p>
@@ -29,3 +36,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

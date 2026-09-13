@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-nike-tn-content-de' -%}
+{%- else -%}
 <p>
   Lancée en 1998 par Sean McDowell, la <strong>Nike Air Max Plus</strong> — surnommée <strong>TN</strong> ou <strong>Tuned Air</strong> — est l'une des silhouettes Air Max les plus iconiques de l'histoire. Empeigne TPU en arête de palmier ondulée, Tuned Air dans le talon et lignes radicales : la TN reste à la fois une chaussure de running résiduelle et un objet culturel européen majeur (banlieue parisienne, Marseille, sud de l'Italie, Suisse romande).
 </p>
@@ -34,3 +41,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

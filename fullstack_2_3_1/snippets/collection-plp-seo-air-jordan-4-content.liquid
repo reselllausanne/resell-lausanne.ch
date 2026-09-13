@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-air-jordan-4-content-de' -%}
+{%- else -%}
 <p>
   Sortie en 1989, l'<strong>Air Jordan 4</strong> est la quatrième silhouette signature de Michael Jordan et la première Jordan conçue intégralement par Tinker Hatfield. Empeigne nubuck et nylon, bulle d'air visible à la base, support latéral "wing" pour les lacets, plastique « 23 » à l'arrière : la Jordan 4 reste l'un des modèles les plus collaborés et les plus iconiques de l'histoire de la sneaker.
 </p>
@@ -34,3 +41,4 @@
 <p>
   Livraison gratuite en Suisse dès 50 CHF, 10 CHF en Europe. Paiement sécurisé Visa, MasterCard, Amex, Apple Pay, Twint, PostFinance, Powerpay en Suisse, Alma en Europe (2, 3 ou 4 fois sans frais sur les commandes éligibles). Délais standard 5 à 10 jours ouvrables, express 2 à 5 jours ouvrables sur produits éligibles.
 </p>
+{%- endif -%}

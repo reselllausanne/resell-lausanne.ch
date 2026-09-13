@@ -1,3 +1,10 @@
+{%- liquid
+  assign locale_iso = request.locale.iso_code | default: localization.language.iso_code | default: 'fr' | downcase
+  assign locale_base = locale_iso | split: "-" | first
+-%}
+{%- if locale_base == "de" -%}
+  {%- render 'collection-plp-seo-travis-scott-content-de' -%}
+{%- else -%}
 {% liquid
   assign url_air_jordan = collections['air-jordan'].url | default: '/collections/air-jordan'
   assign url_nike = collections.nike.url | default: '/collections/nike'
@@ -60,3 +67,4 @@
 <p><strong>Quelle taille choisir pour une Travis Scott ?</strong><br>
   La plupart des modèles taillent normalement (Jordan 1 Low, AF1). La Nike SB Dunk Low taille plutôt grand : envisagez une demi-pointure en dessous selon votre forme de pied. En cas de doute, contactez-nous.
 </p>
+{%- endif -%}
