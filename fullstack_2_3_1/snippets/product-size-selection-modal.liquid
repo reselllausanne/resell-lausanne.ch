@@ -367,10 +367,12 @@
 
   {% comment %}
     Variant delivery contract:
+    - express UI requires variant.custom.express_available == true AND usable express_price
+    - express_price alone must never unlock express (bulk reprice noise)
     - variant.custom.express_delivery_promise | delivery_estimation_text | delivery_between_text → 48h mode + picto
-    - product.metafields.custom.soldes_48h == true → 48h at product price, no extra fields
-    - product tag soldes-48h / soldes (or soldes collection) → same fallback
-    - variant.custom.express_price (money/number) → optional paid express upgrade on non-soldes products
+    - product.metafields.custom.soldes_48h == true → 48h campaign picto only (not a delivery promise)
+    - variant.custom.delivery_48h == true → 48h express at base price
+    - variant.custom.express_price (money/number) → optional paid express upgrade when express_available
   {% endcomment %}
 
   <template id="{{ modal_dom_id }}-tpl">
@@ -1129,6 +1131,16 @@
             if express_price_defined and express_price_cents <= 0
               assign express_price_defined = false
               assign express_available = false
+            endif
+
+            comment
+              Strict contract: express UI needs express_available == true AND a
+              usable express_price. A lone express_price (common after bulk
+              reprice when the boolean stays null/false) must not surface
+              express or force-express the shopper.
+            endcomment
+            if express_available == false
+              assign express_price_defined = false
             endif
 
             assign shipping_group = ''

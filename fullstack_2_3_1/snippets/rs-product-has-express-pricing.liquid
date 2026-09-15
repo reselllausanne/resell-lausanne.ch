@@ -1,5 +1,10 @@
 {% comment %}
-  True when any available variant has custom.express_price (standard vs express choice in size modal).
+  True when any available variant offers a real express choice:
+  custom.express_available == true AND a usable custom.express_price
+  (or in-stock delivery_48h, which implies express at base price).
+
+  express_price alone is not enough — bulk reprice may write prices while
+  express_available stays null/false.
 
   @param product {product}
 {% endcomment %}
@@ -8,6 +13,15 @@
 
   for variant in product.variants
     unless variant.available
+      continue
+    endunless
+
+    if variant.metafields.custom.delivery_48h.value == true
+      assign rs_has_express_pricing = true
+      break
+    endif
+
+    unless variant.metafields.custom.express_available.value == true
       continue
     endunless
 
