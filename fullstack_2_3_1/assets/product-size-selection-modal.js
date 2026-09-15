@@ -325,18 +325,35 @@
     return v.expressPriceDefined === true && Number.isFinite(expPrice) && expPrice > 0;
   };
 
-  const variantHasExpress = (v) => variantHasExpressPrice(v);
+  // Express UI requires BOTH the boolean flag and a usable express_price.
+  // Price alone must never unlock express — Sep reprice wrote express_price on
+  // most variants while express_available stayed false/null.
+  const variantHasExpress = (v) => v.expressAvailable === true && variantHasExpressPrice(v);
 
   const shippingLayout = (v) => {
-    if (!variantHasExpressPrice(v)) {
-      return { showStandard: true, showExpress: false, forceExpress: false };
-    }
+    const g = (v.shippingGroup || '').toLowerCase();
+    const exp = variantHasExpress(v);
     const expPrice = Number(v.expressPriceCents);
     const basePrice = Number(v.price);
-    if (Number.isFinite(basePrice) && expPrice > basePrice) {
-      return { showStandard: true, showExpress: true, forceExpress: false };
+    const samePrice = exp && Number.isFinite(basePrice) && expPrice === basePrice;
+    let showStandard = true;
+    let showExpress = exp && g !== 'standard';
+
+    if (g === 'express') {
+      showStandard = false;
+      showExpress = exp;
     }
-    return { showStandard: false, showExpress: true, forceExpress: true };
+    // Paid upgrade (express > standard): keep both options.
+    // Same price / express-only group: force express, hide standard.
+    if (samePrice && exp) {
+      showStandard = false;
+      showExpress = g === 'standard' ? false : true;
+    }
+    if (!exp || g === 'standard') showExpress = false;
+    if (!showStandard && !showExpress) showStandard = true;
+
+    const forceExpress = (g === 'express' || samePrice) && showExpress;
+    return { showStandard, showExpress, forceExpress };
   };
 
   const compactText = (value) => {
