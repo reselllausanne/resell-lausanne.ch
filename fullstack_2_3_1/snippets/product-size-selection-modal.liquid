@@ -1135,12 +1135,16 @@
 
             comment
               Strict contract: express UI needs express_available == true AND a
-              usable express_price. A lone express_price (common after bulk
-              reprice when the boolean stays null/false) must not surface
-              express or force-express the shopper.
+              usable express_price that is >= base. A lone express_price
+              (bulk reprice noise) or an undercut (express < standard) must
+              not surface express or replace the catalog price.
             endcomment
             if express_available == false
               assign express_price_defined = false
+            endif
+            if express_price_defined and express_price_cents < variant.price
+              assign express_price_defined = false
+              assign express_available = false
             endif
 
             assign shipping_group = ''
