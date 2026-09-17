@@ -343,24 +343,23 @@
     const expPrice = Number(v.expressPriceCents);
     const basePrice = Number(v.price);
     const samePrice = exp && Number.isFinite(basePrice) && expPrice === basePrice;
+    // Only force express-only when shipping group or 48h says so — never from
+    // mere price equality (accidental express_price == base would hide Standard).
+    const expressOnlyLane = g === 'express' || v.expressIs48h === true;
     let showStandard = true;
     let showExpress = exp && g !== 'standard';
 
-    if (g === 'express') {
+    if (expressOnlyLane) {
       showStandard = false;
       showExpress = exp;
     }
-    // Paid upgrade (express > standard): keep both options, default standard.
-    // Same price / express-only group: force express, hide standard.
-    if (samePrice && exp) {
-      showStandard = false;
-      showExpress = g === 'standard' ? false : true;
-    }
+    // Paid upgrade (express > standard): keep both, default Standard.
+    // samePrice alone no longer hides Standard.
     if (!exp || g === 'standard') showExpress = false;
     if (!showStandard && !showExpress) showStandard = true;
 
-    const forceExpress = (g === 'express' || samePrice) && showExpress;
-    return { showStandard, showExpress, forceExpress };
+    const forceExpress = expressOnlyLane && showExpress;
+    return { showStandard, showExpress, forceExpress, samePrice };
   };
 
   const compactText = (value) => {

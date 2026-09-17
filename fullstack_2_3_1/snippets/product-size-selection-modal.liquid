@@ -157,15 +157,10 @@
   endcapture
   assign modal_price_parts = modal_price_snapshot | strip | split: '|'
   assign modal_product_is_free = false
-  assign modal_product_has_valid_prices = false
-  assign modal_fallback_price = 0
   if modal_price_parts[6] == '1'
     assign modal_product_is_free = true
   endif
-  if modal_price_parts[8] == '1'
-    assign modal_product_has_valid_prices = true
-    assign modal_fallback_price = modal_price_parts[2] | plus: 0
-  endif
+  # Never copy another size's price into a zero-price variant.
 
   assign socks_product = all_products['nike-everyday-plus-cushioned-crew-socks-6-pairs-white']
   assign product_handle_down = product.handle | default: '' | downcase
@@ -1194,11 +1189,9 @@
             assign size_value = variant.options[size_option_index]
             assign variant_standard_price = variant.price
             assign variant_available_for_display = variant.available
+            # Zero/blank price: mark unavailable — never borrow another variant's price.
             if modal_product_is_free == false and variant_standard_price <= 0
               assign variant_available_for_display = false
-              if modal_product_has_valid_prices
-                assign variant_standard_price = modal_fallback_price
-              endif
             endif
 
             capture express_price_formatted

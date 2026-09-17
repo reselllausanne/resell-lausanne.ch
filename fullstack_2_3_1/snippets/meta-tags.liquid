@@ -919,16 +919,21 @@
               assign v_has_express = false
               if v.metafields.custom.express_available.value == true and v.metafields.custom.express_price != blank
                 assign exp_mv_schema = v.metafields.custom.express_price.value
+                assign exp_cents_schema = 0
                 if exp_mv_schema.amount != blank
                   assign exp_amt_schema = exp_mv_schema.amount | times: 1
-                  if exp_amt_schema > 0
-                    assign v_has_express = true
-                  endif
+                  assign exp_cents_schema = exp_amt_schema | times: 100
                 else
                   assign exp_str_schema = exp_mv_schema | append: '' | strip
-                  if exp_str_schema != '' and exp_str_schema != '0'
-                    assign v_has_express = true
+                  if exp_str_schema contains '.'
+                    assign exp_cents_schema = exp_str_schema | times: 100
+                  else
+                    assign exp_cents_schema = exp_str_schema | plus: 0
                   endif
+                endif
+                # Match display rule: never advertise express that undercuts catalog price.
+                if exp_cents_schema > 0 and exp_cents_schema >= schema_effective_price
+                  assign v_has_express = true
                 endif
               endif
             -%}

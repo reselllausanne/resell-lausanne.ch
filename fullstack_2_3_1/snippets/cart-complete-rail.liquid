@@ -63,10 +63,18 @@
         endif
       endfor
 
-      assign rail_price = rail_product.price
-      assign rail_compare = rail_product.compare_at_price
+      # Use same effective-price snapshot as PLP/PDP (never express undercut).
+      capture rail_price_snapshot
+        render 'rs-product-price-snapshot', product: rail_product
+      endcapture
+      assign rail_price_parts = rail_price_snapshot | strip | split: '|'
+      assign rail_price = rail_price_parts[2] | default: rail_product.price | plus: 0
+      assign rail_compare = rail_price_parts[3] | default: 0 | plus: 0
+      if rail_price <= 0
+        assign rail_price = rail_product.price
+      endif
       assign rail_has_from = false
-      if rail_product.price_varies
+      if rail_price_parts[5] == '1' or rail_product.price_varies
         assign rail_has_from = true
       endif
       assign rail_on_sale = false
