@@ -325,10 +325,17 @@
     return v.expressPriceDefined === true && Number.isFinite(expPrice) && expPrice > 0;
   };
 
-  // Express UI requires BOTH the boolean flag and a usable express_price.
-  // Price alone must never unlock express — Sep reprice wrote express_price on
-  // most variants while express_available stayed false/null.
-  const variantHasExpress = (v) => v.expressAvailable === true && variantHasExpressPrice(v);
+  // Express UI requires flag + usable express_price, and must never undercut
+  // the standard catalog price. Sep reprice left express_price < base on many
+  // variants (e.g. CHF 89 vs CHF 129) — those must not unlock express.
+  const variantHasExpress = (v) => {
+    if (v.expressAvailable !== true || !variantHasExpressPrice(v)) return false;
+    const expPrice = Number(v.expressPriceCents);
+    const basePrice = Number(v.price);
+    if (!Number.isFinite(basePrice) || !Number.isFinite(expPrice)) return false;
+    // Valid: paid upgrade (express > base) or same-price / 48h express.
+    return expPrice >= basePrice;
+  };
 
   const shippingLayout = (v) => {
     const g = (v.shippingGroup || '').toLowerCase();
@@ -343,7 +350,7 @@
       showStandard = false;
       showExpress = exp;
     }
-    // Paid upgrade (express > standard): keep both options.
+    // Paid upgrade (express > standard): keep both options, default standard.
     // Same price / express-only group: force express, hide standard.
     if (samePrice && exp) {
       showStandard = false;

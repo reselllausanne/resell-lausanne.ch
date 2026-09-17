@@ -103,7 +103,7 @@
       endif
     endif
 
-    if express_price_defined and express_price_cents > 0
+    if express_price_defined and express_price_cents > 0 and express_price_cents >= variant.price
       assign rs_express_active = true
       break
     endif
