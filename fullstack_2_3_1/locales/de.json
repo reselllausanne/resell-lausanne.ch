@@ -428,7 +428,7 @@
       "accordion_payment": "ZAHLUNGSMETHODEN",
       "auth_html": "<p>Alle bei Resell Lausanne verkauften Produkte sind authentisch. Bevor sie bei Ihnen ankommen, wird jedes Produkt von unseren Experten auf Qualität und Echtheit geprüft.</p><p>Alle Produkte stammen direkt aus unserem Partner-Reseller-Netzwerk, das einzeln nach Erfahrung ausgewählt wird. Sneakers- und Streetwear-Artikel werden in der Originalbox mit Zubehör und einem Resell-Lausanne-Siegel geliefert, das die Prüfung und den Versand durch unser Team bestätigt.</p><p>Wichtig: Entfernen Sie das Siegel erst, wenn Sie absolut sicher sind, dass Sie das Produkt behalten. Andernfalls kann die Rückgabe abgelehnt werden.</p><p><a href=\"/pages/notre-processus-d-authentification\" class=\"link\">Vollständigen Authentifizierungsprozess ansehen.</a></p>",
       "delivery_html": "<p>Kostenlose Lieferung in der Schweiz ab 50 CHF Bestellwert. Pauschale von 10 CHF für Lieferungen nach Europa.</p><p>Geschätzte Lieferzeiten:</p><ul><li>Standardlieferung: 5 bis 10 Werktage</li><li>Expresslieferung: 2 bis 5 Werktage, wenn verfügbar</li></ul><p>Eine Sendungsverfolgungsnummer wird per E-Mail gesendet, sobald die Bestellung an den Transporteur übergeben wurde.</p>",
-      "payment_html": "<p>Sichere Zahlung per Karte, Apple Pay, Twint, PostFinance und Powerpay je nach verfügbaren Optionen beim Checkout.</p><p>Verfügbare Zahlungsmethoden können je nach Lieferland und Bestellwert variieren.</p><p><a href=\"/pages/faq?category=options-de-paiement#faq-options-de-paiement\" class=\"link\">Mehr zur Zahlungssicherheit.</a></p>",
+      "payment_html": "<p>Sichere Zahlung per Karte, Apple Pay, Twint, PostFinance und CembraPay Facture je nach verfügbaren Optionen beim Checkout.</p><p>Verfügbare Zahlungsmethoden können je nach Lieferland und Bestellwert variieren.</p><p><a href=\"/pages/faq?category=options-de-paiement#faq-options-de-paiement\" class=\"link\">Mehr zur Zahlungssicherheit.</a></p>",
       "size_modal": {
         "free_shipping_ch": "Kostenlose Lieferung in der Schweiz ab 50 CHF",
         "size_guide": "Grössentabelle",
@@ -439,7 +439,7 @@
         "lego_fit_note": "Versiegelt und neu",
         "hero_sub_range": "5 bis 10 Werktage",
         "express_promise_default": "2 bis 5 Werktage",
-        "promo_powerpay": "Ratenzahlung mit Powerpay / Twint.",
+        "promo_powerpay": "Ratenzahlung mit CembraPay / Twint.",
         "promo_free": "Kostenlose Lieferung.",
         "promo_fast": " Fast-Option innerhalb von 72 Std. verfügbar.",
         "cart_added": "Produkt wurde in den Warenkorb gelegt",

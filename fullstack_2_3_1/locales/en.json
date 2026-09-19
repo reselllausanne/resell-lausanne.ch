@@ -428,7 +428,7 @@
       "accordion_payment": "PAYMENT METHODS",
       "auth_html": "<p>All products sold on Resell Lausanne are authentic. Before reaching you, each product is checked by our experts for both quality and authenticity.</p><p>All products come directly from our partner reseller network, selected individually for proven experience. Sneakers & Streetwear items are delivered in their original box with accessories and a Resell Lausanne seal confirming that our team inspected and dispatched the product.</p><p>Important: do not remove the seal until you are absolutely sure you will keep the product, otherwise the return request may be refused.</p><p><a href=\"/pages/notre-processus-d-authentification\" class=\"link\">Read our full authentication process.</a></p>",
       "delivery_html": "<p>Free shipping in Switzerland on orders over 50 CHF. 10 CHF flat rate to Europe.</p><p>Estimated delivery times:</p><ul><li>Standard shipping: 5 to 10 business days</li><li>Express shipping: 2 to 5 business days when available</li></ul><p>A tracking number is emailed once your order is handed to the carrier.</p>",
-      "payment_html": "<p>Secure payment by card, Apple Pay, Twint, PostFinance and Powerpay depending on options available at checkout.</p><p>Available payment methods may vary by delivery country and order amount.</p><p><a href=\"/pages/faq?category=options-de-paiement#faq-options-de-paiement\" class=\"link\">Learn more about payment security.</a></p>",
+      "payment_html": "<p>Secure payment by card, Apple Pay, Twint, PostFinance and CembraPay Facture depending on options available at checkout.</p><p>Available payment methods may vary by delivery country and order amount.</p><p><a href=\"/pages/faq?category=options-de-paiement#faq-options-de-paiement\" class=\"link\">Learn more about payment security.</a></p>",
       "size_modal": {
         "free_shipping_ch": "Free shipping in Switzerland on orders over 50 CHF",
         "size_guide": "Size guide",
@@ -439,7 +439,7 @@
         "lego_fit_note": "Factory sealed, brand new",
         "hero_sub_range": "5 to 10 business days",
         "express_promise_default": "2 to 5 business days",
-        "promo_powerpay": "Pay in instalments with Powerpay / Twint.",
+        "promo_powerpay": "Pay in instalments with CembraPay / Twint.",
         "promo_free": "Free shipping.",
         "promo_fast": " Fast option available within 72h.",
         "cart_added": "Product added to your cart",
