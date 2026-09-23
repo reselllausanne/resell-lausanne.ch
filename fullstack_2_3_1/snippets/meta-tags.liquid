@@ -824,9 +824,9 @@
     if schema_price_parts[6] == '1'
       assign schema_product_genuine_free = true
     endif
-    {%- comment -%} og:price = prix visible pour tuer le "price mismatch" Merchant.
-      ?variant= (deep-link feed) → prix de cette variante.
-      Canonique (sans variante) → prix "À partir de" min affiché. {%- endcomment -%}
+    # og:price = prix visible pour tuer le "price mismatch" Merchant.
+    # ?variant= (deep-link feed) -> prix de cette variante.
+    # Canonique (sans variante) -> prix "A partir de" min affiche.
     if product.selected_variant != blank and schema_price_parts[7] == '1'
       assign schema_offer_price_current = schema_price_parts[0] | plus: 0
     elsif schema_price_parts[8] == '1'
