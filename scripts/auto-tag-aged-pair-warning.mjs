@@ -4,7 +4,7 @@
 // Usage:
 //   node --env-file=apps/.env scripts/auto-tag-aged-pair-warning.mjs
 //   node --env-file=apps/.env scripts/auto-tag-aged-pair-warning.mjs --apply
-//   node --env-file=apps/.env scripts/auto-tag-aged-pair-warning.mjs --apply --years=5
+//   node --env-file=apps/.env scripts/auto-tag-aged-pair-warning.mjs --apply --years=9
 //   node --env-file=apps/.env scripts/auto-tag-aged-pair-warning.mjs --apply --before=2021-01-01
 //   node --env-file=apps/.env scripts/auto-tag-aged-pair-warning.mjs --apply --backfill-metafield
 
@@ -28,7 +28,7 @@ const getArg = (prefix, fallback = null) => {
 const APPLY = hasFlag("--apply");
 const DRY_RUN = !APPLY || hasFlag("--dry-run");
 const BACKFILL_METAFIELD = hasFlag("--backfill-metafield");
-const YEARS = Number.parseInt(getArg("--years", "5"), 10) || 5;
+const YEARS = Number.parseInt(getArg("--years", "9"), 10) || 9;
 const BEFORE = getArg("--before", null);
 const LIMIT = Number.parseInt(getArg("--limit", "0"), 10) || 0;
 const TAG = getArg("--tag", "aged-pair-warning");

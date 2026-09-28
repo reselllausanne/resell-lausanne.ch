@@ -11,7 +11,7 @@
   Excludes sealed collectibles (LEGO, watches, Pop Mart, etc.).
 
   @param {product} product
-  @param {number} [years_threshold] - default 5
+  @param {number} [years_threshold] - default 9
 
   @example
   {% capture rs_aged_pair_flags %}{% render 'rs-product-aged-pair-warning-signals', product: product %}{% endcapture %}
@@ -20,7 +20,7 @@
 {%- liquid
   assign rs_aged_pair_active = false
   assign rs_aged_pair_release_date = blank
-  assign rs_aged_pair_years = years_threshold | default: 5 | plus: 0
+  assign rs_aged_pair_years = years_threshold | default: 9 | plus: 0
 
   capture rs_is_sealed_flag
     render 'rs-product-is-sealed-collectible', product: product
