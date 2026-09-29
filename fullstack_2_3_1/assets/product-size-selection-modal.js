@@ -325,18 +325,42 @@
     return v.expressPriceDefined === true && Number.isFinite(expPrice) && expPrice > 0;
   };
 
-  const variantHasExpress = (v) => variantHasExpressPrice(v);
-
-  const shippingLayout = (v) => {
-    if (!variantHasExpressPrice(v)) {
-      return { showStandard: true, showExpress: false, forceExpress: false };
-    }
+  // Express UI requires flag + usable express_price, and must never undercut
+  // the standard catalog price. Sep reprice left express_price < base on many
+  // variants (e.g. CHF 89 vs CHF 129) — those must not unlock express.
+  const variantHasExpress = (v) => {
+    if (v.expressAvailable !== true || !variantHasExpressPrice(v)) return false;
     const expPrice = Number(v.expressPriceCents);
     const basePrice = Number(v.price);
-    if (Number.isFinite(basePrice) && expPrice > basePrice) {
-      return { showStandard: true, showExpress: true, forceExpress: false };
+    if (!Number.isFinite(basePrice) || !Number.isFinite(expPrice)) return false;
+    // Valid: paid upgrade (express > base) or same-price / 48h express.
+    return expPrice >= basePrice;
+  };
+
+  const shippingLayout = (v) => {
+    const g = (v.shippingGroup || '').toLowerCase();
+    const exp = variantHasExpress(v);
+    const expPrice = Number(v.expressPriceCents);
+    const basePrice = Number(v.price);
+    const samePrice = exp && Number.isFinite(basePrice) && expPrice === basePrice;
+    let showStandard = true;
+    let showExpress = exp && g !== 'standard';
+
+    if (g === 'express') {
+      showStandard = false;
+      showExpress = exp;
     }
-    return { showStandard: false, showExpress: true, forceExpress: true };
+    // Paid upgrade (express > standard): keep both options, default standard.
+    // Same price / express-only group: force express, hide standard.
+    if (samePrice && exp) {
+      showStandard = false;
+      showExpress = g === 'standard' ? false : true;
+    }
+    if (!exp || g === 'standard') showExpress = false;
+    if (!showStandard && !showExpress) showStandard = true;
+
+    const forceExpress = (g === 'express' || samePrice) && showExpress;
+    return { showStandard, showExpress, forceExpress };
   };
 
   const compactText = (value) => {
