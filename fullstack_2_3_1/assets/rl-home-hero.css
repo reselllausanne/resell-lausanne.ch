@@ -29,19 +29,32 @@
       min-height: 0;
       max-height: none;
     }
+
+    .section-home-hero-premium .rl-home__hero-slide--cover-only .rl-home__hero-image {
+      object-fit: contain;
+      object-position: center center;
+    }
   }
 
   @media (width > 750px) {
-    /* Match new desk banner 1672×941; BTS 2000×800 still covers fine. */
+    /* 1672×941 desk banners. Never cap height at full width — that stretches
+       ratio (e.g. 1920×720) and cover crops designed creatives. */
     .section-home-hero-premium .rl-home__hero {
-      height: min(720px, calc(100vw * 941 / 1672));
-      aspect-ratio: auto;
-      min-height: 360px;
+      width: min(100%, calc(720px * 1672 / 941));
+      height: auto;
+      aspect-ratio: 1672 / 941;
+      min-height: 0;
       max-height: 720px;
+      margin-inline: auto;
     }
 
     .section-home-hero-premium .rl-home__hero-image {
       object-fit: cover;
+      object-position: center center;
+    }
+
+    .section-home-hero-premium .rl-home__hero-slide--cover-only .rl-home__hero-image {
+      object-fit: contain;
       object-position: center center;
     }
   }
