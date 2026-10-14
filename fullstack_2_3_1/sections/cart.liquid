@@ -590,6 +590,15 @@
                 {{ cart_checkout_label }}
               </button>
 
+              <a
+                href="{{ routes.all_products_collection_url }}"
+                class="button button--secondary button--full-width rs-cart__continue-btn"
+                data-rs-ab-continue
+                hidden
+              >
+                {{ cart_continue_shopping }}
+              </a>
+
               {% if additional_checkout_buttons %}
                 <div class="rs-cart__accelerated-checkout">
                   {{ content_for_additional_checkout_buttons }}

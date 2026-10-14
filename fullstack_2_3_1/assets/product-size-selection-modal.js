@@ -9,14 +9,33 @@
   const EXPRESS_PROMISE_TEXT = '2 à 5 jours ouvrés';
   const SHOW_EXPRESS_48H_BADGE = false;
 
-  // A/B test (snippets/rs-ab-upsell.liquid): variant B skips the cart/upsell view.
-  const isUpsellStepSkipped = () => window.rsAbUpsell?.skipUpsellStep === true;
-  const goToCheckout = () => {
-    const sync = window.rsAbUpsell?.syncCartAttribute?.(true) || Promise.resolve();
+  // A/B tests (snippets/rs-ab.liquid). Layer 'post_size': upsell B skips the
+  // cart/upsell view → /checkout; post_size_flow B goes to the cart page instead.
+  const abVariant = (id) => window.rsAB?.get?.(id) || 'A';
+  const abTrack = (name, data) => window.rsAB?.track?.(name, data || {});
+  const isUpsellStepSkipped = () => abVariant('upsell') === 'B';
+  const isCartPageFlow = () => abVariant('post_size_flow') === 'B';
+  const syncAbThen = (go) => {
+    const sync = window.rsAB?.syncCart?.(true) || Promise.resolve();
     const timeout = new Promise((resolve) => window.setTimeout(resolve, 2500));
-    Promise.race([sync, timeout]).finally(() => {
-      window.location.assign('/checkout');
-    });
+    Promise.race([sync, timeout]).finally(go);
+  };
+  const goToCheckout = (source) => {
+    abTrack('flow_checkout_redirect', { source, flow: abVariant('post_size_flow'), upsell: abVariant('upsell') });
+    syncAbThen(() => window.location.assign('/checkout'));
+  };
+  const goToCartPage = (detail) => {
+    try {
+      sessionStorage.setItem(
+        window.rsAB?.FLOW_CART_KEY || 'rs_ab_flow_cart',
+        JSON.stringify({ ...(detail || {}), from: window.location.pathname }),
+      );
+    } catch (_) {}
+    syncAbThen(() => window.location.assign(window.Theme?.routes?.cart_url || '/cart'));
+  };
+  const centsToAmount = (cents) => {
+    const n = Number(cents);
+    return Number.isFinite(n) && n > 0 ? Math.round(n) / 100 : null;
   };
 
   const parseEuSizeRange = (label) => {
@@ -691,6 +710,9 @@
     let signatureInCart = false;
     let signatureLineKey = '';
     let signatureBusy = false;
+    let pendingFlowDetail = null;
+    let upsellViewOpen = false;
+    let upsellAcceptedInView = 0;
 
     const applyGridExpandedState = () => {
       if (!gridExpandBtn) return;
@@ -715,8 +737,37 @@
       }
     };
 
+    const beginUpsellView = (variant) => {
+      upsellViewOpen = true;
+      upsellAcceptedInView = 0;
+      abTrack('upsell_shown', {
+        productId: payload.productId,
+        variantId: variant?.id || null,
+        size: variant?.sizeValue || null,
+      });
+    };
+
+    const markUpsellAccepted = (type, productId, variantId, priceCents) => {
+      upsellAcceptedInView += 1;
+      abTrack('upsell_accepted', {
+        productId: productId || null,
+        variantId: variantId || null,
+        price: centsToAmount(priceCents),
+        upsellType: type,
+        parentProductId: payload.productId,
+      });
+    };
+
+    const endUpsellView = (reason) => {
+      if (!upsellViewOpen) return;
+      upsellViewOpen = false;
+      if (upsellAcceptedInView > 0) return;
+      abTrack('upsell_skipped', { productId: payload.productId, reason });
+    };
+
     const closeModal = () => {
       if (modal.getAttribute('aria-hidden') === 'true') return;
+      endUpsellView('close');
       modal.setAttribute('aria-hidden', 'true');
       modal.classList.remove('is-cart-view');
       clearCartViewState();
@@ -1101,6 +1152,15 @@
             updateModalAtcState();
             return;
           }
+          const clickLaneExpress = shipMode === 'express' && shippingLayout(v).showExpress;
+          abTrack('rs_variant_selected', {
+            productId: payload.productId,
+            variantId: v.id,
+            size: v.sizeValue,
+            lane: clickLaneExpress ? 'express' : 'standard',
+            price: centsToAmount(clickLaneExpress ? v.expressPriceCents : v.price),
+            currency: window.Shopify?.currency?.active || null,
+          });
           // Paint from the local payload right away; the theme's
           // `variant:updated` round-trip only reconciles afterwards.
           selectedVariant = v;
@@ -1183,6 +1243,21 @@
       setHiddenProp(form, '_delivery', isExpressSelection ? 'express' : 'standard');
       setHiddenProp(form, '_express_price', isExpressSelection ? String(chosenCents) : '');
 
+      abTrack('size_selected', {
+        productId: payload.productId,
+        variantId: selectedVariant.id,
+        size: selectedVariant.sizeValue,
+        lane: isExpressSelection ? 'express' : 'standard',
+        price: centsToAmount(isExpressSelection ? chosenCents : baseCents),
+        currency: window.Shopify?.currency?.active || null,
+      });
+      pendingFlowDetail = {
+        productId: payload.productId,
+        variantId: selectedVariant.id,
+        size: selectedVariant.sizeValue,
+        lane: isExpressSelection ? 'express' : 'standard',
+      };
+
       // Stay open and morph to cart view once the cart update succeeds.
       pendingExpressSelection = isExpressSelection;
       pendingCartView = true;
@@ -1230,8 +1305,12 @@
       }, 0);
     });
 
-    cartCheckoutEl?.addEventListener('click', () => {
+    cartCheckoutEl?.addEventListener('click', (event) => {
+      endUpsellView('checkout');
       closeModal();
+      if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+      event.preventDefault();
+      goToCheckout('modal_cart_view');
     });
 
     const protectionVariantId = payload.protectionUpsell?.variantId ? String(payload.protectionUpsell.variantId) : '';
@@ -1566,6 +1645,7 @@
                 body: JSON.stringify({ items: [item] }),
               });
               await parseCartJson(res);
+              markUpsellAccepted(kind, offer.productId, activeVariant.id);
             }
             cartCache = null;
             cartCacheAt = 0;
@@ -1712,6 +1792,8 @@
           });
           const data = await res.json();
           if (data.status && data.message) throw new Error(data.description || data.message);
+          const addedItem = Array.isArray(data?.items) ? data.items[0] : null;
+          markUpsellAccepted('signature', addedItem?.product_id, signatureVariantId, addedItem?.final_price ?? addedItem?.price);
         } else if (nextMode === 'standard' && signatureInCart && signatureLineKey) {
           const res = await fetch(window.Theme?.routes?.cart_change_url || '/cart/change', {
             method: 'POST',
@@ -1834,6 +1916,7 @@
           ? data.items.find((item) => String(item.product_id) === String(productId))
           : null;
         upsellLineKey = addedItem?.key || upsellLineKey;
+        markUpsellAccepted('socks', productId, targetVariant.id, addedItem?.final_price ?? addedItem?.price);
         cartCache = null;
         cartCacheAt = 0;
         emitCartUpdated('size-modal-socks');
@@ -1894,6 +1977,7 @@
           ? data.items.find((item) => String(item.variant_id) === String(protectionVariantId))
           : null;
         protectionLineKey = addedItem?.key || protectionLineKey;
+        markUpsellAccepted('protection', addedItem?.product_id, protectionVariantId, addedItem?.final_price ?? addedItem?.price);
         cartCache = null;
         cartCacheAt = 0;
         emitCartUpdated('size-modal-protection');
@@ -1977,6 +2061,7 @@
       cartCache = null;
       cartCacheAt = 0;
       syncCartAddonsFromCart();
+      beginUpsellView(cartViewShoeVariant);
     };
 
     const handleCartUpdated = (event) => {
@@ -1984,8 +2069,14 @@
       const source = event?.detail?.data?.source;
       if (source && source !== 'product-form') return;
       clearCartViewState();
+      const flowDetail = pendingFlowDetail;
+      pendingFlowDetail = null;
+      if (isCartPageFlow()) {
+        goToCartPage(flowDetail);
+        return;
+      }
       if (isUpsellStepSkipped()) {
-        goToCheckout();
+        goToCheckout('auto_after_add');
         return;
       }
       btnAtc?.classList.remove('is-loading');
@@ -2022,6 +2113,7 @@
       close: closeModal,
       syncCartAddons: syncCartAddonsFromCart,
       enterCartView: swapToCartView,
+      beginUpsellView,
     });
     syncSelectionFromForm();
     updateMobileDock();
@@ -2094,6 +2186,19 @@
     btn.classList.add('is-loading');
     btn.disabled = true;
 
+    const flowDetail = {
+      productId: payload?.productId || null,
+      variantId: firstAvailable.id,
+      size: firstAvailable.sizeValue || null,
+      lane: 'standard',
+    };
+    abTrack('size_selected', {
+      ...flowDetail,
+      price: centsToAmount(firstAvailable.price),
+      currency: window.Shopify?.currency?.active || null,
+      source: 'direct_atc',
+    });
+
     const sections = [];
 
     fetch(window.Theme?.routes?.cart_add_url || '/cart/add.js', {
@@ -2106,9 +2211,15 @@
     })
       .then((r) => r.json())
       .then((response) => {
-        if (isUpsellStepSkipped() && Array.isArray(response?.items)) {
-          goToCheckout();
-          return;
+        if (Array.isArray(response?.items)) {
+          if (isCartPageFlow()) {
+            goToCartPage(flowDetail);
+            return;
+          }
+          if (isUpsellStepSkipped()) {
+            goToCheckout('auto_after_add');
+            return;
+          }
         }
         btn.classList.remove('is-loading');
         btn.disabled = false;
@@ -2160,6 +2271,7 @@
 
     // Paint upsell + sync instance line keys so ✓/× toggles can remove.
     const api = registry.get(modal.id);
+    api?.beginUpsellView?.(variant);
     presentSocksUpsellInModal(modal, payload, variant.sizeValue);
     if (api?.syncCartAddons) {
       api.syncCartAddons();

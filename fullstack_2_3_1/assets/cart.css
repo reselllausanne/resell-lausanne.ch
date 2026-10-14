@@ -973,6 +973,16 @@
   border-radius: 0;
 }
 
+.rs-cart__continue-btn {
+  height: 46px;
+  font-size: 14px;
+  border-radius: 0;
+}
+
+.rs-cart__continue-btn[hidden] {
+  display: none !important;
+}
+
 .rs-cart__accelerated-checkout {
   display: flex;
   flex-direction: column;

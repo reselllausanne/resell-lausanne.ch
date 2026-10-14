@@ -2652,16 +2652,44 @@
     "name": "Conversion PDP",
     "settings": [
       {
+        "type": "header",
+        "content": "Tests A/B (moteur rs-ab)"
+      },
+      {
+        "type": "paragraph",
+        "content": "Couche 'post_size' : un visiteur est dans au plus un test de la couche (upsell OU post_size_flow). Variante enregistrée sur la commande (attributs _ab_<id> et _ab). QA : ?ab_<id>=A|B (persistant 60 j, ?ab_<id>=off pour retirer), ?ab_debug=1 pour logs console."
+      },
+      {
         "type": "select",
         "id": "ab_upsell_mode",
-        "label": "Test A/B upsell (modale taille)",
+        "label": "Test upsell (modale taille)",
         "options": [
-          { "value": "force_a", "label": "Forcer A : upsells après la taille (comportement actuel)" },
-          { "value": "force_b", "label": "Forcer B : taille → checkout direct" },
-          { "value": "split", "label": "Test 50/50 (A ou B par visiteur, 60 jours)" }
+          { "value": "off", "label": "Désactivé (A, non suivi)" },
+          { "value": "split", "label": "Test A/B (par visiteur, 60 jours)" },
+          { "value": "force_a", "label": "Forcer A : upsells après la taille" },
+          { "value": "force_b", "label": "Forcer B : taille → checkout direct" }
         ],
-        "default": "force_a",
-        "info": "Variante enregistrée sur la commande (attribut _ab_upsell = A/B). Override QA : ?ab_upsell=A ou ?ab_upsell=B."
+        "default": "off",
+        "info": "A = vue panier + upsells dans la modale. B = checkout direct. Attribut commande _ab_upsell."
+      },
+      {
+        "type": "select",
+        "id": "ab_post_size_flow_mode",
+        "label": "Test post_size_flow (après choix taille)",
+        "options": [
+          { "value": "off", "label": "Désactivé (A, non suivi)" },
+          { "value": "split", "label": "Test A/B (par visiteur, 60 jours)" },
+          { "value": "force_a", "label": "Forcer A : comportement actuel" },
+          { "value": "force_b", "label": "Forcer B : taille → page panier (Passer commande + continuer)" }
+        ],
+        "default": "off",
+        "info": "A = comportement actuel (modale upsell / checkout selon test upsell). B = ajout puis page panier, pas de redirection checkout. Attribut commande _ab_post_size_flow."
+      },
+      {
+        "type": "textarea",
+        "id": "ab_experiments_json",
+        "label": "Tests A/B avancés (JSON)",
+        "info": "Optionnel. Tableau JSON qui ajoute ou surcharge des tests : [{\"id\":\"mon_test\",\"layer\":\"pdp\",\"variants\":[\"A\",\"B\"],\"weights\":[50,50],\"mode\":\"split\",\"traffic\":1}]. mode = off | split | force_<variante>. Vide = rien."
       },
       {
         "type": "header",

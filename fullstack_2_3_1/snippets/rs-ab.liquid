@@ -1,0 +1,357 @@
+{% doc %}
+  Generic theme A/B engine. Exposes `window.rsAB`.
+
+  Experiments: built-ins below (mode from theme settings "Conversion PDP") plus optional
+  JSON array in `settings.ab_experiments_json` (adds or overrides by id):
+    { id, layer, variants: ['A','B'], weights: [50,50], mode: 'off'|'split'|'force_<variant>', traffic: 1 }
+
+  Assignment (split): stable visitor id `rs_ab_uid` (cookie + localStorage, 60 days).
+  Layer: hash(uid|layer) picks at most one split experiment per layer (weighted by `traffic`),
+  so experiments touching the same funnel step never overlap.
+  Variant: hash(uid|experimentId) against weights.
+  forced experiments apply to everyone and are not tracked; off = first variant, not tracked.
+
+  QA: `?ab_<id>=<variant>` persists an override (60 days, wins its layer), `?ab_<id>=off`
+  removes it, `?ab_reset=1` removes all overrides, `?ab_debug=1` logs to console (session).
+
+  Tracked experiments → cart attributes `_ab_<id>` + combined `_ab` ("id:variant,...")
+  → order note_attributes; custom pixel events `ab_assigned` {experiment, variant}
+  (+ legacy `ab_upsell_assigned` {variant}).
+
+  @example
+  {% render 'rs-ab' %}
+{% enddoc %}
+
+<script>
+  (function () {
+    var BUILTIN = [
+      { id: 'upsell', layer: 'post_size', variants: ['A', 'B'], weights: [50, 50], mode: {{ settings.ab_upsell_mode | default: 'off' | json }} },
+      { id: 'post_size_flow', layer: 'post_size', variants: ['A', 'B'], weights: [50, 50], mode: {{ settings.ab_post_size_flow_mode | default: 'off' | json }} }
+    ];
+    var EXTRA_RAW = {{ settings.ab_experiments_json | default: '' | json }};
+
+    var TTL_MS = 60 * 24 * 60 * 60 * 1000;
+    var UID_KEY = 'rs_ab_uid';
+    var OVR_KEY = 'rs_ab_ovr';
+    var SYNC_KEY = 'rs_ab_synced';
+    var DEBUG_KEY = 'rs_ab_debug';
+    var FLOW_CART_KEY = 'rs_ab_flow_cart';
+    var ID_RE = /^[a-z0-9_]{1,40}$/;
+    var RESERVED = { debug: 1, reset: 1 };
+
+    var params;
+    try { params = new URLSearchParams(window.location.search); } catch (e) { params = null; }
+    var param = function (k) { return params ? params.get(k) : null; };
+
+    var debug = false;
+    try {
+      if (param('ab_debug') === '1') sessionStorage.setItem(DEBUG_KEY, '1');
+      if (param('ab_debug') === '0') sessionStorage.removeItem(DEBUG_KEY);
+      debug = sessionStorage.getItem(DEBUG_KEY) === '1';
+    } catch (e) {}
+    var log = function () {
+      if (!debug || !window.console) return;
+      var args = [].slice.call(arguments);
+      try { console.log.apply(console, ['[rsAB]'].concat(args)); } catch (e) {}
+      try {
+        var buf = JSON.parse(sessionStorage.getItem('rs_ab_log') || '[]');
+        buf.push(window.location.pathname + ' ' + JSON.stringify(args));
+        sessionStorage.setItem('rs_ab_log', JSON.stringify(buf.slice(-50)));
+      } catch (e) {}
+    };
+
+    var readCookie = function (name) {
+      var m = document.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    };
+    var writeCookie = function (name, value) {
+      document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' +
+        new Date(Date.now() + TTL_MS).toUTCString() + '; path=/; SameSite=Lax';
+    };
+    var lsGet = function (k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } };
+    var lsSet = function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+    // Stable visitor id.
+    var uid = readCookie(UID_KEY);
+    if (!uid || !/^[a-z0-9]{8,40}$/.test(uid)) {
+      var stored = lsGet(UID_KEY);
+      uid = stored && stored.v && stored.exp > Date.now() ? stored.v : null;
+    }
+    if (!uid || !/^[a-z0-9]{8,40}$/.test(uid)) {
+      uid = Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+    }
+    writeCookie(UID_KEY, uid);
+    lsSet(UID_KEY, { v: uid, exp: Date.now() + TTL_MS });
+
+    // FNV-1a 32-bit → [0, 1).
+    var hash01 = function (s) {
+      var h = 0x811c9dc5;
+      for (var i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 0x01000193) >>> 0;
+      }
+      return h / 4294967296;
+    };
+
+    // Experiment registry.
+    var byId = {};
+    var order = [];
+    var put = function (raw) {
+      if (!raw || typeof raw !== 'object') return;
+      var id = String(raw.id || '').toLowerCase();
+      if (!ID_RE.test(id) || RESERVED[id]) return;
+      var prev = byId[id] || {};
+      var exp = {
+        id: id,
+        layer: String(raw.layer || prev.layer || id),
+        variants: Array.isArray(raw.variants) && raw.variants.length ? raw.variants.map(String) : prev.variants || ['A', 'B'],
+        weights: Array.isArray(raw.weights) ? raw.weights.map(Number) : prev.weights || null,
+        mode: String(raw.mode || prev.mode || 'off'),
+        traffic: Number(raw.traffic || prev.traffic || 1) || 1,
+      };
+      if (!exp.weights || exp.weights.length !== exp.variants.length) {
+        exp.weights = exp.variants.map(function () { return 1; });
+      }
+      if (!byId[id]) order.push(id);
+      byId[id] = exp;
+    };
+    BUILTIN.forEach(put);
+    if (EXTRA_RAW && String(EXTRA_RAW).trim()) {
+      try {
+        var extra = JSON.parse(EXTRA_RAW);
+        (Array.isArray(extra) ? extra : [extra]).forEach(put);
+      } catch (e) { log('ab_experiments_json invalid', e); }
+    }
+
+    var matchVariant = function (exp, v) {
+      v = String(v || '').toLowerCase();
+      for (var i = 0; i < exp.variants.length; i++) {
+        if (exp.variants[i].toLowerCase() === v) return exp.variants[i];
+      }
+      return null;
+    };
+    var parseMode = function (exp) {
+      var m = exp.mode.toLowerCase();
+      if (m === 'split') return { kind: 'split' };
+      if (m.indexOf('force_') === 0) {
+        var fv = matchVariant(exp, m.slice(6));
+        if (fv) return { kind: 'force', variant: fv };
+      }
+      return { kind: 'off' };
+    };
+
+    // Overrides (?ab_<id>=<variant>), persisted 60 days.
+    var overrides = lsGet(OVR_KEY) || {};
+    var now = Date.now();
+    Object.keys(overrides).forEach(function (k) {
+      if (!overrides[k] || !(overrides[k].exp > now) || !byId[k]) delete overrides[k];
+    });
+    if (param('ab_reset') === '1') overrides = {};
+    if (params) {
+      params.forEach(function (value, key) {
+        if (key.indexOf('ab_') !== 0) return;
+        var id = key.slice(3).toLowerCase();
+        var exp = byId[id];
+        if (!exp) return;
+        var lv = String(value || '').toLowerCase();
+        if (lv === 'off' || lv === 'reset' || lv === '') { delete overrides[id]; return; }
+        var v = matchVariant(exp, value);
+        if (!v) return;
+        Object.keys(overrides).forEach(function (other) {
+          if (byId[other] && byId[other].layer === exp.layer) delete overrides[other];
+        });
+        overrides[id] = { v: v, exp: now + TTL_MS };
+      });
+    }
+    lsSet(OVR_KEY, overrides);
+
+    // Layer owners: override first, else hashed pick among split experiments.
+    var layerOwner = {};
+    order.forEach(function (id) {
+      if (overrides[id]) layerOwner[byId[id].layer] = id;
+    });
+    var splitByLayer = {};
+    order.forEach(function (id) {
+      var exp = byId[id];
+      if (parseMode(exp).kind !== 'split') return;
+      (splitByLayer[exp.layer] = splitByLayer[exp.layer] || []).push(exp);
+    });
+    Object.keys(splitByLayer).forEach(function (layer) {
+      if (layerOwner[layer]) return;
+      var list = splitByLayer[layer];
+      var total = list.reduce(function (s, e) { return s + e.traffic; }, 0);
+      var r = hash01(uid + '|layer|' + layer) * total;
+      for (var i = 0; i < list.length; i++) {
+        r -= list[i].traffic;
+        if (r < 0 || i === list.length - 1) { layerOwner[layer] = list[i].id; break; }
+      }
+    });
+
+    var pickVariant = function (exp) {
+      var total = exp.weights.reduce(function (s, w) { return s + (w > 0 ? w : 0); }, 0);
+      if (!(total > 0)) return exp.variants[0];
+      var r = hash01(uid + '|' + exp.id) * total;
+      for (var i = 0; i < exp.variants.length; i++) {
+        r -= exp.weights[i] > 0 ? exp.weights[i] : 0;
+        if (r < 0) return exp.variants[i];
+      }
+      return exp.variants[exp.variants.length - 1];
+    };
+
+    var assignments = {};
+    order.forEach(function (id) {
+      var exp = byId[id];
+      var mode = parseMode(exp);
+      var a;
+      if (overrides[id] && layerOwner[exp.layer] === id) a = { variant: overrides[id].v, tracked: true, source: 'override' };
+      else if (mode.kind === 'split' && layerOwner[exp.layer] === id) a = { variant: pickVariant(exp), tracked: true, source: 'split' };
+      else if (mode.kind === 'force') a = { variant: mode.variant, tracked: false, source: 'force' };
+      else a = { variant: exp.variants[0], tracked: false, source: mode.kind === 'split' ? 'excluded' : 'off' };
+      a.experiment = id;
+      a.layer = exp.layer;
+      assignments[id] = a;
+    });
+
+    var tracked = order.filter(function (id) { return assignments[id].tracked; });
+    var combined = tracked.map(function (id) { return id + ':' + assignments[id].variant; }).join(',');
+
+    // Pixel events.
+    var publish = function (name, data, attempt) {
+      try {
+        if (window.Shopify && window.Shopify.analytics && typeof window.Shopify.analytics.publish === 'function') {
+          window.Shopify.analytics.publish(name, data);
+          log('publish', name, data);
+          return;
+        }
+      } catch (e) {}
+      if ((attempt || 0) < 20) {
+        window.setTimeout(function () { publish(name, data, (attempt || 0) + 1); }, 250);
+      } else {
+        log('publish failed (no Shopify.analytics)', name, data);
+      }
+    };
+    var track = function (name, data) {
+      var payload = {};
+      for (var k in data || {}) if (Object.prototype.hasOwnProperty.call(data, k)) payload[k] = data[k];
+      if (combined && payload.ab === undefined) payload.ab = combined;
+      publish(name, payload, 0);
+    };
+
+    // Cart attributes → order note_attributes.
+    var cartAttributes = function () {
+      var attrs = { _ab: combined };
+      order.forEach(function (id) {
+        attrs['_ab_' + id] = assignments[id].tracked ? assignments[id].variant : '';
+      });
+      return attrs;
+    };
+    var syncCart = function (force) {
+      if (!combined) return Promise.resolve();
+      var cart = readCookie('cart') || '';
+      if (!cart && !force) return Promise.resolve();
+      var attrs = cartAttributes();
+      var key = JSON.stringify(attrs) + '|' + cart;
+      try { if (!force && sessionStorage.getItem(SYNC_KEY) === key) return Promise.resolve(); } catch (e) {}
+      var root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+      return fetch(root + 'cart/update.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ attributes: attrs }),
+      })
+        .then(function (res) {
+          if (!res.ok) return;
+          try { sessionStorage.setItem(SYNC_KEY, JSON.stringify(attrs) + '|' + (readCookie('cart') || '')); } catch (e) {}
+          log('cart attributes synced', attrs);
+        })
+        .catch(function () {});
+    };
+
+    window.rsAB = {
+      uid: uid,
+      debug: debug,
+      experiments: byId,
+      assignments: assignments,
+      combined: combined,
+      get: function (id) { var a = assignments[id]; return a ? a.variant : null; },
+      isTracked: function (id) { return !!(assignments[id] && assignments[id].tracked); },
+      track: track,
+      syncCart: syncCart,
+      log: log,
+      FLOW_CART_KEY: FLOW_CART_KEY,
+    };
+
+    // Legacy API (size modal before the generic engine).
+    window.rsAbUpsell = {
+      mode: byId.upsell ? byId.upsell.mode : 'off',
+      variant: assignments.upsell ? assignments.upsell.variant : 'A',
+      tracked: window.rsAB.isTracked('upsell'),
+      skipUpsellStep: window.rsAB.get('upsell') === 'B',
+      syncCartAttribute: syncCart,
+    };
+
+    log('uid', uid, 'assignments', assignments, 'overrides', overrides);
+
+    var isCartPage = function () {
+      return /\/cart\/?$/.test(window.location.pathname);
+    };
+
+    var CHECKOUT_LABELS = { fr: 'Passer commande', de: 'Zur Kasse', it: 'Procedi all\'ordine', pl: 'Złóż zamówienie', en: 'Checkout' };
+
+    var enhanceCartPage = function () {
+      if (!isCartPage()) return;
+      var pending = null;
+      try {
+        pending = JSON.parse(sessionStorage.getItem(FLOW_CART_KEY) || 'null');
+        sessionStorage.removeItem(FLOW_CART_KEY);
+      } catch (e) {}
+      if (pending) track('flow_cart_opened', pending);
+
+      document.addEventListener('click', function (event) {
+        var btn = event.target && event.target.closest && event.target.closest('[data-ref="checkout-button"]');
+        if (!btn) return;
+        track('flow_checkout_redirect', { source: 'cart_page', flow: window.rsAB.get('post_size_flow') });
+      }, true);
+
+      if (window.rsAB.get('post_size_flow') !== 'B') return;
+      var lang = (document.documentElement.lang || 'fr').slice(0, 2).toLowerCase();
+      var label = CHECKOUT_LABELS[lang] || CHECKOUT_LABELS.en;
+      var lastPdp = '';
+      try { lastPdp = (pending && pending.from) || sessionStorage.getItem('rs_ab_last_pdp') || ''; } catch (e) {}
+      var apply = function () {
+        document.querySelectorAll('[data-ref="checkout-button"]').forEach(function (b) {
+          if (b.textContent.trim() !== label) b.textContent = label;
+        });
+        document.querySelectorAll('[data-rs-ab-continue]').forEach(function (a) {
+          if (lastPdp && lastPdp.charAt(0) === '/') a.setAttribute('href', lastPdp);
+          a.hidden = false;
+        });
+      };
+      apply();
+      // Cart section re-renders (qty/remove) replace the buttons.
+      document.addEventListener('cart:updated', function () { window.setTimeout(apply, 50); });
+      if (window.MutationObserver) {
+        var root = document.querySelector('cart-component') || document.body;
+        new MutationObserver(function () { apply(); }).observe(root, { childList: true, subtree: true });
+      }
+    };
+
+    var boot = function () {
+      tracked.forEach(function (id) {
+        track('ab_assigned', { experiment: id, variant: assignments[id].variant });
+      });
+      if (window.rsAB.isTracked('upsell')) track('ab_upsell_assigned', { variant: assignments.upsell.variant });
+      if (/\/products\//.test(window.location.pathname)) {
+        try { sessionStorage.setItem('rs_ab_last_pdp', window.location.pathname); } catch (e) {}
+      }
+      enhanceCartPage();
+      syncCart(false);
+    };
+
+    document.addEventListener('cart:updated', function () { syncCart(false); });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot, { once: true });
+    } else {
+      boot();
+    }
+  })();
+</script>
