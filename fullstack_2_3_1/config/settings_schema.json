@@ -2680,10 +2680,10 @@
           { "value": "off", "label": "Désactivé (A, non suivi)" },
           { "value": "split", "label": "Test A/B (par visiteur, 60 jours)" },
           { "value": "force_a", "label": "Forcer A : comportement actuel" },
-          { "value": "force_b", "label": "Forcer B : taille → page panier (Passer commande + continuer)" }
+          { "value": "force_b", "label": "Forcer B : même panneau, CTA Voir mon panier → page panier" }
         ],
         "default": "off",
-        "info": "A = comportement actuel (modale upsell / checkout selon test upsell). B = ajout puis page panier, pas de redirection checkout. Attribut commande _ab_post_size_flow."
+        "info": "A = panneau post-ajout, CTA Continuer → checkout. B = même panneau et upsells, CTA Voir mon panier → page panier (Passer commande + Continuer les achats). Attribut commande _ab_post_size_flow."
       },
       {
         "type": "textarea",

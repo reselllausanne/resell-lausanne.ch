@@ -10,11 +10,17 @@
   const SHOW_EXPRESS_48H_BADGE = false;
 
   // A/B tests (snippets/rs-ab.liquid). Layer 'post_size': upsell B skips the
-  // cart/upsell view → /checkout; post_size_flow B goes to the cart page instead.
+  // cart/upsell view → /checkout; post_size_flow B keeps the panel but its CTA
+  // opens the cart page instead of /checkout.
   const abVariant = (id) => window.rsAB?.get?.(id) || 'A';
   const abTrack = (name, data) => window.rsAB?.track?.(name, data || {});
   const isUpsellStepSkipped = () => abVariant('upsell') === 'B';
   const isCartPageFlow = () => abVariant('post_size_flow') === 'B';
+  const VIEW_CART_LABELS = { fr: 'Voir mon panier', de: 'Zum Warenkorb', en: 'View cart', it: 'Vai al carrello', pl: 'Zobacz koszyk' };
+  const viewCartLabel = () =>
+    VIEW_CART_LABELS[(document.documentElement.lang || 'fr').slice(0, 2).toLowerCase()] || VIEW_CART_LABELS.en;
+  // Last added shoe per modal, for the flow_cart_opened payload.
+  const panelFlowDetail = new Map();
   const syncAbThen = (go) => {
     const sync = window.rsAB?.syncCart?.(true) || Promise.resolve();
     const timeout = new Promise((resolve) => window.setTimeout(resolve, 2500));
@@ -1305,12 +1311,22 @@
       }, 0);
     });
 
+    if (cartCheckoutEl && isCartPageFlow()) {
+      cartCheckoutEl.textContent = viewCartLabel();
+      cartCheckoutEl.setAttribute('href', window.Theme?.routes?.cart_url || '/cart');
+    }
+
     cartCheckoutEl?.addEventListener('click', (event) => {
-      endUpsellView('checkout');
+      const toCart = isCartPageFlow();
+      endUpsellView(toCart ? 'cart' : 'checkout');
       closeModal();
       if (event.metaKey || event.ctrlKey || event.shiftKey) return;
       event.preventDefault();
-      goToCheckout('modal_cart_view');
+      if (toCart) {
+        goToCartPage({ ...(panelFlowDetail.get(modal.id) || {}), source: 'panel_cta' });
+      } else {
+        goToCheckout('modal_cart_view');
+      }
     });
 
     const protectionVariantId = payload.protectionUpsell?.variantId ? String(payload.protectionUpsell.variantId) : '';
@@ -2069,12 +2085,8 @@
       const source = event?.detail?.data?.source;
       if (source && source !== 'product-form') return;
       clearCartViewState();
-      const flowDetail = pendingFlowDetail;
+      if (pendingFlowDetail) panelFlowDetail.set(modal.id, pendingFlowDetail);
       pendingFlowDetail = null;
-      if (isCartPageFlow()) {
-        goToCartPage(flowDetail);
-        return;
-      }
       if (isUpsellStepSkipped()) {
         goToCheckout('auto_after_add');
         return;
@@ -2211,16 +2223,11 @@
     })
       .then((r) => r.json())
       .then((response) => {
-        if (Array.isArray(response?.items)) {
-          if (isCartPageFlow()) {
-            goToCartPage(flowDetail);
-            return;
-          }
-          if (isUpsellStepSkipped()) {
-            goToCheckout('auto_after_add');
-            return;
-          }
+        if (Array.isArray(response?.items) && isUpsellStepSkipped()) {
+          goToCheckout('auto_after_add');
+          return;
         }
+        if (modal) panelFlowDetail.set(modal.id, flowDetail);
         btn.classList.remove('is-loading');
         btn.disabled = false;
 
