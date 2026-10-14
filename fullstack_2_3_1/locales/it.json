@@ -321,7 +321,12 @@
     "reviews": "recensioni",
     "sales": "In saldo",
     "save": "Risparmia",
-    "sold_out": "Esaurito"
+    "sold_out": "Esaurito",
+    "pdp": {
+      "size_modal": {
+        "continue_checkout": "Vai al checkout"
+      }
+    }
   },
   "search": {
     "collections": "Collezioni",

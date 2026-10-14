@@ -30,6 +30,8 @@
     abTrack('flow_checkout_redirect', { source, flow: abVariant('post_size_flow'), upsell: abVariant('upsell') });
     syncAbThen(() => window.location.assign('/checkout'));
   };
+  // Locale-prefixed (/de/cart); `Theme` from scripts.liquid is not on window.
+  const localeCartUrl = () => `${window.Shopify?.routes?.root || '/'}cart`;
   const goToCartPage = (detail) => {
     try {
       sessionStorage.setItem(
@@ -37,7 +39,7 @@
         JSON.stringify({ ...(detail || {}), from: window.location.pathname }),
       );
     } catch (_) {}
-    syncAbThen(() => window.location.assign(window.Theme?.routes?.cart_url || '/cart'));
+    syncAbThen(() => window.location.assign(localeCartUrl()));
   };
   const centsToAmount = (cents) => {
     const n = Number(cents);
@@ -1313,7 +1315,7 @@
 
     if (cartCheckoutEl && isCartPageFlow()) {
       cartCheckoutEl.textContent = viewCartLabel();
-      cartCheckoutEl.setAttribute('href', window.Theme?.routes?.cart_url || '/cart');
+      cartCheckoutEl.setAttribute('href', localeCartUrl());
     }
 
     cartCheckoutEl?.addEventListener('click', (event) => {
