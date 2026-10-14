@@ -7,6 +7,10 @@
   assign rs_has_express_pricing = false
 
   for variant in product.variants
+    if settings.rs_express_lane_disabled
+      break
+    endif
+
     unless variant.available
       continue
     endunless

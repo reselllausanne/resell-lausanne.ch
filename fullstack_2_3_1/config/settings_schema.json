@@ -2615,6 +2615,13 @@
     "name": "t:cart",
     "settings": [
       {
+        "type": "checkbox",
+        "id": "rs_express_lane_disabled",
+        "label": "Masquer la livraison Express payante",
+        "info": "Cache l'option Express (prix supérieur) dans le choix de taille. À activer si la fonction Cart Transform « express-price » n'est pas active, sinon l'Express est facturé au prix Standard.",
+        "default": false
+      },
+      {
         "type": "select",
         "id": "cart_type",
         "label": "t:cart_type",

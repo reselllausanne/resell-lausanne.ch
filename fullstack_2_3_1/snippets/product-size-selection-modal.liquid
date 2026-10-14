@@ -1130,6 +1130,13 @@
               assign express_price_defined = false
               assign express_available = false
             endif
+            comment
+              Kill switch: paid Express is only charged by the cart transform
+              function; hide it whenever that function is not live.
+            endcomment
+            if settings.rs_express_lane_disabled and express_price_cents > variant.price
+              assign express_available = false
+            endif
 
             assign shipping_group = ''
             if variant.metafields.custom.shipping_group.value != blank
