@@ -5,6 +5,22 @@
   {% content_for 'block', type: 'resell-store-rating', id: 'store_rating' %}
 {% enddoc %}
 
+{% if block.settings.source == 'trustpilot' %}
+  {{ 'rs-trust-badge.css' | asset_url | stylesheet_tag }}
+  <div
+    class="
+      resell-store-trust resell-store-trust--trustpilot
+      {%- if block.settings.show_on_display == 'desktop_only' %} mobile-hide{% endif -%}
+      {%- if block.settings.show_on_display == 'mobile_only' %} desktop-hide{% endif -%}
+      {%- if block.settings.additional_class != blank %} {{ block.settings.additional_class }}{% endif -%}
+    "
+    style="margin-top: {{ block.settings.margin_top }}px; margin-bottom: {{ block.settings.margin_bottom }}px;"
+    data-rs-store-trust
+    {{ block.shopify_attributes }}
+  >
+    {% render 'rs-trust-badge', size: 'small', sub_format: 'compact' %}
+  </div>
+{% else %}
 {% liquid
   assign reviews_url = ''
 
@@ -55,6 +71,7 @@
 
   <span class="resell-store-trust__label">{{ 'store_trust.reviews' | t }}</span>
 </a>
+{% endif %}
 
 {% stylesheet %}
   .resell-store-trust {
@@ -230,6 +247,10 @@
       "label": "Source des avis",
       "default": "manual",
       "options": [
+        {
+          "value": "trustpilot",
+          "label": "Trustpilot (réglages thème > Conversion PDP)"
+        },
         {
           "value": "judgeme",
           "label": "Judge.me (temps réel)"

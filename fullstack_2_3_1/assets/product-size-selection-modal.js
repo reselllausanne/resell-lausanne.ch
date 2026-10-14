@@ -9,6 +9,16 @@
   const EXPRESS_PROMISE_TEXT = '2 à 5 jours ouvrés';
   const SHOW_EXPRESS_48H_BADGE = false;
 
+  // A/B test (snippets/rs-ab-upsell.liquid): variant B skips the cart/upsell view.
+  const isUpsellStepSkipped = () => window.rsAbUpsell?.skipUpsellStep === true;
+  const goToCheckout = () => {
+    const sync = window.rsAbUpsell?.syncCartAttribute?.(true) || Promise.resolve();
+    const timeout = new Promise((resolve) => window.setTimeout(resolve, 2500));
+    Promise.race([sync, timeout]).finally(() => {
+      window.location.assign('/checkout');
+    });
+  };
+
   const parseEuSizeRange = (label) => {
     const nums = String(label || '')
       .match(/\d+/g)
@@ -1974,6 +1984,10 @@
       const source = event?.detail?.data?.source;
       if (source && source !== 'product-form') return;
       clearCartViewState();
+      if (isUpsellStepSkipped()) {
+        goToCheckout();
+        return;
+      }
       btnAtc?.classList.remove('is-loading');
       // Only swap view if the modal is still visible.
       if (modal.getAttribute('aria-hidden') === 'false') {
@@ -2092,6 +2106,10 @@
     })
       .then((r) => r.json())
       .then((response) => {
+        if (isUpsellStepSkipped() && Array.isArray(response?.items)) {
+          goToCheckout();
+          return;
+        }
         btn.classList.remove('is-loading');
         btn.disabled = false;
 

@@ -57,6 +57,7 @@
         "resell_judgeme_badge_G3a8mN": {
           "type": "resell-product-judgeme-badge",
           "name": "Avis produit (Judge.me)",
+          "disabled": true,
           "settings": {
             "show_on_display": "desktop_and_mobile",
             "margin_top": 8,
@@ -437,7 +438,7 @@
           "name": "Avis boutique (PDP)",
           "settings": {
             "show_on_display": "desktop_and_mobile",
-            "source": "judgeme",
+            "source": "trustpilot",
             "reviews_page": "/pages/avis-sur-resell-lausanne",
             "rating": 4.8,
             "review_count": 380,

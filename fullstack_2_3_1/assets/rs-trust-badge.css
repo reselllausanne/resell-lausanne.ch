@@ -20,6 +20,8 @@
   gap: 6px;
   text-decoration: none;
   color: rgb(8 8 8);
+  pointer-events: none;
+  cursor: default;
 }
 
 .rs-trust-badge--sm {

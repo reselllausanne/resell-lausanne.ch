@@ -1,10 +1,12 @@
 {% doc %}
   Trustpilot-style rating badge: star tiles, wordmark, review subline.
 
-  @param {number} [rating] - Score out of 5. Defaults to 4.5.
-  @param {number} [count] - Review count. Defaults to 1200.
+  Never a link: the badge is display-only (no outbound navigation to Trustpilot).
+
+  @param {number} [rating] - Score out of 5. Defaults to theme setting `trustpilot_rating`.
+  @param {number} [count] - Review count. Defaults to theme setting `trustpilot_review_count`.
   @param {string} [size] - 'default' or 'small'.
-  @param {string} [link] - Profile URL. Pass false / 'none' for a non-clickable badge.
+  @param {boolean} [link] - Ignored; kept for existing callers.
   @param {boolean} [show_subline] - Set false to keep only stars + wordmark.
   @param {string} [sub_format] - 'long' (default) or 'compact' for tight rows.
   @param {string} [class] - Extra classes on the root element.
@@ -14,16 +16,9 @@
 {% enddoc %}
 
 {%- liquid
-  assign badge_rating = rating | default: 4.5
-  assign badge_count = count | default: 1200
+  assign badge_rating = rating | default: settings.trustpilot_rating | default: 4.5
+  assign badge_count = count | default: settings.trustpilot_review_count | default: 1200
   assign badge_size = size | default: 'default'
-  if link == false or link == 'false' or link == 'none'
-    assign badge_link = ''
-  elsif link != blank
-    assign badge_link = link
-  else
-    assign badge_link = 'https://fr.trustpilot.com/review/resell-lausanne.ch'
-  endif
 
   assign show_sub = true
   if show_subline == false
@@ -101,18 +96,6 @@
   {%- assign root_class = root_class | append: ' ' | append: class -%}
 {%- endif -%}
 
-{%- if badge_link != blank -%}
-  <a
-    class="{{ root_class }}"
-    href="{{ badge_link }}"
-    target="_blank"
-    rel="noopener nofollow"
-    aria-label="{{ aria | escape }}"
-  >
-    {{ badge_body }}
-  </a>
-{%- else -%}
-  <span class="{{ root_class }}" aria-label="{{ aria | escape }}">
-    {{ badge_body }}
-  </span>
-{%- endif -%}
+<span class="{{ root_class }}" role="img" aria-label="{{ aria | escape }}">
+  {{ badge_body }}
+</span>
