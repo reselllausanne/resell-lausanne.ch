@@ -8,6 +8,25 @@
   const STANDARD_PROMISE_TEXT = `${STANDARD_MIN_DAYS} à ${STANDARD_MAX_DAYS} jours ouvrés`;
   const EXPRESS_PROMISE_TEXT = '2 à 5 jours ouvrés';
   const SHOW_EXPRESS_48H_BADGE = false;
+  const centsToAmount = (cents) => {
+    const n = Number(cents);
+    return Number.isFinite(n) && n > 0 ? Math.round(n) / 100 : null;
+  };
+  const publishTrackingEvent = (name, data) => {
+    try {
+      const published = window.Shopify?.analytics?.publish?.(name, {
+        ...(data || {}),
+        url: window.location.pathname + window.location.search,
+      });
+      if (published && typeof published.catch === 'function') published.catch(() => {});
+    } catch (_) {
+      /* tracking optional */
+    }
+  };
+  const trackedLineProperties = (properties) => {
+    const allowed = ["Mode d'expédition", '_estimation_livraison', '_delivery', '_express_price'];
+    return Object.fromEntries(allowed.filter((key) => properties?.[key] != null).map((key) => [key, String(properties[key])]));
+  };
 
   const parseEuSizeRange = (label) => {
     const nums = String(label || '')
@@ -756,6 +775,35 @@
       return v.priceFormatted;
     };
 
+    const modeForVariant = (variant, requestedMode = shipMode) => {
+      const layout = shippingLayout(variant);
+      return requestedMode === 'express' && layout.showExpress ? 'express' : 'standard';
+    };
+
+    const trackingPayloadFor = (variant, requestedMode, source, component, extra = {}) => {
+      const fulfillmentMode = modeForVariant(variant, requestedMode);
+      const standardPrice = centsToAmount(variant?.price);
+      const expressPrice = centsToAmount(variant?.expressPriceCents);
+      const displayedPrice = fulfillmentMode === 'express' && expressPrice != null ? expressPrice : standardPrice;
+      return {
+        productId: payload.productId,
+        productHandle: payload.productHandle,
+        productTitle: payload.productTitle,
+        variantId: variant?.id || null,
+        sku: variant?.sku || null,
+        selectedSize: variant?.sizeValue || null,
+        variantTitle: variant?.title || variant?.sizeValue || null,
+        fulfillmentMode,
+        standardPrice,
+        expressPrice,
+        displayedPrice,
+        currency: window.Shopify?.currency?.active || null,
+        source,
+        component,
+        ...extra,
+      };
+    };
+
     const sizeCardAriaLabel = (v) => {
       const label = displayLabel(v);
       if (!v.available) return `${label}, indisponible`;
@@ -1082,6 +1130,7 @@
 
         b.addEventListener('click', () => {
           if (!v.available) return;
+          if (String(selectedVariant?.id || '') === String(v.id)) return;
           lastChosenSizeValue = v.sizeValue;
           pendingVariantSync = true;
           updateModalAtcState();
@@ -1091,6 +1140,10 @@
             updateModalAtcState();
             return;
           }
+          publishTrackingEvent(
+            'rs_variant_selected',
+            trackingPayloadFor(v, shipMode, 'size_card', 'product_size_modal'),
+          );
           // Paint from the local payload right away; the theme's
           // `variant:updated` round-trip only reconciles afterwards.
           selectedVariant = v;
@@ -1136,18 +1189,29 @@
     });
 
     btnStandard?.addEventListener('click', () => {
+      if (!selectedVariant || shipMode === 'standard') return;
+      const previousMode = shipMode;
       shipMode = 'standard';
       updateShippingCards();
       refreshGridPrices();
       updateMobileDock();
+      publishTrackingEvent(
+        'rs_fulfillment_mode_selected',
+        trackingPayloadFor(selectedVariant, shipMode, 'shipping_card', 'product_size_modal', { previousMode }),
+      );
     });
 
     btnExpress?.addEventListener('click', () => {
-      if (btnExpress?.hidden) return;
+      if (btnExpress?.hidden || !selectedVariant || shipMode === 'express') return;
+      const previousMode = shipMode;
       shipMode = 'express';
       updateShippingCards();
       refreshGridPrices();
       updateMobileDock();
+      publishTrackingEvent(
+        'rs_fulfillment_mode_selected',
+        trackingPayloadFor(selectedVariant, shipMode, 'shipping_card', 'product_size_modal', { previousMode }),
+      );
     });
 
     btnAtc?.addEventListener('click', () => {
@@ -1172,6 +1236,12 @@
       const chosenCents = expressCents > 0 ? expressCents : (baseCents > 0 ? baseCents : 0);
       setHiddenProp(form, '_delivery', isExpressSelection ? 'express' : 'standard');
       setHiddenProp(form, '_express_price', isExpressSelection ? String(chosenCents) : '');
+      form.__rsCartTracking = trackingPayloadFor(
+        selectedVariant,
+        isExpressSelection ? 'express' : 'standard',
+        'add_to_cart',
+        'product_size_modal',
+      );
 
       // Stay open and morph to cart view once the cart update succeeds.
       pendingExpressSelection = isExpressSelection;
@@ -2090,8 +2160,39 @@
         sections: sections.join(','),
       }),
     })
-      .then((r) => r.json())
+      .then(async (r) => {
+        const response = await r.json();
+        if (!r.ok || (response?.status && response?.message)) {
+          throw new Error(response?.description || response?.message || 'Une erreur est survenue.');
+        }
+        return response;
+      })
       .then((response) => {
+        const addedItem = Array.isArray(response?.items)
+          ? response.items.find((candidate) => String(candidate.variant_id || candidate.id) === String(firstAvailable.id))
+          : null;
+        const properties = trackedLineProperties(addedItem?.properties || {});
+        const fulfillmentMode = properties._delivery === 'express' ? 'express' : 'standard';
+        publishTrackingEvent('rs_cart_item_added', {
+          productId: payload?.productId || addedItem?.product_id || null,
+          productHandle: payload?.productHandle || addedItem?.handle || null,
+          productTitle: payload?.productTitle || addedItem?.product_title || null,
+          variantId: firstAvailable.id,
+          sku: firstAvailable.sku || addedItem?.sku || null,
+          selectedSize: firstAvailable.sizeValue || null,
+          variantTitle: firstAvailable.title || addedItem?.variant_title || null,
+          fulfillmentMode,
+          standardPrice: centsToAmount(firstAvailable.price),
+          expressPrice: centsToAmount(firstAvailable.expressPriceCents),
+          displayedPrice: centsToAmount(fulfillmentMode === 'express' ? firstAvailable.expressPriceCents : firstAvailable.price),
+          cartResponseLinePrice: centsToAmount(addedItem?.final_price ?? addedItem?.price),
+          currency: window.Shopify?.currency?.active || null,
+          quantity: addedItem?.quantity || 1,
+          linePropertiesJson: JSON.stringify(properties),
+          clientExpressPricePropertyCents: properties._express_price || null,
+          source: 'direct_atc',
+          component: 'product_size_modal',
+        });
         btn.classList.remove('is-loading');
         btn.disabled = false;
 

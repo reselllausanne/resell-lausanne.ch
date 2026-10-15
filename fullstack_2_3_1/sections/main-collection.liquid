@@ -90,6 +90,9 @@
 
 <div
   class="main-collection color-{{ section.settings.color_scheme | default: 'scheme-1' }} main-collection--has-results"
+  data-collection-handle="{{ collection.handle | escape }}"
+  data-collection-title="{{ collection.title | escape }}"
+  data-collection-url="{{ collection.url | escape }}"
   style="
     --margin-top: {{ section.settings.margin_top }}px;
     --margin-bottom: {{ section.settings.margin_bottom }}px;

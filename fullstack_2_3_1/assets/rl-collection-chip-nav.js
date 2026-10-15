@@ -89,13 +89,19 @@
     return !normalized || normalized === '/' || normalized === root;
   }
 
-  function publishChipNavPageView() {
+  function publishCollectionNavigation(source) {
     try {
-      if (window.ShopifyAnalytics?.lib?.page) {
-        window.ShopifyAnalytics.lib.page(null, { shopifyEmitted: false });
-      }
+      const collection = document.querySelector('.main-collection[data-collection-handle]');
       if (window.Shopify?.analytics?.publish) {
-        window.Shopify.analytics.publish('page_viewed', {});
+        const published = window.Shopify.analytics.publish('rs_collection_navigated', {
+          collectionHandle: collection?.dataset.collectionHandle || null,
+          collectionTitle: collection?.dataset.collectionTitle || null,
+          url: window.location.pathname + window.location.search,
+          source: source || 'unknown',
+        });
+        if (published && typeof published.catch === 'function') {
+          published.catch(function () {});
+        }
       }
       if (typeof window.clarity === 'function') {
         window.clarity('set', 'page', window.location.href);
@@ -1002,7 +1008,7 @@
     return html;
   }
 
-  async function navigateFromHome(url, push) {
+  async function navigateFromHome(url, push, source) {
     if (!canPartialSwapFromHome() || !isSafeCollectionNavUrl(url)) {
       window.location.assign(url);
       return;
@@ -1033,7 +1039,7 @@
       if (push !== false) {
         history.pushState({ rlChipNav: key, rlFromHome: true }, '', url);
       }
-      publishChipNavPageView();
+      publishCollectionNavigation(source);
       window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
     } catch (err) {
       if (err.name !== 'AbortError') window.location.assign(url);
@@ -1045,7 +1051,7 @@
   async function navigate(url, push, source) {
     if (canPartialSwapFromHome()) {
       if (source === 'menu') {
-        return navigateFromHome(url, push);
+        return navigateFromHome(url, push, source);
       }
       window.location.assign(url);
       return;
@@ -1086,7 +1092,7 @@
       updateChips(url);
       warmHeaderCollectionLinks();
       if (push !== false) history.pushState({ rlChipNav: key }, '', url);
-      publishChipNavPageView();
+      publishCollectionNavigation(source);
       window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
     } catch (err) {
       if (err.name !== 'AbortError') window.location.assign(url);
@@ -1217,7 +1223,7 @@
     if (!canPartialSwap()) {
       if (canPartialSwapFromHome() && isSafeCollectionNavUrl(window.location.href)) {
         closeMobileMenuForNavigation();
-        navigateFromHome(window.location.href, false);
+        navigateFromHome(window.location.href, false, 'history');
       }
       return;
     }
@@ -1228,7 +1234,7 @@
       document.querySelector(HEADER_COLLECTION_LINK)
     ) {
       closeMobileMenuForNavigation();
-      navigate(window.location.href, false, 'header');
+      navigate(window.location.href, false, 'history');
     }
   });
 

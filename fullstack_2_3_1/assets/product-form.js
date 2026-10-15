@@ -1,6 +1,28 @@
 import { formatMoney } from '@theme/utilities';
 import { ThemeEvents, CartUpdatedEvent, FormUpdatedEvent } from '@theme/events';
 
+const centsToTrackingAmount = (cents) => {
+  const value = Number(cents);
+  return Number.isFinite(value) ? Math.round(value) / 100 : null;
+};
+
+const trackedLineProperties = (properties) => {
+  const allowed = ["Mode d'expédition", '_estimation_livraison', '_delivery', '_express_price'];
+  return Object.fromEntries(allowed.filter((key) => properties?.[key] != null).map((key) => [key, String(properties[key])]));
+};
+
+const publishTrackingEvent = (name, data) => {
+  try {
+    const published = window.Shopify?.analytics?.publish?.(name, {
+      ...(data || {}),
+      url: window.location.pathname + window.location.search,
+    });
+    if (published && typeof published.catch === 'function') published.catch(() => {});
+  } catch (_) {
+    /* tracking optional */
+  }
+};
+
 class ProductForm extends HTMLElement {
   constructor() {
     super();
@@ -233,6 +255,8 @@ class ProductForm extends HTMLElement {
 
     // Grouper les items par id (somme des quantités) pour que les Web Pixels Shopify déclenchent product_added_to_cart (une ligne par variante)
     items = this.#mergeItemsById(items);
+    const cartTracking = this.form.__rsCartTracking || null;
+    delete this.form.__rsCartTracking;
 
     // On récupère la quantité totale à ajouter au panier pour mettre à jour le compteur du panier
     let quantityAddedToCart = items.reduce((acc, item) => acc + item.quantity, 0);
@@ -249,10 +273,30 @@ class ProductForm extends HTMLElement {
         sections: sections.join(','),
       }),
     })
-      .then((response) => {
-        return response.json();
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok || (data?.status && data?.message)) {
+          throw new Error(data?.description || data?.message || 'Une erreur est survenue.');
+        }
+        return data;
       })
       .then((response) => {
+        if (cartTracking) {
+          const requestItem = items.find((item) => String(item.id) === String(cartTracking.variantId));
+          const addedItem = Array.isArray(response?.items)
+            ? response.items.find((item) => String(item.variant_id || item.id) === String(cartTracking.variantId))
+            : null;
+          const properties = trackedLineProperties(addedItem?.properties || requestItem?.properties || {});
+          const fulfillmentMode = properties._delivery === 'express' ? 'express' : 'standard';
+          publishTrackingEvent('rs_cart_item_added', {
+            ...cartTracking,
+            fulfillmentMode,
+            quantity: addedItem?.quantity || requestItem?.quantity || 1,
+            cartResponseLinePrice: centsToTrackingAmount(addedItem?.final_price ?? addedItem?.price),
+            linePropertiesJson: JSON.stringify(properties),
+            clientExpressPricePropertyCents: properties._express_price || null,
+          });
+        }
         const countEl = document.querySelector('[data-ref="cart-count"]');
         const currentItemCount = countEl ? parseInt(countEl.textContent, 10) : null;
 
