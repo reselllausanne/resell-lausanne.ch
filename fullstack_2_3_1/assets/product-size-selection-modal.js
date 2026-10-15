@@ -1666,6 +1666,7 @@
       const bundleVisible = Boolean(bundleCard && !bundleCard.hidden);
       cartUpsellsEl.hidden = allEntries.length === 0 && !bundleVisible;
       if (bundleVisible || colorwayEntries.length) cartUpsellsEl.scrollLeft = 0;
+      window.__rsUpsellCarouselTracking?.autoBind?.();
     };
 
     const setSocksAddedState = (added, lineVariantId = '', { refreshPresentation = true } = {}) => {
