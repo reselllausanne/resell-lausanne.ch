@@ -1500,6 +1500,9 @@
         const row = document.createElement('div');
         row.className = 'rs-size-modal__cart-upsell';
         if (kind === 'colorway') row.classList.add('rs-size-modal__cart-upsell--colorway');
+        if (offer.productId) row.dataset.rsUpsellProductId = String(offer.productId);
+        if (offer.handle) row.dataset.rsUpsellProductHandle = String(offer.handle);
+        row.dataset.rsUpsellKind = kind;
 
         const action = document.createElement('div');
         action.className = 'rs-size-modal__cart-upsell-row';

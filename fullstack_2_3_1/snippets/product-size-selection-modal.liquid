@@ -891,6 +891,7 @@
             {%- unless cart_upsell_first -%},{%- endunless -%}
             {
               "productId": {{ cart_upsell_product.id | json }},
+              "handle": {{ cart_upsell_product.handle | json }},
               "title": {{ cart_upsell_product.title | json }},
               "image": {{ cart_upsell_product.featured_image | image_url: width: 160 | json }},
               "variants": [
