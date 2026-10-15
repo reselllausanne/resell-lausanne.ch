@@ -1,8 +1,9 @@
 (() => {
-  if (window.__rsUpsellCarouselTracking) return;
+  if (window.__rsUpsellCarouselTrackingInit) return;
+  window.__rsUpsellCarouselTrackingInit = true;
 
-  const MIN_SCROLL_DELTA = 48;
-  const SCROLL_DEBOUNCE_MS = 400;
+  const MIN_SCROLL_DELTA = 24;
+  const SCROLL_DEBOUNCE_MS = 350;
 
   const publish = (name, data) => {
     try {
@@ -57,6 +58,11 @@
     let accDelta = 0;
     let scrollTimer = null;
 
+    const scheduleFlush = () => {
+      if (scrollTimer) window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(flushScroll, SCROLL_DEBOUNCE_MS);
+    };
+
     const flushScroll = () => {
       scrollTimer = null;
       if (Math.abs(accDelta) < MIN_SCROLL_DELTA) {
@@ -75,6 +81,13 @@
         visibleProductHandles: visible.map((v) => v.productHandle).filter(Boolean).join(','),
       });
       accDelta = 0;
+      lastLeft = scroller.scrollLeft;
+    };
+
+    const recordDelta = (delta) => {
+      if (!delta) return;
+      accDelta += delta;
+      scheduleFlush();
     };
 
     scroller.addEventListener(
@@ -82,10 +95,38 @@
       () => {
         const delta = scroller.scrollLeft - lastLeft;
         lastLeft = scroller.scrollLeft;
-        if (!delta) return;
-        accDelta += delta;
-        if (scrollTimer) window.clearTimeout(scrollTimer);
-        scrollTimer = window.setTimeout(flushScroll, SCROLL_DEBOUNCE_MS);
+        recordDelta(delta);
+      },
+      { passive: true },
+    );
+
+    scroller.addEventListener(
+      'wheel',
+      (event) => {
+        const dx = event.deltaX;
+        if (!dx || Math.abs(dx) < Math.abs(event.deltaY)) return;
+        recordDelta(dx);
+      },
+      { passive: true },
+    );
+
+    let touchStartX = null;
+    scroller.addEventListener(
+      'touchstart',
+      (event) => {
+        const t = event.changedTouches?.[0];
+        touchStartX = t ? t.clientX : null;
+      },
+      { passive: true },
+    );
+    scroller.addEventListener(
+      'touchend',
+      (event) => {
+        const t = event.changedTouches?.[0];
+        if (touchStartX == null || !t) return;
+        const dx = touchStartX - t.clientX;
+        touchStartX = null;
+        recordDelta(dx);
       },
       { passive: true },
     );
@@ -99,6 +140,19 @@
         interactionType: 'product_link_click',
         productId: cardProductId(card),
         productHandle: cardProductHandle(card),
+      });
+    });
+
+    scroller.addEventListener('change', (event) => {
+      const select = event.target.closest('select.rs-size-modal__cart-upsell-select');
+      if (!select || !scroller.contains(select)) return;
+      const card = select.closest(cardSelector);
+      if (!card) return;
+      emitInteraction(sourceComponent, {
+        interactionType: 'upsell_size_select',
+        productId: cardProductId(card),
+        productHandle: cardProductHandle(card),
+        selectedSize: select.value || null,
       });
     });
   };
