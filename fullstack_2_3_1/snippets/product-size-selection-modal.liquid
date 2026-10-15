@@ -1191,6 +1191,8 @@
           %}
           {
             "id": {{ variant.id | json }},
+            "sku": {{ variant.sku | json }},
+            "title": {{ variant.title | json }},
             "available": {{ variant_available_for_display | json }},
             "options": {{ variant.options | json }},
             "sizeValue": {{ size_value | json }},
