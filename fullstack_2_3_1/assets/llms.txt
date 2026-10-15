@@ -66,7 +66,7 @@ Each brand has a dedicated collection page. Use search or brand pages to narrow 
 - Orders outside Switzerland: local VAT, customs or import fees may apply and are borne by the customer.
 
 ### Payment
-- Switzerland: Visa, Mastercard, Amex, Apple Pay, Twint, PostFinance, Powerpay (installments).
+- Switzerland: Visa, Mastercard, Amex, Apple Pay, Twint, PostFinance, CembraPay Facture (invoice / instalments).
 - Europe: Visa, Mastercard, Amex, Apple Pay, Alma (pay in 2, 3 or 4 instalments).
 - All displayed prices in CHF. Swiss prices include applicable Swiss VAT.
 

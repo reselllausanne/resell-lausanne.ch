@@ -432,7 +432,7 @@
       "accordion_payment": "MOYENS DE PAIEMENT",
       "auth_html": "<p>Tous les produits vendus sur Resell Lausanne sont authentiques. Avant d'arriver entre vos mains, ils sont contrôlés par nos experts pour la qualité et l'authenticité.</p><p>Tous les produits proviennent de notre réseau de revendeurs partenaires, sélectionnés individuellement pour leur expérience. Les articles Sneakers & Streetwear sont livrés dans leur boîte d'origine avec les accessoires et un scellé Resell Lausanne confirmant le contrôle de notre équipe.</p><p>Attention : ne détachez pas le scellé avant d'être absolument sûr(e) de garder le produit, sinon la demande de retour pourra être refusée.</p><p><a href=\"/pages/notre-processus-d-authentification\" class=\"link\">Voir le processus d'authentification complet.</a></p>",
       "delivery_html": "<p>Livraison gratuite en Suisse dès 50 CHF d'achat. Forfait de 10 CHF pour les livraisons en Europe.</p><p>Délais estimés :</p><ul><li>Livraison standard : 5 à 10 jours ouvrés</li><li>Livraison express : 2 à 5 jours ouvrés lorsque l'option est disponible</li></ul><p>Un numéro de suivi est envoyé par e-mail dès que la commande est remise au transporteur.</p>",
-      "payment_html": "<p>Paiement sécurisé par carte bancaire, Apple Pay, Twint, PostFinance et Powerpay selon les options disponibles au moment du paiement.</p><p>Les moyens de paiement affichés peuvent varier selon le pays de livraison et le montant de la commande.</p><p><a href=\"/pages/faq?category=options-de-paiement#faq-options-de-paiement\" class=\"link\">En savoir plus sur la sécurité des paiements.</a></p>",
+      "payment_html": "<p>Paiement sécurisé par carte bancaire, Apple Pay, Twint, PostFinance et CembraPay Facture selon les options disponibles au moment du paiement.</p><p>Les moyens de paiement affichés peuvent varier selon le pays de livraison et le montant de la commande.</p><p><a href=\"/pages/faq?category=options-de-paiement#faq-options-de-paiement\" class=\"link\">En savoir plus sur la sécurité des paiements.</a></p>",
       "size_modal": {
         "free_shipping_ch": "Livraison gratuite en Suisse dès 50 CHF",
         "size_guide": "Guide des tailles",
@@ -443,7 +443,7 @@
         "lego_fit_note": "Produit scelé et neuf",
         "hero_sub_range": "5 à 10 jours ouvrés",
         "express_promise_default": "2 à 5 jours ouvrés",
-        "promo_powerpay": "Paiement en plusieurs fois avec Powerpay / Twint.",
+        "promo_powerpay": "Paiement en plusieurs fois avec CembraPay / Twint.",
         "promo_free": "Livraison offerte.",
         "promo_fast": " Option Fast disponible sous 72h.",
         "cart_added": "Produit ajouté à votre panier",
