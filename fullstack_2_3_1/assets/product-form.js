@@ -287,7 +287,12 @@ class ProductForm extends HTMLElement {
             ? response.items.find((item) => String(item.variant_id || item.id) === String(cartTracking.variantId))
             : null;
           const properties = trackedLineProperties(addedItem?.properties || requestItem?.properties || {});
-          const fulfillmentMode = properties._delivery === 'express' ? 'express' : 'standard';
+          const fulfillmentMode =
+            properties._delivery === 'express'
+              ? 'express'
+              : properties._delivery === 'standard'
+                ? 'standard'
+                : cartTracking.fulfillmentMode || 'standard';
           publishTrackingEvent('rs_cart_item_added', {
             ...cartTracking,
             fulfillmentMode,

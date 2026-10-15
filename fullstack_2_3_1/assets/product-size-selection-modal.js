@@ -777,6 +777,7 @@
 
     const modeForVariant = (variant, requestedMode = shipMode) => {
       const layout = shippingLayout(variant);
+      if (layout.forceExpress) return 'express';
       return requestedMode === 'express' && layout.showExpress ? 'express' : 'standard';
     };
 
@@ -935,12 +936,21 @@
       }
       cardsWrap?.classList.toggle('is-single', (showStandard && !showExpress) || (!showStandard && showExpress));
 
+      const previousShipMode = shipMode;
       if (forceExpress) {
         shipMode = 'express';
       } else if (!showExpress && shipMode === 'express') {
         shipMode = 'standard';
       } else if (!showStandard && shipMode === 'standard') {
         shipMode = 'express';
+      }
+      if (forceExpress && previousShipMode !== 'express') {
+        publishTrackingEvent(
+          'rs_fulfillment_mode_selected',
+          trackingPayloadFor(selectedVariant, 'express', 'auto_express_only', 'product_size_modal', {
+            previousMode: previousShipMode,
+          }),
+        );
       }
 
       btnStandard?.classList.toggle('is-selected', shipMode === 'standard');
@@ -1140,15 +1150,15 @@
             updateModalAtcState();
             return;
           }
-          publishTrackingEvent(
-            'rs_variant_selected',
-            trackingPayloadFor(v, shipMode, 'size_card', 'product_size_modal'),
-          );
           // Paint from the local payload right away; the theme's
           // `variant:updated` round-trip only reconciles afterwards.
           selectedVariant = v;
           highlightSelectedCard();
           updateShippingCards();
+          publishTrackingEvent(
+            'rs_variant_selected',
+            trackingPayloadFor(v, shipMode, 'size_card', 'product_size_modal'),
+          );
           updateModalAtcState();
           refreshGridPrices();
           updateMobileDock();
@@ -1218,7 +1228,7 @@
       if (!selectedVariant || btnAtc.disabled) return;
       setFormVariantId(form, selectedVariant.id);
       const selectedLayout = shippingLayout(selectedVariant);
-      const isExpressSelection = shipMode === 'express' && selectedLayout.showExpress;
+      const isExpressSelection = modeForVariant(selectedVariant, shipMode) === 'express';
       const expressLine =
         isExpressSelection
           ? `${expressShippingName} ${expressPromiseForVariant(selectedVariant)}`
@@ -2172,7 +2182,15 @@
           ? response.items.find((candidate) => String(candidate.variant_id || candidate.id) === String(firstAvailable.id))
           : null;
         const properties = trackedLineProperties(addedItem?.properties || {});
-        const fulfillmentMode = properties._delivery === 'express' ? 'express' : 'standard';
+        const directLayout = shippingLayout(firstAvailable);
+        const fulfillmentMode =
+          properties._delivery === 'express'
+            ? 'express'
+            : properties._delivery === 'standard'
+              ? 'standard'
+              : directLayout.forceExpress
+                ? 'express'
+                : 'standard';
         publishTrackingEvent('rs_cart_item_added', {
           productId: payload?.productId || addedItem?.product_id || null,
           productHandle: payload?.productHandle || addedItem?.handle || null,
