@@ -12,8 +12,8 @@
   carries custom.delivery_48h. Sold-out warehouse sizes hide the product-level
   48h badge. Product tags / show_48h_picto alone are not enough.
 
-  Express picto (bit 2) — when at least one IN-STOCK variant has a usable
-  express option (express_price or express_available). Display layer must
+  Express picto (bit 2) — when at least one IN-STOCK variant has
+  express_available == true AND a usable express_price. Display layer must
   prefer 48h over express so they never stack.
 
   @param {product} product
@@ -64,19 +64,18 @@
   endfor
 
   comment
-    Express: live stock with express_price or express_available.
-    48h-only sizes also flip express_available in the size modal — those stay
-    under the 48h badge via display priority (bit 1 wins over bit 2).
+    Express: live stock with express_available == true AND usable express_price.
+    express_price alone must not light the badge (bulk reprice noise).
+    48h-only sizes stay under the 48h badge (bit 1 wins over bit 2).
   endcomment
   for variant in product.variants
     unless variant.available
       continue
     endunless
 
-    if variant.metafields.custom.express_available.value == true
-      assign rs_express_active = true
-      break
-    endif
+    unless variant.metafields.custom.express_available.value == true
+      continue
+    endunless
 
     if variant.metafields.custom.express_price == blank
       continue
