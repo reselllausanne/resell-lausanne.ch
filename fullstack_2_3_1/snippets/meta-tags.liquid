@@ -917,7 +917,7 @@
             },
             {%- liquid
               assign v_has_express = false
-              if v.metafields.custom.express_price != blank
+              if v.metafields.custom.express_available.value == true and v.metafields.custom.express_price != blank
                 assign exp_mv_schema = v.metafields.custom.express_price.value
                 if exp_mv_schema.amount != blank
                   assign exp_amt_schema = exp_mv_schema.amount | times: 1
