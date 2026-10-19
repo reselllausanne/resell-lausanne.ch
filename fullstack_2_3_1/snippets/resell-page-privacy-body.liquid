@@ -3,6 +3,7 @@
   assign locale_base = locale_iso | split: '-' | first
   assign contact_email = 'contact@resell-lausanne.ch'
   assign contact_url = 'mailto:contact@resell-lausanne.ch'
+  assign audience_host = 'solution' | append: '.' | append: 'resell-lausanne.ch'
 %}
 
 {% if locale_base == 'de' %}
@@ -118,6 +119,19 @@
 
   <h2>7. Cookies</h2>
   <p>Nous utilisons des cookies pour assurer le bon fonctionnement de notre boutique et améliorer votre expérience d’achat. Vous pouvez désactiver les cookies dans votre navigateur&nbsp;; certaines fonctionnalités de la boutique peuvent alors être limitées.</p>
+
+  <h2>Mesure d’audience sur notre site</h2>
+  <p>Avec votre consentement, nous mesurons l’audience de resell-lausanne.ch par un pixel Shopify. Ce pixel ne s’exécute que si vous acceptez les cookies Analytique. En cas de refus, aucune donnée n’est collectée ni envoyée.</p>
+  <p>Les événements sont transmis à notre serveur {{ audience_host }}, hébergé par Hetzner dans l’Union européenne (Allemagne). Nous les conservons quatorze mois, puis nous les supprimons. Ce flux ne contient ni votre nom, ni votre adresse e-mail, ni votre adresse postale, ni votre numéro de téléphone.</p>
+  <p>Nous enregistrons les pages consultées, les produits vus, la taille ou la variante, le mode de livraison Standard ou Express, le panier, le checkout, le numéro de commande, le pays, le type d’appareil et la version d’un test A/B. Un identifiant de clic présent dans l’adresse de la page, tel que gclid, n’est repris que si vous avez aussi accepté les cookies Marketing.</p>
+  <p>Ces informations servent uniquement aux statistiques et à l’amélioration du site. Nous ne les vendons pas. La base légale est votre consentement. Vous pouvez le retirer à tout moment dans le bandeau cookies&nbsp;; le retrait vaut pour l’avenir. Vous avez un droit d’accès, de rectification et de suppression&nbsp;: écrivez à <a href="{{ contact_url }}">{{ contact_email }}</a>.</p>
+  <p>D’autres applications de la boutique peuvent traiter des données selon leurs propres règles. Ce paragraphe décrit seulement notre mesure réalisée en propre (first-party).</p>
+  <p><strong>Ce que nous ne collectons pas</strong></p>
+  <ul>
+    <li>votre nom&nbsp;;</li>
+    <li>votre adresse e-mail&nbsp;;</li>
+    <li>votre adresse postale et votre numéro de téléphone.</li>
+  </ul>
 
   <h2>8. Âge du consentement</h2>
   <p>En utilisant ce site, vous déclarez que vous avez au moins l’âge de la majorité dans votre État ou province de résidence, ou que vous avez donné votre consentement pour permettre à toute personne mineure à votre charge d’utiliser ce site.</p>
