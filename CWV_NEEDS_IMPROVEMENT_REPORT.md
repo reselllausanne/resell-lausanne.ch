@@ -1,10 +1,41 @@
 # Core Web Vitals — Why ~4,970 Mobile URLs “Need Improvement”
 
-**Storefront:** production Shopify origin (this repo)  
-**Date:** 2026-09-19  
-**Sources:** Google Search Console CrUX chart (user), live PageSpeed Insights field (CrUX), local Lighthouse lab, live HTML/CDN probes, git theme history  
-**Ahrefs:** no Site Audit / Site Explorer CSVs in `audit-inputs/ahrefs/` (folder empty). Ahrefs Web Analytics *is* loaded on-site; that is traffic analytics, not a CWV crawl. This report uses CrUX + lab instead.
-<!-- pragma: allowlist secret -->
+**Storefront:** production Shopify origin (this theme)  
+**Updated:** 2026-10-19 (remeasured). Field snapshot below is still the 2026-09-19 PSI pull — the PageSpeed API returned HTTP 429 today.  
+**Sources:** GSC CrUX chart (user, through 17 Sep), PSI field 19 Sep, Lighthouse 12.8.2 mobile lab 19 Oct, live HTML/CDN, Shopify Admin, Tranco rank API, Ahrefs public docs (no API key on this machine).
+
+---
+
+## 0. 19 Oct 2026 remeasure (this supersedes the September byte claims)
+
+**Verdict unchanged:** the orange line is site-wide mobile LCP, not an Ahrefs crawl. 4,970 / 5,044 scored URLs (98.5%) are Needs improvement. Poor stayed 0, so p75 LCP is in the 2.5–4.0s band. Last field read (19 Sep): LCP **2.9s**, INP **156ms** Good, CLS **0** Good, TTFB **2.2s** Poor.
+
+**Lab today (mobile, simulated 4G, `fr-CH` on home):**
+
+| URL | Score | LCP | CLS | TBT | Document TTFB | LCP element |
+|---|---|---|---|---|---|---|
+| `/` | 57 | **6.3s** | 0.169 | 310ms | **1,240ms** | Bundle hero `rl-home-bundle-offer-mobile.jpg` |
+| `/collections/nike` | 55 | **6.2s** | 0.155 | 470ms | 20ms (warm) | First product card |
+| PDP Sabrina 1 TB | 57 | **5.5s** | 0.166 | 380ms | 40ms (warm) | Gallery image |
+
+Lab CLS is in the Needs improvement band. September field CLS was 0. Recheck CLS when PSI quota returns. Do not treat lab CLS as the GSC driver — the 0-Poor shape matches LCP 2.5–4.0s.
+
+**Chrome image bytes (Accept: image/webp).** Correction to the September note that the Back-to-School mobile file is 544 KB–2 MB: that is the no-WebP response. Chrome gets WebP from the Shopify CDN.
+
+| Asset | Chrome bytes | Role |
+|---|---|---|
+| `top-menu-picture.jpg` | **254 KB JPEG** | Hidden drawer, `fetchpriority=high`, bounding box 0×0, every template |
+| Bundle hero | **90 KB WebP** | Actual home LCP. Not preloaded. Theme asset, no CDN srcset |
+| BTS mobile `width=480` | **43 KB WebP** (544 KB PNG if WebP refused) | What `lcp-preload-home.liquid` preloads. Not slide 0 |
+| Nike card `width=420` | 12 KB WebP | PLP preload target |
+
+**Third parties, French homepage lab:** GTM 542 KB, Storyblok 494 KB, Facebook 227 KB (356ms main-thread blocking), TikTok 54 KB, Clarity 38 KB (128ms blocking). Ahrefs analytics was 3 KB / 31ms on the English run. Not the LCP.
+
+**Why ~5k and not the whole catalog.** Admin `productsCount` = **98,520** exact. Published locales: fr (primary), de, en. it unpublished. Sitemap: 99 product shards × 3 locales. Counted shards 1 / 50 / 98 ≈ 1,000 URLs, shard 99 = 242 → about **98.2k product URLs per locale, ~295k total**, plus 642 collection URLs. CrUX only scores URLs with enough Chrome traffic: **5,044**. Tranco rank stayed ~1.33M–1.38M from 7 Sep to 18 Oct, so the September climb in Needs improvement is not a popularity spike. Good stayed ~74 while more URLs entered the sample already over the LCP line.
+
+**Ahrefs.** No API token in the environment. `GET /v3/public/domain-rating-free` requires a key (Ahrefs docs). The public authority checker returned no Domain Rating. `audit-inputs/ahrefs/` is still empty. Site Audit CSVs would be a different report (titles, hreflang, 4xx). They do not move this chart.
+
+**Fix order:** (1) cut/cache the ~620 KB HTML (234 KB inline script), (2) stop high-priority on the hidden 254 KB menu JPEG, (3) preload the bundle hero via CDN srcset, (4) defer Facebook / Clarity / TikTok, (5) shrink Storyblok rails, (6) recheck origin LCP p75 ≤ 2.5s.
 
 ---
 
@@ -81,7 +112,7 @@ Until TTFB drops under ~0.8–1.0s for CH mobile users, LCP will keep straddling
 
 1. **Active LCP element** = Ultimate Bundle hero (`rl-home-bundle-offer-*.jpg`, shipped **9 Sep 2026**, commits `9309430` / `cf18f25`).
 2. **Head still preloads the old Back-to-School assets** (`lcp-preload-home.liquid` → BTS mobile PNG / desktop webp filenames).
-3. BTS **mobile PNG** at width=480 is still **~544 KB**; width=750 **~1.3 MB**; width=1100 **~2.0 MB**. Browser competes for bandwidth on a **non-LCP** asset while the real LCP JPEG (~199 KB mobile asset) waits.
+3. BTS mobile is the preloaded file, but it is **not** what Chrome downloads at full PNG size. With `Accept: image/webp` (19 Oct): width=480 **43 KB WebP**, width=750 **82 KB WebP**. The 544 KB / 1.3 MB / 2.0 MB figures are the no-WebP bytes. The real LCP (bundle mobile) is **90 KB WebP** (199 KB JPEG without WebP) and is not preloaded. The worse site-wide competitor is the hidden menu JPEG at **254 KB**, `fetchpriority=high`.
 4. Bundle `<picture>` uses **raw `asset_url`** — no CDN width/srcset pipeline → mobile may download the full asset without Shopify CDN resizing.
 
 This aligns with the **September rise** in “Needs improvement” after the Aug cliff.
@@ -145,11 +176,11 @@ Same mobile chrome + header + pixels + PLP/PDP media pattern on nearly every mon
 - Live HTML weight: home ~619 KB, Nike PLP ~591 KB, PDP ~663 KB; ~52 inline scripts / ~232 KB.
 - Preload bug: `fullstack_2_3_1/snippets/lcp-preload-home.liquid` still BTS; LCP element = bundle (`rl-home-bundle-offer-banner.liquid`).
 - Git: theme sync `9b3b112` (2026-08-16); bundle hero `9309430` / lean JPG `cf18f25` (2026-09-09).
-- Ahrefs: `audit-inputs/ahrefs/` empty — no Site Audit numbers to merge.
+- Ahrefs: `audit-inputs/ahrefs/` empty. No API token. Public Domain Rating endpoint requires a key. Analytics script on-site is ~3 KB.
 
 ---
 
 ## 9. What we could not pull
 
-- Ahrefs Site Audit / Site Explorer exports (not provided).
-- Google PageSpeed API (daily quota exceeded for shared key) — compensated with PSI UI field data + local Lighthouse.
+- Ahrefs Site Audit / Site Explorer exports, and Domain Rating (no API v3 key).
+- Google PageSpeed API on 19 Oct (HTTP 429). Field numbers remain the 19 Sep PSI read. Lab was re-run.
