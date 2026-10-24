@@ -1,0 +1,24 @@
+{%- doc -%}
+  Footer notice in PDP description for pairs 15+ years old (release date).
+
+  @param {product} product
+{%- enddoc -%}
+
+{%- liquid
+  capture rs_aged_pair_flags
+    render 'rs-product-aged-pair-warning-signals', product: product, years_threshold: 15
+  endcapture
+  assign rs_aged_pair_parts = rs_aged_pair_flags | strip | split: '|'
+  assign rs_aged_pair_active = rs_aged_pair_parts[0]
+  assign rs_aged_pair_release_date = rs_aged_pair_parts[1]
+-%}
+
+{%- if rs_aged_pair_active == '1' -%}
+  <p class="product-pdp-description__aged-pair-notice">
+    {%- if rs_aged_pair_release_date != blank -%}
+      {{ 'products.pdp.aged_pair_notice_with_date' | t: release_date: rs_aged_pair_release_date }}
+    {%- else -%}
+      {{ 'products.pdp.aged_pair_notice' | t }}
+    {%- endif -%}
+  </p>
+{%- endif -%}

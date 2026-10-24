@@ -57,12 +57,24 @@
   {% if sanitized_description != blank %}
     <div class="product-pdp-description__body rte">
       {{ sanitized_description }}
+      {% render 'rs-product-aged-pair-description-notice', product: pdp_product %}
     </div>
+  {% else %}
+    {% render 'rs-product-aged-pair-description-notice', product: pdp_product %}
   {% endif %}
 </div>
 
 {% stylesheet %}
   .product-pdp-description__body {
     margin: 0;
+  }
+
+  .product-pdp-description__aged-pair-notice {
+    margin: var(--gap-md) 0 0;
+    padding-top: var(--gap-sm);
+    border-top: 1px solid rgb(8 8 8 / 10%);
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 600;
   }
 {% endstylesheet %}
