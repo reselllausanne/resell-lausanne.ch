@@ -1,5 +1,6 @@
 {% doc %}
   PLP product card price row: À partir de + optional compare + sale price.
+  Strikethrough only if an available variant has compare_at_price > price.
 
   @param {product} product - Product object
 {% enddoc %}
@@ -22,6 +23,19 @@
 
   if compare_min > price_min and compare_min > 0
     assign show_compare = true
+  endif
+
+  if show_compare
+    assign rs_available_discount = false
+    for variant in card_product.variants
+      if variant.available and variant.compare_at_price > variant.price and variant.compare_at_price > 0
+        assign rs_available_discount = true
+        break
+      endif
+    endfor
+    unless rs_available_discount
+      assign show_compare = false
+    endunless
   endif
 
   if settings.show_trailing_zeros

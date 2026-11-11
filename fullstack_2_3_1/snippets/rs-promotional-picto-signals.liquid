@@ -7,6 +7,8 @@
   - product.metafields.custom.soldes_48h == true
   - tag soldes-48h
   - collection soldes-48h
+  Stuck flag still needs one available variant with compare_at_price > price.
+  A sold-out size on sale does not light the badge.
 
   48h delivery picto (bit 1) — ONLY when at least one IN-STOCK variant
   carries custom.delivery_48h. Sold-out warehouse sizes hide the product-level
@@ -51,6 +53,19 @@
       endif
     endfor
   endunless
+
+  if rs_soldes_48h_active
+    assign rs_available_discount = false
+    for variant in product.variants
+      if variant.available and variant.compare_at_price > variant.price and variant.compare_at_price > 0
+        assign rs_available_discount = true
+        break
+      endif
+    endfor
+    unless rs_available_discount
+      assign rs_soldes_48h_active = false
+    endunless
+  endif
 
   comment
     Product-level 48h picto follows live warehouse stock only.
